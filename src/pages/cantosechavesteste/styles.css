@@ -1,0 +1,157 @@
+a {
+    color: white;
+    height: auto;
+}
+
+.main-fixed {
+    background: url(../../assets/fundo-sistema.jpg);
+    background-position: 50% 50%;
+    background-size: cover;
+    background-attachment: fixed;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.global-containera {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.sec-header-container {
+    width: 100%;
+    display: flex;
+    justify-content: flex-start;
+    border-bottom: solid 1px white;
+}
+
+.secondary-header {
+    width: 100%;
+    margin: 0 15px 15px 15px;
+    font-family: 'Times New Roman', Times, serif;
+    font-weight: bold;
+    color: white;
+    font-size: 18px;
+    display: flex;
+    justify-content: flex-start;
+}
+
+.secondary-list {
+    margin-right: 30px;
+}
+
+.secondary-list:hover {
+    transform: scale(1.05);
+    cursor: pointer;
+}
+
+.secondary-list:active {
+    color: #99bbff
+}
+
+.section-title {
+    font-family: 'Times New Roman', Times, serif;
+    color: white;
+    margin: 25px;
+}
+
+.cards-canto-containera {
+    width: 80%;
+    height: 100%;
+    display: grid;
+    gap: 20px;
+    grid-template-columns: repeat(4, 1fr);
+    margin-bottom: 25px;
+}
+
+.card-cantoa {
+    border: solid 1px #002776;
+    border-radius: 8px;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: #002776;
+    font-family: 'Times New Roman', Times, serif;
+    font-weight: bold;
+    font-size: 25px;
+    text-align: center;
+    background-color: rgba(153, 187, 255, 0.85);
+    height: 2em;
+    z-index: 1;
+}
+
+.card-cantoa:hover {
+    transform: scale(1.05);
+    cursor: pointer;
+    background-color:rgba(153, 187, 255, 1);
+}
+
+.card-cantoa:active {
+    border-color: white;
+}
+
+.card-menu-containera {
+    display: flex;
+    flex-direction: column;
+}
+
+.card-menua {
+    width: 100%;
+    z-index: 1;
+}
+
+.dropdown-containera {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+    top: -8px;
+    height: 0;
+}
+
+.dropdown-containera.active {
+    height: auto;
+}
+
+.dropdowna {
+    position: relative;
+    width: 100%;
+    border-top: none;
+    border-right: solid 1px white;
+    border-bottom: solid 1px white;
+    border-left: solid 1px white;
+    border-bottom-left-radius: 8px;
+    border-bottom-right-radius: 8px;
+    font-family: 'Times New Roman', Times, serif;
+    font-size: 16px;
+    font-weight: bold;
+    padding: 5px;
+    transition: .5s linear;
+}
+
+.dropdowna.active {
+    top: 0;
+    visibility: visible;
+}
+
+.dropdowna.inactive {
+    top: -100%;
+    visibility: hidden;
+}
+
+.menu-itema {
+    position: relative;
+    color: white;
+    margin-top: 5px;
+    text-overflow: ellipsis;
+}
+
+.menu-itema:hover {
+    text-decoration: underline;
+}
+

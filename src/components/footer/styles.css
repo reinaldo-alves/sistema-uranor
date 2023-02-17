@@ -1,0 +1,9 @@
+.footer {
+    text-align: center;
+    font-family: 'Times New Roman', Times, serif;
+    font-weight: bold;
+    font-size: 14px;
+    color: white;
+    margin: 2em 0 1em 0;
+    background: transparent;
+}

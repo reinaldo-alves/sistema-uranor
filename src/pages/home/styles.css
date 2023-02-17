@@ -1,0 +1,70 @@
+.options-container {
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.cards-container {
+    height: 100%;
+    display: grid;
+    gap: 20px;
+    grid-template-columns: repeat(4, 1fr);
+}
+
+.card-options {
+    border: solid 1px #002776;
+    border-radius: 8px;
+    padding: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-position: 50% 50%;
+    background-size: cover;
+    color: #002776;
+    font-family: 'Times New Roman', Times, serif;
+    font-weight: bold;
+    font-size: 25px;
+    text-align: center;
+}
+
+.card-options:hover {
+    transform: scale(1.05);
+    cursor: pointer;
+}
+
+.card-options:active {
+    border-color: white;
+}
+
+#mediuns {
+    background-image: url('../../assets/mediuns.jpg');
+}
+
+#cantosechaves {
+    background-image: url('../../assets/cantosechaves.jpg');
+}
+
+#desenvolvimento {
+    background-image: url('../../assets/desenvolvimento.jpg');
+}
+
+#cursos {
+    background-image: url('../../assets/cursos.jpg');
+}
+
+#consagracoes {
+    background-image: url('../../assets/consagracoes.jpg');
+}
+
+#relatorios {
+    background-image: url('../../assets/relatorios.jpg');
+}
+
+#biblioteca {
+    background-image: url('../../assets/biblioteca.jpg');
+}
+
+#documentosuteis {
+    background-image: url('../../assets/documentosuteis.jpg');
+}

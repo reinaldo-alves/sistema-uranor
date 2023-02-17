@@ -1,0 +1,66 @@
+.header-container {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 15px 15px 25px 15px;
+}
+
+.info-container {
+    padding-left: 15px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.logoHeader {
+    height: 60px;
+    width: auto;
+    padding-right: 20px;
+}
+
+.textContainer {
+    font-family: 'Times New Roman', Times, serif;
+    font-weight: bold;
+    font-size: 24px;
+    color: white;
+    border-left: solid 2px;
+    padding-left: 20px;
+}
+
+.user-info {
+    padding-right: 15px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: flex-end;
+}
+
+.user-and-level {
+    font-size: 16px;
+    font-family: 'Times New Roman', Times, serif;
+    color: white;
+    font-weight: bold;
+}
+
+.button-header-container {
+    margin-top: 5px;
+}
+
+.button-header {
+    font-size: 12px;
+    padding: 2px 6px;
+    color: white;
+    border: solid 2px white;
+    background-color: transparent;
+    margin-left: 10px;
+}
+
+button:hover {
+    cursor: pointer;
+    transform: scale(1.05);
+}
+
+.button-header:active {
+    background-color: red;
+}

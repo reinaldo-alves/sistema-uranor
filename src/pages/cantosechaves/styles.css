@@ -1,0 +1,158 @@
+a {
+    color: white;
+    height: auto;
+}
+
+.main-fixed {
+    background: url(../../assets/fundo-sistema.jpg);
+    background-position: 50% 50%;
+    background-size: cover;
+    background-attachment: fixed;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.global-container {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.sec-header-container {
+    width: 100%;
+    display: flex;
+    justify-content: flex-start;
+    border-bottom: solid 1px white;
+}
+
+.secondary-header {
+    width: 100%;
+    margin: 0 15px 15px 15px;
+    font-family: 'Times New Roman', Times, serif;
+    font-weight: bold;
+    color: white;
+    font-size: 18px;
+    display: flex;
+    justify-content: flex-start;
+}
+
+.secondary-list {
+    margin-right: 30px;
+}
+
+.secondary-list:hover {
+    transform: scale(1.05);
+    cursor: pointer;
+}
+
+.secondary-list:active {
+    color: #99bbff
+}
+
+.section-title {
+    font-family: 'Times New Roman', Times, serif;
+    color: white;
+    margin: 25px;
+}
+
+.cards-canto-container {
+    width: 80%;
+    height: 100%;
+    display: grid;
+    gap: 20px;
+    grid-template-columns: repeat(3, 1fr);
+    margin-bottom: 25px;
+}
+
+#fourcolums {
+    grid-template-columns: repeat(4, 1fr);
+}
+
+.card-canto {
+    border: solid 1px #002776;
+    border-radius: 8px;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: #002776;
+    font-family: 'Times New Roman', Times, serif;
+    font-weight: bold;
+    font-size: 25px;
+    text-align: center;
+    background-color: rgba(153, 187, 255, 0.85);
+    height: 2em;
+}
+
+#card-ind {
+    height: 4em;
+}
+
+#card-chave {
+    height: 3em;
+}
+
+.subtitle {
+    font-size: 18px;
+}
+
+.card-canto:hover {
+    transform: scale(1.05);
+    cursor: pointer;
+    background-color:rgba(153, 187, 255, 1);
+}
+
+.card-canto:active {
+    border-color: white;
+}
+
+.card-menu-container {
+    position: relative;
+    transition: 0.5s;
+}
+
+.card-menu-container.inactive {
+    height: 1em;
+}
+
+.card-menu-container.active {
+    height: auto;
+}
+
+.card-menu {
+    position: absolute;
+    top: 0;
+    width: 100%;
+}
+
+.dropdown {
+    font-family: 'Times New Roman', Times, serif;
+    font-size: 16px;
+    font-weight: bold;
+    transition: 0.5s;
+    border: solid 1px white;
+    border-top: none;
+    border-radius: 8px;
+    padding: 3.6em 5px 5px 5px;
+}
+
+.dropdown.active {
+    position: relative;
+}
+
+.menu-item {
+    color: white;
+    margin-top: 5px;
+}
+
+.menu-item:hover {
+    text-decoration: underline;
+}
+
+.dropdown.inactive {
+    transform: scaleY(0.01);
+}
