@@ -38,6 +38,7 @@ import Dha from '../../docs/DharmoOxinto.pdf'
 import DhaL from '../../docs/DharmoOxintoLeito.pdf'
 import Mur from '../../docs/Muruaicy.pdf'
 import MurP from '../../docs/MuruaicyPortoes.pdf'
+import ButtonMenu from "../../components/ButtonMenu/ButtonMenu";
 
 function CantosChaves() {
     
@@ -89,105 +90,43 @@ function CantosChaves() {
                 </div>
                 <h1 className='section-title'>Cantos das Falanges Missionárias</h1>
                 <div className='cards-canto-container' id='fourcolums'>                    
-                    <div className={`card-menu-container ${nitActive ? 'active' : 'inactive'}`}>
-                        <nav className={`dropdown ${nitActive ? 'active' : 'inactive'}`}>
-                            <ul>
-                                <li className='menu-item'>
-                                    <a href={Nit} target='_blank' rel='noreferrer'>Canto da Nityama</a>
-                                </li>
-                                <li className='menu-item'>
-                                    <a href={NitC} target='_blank' rel='noreferrer'>Canto para Chama da Vida</a>
-                                </li>
-                                <li className='menu-item'>
-                                    <a href={NitT} target='_blank' rel='noreferrer'>Canto do Turigano</a>
-                                </li>
-                            </ul>
-                        </nav>
-                        <div className='card-canto card-menu' onClick={nitClick}>Nityama</div>
-                    </div>
-                    <div className={`card-menu-container ${samActive ? 'active' : 'inactive'}`}>
-                        <nav className={`dropdown ${samActive ? 'active' : 'inactive'}`}>
-                            <ul>
-                                <li className='menu-item'>
-                                    <a href={Sam} target='_blank' rel='noreferrer'>Canto da Samaritana</a>
-                                </li>
-                                <li className='menu-item'>
-                                    <a href={SamT} target='_blank' rel='noreferrer'>Canto do Turigano</a>
-                                </li>
-                            </ul>
-                        </nav>
-                        <div className='card-canto card-menu' onClick={samClick}>Samaritana</div>
-                    </div>
+                <ButtonMenu active={nitActive} click={nitClick} name={'Nityama'} list={[
+                        {link: Nit, canto: 'Canto da Nityama'},
+                        {link: NitC, canto: 'Canto para Chama da Vida'},
+                        {link: NitT, canto: 'Canto do Turigano'}
+                    ]} />
+                    <ButtonMenu active={samActive} click={samClick} name={'Samaritana'} list={[
+                        {link: Sam, canto: 'Canto da Samaritana'},
+                        {link: SamT, canto: 'Canto do Turigano'}
+                    ]} />
                     <a href={Gre} target='_blank' rel='noreferrer'>
                         <div className='card-canto'>Grega</div>
                     </a>
                     <a href={May} target='_blank' rel='noreferrer'>
                         <div className='card-canto'>Maya</div>
                     </a>
-                    <div className={`card-menu-container ${magActive ? 'active' : 'inactive'}`}>
-                        <nav className={`dropdown ${magActive ? 'active' : 'inactive'}`}>
-                            <ul>
-                                <li className='menu-item'>
-                                    <a href={Mag} target='_blank' rel='noreferrer'>Canto do Mago</a>
-                                </li>
-                                <li className='menu-item'>
-                                    <a href={MagOn} target='_blank' rel='noreferrer'>Canto para Acender a Chama</a>
-                                </li>
-                                <li className='menu-item'>
-                                    <a href={MagOff} target='_blank' rel='noreferrer'>Canto para Apagar a Chama</a>
-                                </li>
-                            </ul>
-                        </nav>
-                        <div className='card-canto card-menu' onClick={magClick}>Mago</div>
-                    </div>                    
+                    <ButtonMenu active={magActive} click={magClick} name={'Mago'} list={[
+                        {link: Mag, canto: 'Canto do Mago'},
+                        {link: MagOn, canto: 'Canto para Acender a Chama'},
+                        {link: MagOff, canto: 'Canto para Apagar a Chama'}
+                    ]} />                        
                     <a href={Pri} target='_blank' rel='noreferrer'>
                         <div className='card-canto'>Príncipe Maya</div>
                     </a>
-                    <div className={`card-menu-container ${yurActive ? 'active' : 'inactive'}`}>
-                        <nav className={`dropdown ${yurActive ? 'active' : 'inactive'}`}>
-                            <ul>
-                                <li className='menu-item'>
-                                    <a href={YurS} target='_blank' rel='noreferrer'>Canto da Yuricy Sol</a>
-                                </li>
-                                <li className='menu-item'>
-                                    <a href={YurL} target='_blank' rel='noreferrer'>Canto da Yuricy Lua</a>
-                                </li>
-                                <li className='menu-item'>
-                                    <a href={Yur1} target='_blank' rel='noreferrer'>Canto do Aramê</a>
-                                </li>
-                                <li className='menu-item'>
-                                    <a href={YurT} target='_blank' rel='noreferrer'>Canto do Turigano</a>
-                                </li>
-                            </ul>
-                        </nav>
-                        <div className='card-canto card-menu' onClick={yurClick}>Yuricy</div>
-                    </div>
-                    <div className={`card-menu-container ${dhaActive ? 'active' : 'inactive'}`}>
-                        <nav className={`dropdown ${dhaActive ? 'active' : 'inactive'}`}>
-                            <ul>
-                                <li className='menu-item'>
-                                    <a href={Dha} target='_blank' rel='noreferrer'>Canto da Dharmo-Oxinto</a>
-                                </li>
-                                <li className='menu-item'>
-                                    <a href={DhaL} target='_blank' rel='noreferrer'>Canto do Leito/Turigano</a>
-                                </li>
-                            </ul>
-                        </nav>
-                        <div className='card-canto card-menu' onClick={dhaClick}>Dharmo-Oxinto</div>
-                    </div>
-                    <div className={`card-menu-container ${murActive ? 'active' : 'inactive'}`}>
-                        <nav className={`dropdown ${murActive ? 'active' : 'inactive'}`}>
-                            <ul>
-                                <li className='menu-item'>
-                                    <a href={Mur} target='_blank' rel='noreferrer'>Canto da Muruaicy</a>
-                                </li>
-                                <li className='menu-item'>
-                                    <a href={MurP} target='_blank' rel='noreferrer'>Chave de Abertura dos Portões</a>
-                                </li>
-                            </ul>
-                        </nav>
-                        <div className='card-canto card-menu' onClick={murClick}>Muruaicy</div>
-                    </div>
+                    <ButtonMenu active={yurActive} click={yurClick} name={'Yuricy'} list={[
+                        {link: YurS, canto: 'Canto da Yuricy Sol'},
+                        {link: YurL, canto: 'Canto da Yuricy Lua'},
+                        {link: Yur1, canto: 'Canto do Aramê'},
+                        {link: YurT, canto: 'Canto do Turigano'}
+                    ]} />
+                    <ButtonMenu active={dhaActive} click={dhaClick} name={'Dharmo-Oxinto'} list={[
+                        {link: Dha, canto: 'Canto da Dharmo-Oxinto'},
+                        {link: DhaL, canto: 'Canto do Leito/Turigano'}
+                    ]} />
+                    <ButtonMenu active={murActive} click={murClick} name={'Muruaicy'} list={[
+                        {link: Mur, canto: 'Canto da Muruaicy'},
+                        {link: MurP, canto: 'Chave de Abertura dos Portões'}
+                    ]} />
                     <a href={Jac} target='_blank' rel='noreferrer'>
                         <div className='card-canto'>Jaçanã</div>
                     </a>
