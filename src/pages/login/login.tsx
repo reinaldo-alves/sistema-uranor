@@ -1,4 +1,3 @@
-import React from 'react'
 import Footer from '../../components/footer/footer'
 import './styles.css'
 import logo from '../../assets/jaguar.jpg'
