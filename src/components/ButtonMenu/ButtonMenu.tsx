@@ -1,23 +1,34 @@
-import './styles.css'
+import { MouseEventHandler } from 'react'
+import { ButtonMenuContainer, CantoButton, Dropdown, DropdownContainer } from './styles'
 
-type mudar = any
+interface ICanto {
+    link: string,
+    canto: string
+}
 
-function ButtonMenu(props: mudar) {
+interface IButtonMenu {
+    active: boolean,
+    click: MouseEventHandler,
+    name: string,
+    list: Array<ICanto>
+}
+
+function ButtonMenu(props: IButtonMenu) {
     return (
-        <div className={`button-menu-container ${props.active ? 'active' : 'inactive'}`}>
-            <div className='button-canto' onClick={props.click}>{props.name}</div>
-            <div className={`dropdown-container ${props.active ? 'active' : 'inactive'}`}>
-                <nav className={`dropdown ${props.active ? 'active' : 'inactive'}`}>
+        <ButtonMenuContainer>
+            <CantoButton onClick={props.click}>{props.name}</CantoButton>
+            <DropdownContainer active={props.active}>
+                <Dropdown active={props.active}>
                     <ul>
-                        {props.list.map((item: mudar) => (
+                        {props.list.map((item: ICanto) => (
                             <li>
-                                <a href={item.doc} target='_blank' rel='noreferrer'>{item.canto}</a>
+                                <a href={item.link} target='_blank' rel='noreferrer'>{item.canto}</a>
                             </li>
                         ))}
                     </ul>
-                </nav>
-            </div>
-        </div>
+                </Dropdown>
+            </DropdownContainer>
+        </ButtonMenuContainer>
     )
 }
 

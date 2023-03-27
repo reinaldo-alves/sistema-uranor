@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import Footer from "../../components/footer/footer";
 import Header from "../../components/header/header";
 import './styles.css'
 import CavEsp from '../../docs/CavaleiroEspecial.pdf'
@@ -57,7 +56,7 @@ function CantosChaves() {
     const murClick = () => setMurActive(!murActive)
 
     return (
-        <div className='main-fixed'>
+        <>
             <Header />
             <header className='sec-header-container'>
                 <nav>
@@ -90,7 +89,7 @@ function CantosChaves() {
                 </div>
                 <h1 className='section-title'>Cantos das Falanges Missionárias</h1>
                 <div className='cards-canto-container' id='fourcolums'>                    
-                <ButtonMenu active={nitActive} click={nitClick} name={'Nityama'} list={[
+                    <ButtonMenu active={nitActive} click={nitClick} name={'Nityama'} list={[
                         {link: Nit, canto: 'Canto da Nityama'},
                         {link: NitC, canto: 'Canto para Chama da Vida'},
                         {link: NitT, canto: 'Canto do Turigano'}
@@ -183,8 +182,7 @@ function CantosChaves() {
                     <div className='card-canto' id='card-chave'>Sudálio</div>
                 </div>
             </div>
-            <Footer />
-        </div>
+        </>
     )
 }
 

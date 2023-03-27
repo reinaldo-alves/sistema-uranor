@@ -1,5 +1,4 @@
 import { useNavigate } from "react-router-dom";
-import Footer from "../../components/footer/footer";
 import Header from "../../components/header/header";
 import './styles.css'
 
@@ -8,7 +7,7 @@ function DocumentosUteis() {
     const navigate = useNavigate();
     
     return (
-        <div className='main'>
+        <>
             <Header />
             <header className='sec-header-container'>
                 <nav>
@@ -27,8 +26,7 @@ function DocumentosUteis() {
                     <div className='card-docs'>Escala dos Devas</div>
                 </div>
             </div>
-            <Footer />
-        </div>
+        </>
     )
 }
 

@@ -31,7 +31,6 @@ a {
 .secondary-header {
     width: 100%;
     margin: 0 15px 15px 15px;
-    font-family: 'Times New Roman', Times, serif;
     font-weight: bold;
     color: white;
     font-size: 18px;
@@ -53,7 +52,6 @@ a {
 }
 
 .section-title {
-    font-family: 'Times New Roman', Times, serif;
     color: white;
     margin: 25px;
 }
@@ -80,7 +78,6 @@ a {
     justify-content: center;
     align-items: center;
     color: #002776;
-    font-family: 'Times New Roman', Times, serif;
     font-weight: bold;
     font-size: 25px;
     text-align: center;

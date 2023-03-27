@@ -1,32 +1,30 @@
-import Footer from '../../components/footer/footer'
-import './styles.css'
 import logo from '../../assets/jaguar.jpg'
+import { LoginCard, LoginCardContainer, LoginError, LoginForm, LoginHeader, TitleContainer } from './styles'
 
 function Login() {
     return (
-        <div className='main'>
-            <header className='headerLogin'>
+        <>
+            <LoginHeader>
                 <img className='logoHeader' src={logo} alt=''/>
-                <div className='textContainer'>
+                <TitleContainer>
                     <p>URANOR DO AMANHECER</p>
                     <p>CASTELO DOS DEVAS</p>
-                </div>
-            </header>
-            <div className='cardContainer'>
-                <div className='card'>
+                </TitleContainer>
+            </LoginHeader>
+            <LoginCardContainer>
+                <LoginCard>
                     <h2>Login</h2>
-                    <div className="form">
+                    <LoginForm>
                         <label id='label-login'>Usuário:</label>
                         <input type="text" name="user" id='input-login'/>
                         <label id='label-login'>Senha:</label>
                         <input type="password" name="password" id='input-login' />
                         <button id='button-login'>Entrar</button>
-                    </div>
-                    <div id='error'>{''}<br /></div>
-                </div>
-            </div>
-            <Footer />
-        </div>
+                    </LoginForm>
+                    <LoginError>{''}<br /></LoginError>
+                </LoginCard>
+            </LoginCardContainer>
+        </>
     )
 }
 
