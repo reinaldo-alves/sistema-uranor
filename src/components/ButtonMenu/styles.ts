@@ -5,7 +5,7 @@ export const ButtonMenuContainer = styled.div`
     flex-direction: column;
 `;
 
-export const CantoButton = styled.div`
+export const CantoButton = styled.div<{height?: string}>`
     border: solid 1px ${(props) => {return props.theme.color.darkerColor}};
     border-radius: 8px;
     padding: 10px;
@@ -18,7 +18,7 @@ export const CantoButton = styled.div`
     font-size: 25px;
     text-align: center;
     background-color: ${(props) => {return props.theme.color.mediumColorTr}};
-    height: 2em;
+    height: ${({ height }) => height ? height : '2em'};
     z-index: 1;
     width: 100%;
 
@@ -59,12 +59,18 @@ export const Dropdown = styled.nav<{active: boolean}>`
 
     ul li {
         position: relative;
-        color: white;
-        margin-top: 5px;
+        color: ${(props) => {return props.theme.color.lighterColor}};
+        margin-top: 10px;
+        margin-bottom: 4px;
+        overflow: hidden;
         text-overflow: ellipsis;
     }
 
     ul li:hover {
         text-decoration: underline;
+    }
+
+    ul li a {
+        color: ${(props) => {return props.theme.color.lighterColor}};
     }
 `;

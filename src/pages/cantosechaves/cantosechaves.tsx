@@ -1,7 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import Header from "../../components/header/header";
-import './styles.css'
 import CavEsp from '../../docs/CavaleiroEspecial.pdf'
 import ECavEsp from '../../docs/Escrava.pdf'
 import NCavEsp from '../../docs/NinfaSol.pdf'
@@ -38,10 +36,12 @@ import DhaL from '../../docs/DharmoOxintoLeito.pdf'
 import Mur from '../../docs/Muruaicy.pdf'
 import MurP from '../../docs/MuruaicyPortoes.pdf'
 import ButtonMenu from "../../components/ButtonMenu/ButtonMenu";
+import SubMenu from "src/components/SubMenu/SubMenu";
+import ButtonDoc from "src/components/ButtonDoc/ButtonDoc";
+import { CardsCantoContainer, GlobalContainer, SectionTitle } from "./styles";
 
 function CantosChaves() {
     
-    const navigate = useNavigate();
     const [nitActive, setNitActive] = useState(false)
     const nitClick = () => setNitActive(!nitActive)
     const [samActive, setSamActive] = useState(false)
@@ -55,40 +55,113 @@ function CantosChaves() {
     const [murActive, setMurActive] = useState(false)
     const murClick = () => setMurActive(!murActive)
 
+    const [abaActive, setAbaActive] = useState(false)
+    const abaClick = () => setAbaActive(!abaActive)
+    const [abeActive, setAbeActive] = useState(false)
+    const abeClick = () => setAbeActive(!abeActive)
+    const [alaActive, setAlaActive] = useState(false)
+    const alaClick = () => setAlaActive(!alaActive)
+    const [araActive, setAraActive] = useState(false)
+    const araClick = () => setAraActive(!araActive)
+    const [curActive, setCurActive] = useState(false)
+    const curClick = () => setCurActive(!curActive)
+    const [defActive, setDefActive] = useState(false)
+    const defClick = () => setDefActive(!defActive)
+    const [indActive, setIndActive] = useState(false)
+    const indClick = () => setIndActive(!indActive)
+    const [junActive, setJunActive] = useState(false)
+    const junClick = () => setJunActive(!junActive)
+    const [leiActive, setLeiActive] = useState(false)
+    const leiClick = () => setLeiActive(!leiActive)
+    const [oraActive, setOraActive] = useState(false)
+    const oraClick = () => setOraActive(!oraActive)
+    const [ranActive, setRanActive] = useState(false)
+    const ranClick = () => setRanActive(!ranActive)
+    const [sudActive, setSudActive] = useState(false)
+    const sudClick = () => setSudActive(!sudActive)
+
+    const individualidade = [
+        {name: 'Canto do Cavaleiro Especial', link: CavEsp, subtitle: '(Doutrinador e Ajanã)'},
+        {name: 'Canto da Escrava do Cavaleiro Especial', link: ECavEsp, subtitle: '(Ninfa Lua)'},
+        {name: 'Canto da Ninfa do Cavaleiro Especial', link: NCavEsp, subtitle: '(Ninfa Sol)'}
+    ]
+
+    const chaves = [
+        {name:'Abatá', active: abaActive, click: abaClick, list: [
+            {link: '', canto: 'Chave da Ninfa Comandante'}
+        ]},
+        {name:'Abertura e Encerramento', active: abeActive, click: abeClick, list: [
+            {link: '', canto: 'Chave de Abertura e Encerramento dos Trabalhos'},
+            {link: '', canto: 'Chave de Abertura e Encerramento do Trabalho Oficial'},
+            {link: '', canto: 'Chave de Tapir (Abertura da Corrente Mestra'}
+        ]},
+        {name:'Alabá', active: alaActive, click: alaClick, list: [
+            {link: '', canto: 'Chave do Comandante (Reino Central)'},
+            {link: '', canto: 'Chave do Cavaleiro da Lança Vermelha'},
+            {link: '', canto: 'Chave de Invocação dos Cavaleiros das Lanças'}
+        ]},
+        {name:'Aramê', active: araActive, click: araClick, list: [
+            {link: '', canto: 'Canto da Yuricy no Aramê'},
+            {link: '', canto: 'Chave do Ajanã'},
+            {link: '', canto: 'Canto da Condessa de Natharry'},
+            {link: '', canto: 'Canto da Promotoria'},
+            {link: '', canto: 'Canto da Defensoria'},
+            {link: '', canto: 'Chave do Cavaleiro da Lança Vermelha'}
+        ]},
+        {name:'Cura', active: curActive, click: curClick, list: [
+            {link: '', canto: 'Chave do Comandante'}
+        ]},
+        {name:'Defumação', active: defActive, click: defClick, list: [
+            {link: '', canto: 'Chave do Comandante'}
+        ]},
+        {name:'Indução', active: indActive, click: indClick, list: [
+            {link: '', canto: 'Chave do Comandante'}
+        ]},
+        {name:'Junção', active: junActive, click: junClick, list: [
+            {link: '', canto: 'Chave do Comandante'}
+        ]},
+        {name:'Leito Magnético', active: leiActive, click: leiClick, list: [
+            {link: '', canto: 'Chave das Ninfas Representantes das Falanges Missionárias'},
+            {link: '', canto: 'Chave do Comandante - 1° Cavaleiro da Lança Reino Central'},
+            {link: '', canto: 'Chave do 1° Cavaleiro da Lança Vermelha'},
+            {link: '', canto: 'Chave do 1° Cavaleiro da Lança Lilás'},
+            {link: '', canto: 'Chave do 1° Cavaleiro da Lança Rósea'},
+            {link: '', canto: 'Chave dos Cavaleiros de Oxosse'},
+            {link: '', canto: 'Chave das Ninfas dos Cavaleiros de Oxosse'},
+            {link: '', canto: 'Chave do Ajanã'},
+        ]},
+        {name:'Oráculo', active: oraActive, click: oraClick, list: [
+            {link: '', canto: 'Chave do Comandante'},
+            {link: '', canto: 'Chave do Ajanã'},
+            {link: '', canto: 'Convite do Pai Seta Branca (Ninfa Sol)'}
+        ]},
+        {name:'Randy', active: ranActive, click: ranClick, list: [
+            {link: '', canto: 'Chave do Comandante (Reino Central)'},
+            {link: '', canto: 'Chave dos Cavaleiros da Lança'},
+            {link: '', canto: 'Chave dos Sextos'},
+            {link: '', canto: 'Chave do Ajanã'},
+            {link: '', canto: 'Chave da Ninfa Sol'},
+            {link: '', canto: 'Chave da Ninfa Lua'}
+        ]},
+        {name:'Sudálio', active: sudActive, click: sudClick, list: [
+            {link: '', canto: 'Chave do Comandante'},
+            {link: '', canto: 'Chave da Ninfa Lua'}
+        ]}
+    ]
+
     return (
         <>
             <Header />
-            <header className='sec-header-container'>
-                <nav>
-                    <ul className='secondary-header'>
-                        <li className='secondary-list' onClick={() => navigate('/')}>Página Inicial</li>
-                    </ul>
-                </nav>
-            </header>
-            <div className='global-container'>
-                <h1 className='section-title'>Cantos da Individualidade</h1>
-                <div className='cards-canto-container'>
-                    <a href={CavEsp} target='_blank' rel='noreferrer'>
-                        <div className='card-canto' id='card-ind'>
-                            Canto do Cavaleiro Especial
-                            <span className='subtitle'>(Doutrinador e Ajanã)</span>
-                        </div>
-                    </a>
-                    <a href={ECavEsp} target='_blank' rel='noreferrer'>
-                        <div className='card-canto' id='card-ind'>
-                            Canto da Escrava do Cavaleiro Especial
-                            <span className='subtitle'>(Ninfa Lua)</span>
-                        </div>
-                    </a>
-                    <a href={NCavEsp} target='_blank' rel='noreferrer'>
-                        <div className='card-canto' id='card-ind'>
-                            Canto da Ninfa do Cavaleiro Especial
-                            <span className='subtitle'>(Ninfa Sol)</span>
-                        </div>
-                    </a>
-                </div>
-                <h1 className='section-title'>Cantos das Falanges Missionárias</h1>
-                <div className='cards-canto-container' id='fourcolums'>                    
+            <SubMenu list={[{title: 'Página Inicial', click: '/'}]}/>
+            <GlobalContainer>
+                <SectionTitle>Cantos da Individualidade</SectionTitle>
+                <CardsCantoContainer colums="3">
+                    {individualidade.map((item) => (
+                        <ButtonDoc name={item.name} link={item.link} subtitle={item.subtitle} height={'4em'} />
+                    ))}
+                </CardsCantoContainer>
+                <SectionTitle>Cantos das Falanges Missionárias</SectionTitle>
+                <CardsCantoContainer colums="4">
                     <ButtonMenu active={nitActive} click={nitClick} name={'Nityama'} list={[
                         {link: Nit, canto: 'Canto da Nityama'},
                         {link: NitC, canto: 'Canto para Chama da Vida'},
@@ -98,20 +171,14 @@ function CantosChaves() {
                         {link: Sam, canto: 'Canto da Samaritana'},
                         {link: SamT, canto: 'Canto do Turigano'}
                     ]} />
-                    <a href={Gre} target='_blank' rel='noreferrer'>
-                        <div className='card-canto'>Grega</div>
-                    </a>
-                    <a href={May} target='_blank' rel='noreferrer'>
-                        <div className='card-canto'>Maya</div>
-                    </a>
+                    <ButtonDoc name={'Grega'} link={Gre} height={'2em'} />
+                    <ButtonDoc name={'Maya'} link={May} height={'2em'} />
                     <ButtonMenu active={magActive} click={magClick} name={'Mago'} list={[
                         {link: Mag, canto: 'Canto do Mago'},
                         {link: MagOn, canto: 'Canto para Acender a Chama'},
                         {link: MagOff, canto: 'Canto para Apagar a Chama'}
                     ]} />                        
-                    <a href={Pri} target='_blank' rel='noreferrer'>
-                        <div className='card-canto'>Príncipe Maya</div>
-                    </a>
+                    <ButtonDoc name={'Príncipe Maya'} link={Pri} height={'2em'} />
                     <ButtonMenu active={yurActive} click={yurClick} name={'Yuricy'} list={[
                         {link: YurS, canto: 'Canto da Yuricy Sol'},
                         {link: YurL, canto: 'Canto da Yuricy Lua'},
@@ -126,62 +193,33 @@ function CantosChaves() {
                         {link: Mur, canto: 'Canto da Muruaicy'},
                         {link: MurP, canto: 'Chave de Abertura dos Portões'}
                     ]} />
-                    <a href={Jac} target='_blank' rel='noreferrer'>
-                        <div className='card-canto'>Jaçanã</div>
-                    </a>
-                    <a href={Ari} target='_blank' rel='noreferrer'>
-                        <div className='card-canto'>Ariana</div>
-                    </a>
-                    <a href={Mad} target='_blank' rel='noreferrer'>
-                        <div className='card-canto'>Madalena</div>
-                    </a>
-                    <a href={Fra} target='_blank' rel='noreferrer'>
-                        <div className='card-canto'>Franciscana</div>
-                    </a>
-                    <a href={Nar} target='_blank' rel='noreferrer'>
-                        <div className='card-canto'>Narayama</div>
-                    </a>
-                    <a href={Roc} target='_blank' rel='noreferrer'>
-                        <div className='card-canto'>Rochana</div>
-                    </a>
-                    <a href={Cay} target='_blank' rel='noreferrer'>
-                        <div className='card-canto'>Cayçara</div>
-                    </a>
-                    <a href={Tup} target='_blank' rel='noreferrer'>
-                        <div className='card-canto'>Tupinambá</div>
-                    </a>
-                    <a href={CAg} target='_blank' rel='noreferrer'>
-                        <div className='card-canto'>Cigana Aganara</div>
-                    </a>
-                    <a href={CTa} target='_blank' rel='noreferrer'>
-                        <div className='card-canto'>Cigana Tagana</div>
-                    </a>
-                    <a href={Agu} target='_blank' rel='noreferrer'>
-                        <div className='card-canto'>Agulha Ismênia</div>
-                    </a>
-                    <a href={Nia} target='_blank' rel='noreferrer'>
-                        <div className='card-canto'>Niatra</div>
-                    </a>
-                    <a href={Apo} target='_blank' rel='noreferrer'>
-                        <div className='card-canto'>Aponara</div>
-                    </a>
-                </div>
-                <h1 className='section-title'>Chaves dos Trabalhos</h1>
-                <div className='cards-canto-container' id='fourcolums'>
-                    <div className='card-canto' id='card-chave'>Abatá</div>
-                    <div className='card-canto' id='card-chave'>Abertura e Encerramento</div>
-                    <div className='card-canto' id='card-chave'>Alabá</div>
-                    <div className='card-canto' id='card-chave'>Aramê</div>
-                    <div className='card-canto' id='card-chave'>Cura</div>
-                    <div className='card-canto' id='card-chave'>Defumação</div>
-                    <div className='card-canto' id='card-chave'>Indução</div>
-                    <div className='card-canto' id='card-chave'>Junção</div>
-                    <div className='card-canto' id='card-chave'>Leito Magnético</div>
-                    <div className='card-canto' id='card-chave'>Oráculo</div>
-                    <div className='card-canto' id='card-chave'>Randy</div>
-                    <div className='card-canto' id='card-chave'>Sudálio</div>
-                </div>
-            </div>
+                    <ButtonDoc name={'Jaçanã'} link={Jac} height={'2em'} />
+                    <ButtonDoc name={'Ariana'} link={Ari} height={'2em'} />
+                    <ButtonDoc name={'Madalena'} link={Mad} height={'2em'} />
+                    <ButtonDoc name={'Franciscana'} link={Fra} height={'2em'} />
+                    <ButtonDoc name={'Narayama'} link={Nar} height={'2em'} />
+                    <ButtonDoc name={'Rochana'} link={Roc} height={'2em'} />
+                    <ButtonDoc name={'Cayçara'} link={Cay} height={'2em'} />
+                    <ButtonDoc name={'Tupinambá'} link={Tup} height={'2em'} />
+                    <ButtonDoc name={'Cigana Aganara'} link={CAg} height={'2em'} />
+                    <ButtonDoc name={'Cigana Tagana'} link={CTa} height={'2em'} />
+                    <ButtonDoc name={'Agulha Ismênia'} link={Agu} height={'2em'} />
+                    <ButtonDoc name={'Niatra'} link={Nia} height={'2em'} />
+                    <ButtonDoc name={'Aponara'} link={Apo} height={'2em'} />
+                </CardsCantoContainer>
+                <SectionTitle>Chaves dos Trabalhos</SectionTitle>
+                <CardsCantoContainer colums="4">
+                    {chaves.map((item) => (
+                        <ButtonMenu
+                            active={item.active}
+                            click={item.click}
+                            name={item.name}
+                            list={item.list}
+                            height={'3em'}
+                        />
+                    ))}
+                </CardsCantoContainer>
+            </GlobalContainer>
         </>
     )
 }

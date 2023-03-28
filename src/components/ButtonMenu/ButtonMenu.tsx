@@ -10,13 +10,14 @@ interface IButtonMenu {
     active: boolean,
     click: MouseEventHandler,
     name: string,
-    list: Array<ICanto>
+    list: Array<ICanto>,
+    height?: string | undefined
 }
 
 function ButtonMenu(props: IButtonMenu) {
     return (
         <ButtonMenuContainer>
-            <CantoButton onClick={props.click}>{props.name}</CantoButton>
+            <CantoButton onClick={props.click} height={props.height}>{props.name}</CantoButton>
             <DropdownContainer active={props.active}>
                 <Dropdown active={props.active}>
                     <ul>

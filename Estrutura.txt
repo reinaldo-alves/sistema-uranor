@@ -1,6 +1,8 @@
 MÉDIUM
 - Cadastrar
 - Consultar
+- Gerar Emissão
+- Gerar Ficha
 
 CANTOS E CHAVES
 - Cantos da Individualidade
@@ -8,12 +10,28 @@ CANTOS E CHAVES
 - Chaves dos Trabalhos
 
 CURSOS
-- 
+- Cadastro de cursos
+- Frequência
 
 CONSAGRAÇÕES
 - Autorizações
 - Termo de Compromisso
 
+RELATÓRIOS
+- Relatório Personalizado
 
 BIBLIOTECA
+- Livro de Leis
+- Unificação
+- Manual dos Devas
+
+MANUTENÇÃO
+- Cadastro de Usuários
+- Exportar Banco de dados
+- Cadastro de Templos, Adjuntos, Ministros, Cavaleiros e Guias Missionárias
+
+OUTROS
+- Emissão de crachá
+- Histórico de Atualizações
+- Linha do tempo do médium
 

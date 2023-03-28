@@ -1,18 +1,38 @@
 import styled from "styled-components";
 
-export const HomeContainer = styled.div`
-    height: ${(props) => {return props.theme.height.homeContent}};
+export const GlobalContainer = styled.div`
+    min-height: ${(props) => {return props.theme.height.mainContent}};
+    width: 100%;
     display: flex;
-    justify-content: center;
+    flex-direction: column;
     align-items: center;
 `;
 
-export const CardsContainer = styled.div`
+export const SectionTitle = styled.h1`
+    color: ${(props) => {return props.theme.color.lighterColor}};
+    margin: 25px;
+`;
+
+export const CardsCantoContainer = styled.div<{colums: string}>`
+    width: 80%;
     height: 100%;
     display: grid;
     gap: 20px;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(${({ colums }) => colums? colums : '3'}, 1fr);
+    margin-bottom: 25px;
 `;
+
+
+
+
+
+
+
+
+
+
+
+
 
 export const CardMenu = styled.div`
     border: solid 1px ${(props) => {return props.theme.color.darkerColor}};
