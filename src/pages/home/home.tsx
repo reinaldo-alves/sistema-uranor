@@ -20,7 +20,7 @@ function Home() {
     const navigate = useNavigate();
     
     const menu = [
-        {title: 'Médiuns', image: Med, link: 'mediuns'},
+        {title: 'Médiuns', image: Med, link: 'mediuns/consulta'},
         {title: 'Cantos e Chaves', image: Can, link: 'cantosechaves'},
         {title: 'Desenvolvimento', image: Des, link: 'desenvolvimento'},
         {title: 'Cursos', image: Cur, link: 'cursos'},

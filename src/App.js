@@ -11,6 +11,10 @@ import Cursos from './pages/cursos/cursos';
 import Consagracoes from './pages/consagracoes/consagracoes';
 import Relatorios from './pages/relatorios/relatorios';
 import Biblioteca from './pages/biblioteca/biblioteca';
+import PageNotFound from './pages/PageNotFound/PageNotFound';
+import SearchMedium from './pages/mediuns/SearchMedium/SearchMedium';
+import AddMedium from './pages/mediuns/AddMedium/AddMedium';
+import YoungMedium from './pages/mediuns/YoungMedium/YoungMedium';
 
 function App() {
   const theme = {
@@ -34,7 +38,11 @@ function App() {
           <Routes>
             <Route path='/login' element={<Login />} />
             <Route path='/' element={<Home />} />
-            <Route path='/mediuns' element={<Mediuns />} />
+            <Route path='/mediuns' element={<Mediuns />}>
+              <Route path='consulta' element={<SearchMedium />} />
+              <Route path='cadastro' element={<AddMedium />} />
+              <Route path='menor' element={<YoungMedium />} />
+            </Route>
             <Route path='/cantosechaves' element={<CantosChaves />} />
             <Route path='/desenvolvimento' element={<Desenvolvimento />} />
             <Route path='/cursos' element={<Cursos />} />
@@ -42,6 +50,7 @@ function App() {
             <Route path='/relatorios' element={<Relatorios />} /> 
             <Route path='/documentosuteis' element={<DocumentosUteis />} />
             <Route path='/biblioteca' element={<Biblioteca />} />
+            <Route path='*' element={<PageNotFound />} />
           </Routes>
         </BrowserRouter>
         <Footer>Sistema Uranor - v.0.0.0 - ©2023 Uranor do Amanhecer. Todos os direitos reservados.</Footer>

@@ -18,7 +18,7 @@ export const SubMenuContent = styled.ul`
 `;
 
 export const SubMenuItem = styled.li`
-    margin-right: 30px;
+    margin-right: 50px;
 
     :hover {
         transform: scale(1.05);
