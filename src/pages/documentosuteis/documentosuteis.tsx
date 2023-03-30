@@ -10,7 +10,8 @@ function DocumentosUteis() {
         {name: 'Prefixos das Falanges Missionárias', link: ''},
         {name: 'Relação de Turnos de Trabalho', link: ''},
         {name: 'Calendário de Atividades Doutrinárias', link: ''},
-        {name: 'Escala dos Devas', link: ''}
+        {name: 'Escala dos Devas', link: ''},
+        {name: 'Formulário para Ficha Mediúnica', link: ''}
     ]
     
     return (
