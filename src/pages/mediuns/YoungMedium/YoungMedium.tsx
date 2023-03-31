@@ -1,9 +1,9 @@
-import { MainContainer } from "./styles";
+import { MainContainer, SectionTitle } from "./styles";
 
 function YoungMedium() {
     return (
         <MainContainer>
-            
+           <SectionTitle>Módulo em Desenvolvimento</SectionTitle> 
         </MainContainer>
     )
 }

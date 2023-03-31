@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { ButtonContainer, InfoCard, InfoContainer, InputContainer, MainContainer, MediumButton, MediumInfo, MediumName, MediumPhoto, Results, ResultsCard, ResultsCell, ResultsTable, SearchButton, SearchCard, TableContainer, TextContainer } from "./styles";
+import { TemploContext } from "src/contexts/TemploContext";
 
 function SearchMedium() {
     
@@ -7,7 +8,7 @@ function SearchMedium() {
     
     const [selected, setSelected] = useState(noMedium); 
     
-    const templos = ['Jaboatão - PE', 'Prazeres - PE']
+    const { templos } = useContext(TemploContext);
 
     const medium = [
         {id: '12', nome: 'Irene Souza', med: 'Doutrinador', templo: 'Jaboatão - PE', sexo: 'Feminino', situacao: 'Em Desenvolvimento', condicao: 'Afastado', foto: 'https://789d77d27f49a880d02e-714b7dc0b51e300a567fc89d2a0837e5.ssl.cf1.rackcdn.com/PaginaConteudo/depositphotos46976671xl-2015-copia.jpg'},
@@ -39,7 +40,7 @@ function SearchMedium() {
                     <label>Templo</label>
                     <select>
                         <option value=''>Todos</option>
-                        {templos.map((item) => (
+                        {templos.map((item: string) => (
                             <option value={item}>{item}</option>
                         ))}
                     </select>

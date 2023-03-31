@@ -39,7 +39,7 @@ export const InputContainer = styled.div`
     input {
         width: 100%;
         height: 35px;
-        padding: 0.4em;
+        padding: 6px;
         font-size: 18px;
         font-weight: bold;
         border-radius: 8px;
@@ -50,7 +50,7 @@ export const InputContainer = styled.div`
     select {
         width: 100%;
         height: 35px;
-        padding: 0.4em;
+        padding: 6px;
         font-size: 18px;
         font-weight: bold;
         border-radius: 8px;
