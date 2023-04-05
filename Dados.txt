@@ -51,7 +51,7 @@ DADOS MEDIÚNICOS
 - Cor Cavaleiro/Guia
 - Ministro (Jaguar)
 - Nome na Emissão
-- Nome no Crachá
+- Classificação
 
 MENTORES
 - Princesa
@@ -75,10 +75,8 @@ CARGOS E FUNÇÕES
 - Filho de Devas
 - Ninfa Janda
 - Regente
-
-CLASSIFICAÇÕES (Jaguares)
-- Data de cada uma das classificações
-- Trino (Solitário Juremá, Solitário Iramar, Sardyos, Sardyos Solitário Juremá, Sardyos Solitário Iramar)
+- Trino Solitário (Data, Juremá ou Iramar)
+- Trino Sardyos (Data, Herdeiro do Adjunto)
 
 OBSERVAÇÕES
 

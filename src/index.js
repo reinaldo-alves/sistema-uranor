@@ -2,14 +2,14 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
-import { TemploStore } from './contexts/TemploContext';
+import { ListStore } from './contexts/ListContext';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <TemploStore>
+    <ListStore>
       <App />
-    </TemploStore>
+    </ListStore>
   </React.StrictMode>
 );
 
