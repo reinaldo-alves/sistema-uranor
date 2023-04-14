@@ -15,6 +15,7 @@ import PageNotFound from './pages/PageNotFound/PageNotFound';
 import SearchMedium from './pages/mediuns/SearchMedium/SearchMedium';
 import AddMedium from './pages/mediuns/AddMedium/AddMedium';
 import YoungMedium from './pages/mediuns/YoungMedium/YoungMedium';
+import ShowMedium from './pages/mediuns/ShowMedium/ShowMedium';
 
 function App() {
   const theme = {
@@ -40,6 +41,7 @@ function App() {
             <Route path='/' element={<Home />} />
             <Route path='/mediuns' element={<Mediuns />}>
               <Route path='consulta' element={<SearchMedium />} />
+              <Route path='consulta/:id' element={<ShowMedium />} />
               <Route path='cadastro' element={<AddMedium />} />
               <Route path='menor' element={<YoungMedium />} />
             </Route>

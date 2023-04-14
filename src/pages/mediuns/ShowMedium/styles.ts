@@ -28,88 +28,19 @@ export const PersonalCard = styled.div`
     gap: 15px;
 `;
 
+export const NameAndId = styled.h2`
+    color: ${(props) => {return props.theme.color.darkerColor}};
+    margin-bottom: 5px;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+`;
+
 export const SectionTitle = styled.h2`
     color: ${(props) => {return props.theme.color.darkerColor}};
     margin-bottom: 5px;
     width: 100%;
     text-align: center;
-`;
-
-export const InputContainer = styled.div`
-    width: 100%;
-    display: flex;
-    justify-content: flex-start;
-    align-items: center;
-    gap: 20px;
-`;
-
-export const FieldContainer = styled.div<{width?: string}>`
-    display: flex;
-    align-items: center;
-    min-width: ${({ width }) => width? width : '0'};
-    width: ${({ width }) => width? width : '100%'};
-
-    label {
-        font-weight: bold;
-        font-size: 20px;
-        color: ${(props) => {return props.theme.color.darkerColor}};
-        white-space: nowrap;
-        margin-right: 10px;
-    }
-
-    input {
-        width: 100%;
-        height: 35px;
-        padding: 6px;
-        font-size: 18px;
-        font-weight: bold;
-        border-radius: 8px;
-        border: solid 1px ${(props) => {return props.theme.color.darkerColor}};
-        display: block;
-    }
-
-    select {
-        width: 100%;
-        height: 35px;
-        padding: 6px;
-        font-size: 18px;
-        font-weight: bold;
-        border-radius: 8px;
-        border: solid 1px ${(props) => {return props.theme.color.darkerColor}};
-        display: block;
-    }
-`;
-
-export const FieldContainerBox = styled.div`
-    display: flex;
-    align-items: center;
-
-    label {
-        font-weight: bold;
-        font-size: 20px;
-        color: ${(props) => {return props.theme.color.darkerColor}};
-        white-space: nowrap;
-    }
-    
-    input {
-        margin-right: 10px;
-        width: 25px;
-        height: 25px;
-        border-radius: 8px;
-        border: solid 1px ${(props) => {return props.theme.color.darkerColor}};
-        display: block;
-    }
-
-    select {
-        width: 100%;
-        height: 35px;
-        padding: 6px;
-        font-size: 18px;
-        font-weight: bold;
-        border-radius: 8px;
-        border: solid 1px ${(props) => {return props.theme.color.darkerColor}};
-        display: block;
-    }
 `;
 
 export const PhotoContainer = styled.div<{photo: string | null}>`
@@ -139,15 +70,6 @@ export const PhotoContainer = styled.div<{photo: string | null}>`
     }
 `;
 
-export const Observations = styled.textarea`
-    border-radius: 8px;
-    border: solid 1px ${(props) => {return props.theme.color.darkerColor}};
-    padding: 6px;
-    font-size: 18px;
-    font-weight: bold;
-    resize: none;
-`;
-
 export const MediumButton = styled.button<{color: string}>`
     font-weight: bold;
     border: solid 1px ${(props) => {return props.theme.color.darkerColor}};
@@ -157,7 +79,7 @@ export const MediumButton = styled.button<{color: string}>`
     background-color: ${({color}) => {return color}};
     color: ${(props) => {return props.theme.color.lighterColor}};
     text-align: center;
-    height: 45px;
+    height: 35px;
     font-size: 20px;
 
     :hover {
@@ -169,5 +91,30 @@ export const MediumButton = styled.button<{color: string}>`
         color: white;
         background-color: ${(props) => {return props.theme.color.darkerColor}};
         border: solid ${(props) => {return props.theme.color.lighterColor}};
+    }
+`;
+
+export const InfoContainer = styled.div`
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+    flex-wrap: wrap;
+`;
+
+export const MediumInfo = styled.span<{align?: string}>`
+    font-size: 18px;
+    font-weight: bold;
+    text-align: ${({ align }) => align? align : 'left'};
+    color: ${(props) => {return props.theme.color.darkerColor}};
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+
+    span {
+        text-decoration: underline;
     }
 `;

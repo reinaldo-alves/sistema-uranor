@@ -19,7 +19,8 @@ function AddMedium() {
     const [listClass, setListClass] = useState([]);
     const [tSol, setTSol] = useState(false);
     const [tSar, setTSar] = useState(false);
-    const [photo, setPhoto] = useState('');
+    const [photo, setPhoto] = useState<File | null>(null);
+    const [preview, setPreview] = useState<string | null>(null);
 
     useEffect(() => {
         switch (sex) {
@@ -67,6 +68,24 @@ function AddMedium() {
                 setListClass([]);
         }
     }, [med, sex])
+
+    const imageUpdate = (event: React.ChangeEvent<HTMLInputElement>) => {
+        if (event.target.files && event.target.files[0]) {
+            setPhoto(event.target.files[0]);
+        }
+    };
+
+    useEffect(() => {
+        if (photo) {
+            const reader = new FileReader();
+            reader.readAsDataURL(photo);
+            reader.onloadend = () => {
+                setPreview(reader.result as string);
+            };
+        } else {
+            setPreview(null);
+        }
+    }, [photo]);
 
     return (
         <MainContainer>
@@ -124,9 +143,9 @@ function AddMedium() {
                             </FieldContainer>
                         </InputContainer>
                     </MainInfoContainer>
-                    <PhotoContainer id="preview" style={{}} photo={photo}>
+                    <PhotoContainer photo={preview}>
                         {photo? '' : 'Clique aqui para adicionar uma foto'}
-                        <input type="file" name="photo" accept="image/*" onChange={() => setPhoto('info')} />
+                        <input type="file" accept="image/*" onChange={imageUpdate} />
                     </PhotoContainer>
                 </div>
             </PersonalCard>

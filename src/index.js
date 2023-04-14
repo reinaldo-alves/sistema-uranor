@@ -3,12 +3,15 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
 import { ListStore } from './contexts/ListContext';
+import { MediumStore } from './contexts/MediumContext';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
     <ListStore>
-      <App />
+      <MediumStore>
+        <App />
+      </MediumStore>
     </ListStore>
   </React.StrictMode>
 );
