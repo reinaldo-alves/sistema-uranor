@@ -1,5 +1,6 @@
 import logo from '../../assets/jaguar.jpg'
-import { HeaderButton, HeaderButtonContainer, HeaderContainer, InfoContainer, TitleContainer, UserContainer } from './styles'
+import hamburger from '../../assets/menu-aberto.png'
+import { HamburgerIcon, HeaderButton, HeaderButtonContainer, HeaderContainer, InfoContainer, LogoImage, TitleContainer, UserContainer } from './styles'
 
 function Header() {
     const user = 'Reinaldo Alves'
@@ -7,7 +8,8 @@ function Header() {
     return (
         <HeaderContainer>
             <InfoContainer>
-                <img src={logo} alt=''/>
+                <HamburgerIcon src={hamburger} alt='Hamburger' />
+                <LogoImage src={logo} alt='Logo'/>
                 <TitleContainer>
                     <p>URANOR DO AMANHECER</p>
                     <p>CASTELO DOS DEVAS</p>

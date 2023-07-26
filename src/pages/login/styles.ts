@@ -10,6 +10,11 @@ export const LoginHeader = styled.header`
         height: 60px;
         width: auto;
         padding-right: 20px;    
+
+        @media (max-width: 547px) {
+        height: 40px;
+        padding-right: 10px;
+        }
     }
 `;
 
@@ -19,23 +24,31 @@ export const TitleContainer = styled.div`
     color: ${(props) => {return props.theme.color.lighterColor}};
     border-left: solid 2px;
     padding-left: 20px;
+
+    @media (max-width: 547px) {
+        font-size: 15px;
+        padding-left: 10px;
+    }
 `;
 
 export const LoginCardContainer = styled.div`
     height: ${(props) => {return props.theme.height.loginContent}};
+    width: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
+    padding: 0 20px;
 `;
 
 export const LoginCard = styled.div`
     width: 400px;
     height: 90%;
+    max-height: 500px;
     border-radius: 10px;
     background-color: ${(props) => {return props.theme.color.mediumColorTr}};
     display: flex;
     flex-direction: column;
-    justify-content: space-evenly;
+    justify-content: space-around;
     align-items: center;
     border: solid 1px ${(props) => {return props.theme.color.darkerColor}};
 
@@ -47,7 +60,7 @@ export const LoginCard = styled.div`
 `;
 
 export const LoginForm = styled.div`
-    width: 70%;
+    width: 80%;
     display: flex;
     flex-direction: column;
     justify-content: center;

@@ -6,6 +6,10 @@ export const HeaderContainer = styled.header`
     justify-content: space-between;
     align-items: center;
     margin: 15px 15px 25px 15px;
+
+    @media (max-width: 675px) {
+        justify-content: flex-start;
+    }
 `;
 
 export const InfoContainer = styled.div`
@@ -13,11 +17,28 @@ export const InfoContainer = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
+`;
 
-    img {
-        height: 60px;
-        width: auto;
-        padding-right: 20px;
+export const LogoImage = styled.img`
+    height: 60px;
+    width: auto;
+    padding-right: 20px;
+
+    @media (max-width: 675px) {
+        height: 40px;
+        padding-right: 10px;
+    }
+`;
+
+export const HamburgerIcon = styled.img`
+    display: none;
+    height: 30px;
+    width: 40px;
+    padding-right: 10px;
+    cursor: pointer;
+
+    @media (max-width: 675px) {
+        display: block;
     }
 `;
 
@@ -27,6 +48,11 @@ export const TitleContainer = styled.div`
     color: ${(props) => {return props.theme.color.lighterColor}};
     border-left: solid 2px;
     padding-left: 20px;
+
+    @media (max-width: 675px) {
+        font-size: 15px;
+        padding-left: 10px;
+    }
 `;
 
 export const UserContainer = styled.div`
@@ -35,6 +61,10 @@ export const UserContainer = styled.div`
     flex-direction: column;
     justify-content: flex-end;
     align-items: flex-end;
+
+    @media (max-width: 675px) {
+        display: none;
+    }
 
     p {
         font-size: 16px;

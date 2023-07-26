@@ -19,5 +19,6 @@ export const Footer = styled.p`
     font-size: 14px;
     color: ${(props) => {return props.theme.color.lighterColor}};
     margin: 2em 0 1em 0;
+    padding: 0 20px;
     background: transparent;
 `;
