@@ -5,6 +5,10 @@ export const SubMenuContainer = styled.header`
     display: flex;
     justify-content: flex-start;
     border-bottom: solid 1px ${(props) => {return props.theme.color.lighterColor}};
+
+    @media (max-width: 675px) {
+        display: none;
+    }
 `;
 
 export const SubMenuContent = styled.ul`
@@ -15,6 +19,10 @@ export const SubMenuContent = styled.ul`
     font-size: 18px;
     display: flex;
     justify-content: flex-start;
+
+    @media (max-width: 786px) {
+        font-size: 14px;
+    }
 `;
 
 export const SubMenuItem = styled.li`

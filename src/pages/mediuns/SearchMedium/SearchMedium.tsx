@@ -1,5 +1,5 @@
-import { useState, useContext } from "react";
-import { ButtonContainer, InfoCard, InfoContainer, InputContainer, MainContainer, MediumButton, MediumInfo, MediumName, MediumPhoto, Results, ResultsCard, ResultsCell, ResultsTable, SearchButton, SearchCard, TableContainer, TextContainer } from "./styles";
+import { useState, useContext, useEffect } from "react";
+import { ButtonContainer, InfoCard, InfoContainer, InfoContent, InputContainer, MainContainer, MediumButton, MediumInfo, MediumName, MediumPhoto, MessageNull, Results, ResultsCard, ResultsDetails, ResultsTable, ResultsTitle, SearchButton, SearchCard, TableContainer, TextContainer } from "./styles";
 import { ListContext } from "src/contexts/ListContext";
 import { useNavigate } from "react-router-dom";
 import { MediumContext } from "src/contexts/MediumContext";
@@ -12,11 +12,30 @@ function SearchMedium() {
     
     const noMedium = {id: '', nome: '', med: '', templo: '', sexo: '', situacao: '', condicao: '', foto: ''}
     
-    const [selected, setSelected] = useState(noMedium); 
+    const [selected, setSelected] = useState(noMedium);
+    const [counterPosition, setCounterPosition] = useState(true);
+    const [textPosition, setTextPosition] = useState('');
     
     const { templos } = useContext(ListContext);
 
     const { medium } = useContext(MediumContext);
+
+    useEffect(() => {
+        const handleResize = () => {
+            if(window.innerWidth > 786) {
+                setTextPosition("ao lado");
+                setCounterPosition(true);
+            } else {
+                setTextPosition("acima");
+                setCounterPosition(false);
+            }
+        };
+        handleResize();
+        window.addEventListener('resize', handleResize);
+        return () => {
+            window.removeEventListener('resize', handleResize);
+        };
+    }, [])
     
     medium.sort((pessoaA: IMedium, pessoaB: IMedium) => {
         if (pessoaA.nome < pessoaB.nome) {
@@ -52,40 +71,39 @@ function SearchMedium() {
                         <tbody>
                             {medium.map((item: IMedium) => (
                                 <Results onClick={() => setSelected(item)}>
-                                    <ResultsCell align="left">{item.nome}</ResultsCell>
-                                    <ResultsCell width="150px">{item.med}</ResultsCell>
-                                    <ResultsCell width="200px">{item.templo}</ResultsCell>
+                                    <ResultsTitle>{item.nome}</ResultsTitle>
+                                    <ResultsDetails>{item.med} - {item.templo}</ResultsDetails>
                                 </Results>
                             ))}
                         </tbody>
                     </ResultsTable>
                 </TableContainer>
-                <div style={{display: 'flex', flexDirection: 'column', width: '100%', height: '100%', justifyContent: 'space-between'}}>
+                <div style={{display: 'flex', flexDirection: `${counterPosition? 'column' : 'column-reverse'}`, width: '100%', height: '100%', justifyContent: 'space-between', alignItems: 'center'}}>
                     <InfoCard>
-                        {selected===noMedium?
-                            <MediumInfo align="center">Selecione um médium na lista ao lado</MediumInfo>
+                        {!selected.id?
+                            <MessageNull>{`Selecione um médium na lista ${textPosition}`}</MessageNull>
                         :
-                            <>
+                            <InfoContent>
                                 <MediumName>{selected.nome}</MediumName>
-                                <ButtonContainer>
-                                    <MediumButton onClick={() => navigate(`/mediuns/consulta/${selected.id}`)}>Exibir</MediumButton>
-                                    <MediumButton>Editar</MediumButton>
-                                </ButtonContainer>
                                 <InfoContainer>
                                     <MediumPhoto image={selected.foto} />
-                                    <TextContainer>
+                                    <ButtonContainer>
                                         <MediumInfo>ID: <span>{selected.id}</span></MediumInfo>
-                                        <MediumInfo>Mediunidade: <span>{selected.med}</span></MediumInfo>
-                                        <MediumInfo>Sexo: <span>{selected.sexo}</span></MediumInfo>
-                                        <MediumInfo>Situação: <span>{selected.situacao}</span></MediumInfo>
-                                        <MediumInfo>Templo: <span>{selected.templo}</span></MediumInfo>
-                                        <MediumInfo>Condição Atual: <span>{selected.condicao}</span></MediumInfo>
-                                    </TextContainer>
+                                        <MediumButton onClick={() => navigate(`/mediuns/consulta/${selected.id}`)}>Exibir</MediumButton>
+                                        <MediumButton>Editar</MediumButton>
+                                    </ButtonContainer>
                                 </InfoContainer>
-                            </>
+                                <TextContainer>
+                                    <MediumInfo>Mediunidade: <span>{selected.med}</span></MediumInfo>
+                                    <MediumInfo>Sexo: <span>{selected.sexo}</span></MediumInfo>
+                                    <MediumInfo>Situação: <span>{selected.situacao}</span></MediumInfo>
+                                    <MediumInfo>Templo: <span>{selected.templo}</span></MediumInfo>
+                                    <MediumInfo>Condição Atual: <span>{selected.condicao}</span></MediumInfo>
+                                </TextContainer>
+                            </InfoContent>
                         }
                     </InfoCard>
-                    <MediumInfo align="center">Resultados encontrados: {medium.length}</MediumInfo>
+                    <MediumInfo>Resultados encontrados: {medium.length}</MediumInfo>
                 </div>
             </ResultsCard>
         </MainContainer>

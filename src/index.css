@@ -6,6 +6,17 @@
   box-sizing: border-box;
   outline: none;
   font-family: 'Times New Roman', Times, serif;
+  scrollbar-width: 8px;
+  scrollbar-color: #99bbff;
+}
+
+*::-webkit-scrollbar {
+  width: 8px;
+}
+
+*::-webkit-scrollbar-thumb {
+  background-color: #002776;
+  border-radius: 20px;
 }
 
 body {

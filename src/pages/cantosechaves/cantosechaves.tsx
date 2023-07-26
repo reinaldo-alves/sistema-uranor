@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Header from "../../components/header/header";
 import CavEsp from '../../docs/CavaleiroEspecial.pdf'
 import ECavEsp from '../../docs/Escrava.pdf'
@@ -80,6 +80,32 @@ function CantosChaves() {
     const [sudActive, setSudActive] = useState(false)
     const sudClick = () => setSudActive(!sudActive)
 
+    const [columnIndiv, setColumnIndiv] = useState("3");
+    const [columnChave, setColumnChave] = useState("4");
+
+    useEffect(() => {
+        const handleResize = () => {
+            if(window.innerWidth >= 890) {
+                setColumnIndiv("3");
+                setColumnChave("4")
+            } else if (window.innerWidth >= 660) {
+                setColumnIndiv("1");
+                setColumnChave("3");
+            } else if (window.innerWidth >= 440) {
+                setColumnIndiv("1");
+                setColumnChave("2");
+            } else {
+                setColumnIndiv("1");
+                setColumnChave("1");
+            }
+        };
+        handleResize();
+        window.addEventListener('resize', handleResize);
+        return () => {
+            window.removeEventListener('resize', handleResize);
+        };
+    }, [])
+
     const individualidade = [
         {name: 'Canto do Cavaleiro Especial', link: CavEsp, subtitle: '(Doutrinador e Ajanã)'},
         {name: 'Canto da Escrava do Cavaleiro Especial', link: ECavEsp, subtitle: '(Ninfa Lua)'},
@@ -155,13 +181,13 @@ function CantosChaves() {
             <SubMenu list={[{title: 'Página Inicial', click: '/'}]}/>
             <GlobalContainer>
                 <SectionTitle>Cantos da Individualidade</SectionTitle>
-                <CardsCantoContainer colums="3">
+                <CardsCantoContainer colums={columnIndiv}>
                     {individualidade.map((item) => (
                         <ButtonDoc name={item.name} link={item.link} subtitle={item.subtitle} height={'4em'} />
                     ))}
                 </CardsCantoContainer>
                 <SectionTitle>Cantos das Falanges Missionárias</SectionTitle>
-                <CardsCantoContainer colums="4">
+                <CardsCantoContainer colums={columnChave}>
                     <ButtonMenu active={nitActive} click={nitClick} name={'Nityama'} list={[
                         {link: Nit, canto: 'Canto da Nityama'},
                         {link: NitC, canto: 'Canto para Chama da Vida'},
@@ -208,7 +234,7 @@ function CantosChaves() {
                     <ButtonDoc name={'Aponara'} link={Apo} height={'2em'} />
                 </CardsCantoContainer>
                 <SectionTitle>Chaves dos Trabalhos</SectionTitle>
-                <CardsCantoContainer colums="4">
+                <CardsCantoContainer colums={columnChave}>
                     {chaves.map((item) => (
                         <ButtonMenu
                             active={item.active}

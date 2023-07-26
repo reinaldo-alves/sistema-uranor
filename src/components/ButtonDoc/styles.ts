@@ -17,6 +17,10 @@ export const DocButton = styled.div<{height: string}>`
     z-index: 1;
     width: 100%;
 
+    @media (max-width: 1110px) {
+        font-size: 20px;
+    }
+
     :hover {
         transform: scale(1.05);
         cursor: pointer;

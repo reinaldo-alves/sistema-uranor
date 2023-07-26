@@ -22,6 +22,10 @@ export const CantoButton = styled.div<{height?: string}>`
     z-index: 1;
     width: 100%;
 
+    @media (max-width: 1110px) {
+        font-size: 20px;
+    }
+
     :hover {
         transform: scale(1.05);
         cursor: pointer;
@@ -56,6 +60,10 @@ export const Dropdown = styled.nav<{active: boolean}>`
     transition: .5s;
     top: ${({ active }) => active ? '0' : '-100%'};
     visibility: ${({ active }) => active ? 'visible' : 'hidden'};
+
+    @media (max-width: 1110px) {
+        font-size: 12px;
+    }
 
     ul li {
         position: relative;
