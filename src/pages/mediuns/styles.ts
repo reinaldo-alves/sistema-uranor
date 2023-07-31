@@ -1,6 +1,7 @@
 import styled from "styled-components";
 
 export const MainContainer = styled.div`
+    height: 100%;
     min-height: ${(props) => {return props.theme.height.mainContent}};
     width: 100%;
     display: flex;

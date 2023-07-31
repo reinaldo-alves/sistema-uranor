@@ -6,18 +6,34 @@ export const MainContainer = styled.div`
     display: flex;
     flex-direction: column;
     align-items: center;
-    `;
+`;
+
+export const GridContainer = styled.div`
+    width: 90%;
+    max-width: 1472px;
+    display: grid;
+    gap: 20px;
+    grid-template-columns: auto 1fr;
+    align-items: flex-start;
+
+    @media (max-width: 800px) {
+        grid-template-columns: 1fr;
+        gap: 0;
+    }
+`;
 
 export const MainInfoContainer = styled.div`
-    width: 100%;
+    width: 220px;
     display: flex;
     flex-direction: column;
+    justify-content: center;
+    align-items: center;
     gap: 15px;
 `;
 
 export const PersonalCard = styled.div`
-    margin-top: 30px;
-    width: 90%;
+    margin-top: 20px;
+    width: 100%;
     max-width: 1200px;
     border-radius: 10px;
     padding: 15px;
@@ -25,15 +41,35 @@ export const PersonalCard = styled.div`
     border: solid 1px ${(props) => {return props.theme.color.darkerColor}};
     display: flex;
     flex-direction: column;
+    align-items: center;
     gap: 15px;
 `;
 
-export const NameAndId = styled.h2`
+export const MediumMainInfo = styled.span`
+    font-size: 14px;
+    font-weight: bold;
+    text-align: center;
     color: ${(props) => {return props.theme.color.darkerColor}};
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    overflow: hidden;
+    text-overflow: ellipsis;
+
+    span {
+        text-decoration: underline;
+    }
+`;
+
+export const NameAndId = styled.div`
+    width: 90%;
+    color: ${(props) => {return props.theme.color.lighterColor}};
     margin-bottom: 5px;
-    width: 100%;
     display: flex;
-    justify-content: space-between;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 15px;
+    text-align: center;
 `;
 
 export const SectionTitle = styled.h2`
@@ -44,7 +80,7 @@ export const SectionTitle = styled.h2`
 `;
 
 export const PhotoContainer = styled.div<{photo: string | null}>`
-    height: 182px;
+    height: 200px;
     aspect-ratio: 3 / 4;
     border-radius: 10px;
     border: 2px solid ${(props) => {return props.theme.color.lighterColor}};
@@ -74,7 +110,6 @@ export const MediumButton = styled.button<{color: string}>`
     font-weight: bold;
     border: solid 1px ${(props) => {return props.theme.color.darkerColor}};
     border-radius: 8px;
-    margin-top: 30px;
     width: 150px;
     background-color: ${({color}) => {return color}};
     color: ${(props) => {return props.theme.color.lighterColor}};
@@ -96,17 +131,21 @@ export const MediumButton = styled.button<{color: string}>`
 
 export const InfoContainer = styled.div`
     width: 100%;
-    display: flex;
-    justify-content: space-between;
+    display: grid;
+    grid-template-columns: auto auto;
     align-items: center;
     gap: 20px;
-    flex-wrap: wrap;
+
+    @media (max-width: 1100px) {
+        grid-template-columns: auto;
+        width: auto;
+    }
 `;
 
-export const MediumInfo = styled.span<{align?: string}>`
+export const MediumInfo = styled.span`
     font-size: 18px;
     font-weight: bold;
-    text-align: ${({ align }) => align? align : 'left'};
+    text-align: left;
     color: ${(props) => {return props.theme.color.darkerColor}};
     display: -webkit-box;
     -webkit-box-orient: vertical;
@@ -117,4 +156,17 @@ export const MediumInfo = styled.span<{align?: string}>`
     span {
         text-decoration: underline;
     }
+`;
+
+export const MediumText = styled.span`
+    font-size: 18px;
+    font-weight: bold;
+    text-align: center;
+    color: ${(props) => {return props.theme.color.darkerColor}};
+`;
+
+export const Divider = styled.div`
+    width: 100%;
+    height: 1px;
+    background-color: ${(props) => {return props.theme.color.lighterColor}};
 `;

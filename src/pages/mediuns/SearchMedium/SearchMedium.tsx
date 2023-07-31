@@ -58,8 +58,8 @@ function SearchMedium() {
                     <label>Templo</label>
                     <select>
                         <option value=''>Todos</option>
-                        {templos.map((item: string) => (
-                            <option value={item}>{item}</option>
+                        {templos.map((item: string, index: number) => (
+                            <option key={index} value={item}>{item}</option>
                         ))}
                     </select>
                 </InputContainer>
@@ -69,16 +69,18 @@ function SearchMedium() {
                 <TableContainer>
                     <ResultsTable>
                         <tbody>
-                            {medium.map((item: IMedium) => (
-                                <Results onClick={() => setSelected(item)}>
-                                    <ResultsTitle>{item.nome}</ResultsTitle>
-                                    <ResultsDetails>{item.med} - {item.templo}</ResultsDetails>
+                            {medium.map((item: IMedium, index: number) => (
+                                <Results key={index} onClick={() => setSelected(item)}>
+                                    <td>
+                                        <ResultsTitle>{item.nome}</ResultsTitle>
+                                        <ResultsDetails>{item.med} - {item.templo}</ResultsDetails>
+                                    </td>
                                 </Results>
                             ))}
                         </tbody>
                     </ResultsTable>
                 </TableContainer>
-                <div style={{display: 'flex', flexDirection: `${counterPosition? 'column' : 'column-reverse'}`, width: '100%', height: '100%', justifyContent: 'space-between', alignItems: 'center'}}>
+                <div style={{display: 'flex', flexDirection: `${counterPosition? 'column' : 'column-reverse'}`, width: '100%', height: '100%', justifyContent: `${counterPosition? 'flex-start' : 'flex-end'}`, alignItems: 'center'}}>
                     <InfoCard>
                         {!selected.id?
                             <MessageNull>{`Selecione um médium na lista ${textPosition}`}</MessageNull>

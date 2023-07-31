@@ -16,8 +16,8 @@ function SubMenu(props: ISubMenu) {
         <SubMenuContainer>
             <nav>
                 <SubMenuContent>
-                    {props.list.map((item) => (
-                        <SubMenuItem onClick={() => navigate(item.click)}>{item.title}</SubMenuItem>
+                    {props.list.map((item, index) => (
+                        <SubMenuItem key={index} onClick={() => navigate(item.click)}>{item.title}</SubMenuItem>
                     ))}
                 </SubMenuContent>
             </nav>

@@ -39,6 +39,7 @@ import ButtonMenu from "../../components/ButtonMenu/ButtonMenu";
 import SubMenu from "src/components/SubMenu/SubMenu";
 import ButtonDoc from "src/components/ButtonDoc/ButtonDoc";
 import { CardsCantoContainer, GlobalContainer, SectionTitle } from "./styles";
+import SideMenu from "src/components/SideMenu/SideMenu";
 
 function CantosChaves() {
     
@@ -175,10 +176,12 @@ function CantosChaves() {
         ]}
     ]
 
+    const menuList = [{title: 'Página Inicial', click: '/'}]
+
     return (
         <>
             <Header />
-            <SubMenu list={[{title: 'Página Inicial', click: '/'}]}/>
+            <SubMenu list={menuList}/>
             <GlobalContainer>
                 <SectionTitle>Cantos da Individualidade</SectionTitle>
                 <CardsCantoContainer colums={columnIndiv}>
@@ -246,6 +249,7 @@ function CantosChaves() {
                     ))}
                 </CardsCantoContainer>
             </GlobalContainer>
+            <SideMenu list={menuList}/>
         </>
     )
 }

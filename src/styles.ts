@@ -3,6 +3,7 @@ import SystemBack from './assets/fundo-sistema.jpg'
 
 export const Background = styled.div`
     min-height: 100vh;
+    min-width: 392px;
     background-image: url(${SystemBack});
     background-position: 50% 50%;
     background-size: cover;

@@ -2,6 +2,7 @@ import styled from "styled-components";
 
 export const MainContainer = styled.div`
     height: 100%;
+    min-height: ${(props) => {return props.theme.height.mainContent}};
     width: 100%;
     padding-top: 30px;
     display: flex;
@@ -94,7 +95,8 @@ export const SearchButton = styled.button`
 export const ResultsCard = styled.div`
     width: 90%;
     max-width: 1400px;
-    height: 100%;
+    height: calc(100vh - 355px);
+    min-height: 440px;
     border-radius: 10px;
     padding: 15px;
     background-color: ${(props) => {return props.theme.color.mediumColorTr}};
@@ -115,9 +117,10 @@ export const ResultsCard = styled.div`
 
 export const TableContainer = styled.div`
     width: 100%;
-    height: 100%;
+    height: 70vh;
     overflow-y: auto;
-    max-height: 400px;
+    max-height: calc(100vh - 390px);
+    min-height: 400px;
 `;
 
 export const ResultsTable = styled.table`

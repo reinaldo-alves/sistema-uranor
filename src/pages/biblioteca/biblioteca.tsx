@@ -1,15 +1,19 @@
 import SubMenu from "src/components/SubMenu/SubMenu";
 import Header from "../../components/header/header";
 import { MainContainer, SectionTitle } from "./styles";
+import SideMenu from "src/components/SideMenu/SideMenu";
 
 function Biblioteca() {
+    const menuList = [{title: 'Página Inicial', click: '/'}];
+    
     return (
         <>
             <Header />
-            <SubMenu list={[{title: 'Página Inicial', click: '/'}]}/>
+            <SubMenu list={menuList}/>
             <MainContainer>
                 <SectionTitle>Módulo em Desenvolvimento</SectionTitle>
             </MainContainer>
+            <SideMenu list={menuList}/>
         </>
     )
 }

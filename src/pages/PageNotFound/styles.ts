@@ -7,6 +7,7 @@ export const MainContainer = styled.div`
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    padding: 20px 0;
 `;
 
 export const ErrorImage = styled.img`
@@ -18,6 +19,12 @@ export const ErrorMessage = styled.h1`
     color: ${(props) => {return props.theme.color.lighterColor}};
     margin: 25px;
     font-size: 40px;
+    padding: 0 20px;
+    text-align: center;
+
+    @media (max-width: 360px) {
+        font-size: 36px;
+    }
 `;
 
 export const MessageSpan = styled.span`
@@ -25,6 +32,12 @@ export const MessageSpan = styled.span`
     margin-bottom: 25px;
     font-size: 24px;
     font-weight: 500;
+    padding: 0 20px;
+    text-align: center;
+
+    @media (max-width: 360px) {
+        font-size: 20px;
+    }
 `;
 
 export const ErrorButton = styled.button`

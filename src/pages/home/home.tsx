@@ -9,6 +9,7 @@ import Con from '../../assets/consagracoes.jpg'
 import Rel from '../../assets/relatorios.jpg'
 import Doc from '../../assets/documentosuteis.jpg'
 import Bib from '../../assets/biblioteca.jpg'
+import SideMenu from "src/components/SideMenu/SideMenu";
 
 interface IMenu {
     title: string,
@@ -35,16 +36,18 @@ function Home() {
             <Header />
             <HomeContainer>
                 <CardsContainer>
-                    {menu.map((item: IMenu) => (
+                    {menu.map((item: IMenu, index: number) => (
                         <CardMenu
-                            style={{backgroundImage:`url(${item.image})`}}
-                            onClick={() => navigate(item.link)}
+                        key={index}
+                        style={{backgroundImage:`url(${item.image})`}}
+                        onClick={() => navigate(item.link)}
                         >
                             {item.title}
                         </CardMenu>
                     ))}
                 </CardsContainer>
             </HomeContainer>
+            <SideMenu list={[]}/>
         </>
     )
 }

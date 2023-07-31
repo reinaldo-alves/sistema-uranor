@@ -2,6 +2,7 @@ import ButtonDoc from "src/components/ButtonDoc/ButtonDoc";
 import SubMenu from "src/components/SubMenu/SubMenu";
 import Header from "../../components/header/header";
 import { CardsContainer, DocsContainer, SectionTitle } from "./styles";
+import SideMenu from "src/components/SideMenu/SideMenu";
 
 function DocumentosUteis() {
 
@@ -14,10 +15,12 @@ function DocumentosUteis() {
         {name: 'Formulário para Ficha Mediúnica', link: ''}
     ]
     
+    const menuList = [{title: 'Página Inicial', click: '/'}]
+    
     return (
         <>
             <Header />
-            <SubMenu list={[{title: 'Página Inicial', click: '/'}]}/>
+            <SubMenu list={menuList}/>
             <DocsContainer>
                 <SectionTitle>Documentos Úteis</SectionTitle>
                 <CardsContainer>
@@ -26,6 +29,7 @@ function DocumentosUteis() {
                     ))}
                 </CardsContainer>
             </DocsContainer>
+            <SideMenu list={menuList}/>
         </>
     )
 }

@@ -6,7 +6,7 @@ export const MainContainer = styled.div`
     display: flex;
     flex-direction: column;
     align-items: center;
-    `;
+`;
 
 export const MainInfoContainer = styled.div`
     width: 100%;
@@ -26,6 +26,61 @@ export const PersonalCard = styled.div`
     display: flex;
     flex-direction: column;
     gap: 15px;
+
+    label {
+        width: 100%;
+        font-weight: bold;
+        font-size: 18px;
+        color: ${(props) => {return props.theme.color.darkerColor}};
+        white-space: nowrap;
+        text-align: right;
+        
+        @media (max-width: 1000px) {
+            font-size: 14px;
+        }
+    }
+
+    input {
+        width: 100%;
+        height: 35px;
+        padding: 6px;
+        font-size: 18px;
+        font-weight: bold;
+        border-radius: 8px;
+        border: solid 1px ${(props) => {return props.theme.color.darkerColor}};
+        display: block;
+        
+        @media (max-width: 1000px) {
+            font-size: 14px;
+        }
+    }
+
+    select {
+        width: 100%;
+        height: 35px;
+        padding: 6px;
+        font-size: 18px;
+        font-weight: bold;
+        border-radius: 8px;
+        border: solid 1px ${(props) => {return props.theme.color.darkerColor}};
+        display: block;
+
+        @media (max-width: 1000px) {
+            font-size: 14px;
+        }
+    }
+
+`;
+
+export const MainContent = styled.div`
+    display: flex;
+    gap: 30px;
+    width: 100%;
+
+    @media (max-width: 800px) {
+        flex-direction: column;
+        align-items: center;
+    }
 `;
 
 export const SectionTitle = styled.h2`
@@ -41,42 +96,78 @@ export const InputContainer = styled.div`
     justify-content: flex-start;
     align-items: center;
     gap: 20px;
+
+    @media (max-width: 800px) {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+`;
+
+export const GridContainer = styled.div`
+    width: 100%;
+    display: grid;
+    grid-template-columns: auto 1fr auto 1fr;
+    align-items: center;
+    gap: 20px 10px;
+    
+    label:nth-child(4n-1) {
+        padding-left: 10px;
+    }
+
+    @media (max-width: 800px) {
+        grid-template-columns: auto 1fr;
+
+        label:nth-child(4n-1) {
+            padding-left: 0px;
+        }
+    }
+`;
+
+export const GridDatesContainer = styled.div`
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(3, auto 1fr);
+    align-items: center;
+    gap: 20px 10px;
+
+    label:nth-child(6n-1), label:nth-child(6n-3) {
+        padding-left: 10px;
+    }
+
+    @media (max-width: 1000px) {
+        grid-template-columns: repeat(2, auto 1fr);
+
+        label:nth-child(6n-1), label:nth-child(6n-3) {
+            padding-left: 0px;
+        }
+
+        label:nth-child(4n-1) {
+            padding-left: 10px;
+        }
+    }
+
+    @media (max-width: 680px) {
+        grid-template-columns: auto 1fr;
+
+        label:nth-child(4n-1) {
+            padding-left: 0px;
+        }
+    }
 `;
 
 export const FieldContainer = styled.div<{width?: string}>`
     display: flex;
     align-items: center;
-    min-width: ${({ width }) => width? width : '0'};
     width: ${({ width }) => width? width : '100%'};
+    min-width: ${({ width }) => width? width : '150px'};
 
     label {
-        font-weight: bold;
-        font-size: 20px;
-        color: ${(props) => {return props.theme.color.darkerColor}};
-        white-space: nowrap;
-        margin-right: 10px;
+        width: auto;
+        padding-right: 10px;
     }
 
-    input {
+    @media (max-width: 800px) {
         width: 100%;
-        height: 35px;
-        padding: 6px;
-        font-size: 18px;
-        font-weight: bold;
-        border-radius: 8px;
-        border: solid 1px ${(props) => {return props.theme.color.darkerColor}};
-        display: block;
-    }
-
-    select {
-        width: 100%;
-        height: 35px;
-        padding: 6px;
-        font-size: 18px;
-        font-weight: bold;
-        border-radius: 8px;
-        border: solid 1px ${(props) => {return props.theme.color.darkerColor}};
-        display: block;
     }
 `;
 
@@ -85,10 +176,7 @@ export const FieldContainerBox = styled.div`
     align-items: center;
 
     label {
-        font-weight: bold;
-        font-size: 20px;
-        color: ${(props) => {return props.theme.color.darkerColor}};
-        white-space: nowrap;
+        text-align: left;
     }
     
     input {
@@ -98,6 +186,7 @@ export const FieldContainerBox = styled.div`
         border-radius: 8px;
         border: solid 1px ${(props) => {return props.theme.color.darkerColor}};
         display: block;
+        padding: 0;
     }
 
     select {
@@ -136,7 +225,13 @@ export const PhotoContainer = styled.div<{photo: string | null}>`
         width: 100%;
         opacity: 0;
         cursor: pointer;
+        
     }
+
+    @media (max-width: 800px) {
+        width: 136px
+    }
+
 `;
 
 export const Observations = styled.textarea`
@@ -146,6 +241,10 @@ export const Observations = styled.textarea`
     font-size: 18px;
     font-weight: bold;
     resize: none;
+    
+    @media (max-width: 1000px) {
+            font-size: 14px;
+        }
 `;
 
 export const MediumButton = styled.button<{color: string}>`
@@ -170,4 +269,10 @@ export const MediumButton = styled.button<{color: string}>`
         background-color: ${(props) => {return props.theme.color.darkerColor}};
         border: solid ${(props) => {return props.theme.color.lighterColor}};
     }
+`;
+
+export const Divider = styled.div`
+    width: 100%;
+    height: 1px;
+    background-color: ${(props) => {return props.theme.color.lighterColor}};
 `;
