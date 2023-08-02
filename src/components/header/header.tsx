@@ -4,10 +4,15 @@ import logo from '../../assets/jaguar.jpg'
 import hamburger from '../../assets/menu-aberto.png'
 import { HamburgerIcon, HeaderButton, HeaderButtonContainer, HeaderContainer, InfoContainer, LogoImage, TitleContainer, UserContainer } from './styles'
 import { MenuContext } from 'src/contexts/MenuContext'
+import { useNavigate } from 'react-router-dom'
 
 function Header() {
     const { user } = useContext(UserContext);
     const { setOpenMenu } = useContext(MenuContext);
+    const navigate = useNavigate();
+
+    const titleButton = user.level === 'Administrador' ? 'Manutenção' : 'Alterar senha';
+    const clickButton = user.level === 'Administrador' ? () => navigate('/manutencao') : () => navigate('/manutencao/usuarios/alterarsenha');
 
     return (
         <HeaderContainer>
@@ -23,7 +28,7 @@ function Header() {
                 <p>Usuário: {user.name}</p>
                 <p>Nível: {user.level}</p>
                 <HeaderButtonContainer>
-                    <HeaderButton>{user.level === 'Administrador' ? 'Manutenção' : 'Alterar Senha'}</HeaderButton>
+                    <HeaderButton onClick={clickButton}>{titleButton}</HeaderButton>
                     <HeaderButton>Sair</HeaderButton>
                 </HeaderButtonContainer>
             </UserContainer>

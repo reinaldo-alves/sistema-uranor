@@ -16,6 +16,9 @@ import SearchMedium from './pages/mediuns/SearchMedium/SearchMedium';
 import AddMedium from './pages/mediuns/AddMedium/AddMedium';
 import YoungMedium from './pages/mediuns/YoungMedium/YoungMedium';
 import ShowMedium from './pages/mediuns/ShowMedium/ShowMedium';
+import Maintenance from './pages/maintenance/maintenance';
+import Adjuntos from './pages/maintenance/adjuntos/adjuntos';
+import Ministros from './pages/maintenance/ministros/ministros';
 
 function App() {
   const theme = {
@@ -39,6 +42,9 @@ function App() {
           <Routes>
             <Route path='/login' element={<Login />} />
             <Route path='/' element={<Home />} />
+            <Route path='/manutencao' element={<Maintenance />} />
+            <Route path='/manutencao/ministros' element={<Ministros />} />
+            <Route path='/manutencao/adjuntos' element={<Adjuntos />} />
             <Route path='/mediuns' element={<Mediuns />}>
               <Route path='consulta' element={<SearchMedium />} />
               <Route path='consulta/:id' element={<ShowMedium />} />

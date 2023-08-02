@@ -3,8 +3,7 @@ import { ButtonContainer, InfoCard, InfoContainer, InfoContent, InputContainer, 
 import { ListContext } from "src/contexts/ListContext";
 import { useNavigate } from "react-router-dom";
 import { MediumContext } from "src/contexts/MediumContext";
-
-type IMedium = any;
+import { IMedium } from "src/types/types";
 
 function SearchMedium() {
     
@@ -63,7 +62,6 @@ function SearchMedium() {
                         ))}
                     </select>
                 </InputContainer>
-                <SearchButton>Buscar</SearchButton>
             </SearchCard>
             <ResultsCard>
                 <TableContainer>

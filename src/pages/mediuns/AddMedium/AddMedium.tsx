@@ -1,6 +1,7 @@
 import { useContext, useState, useEffect } from "react";
 import { ListContext } from "src/contexts/ListContext";
 import { Divider, FieldContainer, FieldContainerBox, GridContainer, GridDatesContainer, InputContainer, MainContainer, MainContent, MainInfoContainer, MediumButton, Observations, PersonalCard, PhotoContainer, SectionTitle } from "./styles";
+import { ICavaleiro, IFalange, IMentor } from "src/types/types";
 
 interface IAdjuntos {id: string, min: string, adj: string}
 interface IEstados {abrev: string, state: string}
@@ -25,12 +26,12 @@ function AddMedium() {
     useEffect(() => {
         switch (sex) {
             case 'Masculino':
-                setListFalMiss(falMiss.jaguar);
+                setListFalMiss(falMiss.filter((item: IFalange) => item.ninfa === false));
                 setListTurnoL(turnoL.jaguar);
                 setListTurnoT(turnoT.jaguar);
                 break;
             case 'Feminino':
-                setListFalMiss(falMiss.ninfa);
+                setListFalMiss(falMiss.filter((item: IFalange) => item.ninfa === true));
                 setListTurnoL(turnoL.ninfa);
                 setListTurnoT(turnoT.ninfa);
                 break;
@@ -45,12 +46,12 @@ function AddMedium() {
         switch (sex.concat(med)) {
             case 'MasculinoDoutrinador':
                 setListClassMest(classMest.MS);
-                setListCav(cavaleiros.sol);
+                setListCav(cavaleiros.filter((item: ICavaleiro) => item.med === 'Doutrinador'));
                 setListClass(classificacao.sol);
                 break;
             case 'MasculinoApará':
                 setListClassMest(classMest.ML);
-                setListCav(cavaleiros.lua);
+                setListCav(cavaleiros.filter((item: ICavaleiro) => item.med === 'Apará'));
                 setListClass(classificacao.lua);
                 break;
             case 'FemininoDoutrinador':
@@ -260,8 +261,8 @@ function AddMedium() {
                     <label>Falange Missionária: </label>
                     <select>
                         <option value={undefined}></option>
-                        {listFalMiss.map((item: string, index: number) => (
-                            <option key={index} value={item}>{item}</option>
+                        {listFalMiss.map((item: IFalange, index: number) => (
+                            <option key={index} value={item.id}>{item.falange}</option>
                         ))}
                     </select>
                     <label>Adjunto Devas: </label>
@@ -292,8 +293,8 @@ function AddMedium() {
                             <label>Ministro: </label>
                             <select>
                                 <option value={undefined}></option>
-                                {ministros.map((item: string, index: number) => (
-                                    <option key={index} value={item}>{item}</option>
+                                {ministros.map((item: IMentor, index: number) => (
+                                    <option key={index} value={item.id}>{item.nome}</option>
                                 ))}
                             </select>
                             <label>Data Ministro: </label>
@@ -301,8 +302,8 @@ function AddMedium() {
                             <label>Cavaleiro: </label>
                             <select>
                                 <option value={undefined}></option>
-                                {listCav.map((item: string, index: number) => (
-                                    <option key={index} value={item}>{item}</option>
+                                {listCav.map((item: ICavaleiro, index: number) => (
+                                    <option key={index} value={item.id}>{item.nome}</option>
                                 ))}
                             </select>
                             <label>Cor do Cavaleiro: </label>
@@ -350,8 +351,8 @@ function AddMedium() {
                             <label>Guia Missionária: </label>
                             <select>
                                 <option value={undefined}></option>
-                                {guias.map((item: string, index: number) => (
-                                    <option key={index} value={item}>{item}</option>
+                                {guias.map((item: IMentor, index: number) => (
+                                    <option key={index} value={item.id}>{item.nome}</option>
                                 ))}
                             </select>
                             <label>Cor da Guia: </label>

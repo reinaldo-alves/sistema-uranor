@@ -16,6 +16,9 @@ function SideMenu(props: IProps) {
     const { user } = useContext(UserContext);
     const { openMenu, setOpenMenu } = useContext(MenuContext); 
     const navigate = useNavigate();
+
+    const titleButton = user.level === 'Administrador' ? 'Manutenção' : 'Alterar senha';
+    const clickButton = user.level === 'Administrador' ? () => navigate('/manutencao') : () => navigate('/manutencao/usuarios/alterarsenha');
     
     return (
         <SideMenuContainer openMenu={openMenu}>
@@ -24,7 +27,10 @@ function SideMenu(props: IProps) {
                 <p>Usuário: {user.name}</p>
                 <p>Nível: {user.level}</p>
                 <HeaderButtonContainer>
-                    <HeaderButton>{user.level === 'Administrador' ? 'Manutenção' : 'Alterar Senha'}</HeaderButton>
+                    <HeaderButton onClick={() => {
+                        clickButton();
+                        setOpenMenu(false);
+                    }}>{titleButton}</HeaderButton>
                     <HeaderButton>Sair</HeaderButton>
                 </HeaderButtonContainer>
             </UserContainer>

@@ -1,10 +1,11 @@
 DADOS PRINCIPAIS
-- ID
-- Nome
-- Mediunidade
-- Sexo
-- Templo
-- Situação atual
+- ID (AutoIncrement)
+- Data de Atualização (Data/Hora)
+- Nome (string)
+- Mediunidade (string)
+- Sexo (String)
+- Templo (string)
+- Situação atual (string)
 
 DADOS PESSOAIS
 - Nome do Pai
