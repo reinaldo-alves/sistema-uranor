@@ -1,8 +1,9 @@
 import ButtonDoc from "src/components/ButtonDoc/ButtonDoc";
 import SubMenu from "src/components/SubMenu/SubMenu";
 import Header from "../../components/header/header";
-import { CardsContainer, DocsContainer, SectionTitle } from "./styles";
+import { CardsContainer, DocsContainer } from "./styles";
 import SideMenu from "src/components/SideMenu/SideMenu";
+import MainTitle from "src/components/MainTitle/MainTitle";
 
 function DocumentosUteis() {
 
@@ -22,7 +23,7 @@ function DocumentosUteis() {
             <Header />
             <SubMenu list={menuList}/>
             <DocsContainer>
-                <SectionTitle>Documentos Úteis</SectionTitle>
+                <MainTitle content="Documentos Úteis" />
                 <CardsContainer>
                     {docs.map((item) => (
                         <ButtonDoc name={item.name} link={item.link} height={'3em'} />

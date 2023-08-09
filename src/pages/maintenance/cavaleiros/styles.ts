@@ -4,7 +4,6 @@ export const MainContainer = styled.div`
     height: 100%;
     min-height: ${(props) => {return props.theme.height.mainContent}};
     width: 100%;
-    padding-top: 30px;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -16,11 +15,19 @@ export const SearchCard = styled.div`
     border-radius: 10px;
     padding: 15px;
     background-color: ${(props) => {return props.theme.color.mediumColorTr}};
-    display: grid;
-    grid-template-columns: 1fr 250px;
+    display: flex;
+    flex-direction: column;
     align-items: center;
     gap: 20px;
     border: solid 1px ${(props) => {return props.theme.color.darkerColor}};
+`;
+
+export const SearchContainer = styled.div`
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr 180px;
+    align-items: center;
+    gap: 20px;
 
     @media (max-width: 786px) {
         display: flex;
@@ -67,17 +74,41 @@ export const InputContainer = styled.div`
     }
 `;
 
+export const SearchButton = styled.button`
+    font-weight: bold;
+    border: solid 1px ${(props) => {return props.theme.color.darkerColor}};
+    border-radius: 8px;
+    width: 100%;
+    background-color: green;
+    color: ${(props) => {return props.theme.color.lighterColor}};
+    text-align: center;
+    height: 35px;
+    font-size: 20px;
+    align-self: flex-end;
+
+    :hover {
+        cursor: pointer;
+        transform: scale(1.02);
+    }
+
+    :active {
+        color: white;
+        background-color: ${(props) => {return props.theme.color.darkerColor}};
+        border: solid ${(props) => {return props.theme.color.lighterColor}};
+    }
+`;
+
 export const ResultsCard = styled.div`
     width: 90%;
     max-width: 1400px;
-    height: calc(100vh - 357px);
-    min-height: 440px;
+    height: calc(100vh - 449px);
+    min-height: 300px;
     border-radius: 10px;
     padding: 15px;
     background-color: ${(props) => {return props.theme.color.mediumColorTr}};
-    display: grid;
-    grid-template-columns: 3fr 1fr;
-    align-items: flex-start;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     gap: 20px;
     border: solid 1px ${(props) => {return props.theme.color.darkerColor}};
     margin-top: 30px;
@@ -90,16 +121,28 @@ export const ResultsCard = styled.div`
     }
 `;
 
-export const TableContainer = styled.div`
-    width: 100%;
-    overflow-y: auto;
-    max-height: calc(100vh - 390px);
-    min-height: 400px;
-`;
-
 export const ResultsTable = styled.div`
     width: 100%;
-    border-top: 1px solid ${(props) => {return props.theme.color.lighterColor}};
+    overflow-y: auto;
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 10px 30px;
+
+    @media (max-width: 1250px) {
+        grid-template-columns: repeat(4, 1fr);
+    }
+
+    @media (max-width: 1020px) {
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+    @media (max-width: 786px) {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    @media (max-width: 520px) {
+        grid-template-columns: 1fr;
+    }
 `;
 
 export const Results = styled.div`
@@ -139,117 +182,74 @@ export const ResultsDetails = styled.span`
 
 export const InfoCard = styled.div`
     width: 100%;
-    min-width: 270px;
-    min-height: 376px;
-    border: 1px solid ${(props) => {return props.theme.color.lighterColor}};
-    border-radius: 10px;
-    padding: 15px;
     display: flex;
-    flex-direction: column;
-    justify-content: center;
+    justify-content: space-between;
     align-items: center;
-    overflow-y: auto;
-    margin-bottom: 10px;
-    margin-top: 0;
 
     @media (max-width: 786px) {
-        width: 270px;
-        margin-bottom: 0;
-        margin-top: 10px;
+        flex-direction: column;
+        gap: 15px;
     }
 `;
 
-export const InfoContent = styled.div`
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 15px;
-`;
-
-export const MediumName = styled.div`
-    width: 100%;
-    font-size: 24px;
+export const InfoContent = styled.span`
+    font-size: 16px;
     font-weight: bold;
-    text-align: center;
+    text-align: left;
     color: ${(props) => {return props.theme.color.darkerColor}};
-    display: -webkit-box;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 2;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    
+    @media (max-width: 786px) {
+        text-align: center;
+    }
 `;
 
-export const InfoContainer = styled.div`
-    width: 100%;
+export const Modal = styled.div<{vis: boolean}>`
+    width: 100vw;
+    height: 100vh;
+    background-color: ${(props) => {return props.theme.color.mediumColorTr}};
+    position: fixed;
+    visibility: ${({vis}) => vis? 'visible' : 'hidden'};
+    top: 0;
+    left: 0;
+    z-index: 5;
     display: flex;
     justify-content: center;
+    align-items: center;
 `;
 
-export const MediumPhoto = styled.div<{image: string}>`
-    border: 2px solid ${(props) => {return props.theme.color.lighterColor}};
+export const ModalContent = styled.div`
+    width: 380px;
+    max-width: 1400px;
     border-radius: 10px;
-    height: 150px;
-    aspect-ratio: 3 / 4;
-    background-image: url(${({ image }) => image? image : ''});
-    background-position: 50% 50%;
-    background-size: cover;
-    margin-right: 20px;
-`;
-
-export const TextContainer = styled.div`
+    padding: 20px;
+    background-color: ${(props) => {return props.theme.color.mediumColorOp}};
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 5px;
+    gap: 20px;
+    border: solid 1px ${(props) => {return props.theme.color.darkerColor}};
 `;
 
-export const MediumInfo = styled.span`
-    width: 100%;
-    font-size: 16px;
-    font-weight: bold;
-    text-align: center;
+export const ModalTitle = styled.h1`
     color: ${(props) => {return props.theme.color.darkerColor}};
-    display: -webkit-box;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 1;
-    overflow: hidden;
-    text-overflow: ellipsis;
-
-    span {
-        text-decoration: underline;
-    }
+    margin-bottom: 20px;
 `;
 
-export const MessageNull = styled.span`
-    width: 100%;
-    font-size: 16px;
-    font-weight: bold;
-    text-align: center;
-    color: ${(props) => {return props.theme.color.darkerColor}};
-`;
-
-export const ButtonContainer = styled.div`
-    display: flex;
-    flex-direction: column;
-    justify-content: space-around;
-    align-items: center;
-`;
-
-export const MediumButton = styled.button`
+export const ModalButton = styled.button<{color: string}>`
     font-weight: bold;
     border: solid 1px ${(props) => {return props.theme.color.darkerColor}};
     border-radius: 8px;
-    margin: 15px 0;
-    width: 100px;
-    background-color: green;
+    width: 150px;
+    background-color: ${({color}) => color? color : 'green'};
     color: ${(props) => {return props.theme.color.lighterColor}};
     text-align: center;
-    height: 30px;
+    height: 35px;
     font-size: 20px;
+    align-self: flex-end;
 
     :hover {
         cursor: pointer;
-        transform: scale(1.05);
+        transform: scale(1.02);
     }
 
     :active {

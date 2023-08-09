@@ -38,8 +38,9 @@ import MurP from '../../docs/MuruaicyPortoes.pdf'
 import ButtonMenu from "../../components/ButtonMenu/ButtonMenu";
 import SubMenu from "src/components/SubMenu/SubMenu";
 import ButtonDoc from "src/components/ButtonDoc/ButtonDoc";
-import { CardsCantoContainer, GlobalContainer, SectionTitle } from "./styles";
+import { CardsCantoContainer, GlobalContainer } from "./styles";
 import SideMenu from "src/components/SideMenu/SideMenu";
+import MainTitle from "src/components/MainTitle/MainTitle";
 
 function CantosChaves() {
     
@@ -183,13 +184,13 @@ function CantosChaves() {
             <Header />
             <SubMenu list={menuList}/>
             <GlobalContainer>
-                <SectionTitle>Cantos da Individualidade</SectionTitle>
+                <MainTitle content="Cantos da Individualidade" />
                 <CardsCantoContainer colums={columnIndiv}>
                     {individualidade.map((item) => (
                         <ButtonDoc name={item.name} link={item.link} subtitle={item.subtitle} height={'4em'} />
                     ))}
                 </CardsCantoContainer>
-                <SectionTitle>Cantos das Falanges Missionárias</SectionTitle>
+                <MainTitle content="Cantos das Falanges Missionárias" />
                 <CardsCantoContainer colums={columnChave}>
                     <ButtonMenu active={nitActive} click={nitClick} name={'Nityama'} list={[
                         {link: Nit, canto: 'Canto da Nityama'},
@@ -236,7 +237,7 @@ function CantosChaves() {
                     <ButtonDoc name={'Niatra'} link={Nia} height={'2em'} />
                     <ButtonDoc name={'Aponara'} link={Apo} height={'2em'} />
                 </CardsCantoContainer>
-                <SectionTitle>Chaves dos Trabalhos</SectionTitle>
+                <MainTitle content="Chaves dos Trabalhos" />
                 <CardsCantoContainer colums={columnChave}>
                     {chaves.map((item) => (
                         <ButtonMenu

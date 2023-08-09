@@ -10,6 +10,7 @@
     "@types/node": "^18.15.7",
     "@types/react": "^18.0.29",
     "@types/react-dom": "^18.0.11",
+    "axios": "^1.4.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-scripts": "5.0.1",
@@ -42,8 +43,9 @@
     ]
   },
   "devDependencies": {
+    "@types/babel__core": "^7.20.1",
     "@types/styled-components": "^5.1.26",
     "fork-ts-checker-webpack-plugin": "^8.0.0",
-    "react-router-dom": "^6.7.0"
+    "react-router-dom": "^6.14.2"
   }
 }

@@ -17,7 +17,7 @@ function PageNotFound() {
             <MainContainer>
                 <ErrorImage alt="" src={Err} />
                 <ErrorMessage>Error 404 - Page not found</ErrorMessage>
-                <MessageSpan>A página que você está procurando não foi encontrada. Ela pode ter sido movida ou excluída</MessageSpan>
+                <MessageSpan>A página que você está procurando não foi encontrada. Ela pode ter sido movida ou excluída, ou você não tem permissão para acessá-la</MessageSpan>
                 <ErrorButton onClick={() => navigate('/')}>Voltar para página inicial</ErrorButton>
             </MainContainer>
             <SideMenu list={menuList}/>

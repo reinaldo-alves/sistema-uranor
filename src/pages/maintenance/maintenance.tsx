@@ -1,18 +1,20 @@
-import ButtonDoc from "src/components/ButtonDoc/ButtonDoc";
 import SubMenu from "src/components/SubMenu/SubMenu";
 import Header from "../../components/header/header";
-import { CardsContainer, DocsContainer, SectionTitle } from "./styles";
+import { CardsContainer, PageButton, MainContainer } from "./styles";
 import SideMenu from "src/components/SideMenu/SideMenu";
+import { useNavigate } from "react-router-dom";
+import MainTitle from "src/components/MainTitle/MainTitle";
 
 function Maintenance() {
+    const navigate = useNavigate();
 
     const docs = [
         {name: 'Ministros', link: '/manutencao/ministros'},
-        {name: 'Cavaleiros', link: ''},
-        {name: 'Guias Missionárias', link: ''},
+        {name: 'Cavaleiros', link: '/manutencao/cavaleiros'},
+        {name: 'Guias Missionárias', link: '/manutencao/guias'},
         {name: 'Adjuntos', link: '/manutencao/adjuntos'},
-        {name: 'Templos', link: ''},
-        {name: 'Falanges Missionárias', link: ''},
+        {name: 'Templos', link: '/manutencao/templos'},
+        {name: 'Falanges Missionárias', link: '/manutencao/falanges'},
         {name: 'Usuários', link: ''},
         {name: 'Backup', link: ''}
     ]
@@ -23,14 +25,14 @@ function Maintenance() {
         <>
             <Header />
             <SubMenu list={menuList}/>
-            <DocsContainer>
-                <SectionTitle>Sistema Uranor - Manutenção</SectionTitle>
+            <MainContainer>
+                <MainTitle content="Sistema Uranor - Manutenção" />
                 <CardsContainer>
                     {docs.map((item) => (
-                        <ButtonDoc name={item.name} link={item.link} height={'3em'} sameTab />
+                        <PageButton height='3em' onClick={() => navigate(item.link)}>{item.name}</PageButton>
                     ))}
                 </CardsContainer>
-            </DocsContainer>
+            </MainContainer>
             <SideMenu list={menuList}/>
         </>
     )

@@ -9,11 +9,6 @@ export const DocsContainer = styled.div`
     align-items: center;
 `;
 
-export const SectionTitle = styled.h1`
-    color: ${(props) => {return props.theme.color.lighterColor}};
-    margin: 25px;
-`;
-
 export const CardsContainer = styled.div`
     width: 80%;
     display: grid;

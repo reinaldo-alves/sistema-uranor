@@ -5,10 +5,10 @@ import { useNavigate } from "react-router-dom";
 import SideMenu from "src/components/SideMenu/SideMenu";
 import Header from "src/components/header/header";
 import SubMenu from "src/components/SubMenu/SubMenu";
-import { IAdjunto, IMentor } from "src/types/types";
+import { IAdjunto, IEstado, ITemplo } from "src/types/types";
 import MainTitle from "src/components/MainTitle/MainTitle";
 
-function Adjuntos() {
+function Templos() {
     
     const navigate = useNavigate();
     
@@ -17,10 +17,10 @@ function Adjuntos() {
     const [adjunto, setAdjunto] = useState('');
     const [classif, setClassif] = useState('');
     const [esperanca, setEsperanca] = useState(false);
-    const [selected, setSelected] = useState({} as IAdjunto);
+    const [selected, setSelected] = useState({} as ITemplo);
     const [showModal, setShowModal] = useState(false);
     
-    const { adjuntos, ministros } = useContext(ListContext);
+    const { adjuntos, templos, estados } = useContext(ListContext);
 
     const listSubMenu = [
         {title: 'Página Inicial', click: '/'},
@@ -29,14 +29,14 @@ function Adjuntos() {
 
     const modalButtonFunction = () => {
         setShowModal(false)
-        setSelected({} as IAdjunto)
+        setSelected({} as ITemplo)
     }
     
-    adjuntos.sort((adjA: IAdjunto, adjB: IAdjunto) => {
-        if (adjA.min < adjB.min) {
+    templos.sort((temA: ITemplo, temB: ITemplo) => {
+        if (temA.cidade < temB.cidade) {
           return -1;
         }
-        if (adjA.min > adjB.min) {
+        if (temA.cidade > temB.cidade) {
           return 1;
         }
         return 0;
@@ -47,30 +47,39 @@ function Adjuntos() {
             <Header />
             <SubMenu list={listSubMenu}/>
             <MainContainer>
-                <MainTitle content="Adjuntos - Manutenção" />
+                <MainTitle content="Templos - Manutenção" />
                 <SearchCard>
                     <SearchContainer>
                         <InputContainer>
-                            <label>Ministro</label>
+                            <label>Nome do Templo</label>
                             <input />
                         </InputContainer>
                         <InputContainer>
-                            <label>Nome do Adjunto</label>
+                            <label>Estado</label>
+                            <select>
+                            <option value=''></option>
+                            {estados.map((item: IEstado, index: number) => (
+                                <option key={index} value={item.abrev}>{item.abrev}</option>
+                            ))}
+                        </select>
+                        </InputContainer>
+                        <InputContainer>
+                            <label>Ministro</label>
                             <input />
                         </InputContainer>
                         <SearchButton onClick={() => setShowModal(true)}>Adicionar novo</SearchButton>
                     </SearchContainer>
                     <InfoCard>
                         <InfoContent>Clique sobre um adjunto para EDITAR</InfoContent>
-                        <InfoContent>Resultados encontrados: {adjuntos.length}</InfoContent>
+                        <InfoContent>Resultados encontrados: {templos.length}</InfoContent>
                     </InfoCard>
                 </SearchCard>
                 <ResultsCard>
                     <ResultsTable>
-                        {adjuntos.map((item: IAdjunto, index: number) => (
+                        {templos.map((item: ITemplo, index: number) => (
                             <Results key={index} onClick={() => setSelected(item)}>
-                                <ResultsTitle>Adj. {item.min} - Mestre {item.adj}</ResultsTitle>
-                                <ResultsDetails>Classificação: {item.classif} - Esperança: {item.esperanca? 'Sim' : 'Não'}</ResultsDetails>
+                                <ResultsTitle>{item.cidade} - {item.estado}</ResultsTitle>
+                                <ResultsDetails>Adj. {adjuntos.filter((ad: IAdjunto) => ad.id === item.presidente)[0].min} - Mestre {adjuntos.filter((ad: IAdjunto) => ad.id === item.presidente)[0].adj}</ResultsDetails>
                             </Results>
                         ))}
                     </ResultsTable>
@@ -79,33 +88,27 @@ function Adjuntos() {
             <SideMenu list={listSubMenu} />
             <Modal vis={showModal}>
                 <ModalContent>
-                    <ModalTitle>Novo Adjunto</ModalTitle>
+                    <ModalTitle>Novo Templo</ModalTitle>
                     <InputContainer>
-                        <label>Ministro</label>
+                        <label>Nome do Templo (Cidade)</label>
+                        <input type="text" value={adjunto} onChange={(e) => setAdjunto(e.target.value)} />
+                    </InputContainer>
+                    <InputContainer>
+                        <label>Estado</label>
                         <select>
                             <option value=''></option>
-                            {ministros.map((item: IMentor, index: number) => (
-                                <option key={index} value={item.id}>{item.nome}</option>
+                            {estados.map((item: IEstado, index: number) => (
+                                <option key={index} value={item.abrev}>{item.abrev}</option>
                             ))}
                         </select>
                     </InputContainer>
                     <InputContainer>
-                        <label>Nome do Adjunto</label>
-                        <input type="text" value={adjunto} onChange={(e) => setAdjunto(e.target.value)} />
-                    </InputContainer>
-                    <InputContainer>
-                        <label>Classificação</label>
+                        <label>Presidente</label>
                         <select>
                             <option value=''></option>
-                            <option value='Arcanos'>Arcanos</option>
-                            <option value='Rama 2000'>Rama 2000</option>
-                        </select>
-                    </InputContainer>
-                    <InputContainer>
-                        <label>Adjunto Esperança?</label>
-                        <select>
-                            <option value={0}>Não</option>
-                            <option value={1}>Sim</option>
+                            {adjuntos.map((item: IAdjunto, index: number) => (
+                                <option key={index} value={item.id}>Adj. {item.min} - Mestre {item.adj}</option>
+                            ))}
                         </select>
                     </InputContainer>
                     <div style={{display: 'flex', gap: '20px'}}>
@@ -119,4 +122,4 @@ function Adjuntos() {
     )
 }
 
-export default Adjuntos
+export default Templos

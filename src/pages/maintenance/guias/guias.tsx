@@ -8,7 +8,7 @@ import SubMenu from "src/components/SubMenu/SubMenu";
 import { IMentor } from "src/types/types";
 import MainTitle from "src/components/MainTitle/MainTitle";
 
-function Ministros() {
+function Guias() {
     
     const navigate = useNavigate();
     
@@ -17,7 +17,7 @@ function Ministros() {
     const [selected, setSelected] = useState({} as IMentor);
     const [showModal, setShowModal] = useState(false);
     
-    const { ministros } = useContext(ListContext);
+    const { guias } = useContext(ListContext);
 
     const listSubMenu = [
         {title: 'Página Inicial', click: '/'},
@@ -29,11 +29,11 @@ function Ministros() {
         setSelected({} as IMentor)
     }
     
-    ministros.sort((minA: IMentor, minB: IMentor) => {
-        if (minA.nome < minB.nome) {
+    guias.sort((guiaA: IMentor, guiaB: IMentor) => {
+        if (guiaA.nome < guiaB.nome) {
           return -1;
         }
-        if (minA.nome > minB.nome) {
+        if (guiaA.nome > guiaB.nome) {
           return 1;
         }
         return 0;
@@ -44,23 +44,23 @@ function Ministros() {
             <Header />
             <SubMenu list={listSubMenu}/>
             <MainContainer>
-                <MainTitle content="Ministros - Manutenção" />
+                <MainTitle content="Guias Missionárias - Manutenção" />
                 <SearchCard>
                     <SearchContainer>
                         <InputContainer>
-                            <label>Nome do Ministro</label>
+                            <label>Nome da Guia Missionária</label>
                             <input />
                         </InputContainer>
                         <SearchButton onClick={() => setShowModal(true)}>Adicionar novo</SearchButton>
                     </SearchContainer>
                     <InfoCard>
                         <InfoContent>Clique sobre um ministro para EDITAR</InfoContent>
-                        <InfoContent>Resultados encontrados: {ministros.length}</InfoContent>
+                        <InfoContent>Resultados encontrados: {guias.length}</InfoContent>
                     </InfoCard>
                 </SearchCard>
                 <ResultsCard>
                     <ResultsTable>
-                        {ministros.map((item: IMentor, index: number) => (
+                        {guias.map((item: IMentor, index: number) => (
                             <Results key={index} onClick={() => setSelected(item)}>
                                 <ResultsTitle>{item.nome}</ResultsTitle>
                             </Results>
@@ -71,9 +71,9 @@ function Ministros() {
             <SideMenu list={listSubMenu} />
             <Modal vis={showModal}>
                 <ModalContent>
-                    <ModalTitle>Novo Ministro</ModalTitle>
+                    <ModalTitle>Nova Guia Missionária</ModalTitle>
                     <InputContainer>
-                        <label>Nome do Ministro</label>
+                        <label>Nome da Guia Missionária</label>
                         <input type="text" value={ministro} onChange={(e) => setMinistro(e.target.value)} />
                     </InputContainer>
                     <div style={{display: 'flex', gap: '20px'}}>
@@ -87,4 +87,4 @@ function Ministros() {
     )
 }
 
-export default Ministros
+export default Guias

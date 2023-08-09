@@ -27,3 +27,15 @@ export interface IFalange {
     prfLua: string | null,
     ninfa: boolean
 }
+
+export interface ITemplo {
+    id: number, 
+    cidade: string,
+    estado: string,
+    presidente: number
+}
+
+export interface IEstado {
+    abrev: string,
+    state: string
+}

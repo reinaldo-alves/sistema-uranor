@@ -20,16 +20,22 @@ export const ListStore = ({ children }: any) => {
         {abrev: 'TO', state: 'Tocantins'}
     ]
 
-    const templos = ['Jaboatão - PE', 'Prazeres - PE', 'São José do Vale do Rio Preto - RJ']
+    const templos = [
+        {id: 1, cidade: 'Jaboatão', estado: 'PE', presidente: 1},
+        {id: 2, cidade: 'Prazeres', estado: 'PE', presidente: 1},
+        {id: 3, cidade: 'Olinda', estado: 'PE', presidente: 5},
+        {id: 4, cidade: 'Dois Irmãos', estado: 'PE', presidente: 6},
+        {id: 5, cidade: 'São José do Vale do Rio Preto', estado: 'RJ', presidente: 6},
+    ]
     
     const adjuntos = [
-        {id: '1', min: 'Uranor', adj: 'Vasconcelos', classif: 'Arcanos', esperanca: false},
-        {id: '2', min: 'Umaryã', adj: 'Ignácio Sales', classif: 'Arcanos', esperanca: true},
-        {id: '3', min: 'Adones', adj: 'Severino Ramos', classif: 'Arcanos', esperanca: true},
-        {id: '4', min: 'Afário', adj: 'Cezar', classif: 'Arcanos', esperanca: false},
-        {id: '5', min: 'Parlo', adj: 'Zilcio', classif: 'Arcanos', esperanca: false},
-        {id: '6', min: 'Nerano', adj: 'Carlos Magno', classif: 'Arcanos', esperanca: false},
-        {id: '7', min: 'Oratruz', adj: 'Krauzio', classif: 'Arcanos', esperanca: false},
+        {id: 1, min: 'Uranor', adj: 'Vasconcelos', classif: 'Arcanos', esperanca: false},
+        {id: 2, min: 'Umaryã', adj: 'Ignácio Sales', classif: 'Arcanos', esperanca: true},
+        {id: 3, min: 'Adones', adj: 'Severino Ramos', classif: 'Arcanos', esperanca: true},
+        {id: 4, min: 'Afário', adj: 'Cezar', classif: 'Arcanos', esperanca: false},
+        {id: 5, min: 'Parlo', adj: 'Zilcio', classif: 'Arcanos', esperanca: false},
+        {id: 6, min: 'Nerano', adj: 'Carlos Magno', classif: 'Arcanos', esperanca: false},
+        {id: 7, min: 'Oratruz', adj: 'Krauzio', classif: 'Arcanos', esperanca: false},
     ]
 
     const coletes = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]

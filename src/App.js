@@ -5,7 +5,6 @@ import CantosChaves from './pages/cantosechaves/cantosechaves';
 import DocumentosUteis from './pages/documentosuteis/documentosuteis';
 import { Background, Footer } from './styles';
 import { ThemeProvider } from 'styled-components';
-import Mediuns from './pages/mediuns/mediuns';
 import Desenvolvimento from './pages/desenvolvimento/desenvolvimento';
 import Cursos from './pages/cursos/cursos';
 import Consagracoes from './pages/consagracoes/consagracoes';
@@ -19,6 +18,12 @@ import ShowMedium from './pages/mediuns/ShowMedium/ShowMedium';
 import Maintenance from './pages/maintenance/maintenance';
 import Adjuntos from './pages/maintenance/adjuntos/adjuntos';
 import Ministros from './pages/maintenance/ministros/ministros';
+import { useContext } from 'react';
+import { UserContext } from './contexts/UserContext';
+import Guias from './pages/maintenance/guias/guias';
+import Cavaleiros from './pages/maintenance/cavaleiros/cavaleiros';
+import Templos from './pages/maintenance/templos/templos';
+import Falanges from './pages/maintenance/falanges/falanges';
 
 function App() {
   const theme = {
@@ -34,23 +39,44 @@ function App() {
       darkerColor: '#002776'
     }
   }
+
+  const { login, user } = useContext(UserContext)
+
+  if(!login) {
+    return (
+      <ThemeProvider theme={theme}>
+        <Background>
+          <BrowserRouter>
+            <Routes>
+              <Route path='*' element={<Login />} />
+            </Routes>
+          </BrowserRouter>
+        </Background>
+      </ThemeProvider>
+    )
+  }
   
   return (
     <ThemeProvider theme={theme}>
       <Background>
         <BrowserRouter>
           <Routes>
-            <Route path='/login' element={<Login />} />
             <Route path='/' element={<Home />} />
-            <Route path='/manutencao' element={<Maintenance />} />
-            <Route path='/manutencao/ministros' element={<Ministros />} />
-            <Route path='/manutencao/adjuntos' element={<Adjuntos />} />
-            <Route path='/mediuns' element={<Mediuns />}>
-              <Route path='consulta' element={<SearchMedium />} />
-              <Route path='consulta/:id' element={<ShowMedium />} />
-              <Route path='cadastro' element={<AddMedium />} />
-              <Route path='menor' element={<YoungMedium />} />
-            </Route>
+            {user.level === 'Administrador' ? 
+              <>
+                <Route path='/manutencao' element={<Maintenance />} />
+                <Route path='/manutencao/ministros' element={<Ministros />} />
+                <Route path='/manutencao/cavaleiros' element={<Cavaleiros />} />
+                <Route path='/manutencao/guias' element={<Guias />} />
+                <Route path='/manutencao/adjuntos' element={<Adjuntos />} />
+                <Route path='/manutencao/templos' element={<Templos />} />
+                <Route path='/manutencao/falanges' element={<Falanges />} />
+              </>  
+            : ''}
+            <Route path='/mediuns/consulta' element={<SearchMedium />} />
+            <Route path='/mediuns/consulta/:id' element={<ShowMedium />} />
+            <Route path='/mediuns/cadastro' element={<AddMedium />} />
+            <Route path='/mediuns/menor' element={<YoungMedium />} />
             <Route path='/cantosechaves' element={<CantosChaves />} />
             <Route path='/desenvolvimento' element={<Desenvolvimento />} />
             <Route path='/cursos' element={<Cursos />} />

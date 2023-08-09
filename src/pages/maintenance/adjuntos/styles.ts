@@ -9,11 +9,6 @@ export const MainContainer = styled.div`
     align-items: center;
 `;
 
-export const SectionTitle = styled.h1`
-    color: ${(props) => {return props.theme.color.lighterColor}};
-    margin: 25px;
-`;
-
 export const SearchCard = styled.div`
     width: 90%;
     max-width: 1400px;
@@ -106,8 +101,8 @@ export const SearchButton = styled.button`
 export const ResultsCard = styled.div`
     width: 90%;
     max-width: 1400px;
-    height: calc(100vh - 355px);
-    min-height: 440px;
+    height: calc(100vh - 449px);
+    min-height: 300px;
     border-radius: 10px;
     padding: 15px;
     background-color: ${(props) => {return props.theme.color.mediumColorTr}};
@@ -126,24 +121,23 @@ export const ResultsCard = styled.div`
     }
 `;
 
-export const TableContainer = styled.div`
+export const ResultsTable = styled.div`
     width: 100%;
-    height: 70vh;
     overflow-y: auto;
-    max-height: calc(100vh - 390px);
-    min-height: 400px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px 30px;
+
+    @media (max-width: 1120px) {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    @media (max-width: 786px) {
+        grid-template-columns: 1fr;
+    }
 `;
 
-export const ResultsTable = styled.table`
-    width: 100%;
-    max-width: 100%;
-    border-collapse: collapse;
-    text-indent: initial;
-    border-spacing: 2px;
-    border-top: 1px solid ${(props) => {return props.theme.color.lighterColor}};
-`;
-
-export const Results = styled.tr`
+export const Results = styled.div`
     border-bottom: 1px solid ${(props) => {return props.theme.color.lighterColor}};
     display: flex;
     flex-direction: column;
@@ -216,7 +210,7 @@ export const Modal = styled.div<{vis: boolean}>`
 `;
 
 export const ModalContent = styled.div`
-    width: 400px;
+    width: 380px;
     max-width: 1400px;
     border-radius: 10px;
     padding: 20px;

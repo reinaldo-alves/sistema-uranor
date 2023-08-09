@@ -8,12 +8,6 @@ export const GlobalContainer = styled.div`
     align-items: center;
 `;
 
-export const SectionTitle = styled.h1`
-    color: ${(props) => {return props.theme.color.lighterColor}};
-    margin: 25px;
-    text-align: center;
-`;
-
 export const CardsCantoContainer = styled.div<{colums: string}>`
     width: 80%;
     height: 100%;

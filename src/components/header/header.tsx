@@ -7,7 +7,7 @@ import { MenuContext } from 'src/contexts/MenuContext'
 import { useNavigate } from 'react-router-dom'
 
 function Header() {
-    const { user } = useContext(UserContext);
+    const { user, logOut } = useContext(UserContext);
     const { setOpenMenu } = useContext(MenuContext);
     const navigate = useNavigate();
 
@@ -29,7 +29,7 @@ function Header() {
                 <p>Nível: {user.level}</p>
                 <HeaderButtonContainer>
                     <HeaderButton onClick={clickButton}>{titleButton}</HeaderButton>
-                    <HeaderButton>Sair</HeaderButton>
+                    <HeaderButton onClick={() => logOut()}>Sair</HeaderButton>
                 </HeaderButtonContainer>
             </UserContainer>
         </HeaderContainer>
