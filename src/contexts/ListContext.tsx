@@ -1,8 +1,42 @@
-import { createContext } from "react";
+import { createContext, useState } from "react";
+import api from "src/api";
+import { ICavaleiro, IFalange, IMentor } from "src/types/types";
 
 export const ListContext = createContext({} as any);
 
 export const ListStore = ({ children }: any) => {
+    const [ministros, setMinistros] = useState([] as Array<IMentor>);
+    const [cavaleiros, setCavaleiros] = useState([] as Array<ICavaleiro>);
+    const [guias, setGuias] = useState([] as Array<IMentor>);
+    const [falMiss, setFalMiss] = useState([] as Array<IFalange>);
+
+    interface IFalangeAPI {
+        falange_id: number,
+        nome: string,
+        primeira: string,
+        adjMin: string | null,
+        adjNome: string | null,
+        prefSol: string | null,
+        prefLua: string | null,
+        ninfa: number
+    }
+
+    interface IMinistroAPI {
+        ministro_id: number,
+        nome: string,
+    }
+
+    interface IGuiaAPI {
+        guia_id: number,
+        nome: string,
+    }
+
+    interface ICavaleiroAPI {
+        cavaleiro_id: number,
+        nome: string,
+        med: string
+    }
+    
     const estados = [
         {abrev: 'PE', state: 'Pernambuco'}, {abrev: 'AC', state: 'Acre'},
         {abrev: 'AL', state: 'Alagoas'}, {abrev: 'AM', state: 'Amazonas'},
@@ -18,6 +52,15 @@ export const ListStore = ({ children }: any) => {
         {abrev: 'RR', state: 'Roraima'}, {abrev: 'SC', state: 'Santa Catarina'}, 
         {abrev: 'SP', state: 'São Paulo'}, {abrev: 'SE', state: 'Sergipe'}, 
         {abrev: 'TO', state: 'Tocantins'}
+    ]
+
+    const users = [
+        {id: 1, name: 'Reinaldo Alves', level: 'Administrador', medium_id: 10},
+        {id: 2, name: 'Lúcio Costa', level: 'Administrador', medium_id: 11},
+        {id: 3, name: 'Marina Sousa', level: 'Devas', medium_id: 12},
+        {id: 4, name: 'Juliana Rios', level: 'Devas', medium_id: 13},
+        {id: 5, name: 'Rômulo Andrade', level: 'Devas Aspirante', medium_id: 14},
+        {id: 6, name: 'Alexandre Albuquerque', level: 'Devas Aspirante', medium_id: 15},
     ]
 
     const templos = [
@@ -49,32 +92,6 @@ export const ListStore = ({ children }: any) => {
     
     const falMest = ['Anunciação', 'Ascenção', 'Consagração', 'Cruzada', 'Estrela Candente', 'Redenção', 'Ressurreição', 'Sacramento', 'Solar', 'Sublimação', 'Unificação']
 
-    const falMiss = [
-        {id: 1, falange: 'Nityama', primeira: 'Ana Maria', adjMin: 'Trino Regente Alácio', adjNome: 'Moraes', prefSol: 'ISIS RA', prefLua: 'ISIS', ninfa: true},
-        {id: 2, falange: 'Nityama Madruxa', primeira: 'Ana Maria', adjMin: 'Trino Regente Alácio', adjNome: 'Moraes', prefSol: 'ISIS RA', prefLua: 'ISIS', ninfa: true},
-        {id: 3, falange: 'Samaritana', primeira: 'Ana Maria', adjMin: 'Trino Regente Alácio', adjNome: 'Moraes', prefSol: 'ISIS RA', prefLua: 'ISIS', ninfa: true},
-        {id: 4, falange: 'Grega', primeira: 'Ana Maria', adjMin: 'Trino Regente Alácio', adjNome: 'Moraes', prefSol: 'ISIS RA', prefLua: 'ISIS', ninfa: true},
-        {id: 5, falange: 'Maya', primeira: 'Ana Maria', adjMin: 'Trino Regente Alácio', adjNome: 'Moraes', prefSol: 'ISIS RA', prefLua: 'ISIS', ninfa: true},
-        {id: 6, falange: 'Mago', primeira: 'Ana Maria', adjMin: 'Trino Regente Alácio', adjNome: 'Moraes', prefSol: 'ISIS RA', prefLua: 'ISIS', ninfa: false},
-        {id: 7, falange: 'Príncipe Maya', primeira: 'Ana Maria', adjMin: 'Trino Regente Alácio', adjNome: 'Moraes', prefSol: 'ISIS RA', prefLua: 'ISIS', ninfa: false},
-        {id: 8, falange: 'Yuricy', primeira: 'Ana Maria', adjMin: 'Trino Regente Alácio', adjNome: 'Moraes', prefSol: 'ISIS RA', prefLua: 'ISIS', ninfa: true},
-        {id: 9, falange: 'Dharmo-Oxinto', primeira: 'Ana Maria', adjMin: 'Trino Regente Alácio', adjNome: 'Moraes', prefSol: 'ISIS RA', prefLua: 'ISIS', ninfa: true},
-        {id: 10, falange: 'Muruaicy', primeira: 'Ana Maria', adjMin: 'Trino Regente Alácio', adjNome: 'Moraes', prefSol: 'ISIS RA', prefLua: 'ISIS', ninfa: true},
-        {id: 11, falange: 'Jaçana', primeira: 'Ana Maria', adjMin: 'Trino Regente Alácio', adjNome: 'Moraes', prefSol: 'ISIS RA', prefLua: 'ISIS', ninfa: true},
-        {id: 12, falange: 'Ariana da Estrela Testemunha', primeira: 'Ana Maria', adjMin: 'Trino Regente Alácio', adjNome: 'Moraes', prefSol: 'ISIS RA', prefLua: 'ISIS', ninfa: true},
-        {id: 13, falange: 'Madalena', primeira: 'Ana Maria', adjMin: 'Trino Regente Alácio', adjNome: 'Moraes', prefSol: 'ISIS RA', prefLua: 'ISIS', ninfa: true},
-        {id: 14, falange: 'Narayama', primeira: 'Ana Maria', adjMin: 'Trino Regente Alácio', adjNome: 'Moraes', prefSol: 'ISIS RA', prefLua: 'ISIS', ninfa: true},
-        {id: 15, falange: 'Franciscana', primeira: 'Ana Maria', adjMin: 'Trino Regente Alácio', adjNome: 'Moraes', prefSol: 'ISIS RA', prefLua: 'ISIS', ninfa: true},
-        {id: 16, falange: 'Rochana', primeira: 'Ana Maria', adjMin: 'Trino Regente Alácio', adjNome: 'Moraes', prefSol: 'ISIS RA', prefLua: 'ISIS', ninfa: true},
-        {id: 17, falange: 'Cayçara', primeira: 'Ana Maria', adjMin: 'Trino Regente Alácio', adjNome: 'Moraes', prefSol: 'ISIS RA', prefLua: 'ISIS', ninfa: true},
-        {id: 18, falange: 'Tupinambá', primeira: 'Ana Maria', adjMin: 'Trino Regente Alácio', adjNome: 'Moraes', prefSol: 'ISIS RA', prefLua: 'ISIS', ninfa: true},
-        {id: 19, falange: 'Cigana Aganara', primeira: 'Ana Maria', adjMin: 'Trino Regente Alácio', adjNome: 'Moraes', prefSol: 'ISIS RA', prefLua: 'ISIS', ninfa: true},
-        {id: 20, falange: 'Cigana Tagana', primeira: 'Ana Maria', adjMin: 'Trino Regente Alácio', adjNome: 'Moraes', prefSol: 'ISIS RA', prefLua: 'ISIS', ninfa: true},
-        {id: 21, falange: 'Agulha Ismênia', primeira: 'Ana Maria', adjMin: 'Trino Regente Alácio', adjNome: 'Moraes', prefSol: 'ISIS RA', prefLua: 'ISIS', ninfa: true},
-        {id: 22, falange: 'Niatra', primeira: 'Ana Maria', adjMin: 'Trino Regente Alácio', adjNome: 'Moraes', prefSol: 'ISIS RA', prefLua: 'ISIS', ninfa: true},
-        {id: 23, falange: 'Aponara', primeira: 'Ana Maria', adjMin: 'Trino Regente Alácio', adjNome: 'Moraes', prefSol: 'ISIS RA', prefLua: 'ISIS', ninfa: true}
-    ]
-
     const povos = ['Abatã', 'Açanã', 'Açay', 'Amaray', 'Amarê', 'Anaçã', 'Anaçuê', 'Anay', 'Araçê', 'Aramê', 'Aramês', 'Aramôs', 'Arianos', 'Aruã', 'Aruaçã', 'Aruçay', 'Aryatã', 'Camuxy', 'Caporã', 'Carapuana', 'Carybãs', 'Cayrã', 'Cayrus', 'Garacy', 'Guacy', 'Ibaporã', 'Ipuã', 'Ipurã', 'Jaçã', 'Jaçay', 'Jaçuy', 'Jacy', 'Jaguary', 'Janatã', 'Japatã', 'Jaranã', 'Jaruã', 'Joacy', 'Jurupy', 'Juruy', 'Jussay', 'Koaçã', 'Muaçuy', 'Muray', 'Murugy', 'Omayã', 'Peguys', 'Pegy', 'Pery', 'Suadã', 'Tapiris', 'Taporã', 'Tapuã', 'Tapurã', 'Tarymã', 'Tumarê', 'Tupagy', 'Tupinambás', 'Tupuy', 'Uray', 'Uruanã', 'Yaçã', 'Yacy', 'Ymucy', 'Yorimã', 'Ytuporã', 'Yubatã', 'Yucarã', 'Yumary', 'Zanays']
 
     const turnoL = {ninfa: ['Doragana', 'Sabarana'], jaguar: ['Dubali', 'Reili']}
@@ -83,35 +100,6 @@ export const ListStore = ({ children }: any) => {
         ninfa: ['Adelanas', 'Adanares', 'Aganaras', 'Ajouramas', 'Amoranas', 'Galanas', 'Gramaras', 'Maturamas', 'Muranas', 'Savanas', 'Tanaras', 'Tavanas', 'Valúrias', 'Vouganas'],
         jaguar: ['Adelanos', 'Adonares', 'Aganaros', 'Ajouros', 'Amoros', 'Galeros', 'Gramouros', 'Maturos', 'Muranos', 'Savanos', 'Tanaros', 'Tavores', 'Valúrios', 'Vougues']
     }
-
-    const ministros = [
-        {id: 1, nome: 'Omaros'},
-        {id: 2, nome: 'Adalano'},
-        {id: 3, nome: 'Polano'},
-        {id: 4, nome: 'Manair'},
-        {id: 5, nome: 'Afaros'},
-    ]
-
-    const cavaleiros = [
-        {id: 1, nome: 'Fenaro', med: 'Doutrinador'},
-        {id: 2, nome: 'Fejuro', med: 'Doutrinador'},
-        {id: 3, nome: 'Faran', med: 'Doutrinador'},
-        {id: 4, nome: 'Falano', med: 'Doutrinador'},
-        {id: 5, nome: 'Fucio', med: 'Doutrinador'},
-        {id: 6, nome: 'Egato', med: 'Apará'},
-        {id: 7, nome: 'Enuro', med: 'Apará'},
-        {id: 8, nome: 'Etario', med: 'Apará'},
-        {id: 9, nome: 'Ekiato', med: 'Apará'},
-        {id: 10, nome: 'Eluz', med: 'Apará'},
-    ]
-
-    const guias = [
-        {id: 1, nome: 'Anarã'},
-        {id: 2, nome: 'Arabela'},
-        {id: 3, nome: 'Aracila'},
-        {id: 4, nome: 'Atalva'},
-        {id: 5, nome: 'Alana'},
-    ]
 
     const estrelas = {
         sol: ['Geiras', 'Gestas', 'Teizes', 'Vanulos'],
@@ -125,8 +113,57 @@ export const ListStore = ({ children }: any) => {
         lua: ['5° Yurê Raio Autorizado Cautanenses Raio Rama Ajanã', '5° Yurê Adjunto Regente Cautanenses Raio Rama Ajanã', '5° Yurê Adjunto Koatay 108 Cautanenses Raio Rama Ajanã', '5° Yurê Adjunto Koatay 108 Cautanenses Raio Ajanã Rama 2000', '5° Yurê Adjunto Koatay 108 Vancares Raio Ajanã Rama 2000']
     }
 
+    const loadMinistro = (token: string) => {
+        api.get('/ministro/get-ministros', {headers:{Authorization: token}}).then(({ data }) => {
+            const ministro = data.ministro.map((item: IMinistroAPI) => ({
+                id: item.ministro_id,
+                nome: item.nome
+            }))
+            setMinistros(ministro)
+        }).catch((error) => {
+            console.log('Erro ao carregar a lista de ministros', error)
+        })
+    }
+
+    const loadCavaleiro = (token: string) => {
+        api.get('/cavaleiro/get-cavaleiros', {headers:{Authorization: token}}).then(({ data }) => {
+            const cavaleiro = data.cavaleiro.map((item: ICavaleiroAPI) => ({
+                id: item.cavaleiro_id,
+                nome: item.nome,
+                med: item.med
+            }))
+            setCavaleiros(cavaleiro)
+        }).catch((error) => {
+            console.log('Erro ao carregar a lista de cavaleiros', error)
+        })
+    }
+
+    const loadGuia = (token: string) => {
+        api.get('/guia/get-guias', {headers:{Authorization: token}}).then(({ data }) => {
+            const guia = data.guia.map((item: IGuiaAPI) => ({
+                id: item.guia_id,
+                nome: item.nome
+            }))
+            setGuias(guia)
+        }).catch((error) => {
+            console.log('Erro ao carregar a lista de guias missionárias', error)
+        })
+    }
+
+    const loadFalMiss = (token: string) => {
+        api.get('/falange/get-falanges', {headers:{Authorization: token}}).then(({ data }) => {
+            const falange = data.falange.map((item: IFalangeAPI) => ({
+                ...item,
+                ninfa: item.ninfa === 1 ? true : false
+            }))
+            setFalMiss(falange)
+        }).catch((error) => {
+            console.log('Erro ao carregar a lista de falanges missionárias', error)
+        })
+    }
+
     return (
-        <ListContext.Provider value={{templos, estados, adjuntos, coletes, classMest, falMest, falMiss, povos, turnoL, turnoT, ministros, cavaleiros, guias, estrelas, princesas, classificacao}} >
+        <ListContext.Provider value={{templos, estados, users, adjuntos, coletes, classMest, falMest, falMiss, povos, turnoL, turnoT, ministros, cavaleiros, guias, estrelas, princesas, classificacao, loadMinistro, loadCavaleiro, loadGuia, loadFalMiss}} >
             { children }
         </ListContext.Provider>
     )

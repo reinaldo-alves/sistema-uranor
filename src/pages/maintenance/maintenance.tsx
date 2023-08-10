@@ -15,8 +15,8 @@ function Maintenance() {
         {name: 'Adjuntos', link: '/manutencao/adjuntos'},
         {name: 'Templos', link: '/manutencao/templos'},
         {name: 'Falanges Missionárias', link: '/manutencao/falanges'},
-        {name: 'Usuários', link: ''},
-        {name: 'Backup', link: ''}
+        {name: 'Usuários', link: '/manutencao/usuarios'},
+        {name: 'Backup', link: '/manutencao/backup'}
     ]
     
     const menuList = [{title: 'Página Inicial', click: '/'}]
@@ -28,8 +28,8 @@ function Maintenance() {
             <MainContainer>
                 <MainTitle content="Sistema Uranor - Manutenção" />
                 <CardsContainer>
-                    {docs.map((item) => (
-                        <PageButton height='3em' onClick={() => navigate(item.link)}>{item.name}</PageButton>
+                    {docs.map((item, index) => (
+                        <PageButton key={index} height='3em' onClick={() => navigate(item.link)}>{item.name}</PageButton>
                     ))}
                 </CardsContainer>
             </MainContainer>

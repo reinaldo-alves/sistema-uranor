@@ -79,7 +79,7 @@ function SearchMedium() {
                 <ResultsCard>
                     <TableContainer>
                         <ResultsTable>
-                            {medium.map((item: IMedium, index: number) => (
+                            {medium.map((item: any, index: number) => (
                                 <Results key={index} onClick={() => setSelected(item)}>
                                     <ResultsTitle>{item.nome}</ResultsTitle>
                                     <ResultsDetails>{item.med} - {item.templo}</ResultsDetails>

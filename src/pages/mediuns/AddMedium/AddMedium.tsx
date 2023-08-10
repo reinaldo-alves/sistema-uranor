@@ -274,7 +274,7 @@ function AddMedium() {
                         <select>
                             <option value={undefined}></option>
                             {listFalMiss.map((item: IFalange, index: number) => (
-                                <option key={index} value={item.id}>{item.falange}</option>
+                                <option key={index} value={item.falange_id}>{item.nome}</option>
                             ))}
                         </select>
                         <label>Adjunto Devas: </label>

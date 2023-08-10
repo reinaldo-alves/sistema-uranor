@@ -25,8 +25,8 @@ export const SearchCard = styled.div`
 export const SearchContainer = styled.div`
     width: 100%;
     display: grid;
-    grid-template-columns: 1fr 280px;
-    align-items: flex-end;
+    grid-template-columns: 1fr 200px 180px;
+    align-items: center;
     gap: 20px;
 
     @media (max-width: 786px) {
@@ -74,6 +74,30 @@ export const InputContainer = styled.div`
     }
 `;
 
+export const SearchButton = styled.button`
+    font-weight: bold;
+    border: solid 1px ${(props) => {return props.theme.color.darkerColor}};
+    border-radius: 8px;
+    width: 100%;
+    background-color: green;
+    color: ${(props) => {return props.theme.color.lighterColor}};
+    text-align: center;
+    height: 35px;
+    font-size: 20px;
+    align-self: flex-end;
+
+    :hover {
+        cursor: pointer;
+        transform: scale(1.02);
+    }
+
+    :active {
+        color: white;
+        background-color: ${(props) => {return props.theme.color.darkerColor}};
+        border: solid ${(props) => {return props.theme.color.lighterColor}};
+    }
+`;
+
 export const ResultsCard = styled.div`
     width: 90%;
     max-width: 1400px;
@@ -101,14 +125,22 @@ export const ResultsTable = styled.div`
     width: 100%;
     overflow-y: auto;
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(5, 1fr);
     gap: 10px 30px;
 
-    @media (max-width: 1120px) {
-        grid-template-columns: repeat(2, 1fr);
+    @media (max-width: 1250px) {
+        grid-template-columns: repeat(4, 1fr);
+    }
+
+    @media (max-width: 1020px) {
+        grid-template-columns: repeat(3, 1fr);
     }
 
     @media (max-width: 786px) {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    @media (max-width: 520px) {
         grid-template-columns: 1fr;
     }
 `;
@@ -137,17 +169,26 @@ export const ResultsTitle = styled.span`
     text-align: left;
 `;
 
+export const ResultsDetails = styled.span`
+    font-size: 12px;
+    color: ${(props) => {return props.theme.color.darkerColor}};
+    padding-left: 4px;
+    font-weight: bold;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-align: left;
+`;
+
 export const InfoCard = styled.div`
     width: 100%;
     display: flex;
-    flex-direction: column;
     justify-content: space-between;
-    align-items: flex-end;
+    align-items: center;
 
     @media (max-width: 786px) {
         flex-direction: column;
         gap: 15px;
-        align-items: center;
     }
 `;
 
@@ -192,7 +233,6 @@ export const ModalContent = styled.div`
 export const ModalTitle = styled.h1`
     color: ${(props) => {return props.theme.color.darkerColor}};
     margin-bottom: 20px;
-    text-align: center;
 `;
 
 export const ModalButton = styled.button<{color: string}>`

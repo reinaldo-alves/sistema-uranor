@@ -39,7 +39,7 @@ export const UserStore = ({ children }: any) => {
     }
 
     return (
-        <UserContext.Provider value={{login, user, handleLogin, logOut}} >
+        <UserContext.Provider value={{login, user, token, handleLogin, logOut}} >
             { children }
         </UserContext.Provider>
     )

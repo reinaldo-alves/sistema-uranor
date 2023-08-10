@@ -24,6 +24,8 @@ import Guias from './pages/maintenance/guias/guias';
 import Cavaleiros from './pages/maintenance/cavaleiros/cavaleiros';
 import Templos from './pages/maintenance/templos/templos';
 import Falanges from './pages/maintenance/falanges/falanges';
+import Users from './pages/maintenance/users/users';
+import Backup from './pages/maintenance/backup/backup';
 
 function App() {
   const theme = {
@@ -71,6 +73,8 @@ function App() {
                 <Route path='/manutencao/adjuntos' element={<Adjuntos />} />
                 <Route path='/manutencao/templos' element={<Templos />} />
                 <Route path='/manutencao/falanges' element={<Falanges />} />
+                <Route path='/manutencao/usuarios' element={<Users />} />
+                <Route path='/manutencao/backup' element={<Backup />} />
               </>  
             : ''}
             <Route path='/mediuns/consulta' element={<SearchMedium />} />

@@ -1,3 +1,4 @@
+import { useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import Header from "../../components/header/header";
 import { CardMenu, CardsContainer, HomeContainer } from "./styles";
@@ -10,6 +11,8 @@ import Rel from '../../assets/relatorios.jpg'
 import Doc from '../../assets/documentosuteis.jpg'
 import Bib from '../../assets/biblioteca.jpg'
 import SideMenu from "src/components/SideMenu/SideMenu";
+import { ListContext } from "src/contexts/ListContext";
+import { UserContext } from "src/contexts/UserContext";
 
 interface IMenu {
     title: string,
@@ -18,6 +21,8 @@ interface IMenu {
 }
 
 function Home() {
+    const { token } = useContext(UserContext);
+    const { falMiss, loadMinistro, loadCavaleiro, loadGuia, loadFalMiss } = useContext(ListContext)
     const navigate = useNavigate();
     
     const menu = [
@@ -30,6 +35,13 @@ function Home() {
         {title: 'Documentos Úteis', image: Doc, link: 'documentosuteis'},
         {title: 'Biblioteca', image: Bib, link: 'biblioteca'}
     ]
+
+    useEffect(() => {
+        loadMinistro(token);
+        loadCavaleiro(token);
+        loadGuia(token);
+        loadFalMiss(token);
+    }, [])
 
     return (
         <>

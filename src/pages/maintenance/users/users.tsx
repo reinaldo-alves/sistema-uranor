@@ -5,10 +5,11 @@ import { useNavigate } from "react-router-dom";
 import SideMenu from "src/components/SideMenu/SideMenu";
 import Header from "src/components/header/header";
 import SubMenu from "src/components/SubMenu/SubMenu";
-import { IAdjunto, IEstado, ITemplo } from "src/types/types";
+import { IUser } from "src/types/types";
 import MainTitle from "src/components/MainTitle/MainTitle";
+import { MediumContext } from "src/contexts/MediumContext";
 
-function Templos() {
+function Users() {
     
     const navigate = useNavigate();
     
@@ -16,27 +17,40 @@ function Templos() {
     const [ministro, setMinistro] = useState(0);
     const [adjunto, setAdjunto] = useState('');
     const [classif, setClassif] = useState('');
-    const [esperanca, setEsperanca] = useState(false);
-    const [selected, setSelected] = useState({} as ITemplo);
+    const [edit, setEdit] = useState(false);
+    const [selected, setSelected] = useState({} as IUser);
     const [showModal, setShowModal] = useState(false);
     
-    const { adjuntos, templos, estados } = useContext(ListContext);
+    const { users } = useContext(ListContext);
+    const { medium } = useContext(MediumContext);
 
     const listSubMenu = [
         {title: 'Página Inicial', click: '/'},
         {title: 'Voltar para Manutenção', click: '/manutencao'}
     ]
 
+    const levels = ['Administrador', 'Devas', 'Devas Aspirante']
+
     const modalButtonFunction = () => {
-        setShowModal(false)
-        setSelected({} as ITemplo)
+        setShowModal(false);
+        setSelected({} as IUser);
+    }
+
+    const newUser = () => {
+        setShowModal(true);
+        setEdit(false);
+    }
+
+    const editUser = () => {
+        setShowModal(true);
+        setEdit(true);
     }
     
-    templos.sort((temA: ITemplo, temB: ITemplo) => {
-        if (temA.cidade < temB.cidade) {
+    users.sort((userA: IUser, userB: IUser) => {
+        if (userA.name < userB.name) {
           return -1;
         }
-        if (temA.cidade > temB.cidade) {
+        if (userA.name > userB.name) {
           return 1;
         }
         return 0;
@@ -47,39 +61,35 @@ function Templos() {
             <Header />
             <SubMenu list={listSubMenu}/>
             <MainContainer>
-                <MainTitle content="Templos - Manutenção" />
+                <MainTitle content="Usuários - Manutenção" />
                 <SearchCard>
                     <SearchContainer>
                         <InputContainer>
-                            <label>Nome do Templo</label>
+                            <label>Nome</label>
                             <input />
                         </InputContainer>
                         <InputContainer>
-                            <label>Estado</label>
+                            <label>Nível</label>
                             <select>
                                 <option value=''></option>
-                                {estados.map((item: IEstado, index: number) => (
-                                    <option key={index} value={item.abrev}>{item.abrev}</option>
+                                {levels.map((item: string, index: number) => (
+                                    <option key={index} value={item}>{item}</option>
                                 ))}
                             </select>
                         </InputContainer>
-                        <InputContainer>
-                            <label>Ministro</label>
-                            <input />
-                        </InputContainer>
-                        <SearchButton onClick={() => setShowModal(true)}>Adicionar novo</SearchButton>
+                        <SearchButton onClick={() => newUser()}>Adicionar novo</SearchButton>
                     </SearchContainer>
                     <InfoCard>
-                        <InfoContent>Clique sobre um adjunto para EDITAR</InfoContent>
-                        <InfoContent>Resultados encontrados: {templos.length}</InfoContent>
+                        <InfoContent>Clique sobre um usuário para EDITAR</InfoContent>
+                        <InfoContent>Resultados encontrados: {users.length}</InfoContent>
                     </InfoCard>
                 </SearchCard>
                 <ResultsCard>
                     <ResultsTable>
-                        {templos.map((item: ITemplo, index: number) => (
-                            <Results key={index} onClick={() => setSelected(item)}>
-                                <ResultsTitle>{item.cidade} - {item.estado}</ResultsTitle>
-                                <ResultsDetails>Adj. {adjuntos.filter((ad: IAdjunto) => ad.adjunto_id === item.presidente)[0].min} - Mestre {adjuntos.filter((ad: IAdjunto) => ad.adjunto_id === item.presidente)[0].adj}</ResultsDetails>
+                        {users.map((item: IUser, index: number) => (
+                            <Results key={index} onClick={() => editUser()}>
+                                <ResultsTitle>{item.name}</ResultsTitle>
+                                <ResultsDetails>Nível: {item.level}</ResultsDetails>
                             </Results>
                         ))}
                     </ResultsTable>
@@ -88,29 +98,47 @@ function Templos() {
             <SideMenu list={listSubMenu} />
             <Modal vis={showModal}>
                 <ModalContent>
-                    <ModalTitle>Novo Templo</ModalTitle>
+                    <ModalTitle>{edit? 'Editar Usuário' : 'Novo Usuário'}</ModalTitle>
                     <InputContainer>
-                        <label>Nome do Templo (Cidade)</label>
+                        <label>Nome do Usuário</label>
                         <input type="text" value={adjunto} onChange={(e) => setAdjunto(e.target.value)} />
                     </InputContainer>
                     <InputContainer>
-                        <label>Estado</label>
+                        <label>Médium</label>
                         <select>
                             <option value=''></option>
-                            {estados.map((item: IEstado, index: number) => (
-                                <option key={index} value={item.abrev}>{item.abrev}</option>
+                            {medium.map((item: any, index: number) => (
+                                <option key={index} value={item.id}>{item.nome}</option>
                             ))}
                         </select>
                     </InputContainer>
                     <InputContainer>
-                        <label>Presidente</label>
+                        <label>Nível</label>
                         <select>
                             <option value=''></option>
-                            {adjuntos.map((item: IAdjunto, index: number) => (
-                                <option key={index} value={item.adjunto_id}>Adj. {item.min} - Mestre {item.adj}</option>
+                            {levels.map((item: string, index: number) => (
+                                <option key={index} value={item}>{item}</option>
                             ))}
                         </select>
                     </InputContainer>
+                    {edit? 
+                        <ModalButton 
+                            color="green"
+                            style={{alignSelf: 'center'}}
+                            onClick={() => modalButtonFunction()
+                        }>Alterar Senha</ModalButton>
+                    : 
+                        <>         
+                            <InputContainer>
+                                <label>Senha</label>
+                                <input type="password" />
+                            </InputContainer>
+                            <InputContainer>
+                                <label>Confirmar Senha</label>
+                                <input type="password" />
+                            </InputContainer>
+                        </>
+                    }
                     <div style={{display: 'flex', gap: '20px'}}>
                         <ModalButton color="red" onClick={() => modalButtonFunction()}>Cancelar</ModalButton>
                         <ModalButton color='green' onClick={() => modalButtonFunction()}>Salvar</ModalButton>
@@ -122,4 +150,4 @@ function Templos() {
     )
 }
 
-export default Templos
+export default Users

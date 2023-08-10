@@ -31,16 +31,6 @@ function Falanges() {
         setShowModal(false)
         setSelected({} as IFalange)
     }
-    
-    falMiss.sort((falA: IFalange, falB: IFalange) => {
-        if (falA.falange < falB.falange) {
-          return -1;
-        }
-        if (falA.falange > falB.falange) {
-          return 1;
-        }
-        return 0;
-    });      
 
     return (
         <>
@@ -54,16 +44,17 @@ function Falanges() {
                             <label>Falange Missionária</label>
                             <input />
                         </InputContainer>
-                        <InfoContent>Clique sobre uma falange para EDITAR</InfoContent>
+                        <InfoCard>
+                            <InfoContent>Clique sobre uma falange para EDITAR</InfoContent>
+                            <InfoContent>Resultados encontrados: {falMiss.length}</InfoContent>
+                        </InfoCard>
                     </SearchContainer>
-                    <InfoCard>
-                    </InfoCard>
                 </SearchCard>
                 <ResultsCard>
                     <ResultsTable>
                         {falMiss.map((item: IFalange, index: number) => (
                             <Results key={index} onClick={() => setShowModal(true)}>
-                                <ResultsTitle>{item.falange}</ResultsTitle>
+                                <ResultsTitle>{item.nome}</ResultsTitle>
                             </Results>
                         ))}
                     </ResultsTable>

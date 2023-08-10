@@ -1,32 +1,66 @@
 import { useState, useContext } from "react";
 import { InfoCard, InputContainer, MainContainer, InfoContent, Results, ResultsCard, ResultsTable, ResultsTitle, SearchButton, SearchCard, SearchContainer, Modal, ModalContent, ModalTitle, ModalButton } from "./styles";
 import { ListContext } from "src/contexts/ListContext";
-import { useNavigate } from "react-router-dom";
 import SideMenu from "src/components/SideMenu/SideMenu";
 import Header from "src/components/header/header";
 import SubMenu from "src/components/SubMenu/SubMenu";
 import { IMentor } from "src/types/types";
 import MainTitle from "src/components/MainTitle/MainTitle";
+import api from "src/api";
+import { UserContext } from "src/contexts/UserContext";
 
 function Ministros() {
-    
-    const navigate = useNavigate();
-    
+    const [edit, setEdit] = useState(false);
     const [id, setId] = useState(0);
     const [ministro, setMinistro] = useState('');
-    const [selected, setSelected] = useState({} as IMentor);
     const [showModal, setShowModal] = useState(false);
     
-    const { ministros } = useContext(ListContext);
+    const { token } = useContext(UserContext)
+    const { ministros, loadMinistro } = useContext(ListContext);
 
     const listSubMenu = [
         {title: 'Página Inicial', click: '/'},
         {title: 'Voltar para Manutenção', click: '/manutencao'}
     ]
 
-    const modalButtonFunction = () => {
+    const modalAddMin = () => {
+        setEdit(false);
+        setMinistro('')
+        setId(0);
+        setShowModal(true);
+    }
+
+    const modalEditMin = (min: IMentor) => {
+        setEdit(true);
+        setMinistro(min.nome);
+        setId(min.id);
+        setShowModal(true);
+    }
+
+    const closeModal = () => {
         setShowModal(false)
-        setSelected({} as IMentor)
+        setMinistro('')
+        setId(0);
+    }
+
+    const addMin = (nome: string, token: string) => {
+        api.post('/ministro/create', {nome}, {headers:{Authorization: token}}).then(() => {
+            alert('Ministro adicionado com sucesso');
+            loadMinistro(token);
+            closeModal();
+        }).catch((error) => {
+            console.log('Não foi possível adicionar o ministro', error);
+        })
+    }
+
+    const editMin = (ministro_id: number, nome: string, token: string) => {
+        api.put('/ministro/update', {ministro_id, nome}, {headers:{Authorization: token}}).then(() => {
+            alert('Ministro editado com sucesso');
+            loadMinistro(token);
+            closeModal();
+        }).catch((error) => {
+            console.log('Não foi possível editar o ministro', error);
+        })
     }
     
     ministros.sort((minA: IMentor, minB: IMentor) => {
@@ -51,7 +85,7 @@ function Ministros() {
                             <label>Nome do Ministro</label>
                             <input />
                         </InputContainer>
-                        <SearchButton onClick={() => setShowModal(true)}>Adicionar novo</SearchButton>
+                        <SearchButton onClick={() => modalAddMin()}>Adicionar novo</SearchButton>
                     </SearchContainer>
                     <InfoCard>
                         <InfoContent>Clique sobre um ministro para EDITAR</InfoContent>
@@ -61,7 +95,7 @@ function Ministros() {
                 <ResultsCard>
                     <ResultsTable>
                         {ministros.map((item: IMentor, index: number) => (
-                            <Results key={index} onClick={() => setSelected(item)}>
+                            <Results key={index} onClick={() => modalEditMin(item)}>
                                 <ResultsTitle>{item.nome}</ResultsTitle>
                             </Results>
                         ))}
@@ -71,14 +105,14 @@ function Ministros() {
             <SideMenu list={listSubMenu} />
             <Modal vis={showModal}>
                 <ModalContent>
-                    <ModalTitle>Novo Ministro</ModalTitle>
+                    <ModalTitle>{edit ? 'Editar Ministro' : 'Novo Ministro'}</ModalTitle>
                     <InputContainer>
                         <label>Nome do Ministro</label>
                         <input type="text" value={ministro} onChange={(e) => setMinistro(e.target.value)} />
                     </InputContainer>
                     <div style={{display: 'flex', gap: '20px'}}>
-                        <ModalButton color="red" onClick={() => modalButtonFunction()}>Cancelar</ModalButton>
-                        <ModalButton color='green' onClick={() => modalButtonFunction()}>Salvar</ModalButton>
+                        <ModalButton color="red" onClick={() => closeModal()}>Cancelar</ModalButton>
+                        <ModalButton color='green' onClick={edit ? () => editMin(id, ministro, token) : () => addMin(ministro, token)}>Salvar</ModalButton>
                     </div>
                 </ModalContent>
             </Modal>
