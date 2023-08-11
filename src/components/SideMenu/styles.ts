@@ -1,5 +1,16 @@
 import styled from "styled-components";
 
+export const Overlay = styled.div<{openMenu: boolean}>`
+    height: 100vh;
+    width: calc(100vw - 8px);
+    background: transparent;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 2;
+    display: ${({openMenu}) => openMenu? 'block' : 'none'};;
+`;
+
 export const SideMenuContainer = styled.aside<{openMenu: boolean}>`
     width: 250px;
     height: 100vh;
@@ -15,7 +26,7 @@ export const SideMenuContainer = styled.aside<{openMenu: boolean}>`
     top: 0;
     left: -300px;
     transition: 0.5s;
-    z-index: 2;
+    z-index: 3;
 
     @media (max-width: 675px) {
         left: ${({openMenu}) => openMenu? '0' : '-300px'};

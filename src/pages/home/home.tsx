@@ -22,7 +22,7 @@ interface IMenu {
 
 function Home() {
     const { token } = useContext(UserContext);
-    const { falMiss, loadMinistro, loadCavaleiro, loadGuia, loadFalMiss } = useContext(ListContext)
+    const { loadMinistro, loadCavaleiro, loadGuia, loadFalMiss, loadAdjunto } = useContext(ListContext)
     const navigate = useNavigate();
     
     const menu = [
@@ -41,6 +41,7 @@ function Home() {
         loadCavaleiro(token);
         loadGuia(token);
         loadFalMiss(token);
+        loadAdjunto(token);
     }, [])
 
     return (

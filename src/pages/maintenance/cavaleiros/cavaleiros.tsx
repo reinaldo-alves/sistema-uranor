@@ -10,15 +10,15 @@ import { UserContext } from "src/contexts/UserContext";
 import api from "src/api";
 
 function Cavaleiros() {
+    const defaultCav = {id: 0, nome: '', med: ''}
+
+    const [search, setSearch] = useState('');
     const [edit, setEdit] = useState(false);
-    const [id, setId] = useState(0);
-    const [cavaleiro, setCavaleiro] = useState('');
-    const [med, setMed] = useState('');
-    const [selected, setSelected] = useState({} as ICavaleiro);
-    const [edited, setEdited] = useState({});
+    const [selected, setSelected] = useState(defaultCav);
+    const [edited, setEdited] = useState(defaultCav);
     const [showModal, setShowModal] = useState(false);
     
-    const { token } = useContext(UserContext)
+    const { token } = useContext(UserContext);
     const { cavaleiros, loadCavaleiro } = useContext(ListContext);
 
     const listSubMenu = [
@@ -26,34 +26,35 @@ function Cavaleiros() {
         {title: 'Voltar para Manutenção', click: '/manutencao'}
     ]
 
+    const updateProps = (property: string, newValue: any) => {
+        setEdited((prevData: any) => ({
+        ...prevData,
+        [property]: newValue
+        }));
+    };
+
     const modalAddCav = () => {
         setEdit(false);
-        setId(0);
-        setCavaleiro('');
-        setMed('');
-        setSelected({} as ICavaleiro);
+        setEdited(defaultCav);
+        setSelected(defaultCav);
         setShowModal(true);
     }
 
     const modalEditCav = (cav: ICavaleiro) => {
         setEdit(true);
-        setId(cav.id);
-        setCavaleiro(cav.nome);
-        setMed(cav.med);
-        setSelected(cav)
+        setEdited(cav);
+        setSelected(cav);
         setShowModal(true);
     }
 
     const closeModal = () => {
-        setShowModal(false)
-        setId(0);
-        setCavaleiro('');
-        setMed('');
-        setSelected({} as ICavaleiro);
+        setShowModal(false);
+        setEdited(defaultCav);
+        setSelected(defaultCav);
     }
 
-    const addCav = (nome: string, med: string, token: string) => {
-        api.post('/cavaleiro/create', {nome, med}, {headers:{Authorization: token}}).then(() => {
+    const addCav = (cavaleiro: ICavaleiro, token: string) => {
+        api.post('/cavaleiro/create', {nome:cavaleiro.nome, med:cavaleiro.med}, {headers:{Authorization: token}}).then(() => {
             alert('Cavaleiro adicionado com sucesso');
             loadCavaleiro(token);
             closeModal();
@@ -62,25 +63,26 @@ function Cavaleiros() {
         })
     }
 
-    const editCav = (cavaleiro_id: number, nome: string, med: string, token: string) => {
-        // api.get(`/cavaleiro/get?cavaleiro_id=${cavaleiro_id}`, {headers:{Authorization: token}}).then(({ data }) => {
-        //     setSelected(data.cavaleiro)
-        // }).catch(() => {
-        //     setSelected({} as ICavaleiro)
-        // })
-        // console.log(selected)
-        // if(selected.nome !== nome) {
-        //     api.put('/cavaleiro/update', {cavaleiro_id, nome, med}, {headers:{Authorization: token}}).then(() => {
-        //         alert('Cavaleiro editado com sucesso');
-        //         loadCavaleiro(token);
-        //         closeModal();
-        //     }).catch((error) => {
-        //         console.log('Não foi possível editar o cavaleiro');
-        //     })
-        // }
-        
-        
-        
+    const editCav = (newCav: ICavaleiro, oldCav: ICavaleiro, token: string) => {
+        const changedFields = {} as any
+        for (const key in newCav){
+            if (newCav[key as keyof ICavaleiro] !== oldCav[key as keyof ICavaleiro]){
+                changedFields[key as keyof ICavaleiro] = newCav[key as keyof ICavaleiro]
+            }
+        }
+        if (Object.keys(changedFields).length > 0) {
+            api.put('/cavaleiro/update', {cavaleiro_id: oldCav.id, ...changedFields}, {headers:{Authorization: token}}).then(() => {
+                alert('Cavaleiro editado com sucesso');
+                loadCavaleiro(token);
+                setEdited(defaultCav);
+                setSelected(defaultCav);
+                closeModal();
+            }).catch((error) => {
+                console.log('Não foi possível editar o cavaleiro', error);
+            })
+        } else {
+            alert('Não foi feita nenhuma alteração no cavaleiro')
+        }
     }
     
     cavaleiros.sort((cavA: ICavaleiro, cavB: ICavaleiro) => {
@@ -91,7 +93,7 @@ function Cavaleiros() {
           return 1;
         }
         return 0;
-      });      
+    });      
 
     return (
         <>
@@ -103,23 +105,26 @@ function Cavaleiros() {
                     <SearchContainer>
                         <InputContainer>
                             <label>Nome do Cavaleiro</label>
-                            <input />
+                            <input type="text" value={search} onChange={(e) => setSearch(e.target.value)} />
                         </InputContainer>
                         <SearchButton onClick={() => modalAddCav()}>Adicionar novo</SearchButton>
                     </SearchContainer>
                     <InfoCard>
-                        <InfoContent>Clique sobre um ministro para EDITAR</InfoContent>
-                        <InfoContent>Resultados encontrados: {cavaleiros.length}</InfoContent>
+                        <InfoContent>Clique sobre um cavaleiro para EDITAR</InfoContent>
+                        <InfoContent>Resultados encontrados: {cavaleiros.filter((item: ICavaleiro) => item.nome.toLowerCase().includes(search.trim().toLowerCase())).length}</InfoContent>
                     </InfoCard>
                 </SearchCard>
                 <ResultsCard>
                     <ResultsTable>
-                        {cavaleiros.map((item: ICavaleiro, index: number) => (
-                            <Results key={index} onClick={() => modalEditCav(item)}>
-                                <ResultsTitle>{item.nome}</ResultsTitle>
-                                <ResultsDetails>Cavaleiro {item.med === 'Apará'? 'Ajanã' : 'Adjuração'}</ResultsDetails>
-                            </Results>
-                        ))}
+                        {cavaleiros
+                            .filter((item: ICavaleiro) => item.nome.toLowerCase().includes(search.trim().toLowerCase()))
+                            .map((item: ICavaleiro, index: number) => (
+                                <Results key={index} onClick={() => modalEditCav(item)}>
+                                    <ResultsTitle>{item.nome}</ResultsTitle>
+                                    <ResultsDetails>Cavaleiro {item.med === 'Apará'? 'Ajanã' : 'Adjuração'}</ResultsDetails>
+                                </Results>
+                            ))
+                        }
                     </ResultsTable>
                 </ResultsCard>
             </MainContainer>
@@ -129,11 +134,11 @@ function Cavaleiros() {
                     <ModalTitle>{edit? 'Editar Cavaleiro' : 'Novo Cavaleiro'}</ModalTitle>
                     <InputContainer>
                         <label>Nome do Cavaleiro</label>
-                        <input type="text" value={cavaleiro} onChange={(e) => setCavaleiro(e.target.value)} />
+                        <input type="text" value={edited.nome} onChange={(e) => updateProps('nome', e.target.value)} />
                     </InputContainer>
                     <InputContainer>
                         <label>Mediunidade</label>
-                        <select>
+                        <select value={edited.med} onChange={(e) => updateProps('med', e.target.value)}>
                             <option value=''></option>
                             <option value='Apará'>Apará</option>
                             <option value='Doutrinador'>Doutrinador</option>
@@ -141,7 +146,7 @@ function Cavaleiros() {
                     </InputContainer>
                     <div style={{display: 'flex', gap: '20px'}}>
                         <ModalButton color="red" onClick={() => closeModal()}>Cancelar</ModalButton>
-                        <ModalButton color='green' onClick={edit? () => editCav(id, cavaleiro, med, token) : () => addCav(cavaleiro, med, token)}>Salvar</ModalButton>
+                        <ModalButton color='green' onClick={edit? () => editCav(edited, selected, token) : () => addCav(edited, token)}>Salvar</ModalButton>
                     </div>
                 </ModalContent>
             </Modal>

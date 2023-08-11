@@ -10,6 +10,7 @@ import api from "src/api";
 import { UserContext } from "src/contexts/UserContext";
 
 function Ministros() {
+    const [search, setSearch] = useState('');
     const [edit, setEdit] = useState(false);
     const [id, setId] = useState(0);
     const [ministro, setMinistro] = useState('');
@@ -83,22 +84,25 @@ function Ministros() {
                     <SearchContainer>
                         <InputContainer>
                             <label>Nome do Ministro</label>
-                            <input />
+                            <input type="text" value={search} onChange={(e) => setSearch(e.target.value)} />
                         </InputContainer>
                         <SearchButton onClick={() => modalAddMin()}>Adicionar novo</SearchButton>
                     </SearchContainer>
                     <InfoCard>
                         <InfoContent>Clique sobre um ministro para EDITAR</InfoContent>
-                        <InfoContent>Resultados encontrados: {ministros.length}</InfoContent>
+                        <InfoContent>Resultados encontrados: {ministros.filter((item: IMentor) => item.nome.toLowerCase().includes(search.trim().toLowerCase())).length}</InfoContent>
                     </InfoCard>
                 </SearchCard>
                 <ResultsCard>
                     <ResultsTable>
-                        {ministros.map((item: IMentor, index: number) => (
-                            <Results key={index} onClick={() => modalEditMin(item)}>
-                                <ResultsTitle>{item.nome}</ResultsTitle>
-                            </Results>
-                        ))}
+                        {ministros
+                            .filter((item: IMentor) => item.nome.toLowerCase().includes(search.trim().toLowerCase()))
+                            .map((item: IMentor, index: number) => (
+                                <Results key={index} onClick={() => modalEditMin(item)}>
+                                    <ResultsTitle>{item.nome}</ResultsTitle>
+                                </Results>
+                            ))
+                        }
                     </ResultsTable>
                 </ResultsCard>
             </MainContainer>

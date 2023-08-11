@@ -1,6 +1,6 @@
 import { createContext, useState } from "react";
 import api from "src/api";
-import { ICavaleiro, IFalange, IMentor } from "src/types/types";
+import { IAdjunto, ICavaleiro, IFalange, IMentor } from "src/types/types";
 
 export const ListContext = createContext({} as any);
 
@@ -9,6 +9,7 @@ export const ListStore = ({ children }: any) => {
     const [cavaleiros, setCavaleiros] = useState([] as Array<ICavaleiro>);
     const [guias, setGuias] = useState([] as Array<IMentor>);
     const [falMiss, setFalMiss] = useState([] as Array<IFalange>);
+    const [adjuntos, setAdjuntos] = useState([] as Array<IAdjunto>);
 
     interface IFalangeAPI {
         falange_id: number,
@@ -35,6 +36,14 @@ export const ListStore = ({ children }: any) => {
         cavaleiro_id: number,
         nome: string,
         med: string
+    }
+
+    interface IAdjuntoAPI {
+        adjunto_id: number,
+        nome: string,
+        ministro: number,
+        classif: string,
+        esperanca: number
     }
     
     const estados = [
@@ -71,15 +80,15 @@ export const ListStore = ({ children }: any) => {
         {id: 5, cidade: 'São José do Vale do Rio Preto', estado: 'RJ', presidente: 6},
     ]
     
-    const adjuntos = [
-        {id: 1, min: 'Uranor', adj: 'Vasconcelos', classif: 'Arcanos', esperanca: false},
-        {id: 2, min: 'Umaryã', adj: 'Ignácio Sales', classif: 'Arcanos', esperanca: true},
-        {id: 3, min: 'Adones', adj: 'Severino Ramos', classif: 'Arcanos', esperanca: true},
-        {id: 4, min: 'Afário', adj: 'Cezar', classif: 'Arcanos', esperanca: false},
-        {id: 5, min: 'Parlo', adj: 'Zilcio', classif: 'Arcanos', esperanca: false},
-        {id: 6, min: 'Nerano', adj: 'Carlos Magno', classif: 'Arcanos', esperanca: false},
-        {id: 7, min: 'Oratruz', adj: 'Krauzio', classif: 'Arcanos', esperanca: false},
-    ]
+    // const adjuntos = [
+    //     {id: 1, min: 'Uranor', adj: 'Vasconcelos', classif: 'Arcanos', esperanca: false},
+    //     {id: 2, min: 'Umaryã', adj: 'Ignácio Sales', classif: 'Arcanos', esperanca: true},
+    //     {id: 3, min: 'Adones', adj: 'Severino Ramos', classif: 'Arcanos', esperanca: true},
+    //     {id: 4, min: 'Afário', adj: 'Cezar', classif: 'Arcanos', esperanca: false},
+    //     {id: 5, min: 'Parlo', adj: 'Zilcio', classif: 'Arcanos', esperanca: false},
+    //     {id: 6, min: 'Nerano', adj: 'Carlos Magno', classif: 'Arcanos', esperanca: false},
+    //     {id: 7, min: 'Oratruz', adj: 'Krauzio', classif: 'Arcanos', esperanca: false},
+    // ]
 
     const coletes = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
 
@@ -154,6 +163,10 @@ export const ListStore = ({ children }: any) => {
         api.get('/falange/get-falanges', {headers:{Authorization: token}}).then(({ data }) => {
             const falange = data.falange.map((item: IFalangeAPI) => ({
                 ...item,
+                adjMin: item.adjMin === null ? '' : item.adjMin,
+                adjNome: item.adjNome === null ? '' : item.adjNome,
+                prefSol: item.prefSol === null ? '' : item.prefSol,
+                prefLua: item.prefLua === null ? '' : item.prefLua,
                 ninfa: item.ninfa === 1 ? true : false
             }))
             setFalMiss(falange)
@@ -162,8 +175,20 @@ export const ListStore = ({ children }: any) => {
         })
     }
 
+    const loadAdjunto = (token: string) => {
+        api.get('/adjunto/get-adjuntos', {headers:{Authorization: token}}).then(({ data }) => {
+            const adjunto = data.adjunto.map((item: IAdjuntoAPI) => ({
+                ...item,
+                esperanca: item.esperanca === 1 ? true : false
+            }))
+            setAdjuntos(adjunto)
+        }).catch((error) => {
+            console.log('Erro ao carregar a lista de adjuntos', error)
+        })
+    }
+
     return (
-        <ListContext.Provider value={{templos, estados, users, adjuntos, coletes, classMest, falMest, falMiss, povos, turnoL, turnoT, ministros, cavaleiros, guias, estrelas, princesas, classificacao, loadMinistro, loadCavaleiro, loadGuia, loadFalMiss}} >
+        <ListContext.Provider value={{templos, estados, users, adjuntos, coletes, classMest, falMest, falMiss, povos, turnoL, turnoT, ministros, cavaleiros, guias, estrelas, princesas, classificacao, loadMinistro, loadCavaleiro, loadGuia, loadFalMiss, loadAdjunto}} >
             { children }
         </ListContext.Provider>
     )

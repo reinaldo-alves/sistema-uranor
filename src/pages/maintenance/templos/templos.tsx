@@ -79,7 +79,7 @@ function Templos() {
                         {templos.map((item: ITemplo, index: number) => (
                             <Results key={index} onClick={() => setSelected(item)}>
                                 <ResultsTitle>{item.cidade} - {item.estado}</ResultsTitle>
-                                <ResultsDetails>Adj. {adjuntos.filter((ad: IAdjunto) => ad.adjunto_id === item.presidente)[0].min} - Mestre {adjuntos.filter((ad: IAdjunto) => ad.adjunto_id === item.presidente)[0].adj}</ResultsDetails>
+                                <ResultsDetails>Adj. {adjuntos.filter((ad: IAdjunto) => ad.adjunto_id === item.presidente).min} - Mestre {adjuntos.filter((ad: IAdjunto) => ad.adjunto_id === item.presidente).adj}</ResultsDetails>
                             </Results>
                         ))}
                     </ResultsTable>
@@ -107,7 +107,7 @@ function Templos() {
                         <select>
                             <option value=''></option>
                             {adjuntos.map((item: IAdjunto, index: number) => (
-                                <option key={index} value={item.adjunto_id}>Adj. {item.min} - Mestre {item.adj}</option>
+                                <option key={index} value={item.adjunto_id}>Adj. {item.ministro} - Mestre {item.nome}</option>
                             ))}
                         </select>
                     </InputContainer>

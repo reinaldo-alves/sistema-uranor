@@ -1,6 +1,6 @@
 import { useContext } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { HamburgerIcon, HeaderButton, HeaderButtonContainer, SideMenuContainer, SideMenuContent, SideMenuItem, UserContainer } from './styles'
+import { HamburgerIcon, HeaderButton, HeaderButtonContainer, Overlay, SideMenuContainer, SideMenuContent, SideMenuItem, UserContainer } from './styles'
 import { UserContext } from 'src/contexts/UserContext'
 import { MenuContext } from 'src/contexts/MenuContext'
 import exit from '../../assets/marca-cruzada.png'
@@ -13,7 +13,7 @@ interface IProps {
 }
 
 function SideMenu(props: IProps) {
-    const { user } = useContext(UserContext);
+    const { user, logOut } = useContext(UserContext);
     const { openMenu, setOpenMenu } = useContext(MenuContext); 
     const navigate = useNavigate();
 
@@ -21,33 +21,41 @@ function SideMenu(props: IProps) {
     const clickButton = user.level === 'Administrador' ? () => navigate('/manutencao') : () => navigate('/manutencao/usuarios/alterarsenha');
     
     return (
-        <SideMenuContainer openMenu={openMenu}>
-            <HamburgerIcon src={exit} alt='Exit' onClick={() => setOpenMenu(false)} />
-            <UserContainer>
-                <p>Usuário: {user.name}</p>
-                <p>Nível: {user.level}</p>
-                <HeaderButtonContainer>
-                    <HeaderButton onClick={() => {
-                        clickButton();
-                        setOpenMenu(false);
-                    }}>{titleButton}</HeaderButton>
-                    <HeaderButton>Sair</HeaderButton>
-                </HeaderButtonContainer>
-            </UserContainer>
-            <nav>
-                <SideMenuContent>
-                    {props.list.map((item, index) => (
-                        <SideMenuItem 
-                            key={index}
+        <>
+            <Overlay openMenu={openMenu} onClick={() => setOpenMenu(false)} />
+            <SideMenuContainer openMenu={openMenu}>
+                <HamburgerIcon src={exit} alt='Exit' onClick={() => setOpenMenu(false)} />
+                <UserContainer>
+                    <p>Usuário: {user.name}</p>
+                    <p>Nível: {user.level}</p>
+                    <HeaderButtonContainer>
+                        <HeaderButton onClick={() => {
+                            clickButton();
+                            setOpenMenu(false);
+                        }}>{titleButton}</HeaderButton>
+                        <HeaderButton
                             onClick={() => {
-                                navigate(item.click)
-                                setOpenMenu(false)
+                                logOut();
+                                setOpenMenu(false);
                             }}
-                        >{item.title}</SideMenuItem>
-                    ))}
-                </SideMenuContent>
-            </nav>
-        </SideMenuContainer>
+                        >Sair</HeaderButton>
+                    </HeaderButtonContainer>
+                </UserContainer>
+                <nav>
+                    <SideMenuContent>
+                        {props.list.map((item, index) => (
+                            <SideMenuItem 
+                                key={index}
+                                onClick={() => {
+                                    navigate(item.click);
+                                    setOpenMenu(false);
+                                }}
+                            >{item.title}</SideMenuItem>
+                        ))}
+                    </SideMenuContent>
+                </nav>
+            </SideMenuContainer>
+        </>
     )
 }
 

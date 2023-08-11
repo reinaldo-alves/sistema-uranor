@@ -1,7 +1,7 @@
 export interface IAdjunto {
     adjunto_id: number,
-    min: string,
-    adj: string,
+    nome: string,
+    ministro: number,
     classif: string,
     esperanca: boolean
 }
@@ -19,10 +19,10 @@ export interface IFalange {
     falange_id: number,
     nome: string,
     primeira: string,
-    adjMin: string | null,
-    adjNome: string | null,
-    prefSol: string | null,
-    prefLua: string | null,
+    adjMin: string,
+    adjNome: string,
+    prefSol: string,
+    prefLua: string,
     ninfa: boolean
 }
 

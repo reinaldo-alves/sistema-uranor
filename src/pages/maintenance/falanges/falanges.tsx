@@ -1,35 +1,73 @@
 import { useState, useContext } from "react";
 import { InfoCard, InputContainer, MainContainer, InfoContent, Results, ResultsCard, ResultsTable, ResultsTitle, SearchCard, SearchContainer, Modal, ModalContent, ModalTitle, ModalButton } from "./styles";
 import { ListContext } from "src/contexts/ListContext";
-import { useNavigate } from "react-router-dom";
 import SideMenu from "src/components/SideMenu/SideMenu";
 import Header from "src/components/header/header";
 import SubMenu from "src/components/SubMenu/SubMenu";
 import { IFalange } from "src/types/types";
 import MainTitle from "src/components/MainTitle/MainTitle";
+import { UserContext } from "src/contexts/UserContext";
+import api from "src/api";
 
-function Falanges() {
-    
-    const navigate = useNavigate();
-    
-    const [id, setId] = useState(0);
-    const [ministro, setMinistro] = useState(0);
-    const [adjunto, setAdjunto] = useState('');
-    const [classif, setClassif] = useState('');
-    const [esperanca, setEsperanca] = useState(false);
+function Falanges() {   
+    const [search, setSearch] = useState('');
     const [selected, setSelected] = useState({} as IFalange);
+    const [edited, setEdited] = useState({} as IFalange);
     const [showModal, setShowModal] = useState(false);
     
-    const { falMiss } = useContext(ListContext);
+    const { token } = useContext(UserContext);
+    const { falMiss, loadFalMiss } = useContext(ListContext);
 
     const listSubMenu = [
         {title: 'Página Inicial', click: '/'},
         {title: 'Voltar para Manutenção', click: '/manutencao'}
     ]
 
-    const modalButtonFunction = () => {
-        setShowModal(false)
-        setSelected({} as IFalange)
+    const updateProps = (property: string, newValue: any) => {
+        setEdited((prevData: any) => ({
+        ...prevData,
+        [property]: newValue
+        }));
+    };
+
+    const showModalFal = (fal: IFalange) => {
+        setEdited(fal);
+        setSelected(fal);
+        setShowModal(true);
+    }
+
+    const closeModal = () => {
+        setShowModal(false);
+        setEdited({} as IFalange);
+        setSelected({} as IFalange);
+    }
+
+    const editFal = (newFal: IFalange, oldFal: IFalange, token: string) => {
+        const changedFields = {} as any
+        for (const key in newFal){
+            if (newFal[key as keyof IFalange] !== oldFal[key as keyof IFalange]){
+                changedFields[key as keyof IFalange] = newFal[key as keyof IFalange]
+            }
+        }
+        if (Object.keys(changedFields).length > 0) {
+            api.put('/falange/update', {falange_id: oldFal.falange_id, ...changedFields}, {headers:{Authorization: token}}).then(() => {
+                if(oldFal.falange_id === 1) {
+                    alert('Falange missionária editada com sucesso. Por favor, altere também a falange NITYAMA MADRUXA');
+                } else if(oldFal.falange_id === 2) {
+                    alert('Falange missionária editada com sucesso. Por favor, altere também a falange NITYAMA');
+                } else {
+                    alert('Falange missionária editada com sucesso');
+                }
+                loadFalMiss(token);
+                setEdited({} as IFalange);
+                setSelected({} as IFalange);
+                closeModal();
+            }).catch((error) => {
+                console.log('Não foi possível editar a falange missionária', error);
+            })
+        } else {
+            alert('Não foi feita nenhuma alteração na falange missionária')
+        }
     }
 
     return (
@@ -42,21 +80,24 @@ function Falanges() {
                     <SearchContainer>
                         <InputContainer>
                             <label>Falange Missionária</label>
-                            <input />
+                            <input type="text" value={search} onChange={(e) => setSearch(e.target.value)} />
                         </InputContainer>
                         <InfoCard>
                             <InfoContent>Clique sobre uma falange para EDITAR</InfoContent>
-                            <InfoContent>Resultados encontrados: {falMiss.length}</InfoContent>
+                            <InfoContent>Resultados encontrados: {falMiss.filter((item: IFalange) => item.nome.toLowerCase().includes(search.trim().toLowerCase())).length}</InfoContent>
                         </InfoCard>
                     </SearchContainer>
                 </SearchCard>
                 <ResultsCard>
                     <ResultsTable>
-                        {falMiss.map((item: IFalange, index: number) => (
-                            <Results key={index} onClick={() => setShowModal(true)}>
-                                <ResultsTitle>{item.nome}</ResultsTitle>
-                            </Results>
-                        ))}
+                        {falMiss
+                            .filter((item: IFalange) => item.nome.toLowerCase().includes(search.trim().toLowerCase()))
+                            .map((item: IFalange, index: number) => (
+                                <Results key={index} onClick={() => showModalFal(item)}>
+                                    <ResultsTitle>{item.nome}</ResultsTitle>
+                                </Results>
+                            ))
+                        }
                     </ResultsTable>
                 </ResultsCard>
             </MainContainer>
@@ -66,23 +107,23 @@ function Falanges() {
                     <ModalTitle>Editar Falange Missionária</ModalTitle>
                     <InputContainer>
                         <label>Nome da Falange</label>
-                        <input type="text" value={adjunto} onChange={(e) => setAdjunto(e.target.value)} />
+                        <input type="text" value={edited.nome} onChange={(e) => updateProps('nome', e.target.value)} />
                     </InputContainer>
                     <InputContainer>
                         <label>Nome da Primeira</label>
-                        <input type="text" value={adjunto} onChange={(e) => setAdjunto(e.target.value)} />
+                        <input type="text" value={edited.primeira} onChange={(e) => updateProps('primeira', e.target.value)} />
                     </InputContainer>
                     <InputContainer>
                         <label>Classificação do Adjunto de Apoio</label>
-                        <input type="text" value={adjunto} onChange={(e) => setAdjunto(e.target.value)} />
+                        <input type="text" value={edited.adjMin} onChange={(e) => updateProps('adjMin', e.target.value)} />
                     </InputContainer>
                     <InputContainer>
                         <label>Nome do Adjunto de Apoio</label>
-                        <input type="text" value={adjunto} onChange={(e) => setAdjunto(e.target.value)} />
+                        <input type="text" value={edited.adjNome} onChange={(e) => updateProps('adjNome', e.target.value)} />
                     </InputContainer>
                     <div style={{display: 'flex', gap: '20px'}}>
-                        <ModalButton color="red" onClick={() => modalButtonFunction()}>Cancelar</ModalButton>
-                        <ModalButton color='green' onClick={() => modalButtonFunction()}>Salvar</ModalButton>
+                        <ModalButton color="red" onClick={() => closeModal()}>Cancelar</ModalButton>
+                        <ModalButton color='green' onClick={() => editFal(edited, selected, token)}>Salvar</ModalButton>
                     </div>
                 </ModalContent>
             </Modal>
