@@ -127,7 +127,7 @@ function AddMedium() {
                                 <select>
                                     <option value={undefined}></option>
                                     {templos.map((item: ITemplo, index: number) => (
-                                        <option key={index} value={item.id}>{item.cidade} - {item.estado}</option>
+                                        <option key={index} value={item.templo_id}>{item.cidade} - {item.estado.abrev}</option>
                                     ))}
                                 </select>
                                 <label>Condição Atual: </label>
@@ -239,7 +239,7 @@ function AddMedium() {
                         <select>
                             <option value={undefined}></option>
                             {templos.map((item: ITemplo, index: number) => (
-                                <option key={index} value={item.id}>{item.cidade} - {item.estado}</option>
+                                <option key={index} value={item.templo_id}>{item.cidade} - {item.estado.abrev}</option>
                             ))}
                         </select>
                         <label>Colete N°: </label>

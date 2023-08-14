@@ -142,7 +142,8 @@ export const InfoContainer = styled.div`
     }
 `;
 
-export const MediumInfo = styled.span`
+export const MediumInfo = styled.span<{out?: boolean}>`
+    width: ${({ out }) => out? '100%' : 'auto'};
     font-size: 18px;
     font-weight: bold;
     text-align: left;
@@ -155,6 +156,10 @@ export const MediumInfo = styled.span`
 
     span {
         text-decoration: underline;
+    }
+
+    @media (max-width: 1100px) {
+        text-align: ${({ out }) => out? 'center' : 'left'};
     }
 `;
 

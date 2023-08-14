@@ -12,15 +12,17 @@ function SearchMedium() {
     
     const navigate = useNavigate();
     
-    const noMedium = {id: '', nome: '', med: '', templo: '', sexo: '', situacao: '', condicao: '', foto: ''}
+    const noMedium = {} as IMedium
     
+    const [searchName, setSearchName] = useState('');
+    const [searchTemp, setSearchTemp] = useState('');
     const [selected, setSelected] = useState(noMedium);
     const [counterPosition, setCounterPosition] = useState(true);
     const [textPosition, setTextPosition] = useState('');
     
     const { templos } = useContext(ListContext);
 
-    const { medium } = useContext(MediumContext);
+    const { mediuns } = useContext(MediumContext);
 
     useEffect(() => {
         const handleResize = () => {
@@ -39,7 +41,7 @@ function SearchMedium() {
         };
     }, [])
     
-    medium.sort((pessoaA: IMedium, pessoaB: IMedium) => {
+    mediuns.sort((pessoaA: IMedium, pessoaB: IMedium) => {
         if (pessoaA.nome < pessoaB.nome) {
           return -1;
         }
@@ -64,14 +66,14 @@ function SearchMedium() {
                 <SearchCard>
                     <InputContainer>
                         <label>Nome do Médium</label>
-                        <input />
+                        <input type="text" value={searchName} onChange={(e) => setSearchName(e.target.value)} />
                     </InputContainer>
                     <InputContainer>
                         <label>Templo</label>
-                        <select>
+                        <select value={searchTemp} onChange={(e) => setSearchTemp(e.target.value)}>
                             <option value=''>Todos</option>
                             {templos.map((item: ITemplo, index: number) => (
-                                <option key={index} value={item.id}>{item.cidade} - {item.estado}</option>
+                                <option key={index} value={item.templo_id}>{item.cidade} - {item.estado.abrev}</option>
                             ))}
                         </select>
                     </InputContainer>
@@ -79,40 +81,49 @@ function SearchMedium() {
                 <ResultsCard>
                     <TableContainer>
                         <ResultsTable>
-                            {medium.map((item: any, index: number) => (
-                                <Results key={index} onClick={() => setSelected(item)}>
-                                    <ResultsTitle>{item.nome}</ResultsTitle>
-                                    <ResultsDetails>{item.med} - {item.templo}</ResultsDetails>
-                                </Results>
-                            ))}
+                            {mediuns
+                                .filter((item: IMedium) => item.nome.toLowerCase().includes(searchName.trim().toLowerCase()))
+                                .filter(searchTemp === '' ? (item: IMedium) => item.nome !== '' : (item: IMedium) => item.templo === Number(searchTemp))
+                                .map((item: any, index: number) => (
+                                    <Results key={index} onClick={() => setSelected(item)}>
+                                        <ResultsTitle>{item.nome}</ResultsTitle>
+                                        <ResultsDetails>{item.med} - {templos.filter((temp: ITemplo) => temp.templo_id === item.templo)[0].cidade} - {templos.filter((temp: ITemplo) => temp.templo_id === item.templo)[0].estado.abrev}</ResultsDetails>
+                                    </Results>
+                                ))
+                            }
                         </ResultsTable>
                     </TableContainer>
                     <div style={{display: 'flex', flexDirection: `${counterPosition? 'column' : 'column-reverse'}`, width: '100%', height: '100%', justifyContent: `${counterPosition? 'flex-start' : 'flex-end'}`, alignItems: 'center'}}>
                         <InfoCard>
-                            {!selected.id?
+                            {!selected.medium_id?
                                 <MessageNull>{`Selecione um médium na lista ${textPosition}`}</MessageNull>
                             :
                                 <InfoContent>
                                     <MediumName>{selected.nome}</MediumName>
                                     <InfoContainer>
-                                        <MediumPhoto image={selected.foto} />
+                                        <MediumPhoto image={selected.foto}>{selected.foto? '' : 'SEM FOTO'}</MediumPhoto>
                                         <ButtonContainer>
-                                            <MediumInfo>ID: <span>{selected.id}</span></MediumInfo>
-                                            <MediumButton onClick={() => navigate(`/mediuns/consulta/${selected.id}`)}>Exibir</MediumButton>
+                                            <MediumInfo>ID: <span>{selected.medium_id.toString().padStart(5, '0')}</span></MediumInfo>
+                                            <MediumButton onClick={() => navigate(`/mediuns/consulta/${selected.medium_id}`)}>Exibir</MediumButton>
                                             <MediumButton>Editar</MediumButton>
                                         </ButtonContainer>
                                     </InfoContainer>
                                     <TextContainer>
                                         <MediumInfo>Mediunidade: <span>{selected.med}</span></MediumInfo>
-                                        <MediumInfo>Sexo: <span>{selected.sexo}</span></MediumInfo>
-                                        <MediumInfo>Situação: <span>{selected.situacao}</span></MediumInfo>
-                                        <MediumInfo>Templo: <span>{selected.templo}</span></MediumInfo>
+                                        <MediumInfo>Sexo: <span>{selected.sex}</span></MediumInfo>
+                                        <MediumInfo>Situação: <span>{'selected.situacao'}</span></MediumInfo>
+                                        <MediumInfo>Templo: <span>{templos.filter((temp: ITemplo) => temp.templo_id === selected.templo)[0].cidade} - {templos.filter((temp: ITemplo) => temp.templo_id === selected.templo)[0].estado.abrev}</span></MediumInfo>
                                         <MediumInfo>Condição Atual: <span>{selected.condicao}</span></MediumInfo>
                                     </TextContainer>
                                 </InfoContent>
                             }
                         </InfoCard>
-                        <MediumInfo>Resultados encontrados: {medium.length}</MediumInfo>
+                        <MediumInfo>
+                            Resultados encontrados: {mediuns
+                            .filter((item: IMedium) => item.nome.toLowerCase().includes(searchName.trim().toLowerCase()))
+                            .filter(searchTemp === '' ? (item: IMedium) => item.nome !== '' : (item: IMedium) => item.templo === Number(searchTemp))
+                            .length}
+                        </MediumInfo>
                     </div>
                 </ResultsCard>
             </MainContainer>

@@ -1,6 +1,7 @@
 import { createContext, useState } from "react";
 import api from "src/api";
-import { IAdjunto, ICavaleiro, IFalange, IMentor } from "src/types/types";
+import { IAdjunto, ICavaleiro, IEstado, IFalange, IMentor, ITemplo } from "src/types/types";
+import { IAdjuntoAPI, ICavaleiroAPI, IFalangeAPI, IGuiaAPI, IMinistroAPI, ITemploAPI } from "src/types/typesAPI";
 
 export const ListContext = createContext({} as any);
 
@@ -10,42 +11,8 @@ export const ListStore = ({ children }: any) => {
     const [guias, setGuias] = useState([] as Array<IMentor>);
     const [falMiss, setFalMiss] = useState([] as Array<IFalange>);
     const [adjuntos, setAdjuntos] = useState([] as Array<IAdjunto>);
+    const [templos, setTemplos] = useState([] as Array<ITemplo>);
 
-    interface IFalangeAPI {
-        falange_id: number,
-        nome: string,
-        primeira: string,
-        adjMin: string | null,
-        adjNome: string | null,
-        prefSol: string | null,
-        prefLua: string | null,
-        ninfa: number
-    }
-
-    interface IMinistroAPI {
-        ministro_id: number,
-        nome: string,
-    }
-
-    interface IGuiaAPI {
-        guia_id: number,
-        nome: string,
-    }
-
-    interface ICavaleiroAPI {
-        cavaleiro_id: number,
-        nome: string,
-        med: string
-    }
-
-    interface IAdjuntoAPI {
-        adjunto_id: number,
-        nome: string,
-        ministro: number,
-        classif: string,
-        esperanca: number
-    }
-    
     const estados = [
         {abrev: 'PE', state: 'Pernambuco'}, {abrev: 'AC', state: 'Acre'},
         {abrev: 'AL', state: 'Alagoas'}, {abrev: 'AM', state: 'Amazonas'},
@@ -71,24 +38,6 @@ export const ListStore = ({ children }: any) => {
         {id: 5, name: 'Rômulo Andrade', level: 'Devas Aspirante', medium_id: 14},
         {id: 6, name: 'Alexandre Albuquerque', level: 'Devas Aspirante', medium_id: 15},
     ]
-
-    const templos = [
-        {id: 1, cidade: 'Jaboatão', estado: 'PE', presidente: 1},
-        {id: 2, cidade: 'Prazeres', estado: 'PE', presidente: 1},
-        {id: 3, cidade: 'Olinda', estado: 'PE', presidente: 5},
-        {id: 4, cidade: 'Dois Irmãos', estado: 'PE', presidente: 6},
-        {id: 5, cidade: 'São José do Vale do Rio Preto', estado: 'RJ', presidente: 6},
-    ]
-    
-    // const adjuntos = [
-    //     {id: 1, min: 'Uranor', adj: 'Vasconcelos', classif: 'Arcanos', esperanca: false},
-    //     {id: 2, min: 'Umaryã', adj: 'Ignácio Sales', classif: 'Arcanos', esperanca: true},
-    //     {id: 3, min: 'Adones', adj: 'Severino Ramos', classif: 'Arcanos', esperanca: true},
-    //     {id: 4, min: 'Afário', adj: 'Cezar', classif: 'Arcanos', esperanca: false},
-    //     {id: 5, min: 'Parlo', adj: 'Zilcio', classif: 'Arcanos', esperanca: false},
-    //     {id: 6, min: 'Nerano', adj: 'Carlos Magno', classif: 'Arcanos', esperanca: false},
-    //     {id: 7, min: 'Oratruz', adj: 'Krauzio', classif: 'Arcanos', esperanca: false},
-    // ]
 
     const coletes = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
 
@@ -187,8 +136,29 @@ export const ListStore = ({ children }: any) => {
         })
     }
 
+    const loadTemplo = (token: string) => {
+        api.get('/templo/get-templos', {headers:{Authorization: token}}).then(({ data }) => {
+            const templo = data.templo.map((item: ITemploAPI) => ({
+                ...item,
+                estado: estados.filter((est: IEstado) => est.abrev === item.estado)[0]
+            }))
+            setTemplos(templo)
+        }).catch((error) => {
+            console.log('Erro ao carregar a lista de templos', error)
+        })
+    }
+
+    const getData = (token: string) => {
+        loadMinistro(token);
+        loadGuia(token);
+        loadCavaleiro(token);
+        loadFalMiss(token);
+        loadAdjunto(token);
+        loadTemplo(token);
+    };
+
     return (
-        <ListContext.Provider value={{templos, estados, users, adjuntos, coletes, classMest, falMest, falMiss, povos, turnoL, turnoT, ministros, cavaleiros, guias, estrelas, princesas, classificacao, loadMinistro, loadCavaleiro, loadGuia, loadFalMiss, loadAdjunto}} >
+        <ListContext.Provider value={{templos, estados, users, adjuntos, coletes, classMest, falMest, falMiss, povos, turnoL, turnoT, ministros, cavaleiros, guias, estrelas, princesas, classificacao, getData, loadMinistro, loadCavaleiro, loadGuia, loadFalMiss, loadAdjunto, loadTemplo}} >
             { children }
         </ListContext.Provider>
     )

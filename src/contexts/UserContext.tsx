@@ -1,5 +1,6 @@
-import { createContext, useEffect, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 import api from '../api';
+import { ListContext } from "./ListContext";
 
 export const UserContext = createContext({} as any);
 
@@ -7,6 +8,8 @@ export const UserStore = ({ children }: any) => {
     const [login, setLogin] = useState(false);
     const [user, setUser] = useState({});
     const [token, setToken] = useState(localStorage.getItem('token') as string);
+
+    const { getData } = useContext(ListContext);
 
     const getUser = (token: string) => {
         api.get('/user/get', {headers: {Authorization: token}}).then(({ data }) => {
@@ -19,6 +22,7 @@ export const UserStore = ({ children }: any) => {
 
     useEffect(() => {
         getUser(token);
+        getData(token);
     }, [token])
 
     const handleLogin = (name: string, password: string) => {

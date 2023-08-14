@@ -13,6 +13,7 @@ import Bib from '../../assets/biblioteca.jpg'
 import SideMenu from "src/components/SideMenu/SideMenu";
 import { ListContext } from "src/contexts/ListContext";
 import { UserContext } from "src/contexts/UserContext";
+import { MediumContext } from "src/contexts/MediumContext";
 
 interface IMenu {
     title: string,
@@ -22,7 +23,8 @@ interface IMenu {
 
 function Home() {
     const { token } = useContext(UserContext);
-    const { loadMinistro, loadCavaleiro, loadGuia, loadFalMiss, loadAdjunto } = useContext(ListContext)
+    const { ministros, loadMinistro, loadCavaleiro, loadGuia, loadFalMiss, loadAdjunto, loadTemplo } = useContext(ListContext)
+    const { mediuns, loadMedium } = useContext(MediumContext);
     const navigate = useNavigate();
     
     const menu = [
@@ -42,7 +44,11 @@ function Home() {
         loadGuia(token);
         loadFalMiss(token);
         loadAdjunto(token);
+        loadTemplo(token);
+        loadMedium(token);
     }, [])
+
+    console.log(ministros, mediuns)
 
     return (
         <>

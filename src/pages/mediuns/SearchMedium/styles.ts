@@ -194,6 +194,12 @@ export const MediumPhoto = styled.div<{image: string}>`
     background-position: 50% 50%;
     background-size: cover;
     margin-right: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: ${(props) => {return props.theme.color.darkerColor}};
+    text-align: center;
+    font-weight: bold;
 `;
 
 export const TextContainer = styled.div`

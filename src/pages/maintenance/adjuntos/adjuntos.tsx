@@ -76,8 +76,8 @@ function Adjuntos() {
             api.put('/adjunto/update', {adjunto_id: oldAdj.adjunto_id, ...changedFields}, {headers:{Authorization: token}}).then(() => {
                 alert('Adjunto editado com sucesso');
                 loadAdjunto(token);
-                setEdited({} as IAdjunto);
-                setSelected({} as IAdjunto);
+                setEdited(defaultAdj);
+                setSelected(defaultAdj);
                 closeModal();
             }).catch((error) => {
                 console.log('Não foi possível editar o adjunto', error);
