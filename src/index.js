@@ -10,15 +10,15 @@ import { MenuStore } from './contexts/MenuContext';
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <ListStore>
-      <MediumStore>
-        <UserStore>
-          <MenuStore>
+    <MediumStore>
+      <ListStore>
+        <MenuStore>
+          <UserStore>
             <App />
-          </MenuStore>
-        </UserStore>
-      </MediumStore>
-    </ListStore>
+          </UserStore>
+        </MenuStore>
+      </ListStore>
+    </MediumStore>
   </React.StrictMode>
 );
 

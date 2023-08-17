@@ -25,7 +25,7 @@ export const PageButton = styled.div<{height: string}>`
     z-index: 1;
     width: 100%;
 
-    @media (max-width: 1110px) {
+    @media (max-width: 1099px) {
         font-size: 20px;
     }
 
@@ -42,16 +42,9 @@ export const PageButton = styled.div<{height: string}>`
 
 export const CardsContainer = styled.div`
     width: 80%;
+    max-width: 1450px;
     display: grid;
     gap: 20px;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
     margin-bottom: 25px;
-
-    @media (max-width: 1110px) {
-        grid-template-columns: repeat(2, 1fr);
-    }
-
-    @media (max-width: 768px) {
-        grid-template-columns: 1fr;
-    }
 `;

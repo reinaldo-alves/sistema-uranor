@@ -22,4 +22,8 @@ export const Footer = styled.p`
     margin: 2em 0 1em 0;
     padding: 0 20px;
     background: transparent;
+
+    @media (max-width: 560px) {
+        font-size: 11px;
+    }
 `;

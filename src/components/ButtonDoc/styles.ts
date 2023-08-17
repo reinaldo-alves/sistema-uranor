@@ -17,7 +17,7 @@ export const DocButton = styled.div<{height: string}>`
     z-index: 1;
     width: 100%;
 
-    @media (max-width: 1110px) {
+    @media (max-width: 1099px) {
         font-size: 20px;
     }
 

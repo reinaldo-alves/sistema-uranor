@@ -1,50 +1,77 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import api from '../api';
+import { IUser } from "src/types/types";
 import { ListContext } from "./ListContext";
+import { MediumContext } from "./MediumContext";
+import Loading from "src/utilities/Loading";
 
 export const UserContext = createContext({} as any);
 
 export const UserStore = ({ children }: any) => {
+    const [loading, setLoading] = useState(true);
     const [login, setLogin] = useState(false);
-    const [user, setUser] = useState({});
+    const [user, setUser] = useState({} as IUser);
     const [token, setToken] = useState(localStorage.getItem('token') as string);
+    const [users, setUsers] = useState([] as Array<IUser>);
+    const [errorMessage, setErrorMessage] = useState('');
 
     const { getData } = useContext(ListContext);
-
-    const getUser = (token: string) => {
-        api.get('/user/get', {headers: {Authorization: token}}).then(({ data }) => {
+    const { loadMedium } = useContext(MediumContext);
+    
+    const getUser = async (token: string) => {
+        await api.get('/user/get', {headers: {Authorization: token}}).then(({ data }) => {
             setUser(data.user);
             setLogin(true);
+            setLoading(false);
         }).catch((error) => {
             console.log('Usuário não autenticado', error)
         })
     }
+    
+    const getInfo = async () => {
+        await getUser(token);
+        await getData(token);
+        await loadMedium(token);
+        setLoading(false);
+    }
 
     useEffect(() => {
-        getUser(token);
-        getData(token);
+        getInfo();
     }, [token])
 
-    const handleLogin = (name: string, password: string) => {
-        api.post('/user/login', {name, password}).then(({ data }) => {
-            setLogin(true);
-            localStorage.setItem('token', data.token);
-            setToken(data.token);
-            getUser(data.token);
+    const handleLogin = async (name: string, password: string) => {
+        await api.post('/user/login', {name, password}).then(({ data }) => {
+            if(data.token) {
+                setLogin(true);
+                localStorage.setItem('token', data.token);
+                setToken(data.token);
+                getUser(data.token);
+            }
+            setErrorMessage(data.message);
         }).catch((error) => {
             console.log('Não foi possível fazer o login', error)
+            setErrorMessage('Não foi possível fazer o login. Tente novamente mais tarde.')
         })
     }
 
     const logOut = () => {
         localStorage.removeItem('token');
         setLogin(false);
-        setUser({});
+        setUser({} as IUser);
+    }
+
+    const loadUser = (token: string) => {
+        api.get('/user/get-users', {headers:{Authorization: token}}).then(({ data }) => {
+            const userList = data.user.map((item: IUser) => ({...item}))
+            setUsers(userList)
+        }).catch((error) => {
+            console.log('Erro ao carregar a lista de usuários', error)
+        })
     }
 
     return (
-        <UserContext.Provider value={{login, user, token, handleLogin, logOut}} >
-            { children }
+        <UserContext.Provider value={{login, user, users, token, getUser, handleLogin, logOut, loadUser, errorMessage, setErrorMessage}} >
+            {loading ? <Loading /> : children }
         </UserContext.Provider>
     )
 }

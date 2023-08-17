@@ -21,10 +21,6 @@ export const ErrorMessage = styled.h1`
     font-size: 40px;
     padding: 0 20px;
     text-align: center;
-
-    @media (max-width: 360px) {
-        font-size: 36px;
-    }
 `;
 
 export const MessageSpan = styled.span`
@@ -34,8 +30,10 @@ export const MessageSpan = styled.span`
     font-weight: 500;
     padding: 0 20px;
     text-align: center;
+    width: 90%;
+    max-width: 1000px;
 
-    @media (max-width: 360px) {
+    @media (max-width: 586px) {
         font-size: 20px;
     }
 `;

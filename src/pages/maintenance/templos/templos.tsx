@@ -115,7 +115,7 @@ function Templos() {
                         <InputContainer>
                             <label>Estado</label>
                             <select value={searchState} onChange={(e) => setSearchState(e.target.value)}>
-                                <option value=''></option>
+                                <option value=''>Todos</option>
                                 {estados.map((item: IEstado, index: number) => (
                                     <option key={index} value={item.abrev}>{item.abrev}</option>
                                 ))}

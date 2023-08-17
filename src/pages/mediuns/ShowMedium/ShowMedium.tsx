@@ -1,4 +1,4 @@
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useState } from "react";
 import Header from "src/components/header/header";
 import { Divider, GridContainer, InfoContainer, MainContainer, MainInfoContainer, MediumButton, MediumInfo, MediumMainInfo, MediumText, NameAndId, PersonalCard, PhotoContainer, SectionTitle } from "./styles";
 import SubMenu from "src/components/SubMenu/SubMenu";
@@ -9,18 +9,41 @@ import { IAdjunto, IFalange, IMedium, IMentor, ITemplo } from "src/types/types";
 import { UserContext } from "src/contexts/UserContext";
 import { convertDate } from "src/utilities/functions";
 import { ListContext } from "src/contexts/ListContext";
+import PageNotFound from "src/pages/PageNotFound/PageNotFound";
+import Loading from "src/utilities/Loading";
 
 function ShowMedium() {
-    const { token } = useContext(UserContext);
+    const [loading, setLoading] = useState(true);
+    const [medium, setMedium] = useState({} as IMedium);
+    
+    const { token, getUser } = useContext(UserContext);
     const { mediuns, loadMedium } = useContext(MediumContext);
-    const { ministros, adjuntos, templos, falMiss } = useContext(ListContext);
+    const { ministros, adjuntos, templos, falMiss, getData } = useContext(ListContext);
     const params = useParams();
 
-    const medium: IMedium = mediuns.filter((item: IMedium) => item.medium_id === Number(params.id))[0]
+    //const medium: IMedium = mediuns.filter((item: IMedium) => item.medium_id === Number(params.id))[0]
+    
+    const getInfo = async () => {
+        await loadMedium(token);
+        await getData(token);
+        await getUser(token);
+        setLoading(false);
+    }
     
     useEffect(() => {
-        loadMedium(token);
-    }, [])
+        getInfo();
+        const foundMedium = mediuns.find((item: IMedium) => item.medium_id === Number(params.id));
+        setMedium(foundMedium);
+    }, [params.id, mediuns])
+
+    
+    if(loading) {
+        return <Loading />
+    }
+
+    if(!medium) {
+        return <PageNotFound />
+    }
 
     const endNum = medium.endNumero? 'n° ' + medium.endNumero : ''
     const cityUF = [medium.endCidade, medium.endUF].filter(el => el !== '').join(" - ")

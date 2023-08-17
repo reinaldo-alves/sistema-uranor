@@ -6,6 +6,10 @@ export const LoginHeader = styled.header`
     align-items: center;
     padding: 15px 0 25px 0;
 
+    @media (max-width: 547px) {
+        padding-bottom: 29px;
+    }
+
     img {
         height: 60px;
         width: auto;
@@ -112,7 +116,7 @@ export const LoginForm = styled.div`
 `;
 
 export const LoginError = styled.div`
-    color: red;
+    color: ${(props) => {return props.theme.color.darkerColor}};
     text-align: center;
     font-weight: bold;
     font-size: 20px;

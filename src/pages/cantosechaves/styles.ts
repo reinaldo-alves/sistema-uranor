@@ -10,6 +10,7 @@ export const GlobalContainer = styled.div`
 
 export const CardsCantoContainer = styled.div<{colums: string}>`
     width: 80%;
+    max-width: 1450px;
     height: 100%;
     display: grid;
     gap: 20px;

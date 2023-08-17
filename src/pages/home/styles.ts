@@ -26,6 +26,7 @@ export const CardsContainer = styled.div`
     }
 
     @media (max-width: 420px) {
+        min-width: 352px;
         grid-template-columns: 1fr;
     }
 `;

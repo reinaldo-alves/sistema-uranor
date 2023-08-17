@@ -39,8 +39,9 @@ export interface IEstado {
 }
 
 export interface IUser {
-    id: number,
+    user_id: number,
     name: string,
+    password: string,
     level: string,
     medium_id: number
 }

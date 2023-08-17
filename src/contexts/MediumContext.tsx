@@ -1,12 +1,15 @@
-import { createContext, useState } from "react";
+import { createContext, useState, useEffect, useContext } from "react";
 import api from "src/api";
 import { IMedium } from "src/types/types";
 import { IMediumAPI } from "src/types/typesAPI";
+import { UserContext } from "./UserContext";
 
 export const MediumContext = createContext({} as any);
 
 export const MediumStore = ({ children }: any) => {
     const [mediuns, setMediuns] = useState([] as Array<IMedium>);
+
+    const { token } = useContext(UserContext);
     
     const medium = [
         {id: '12', nome: 'Irene Souza', med: 'Doutrinador', templo: 1, sexo: 'Feminino', situacao: 'Em Desenvolvimento', condicao: 'Afastado', foto: 'https://789d77d27f49a880d02e-714b7dc0b51e300a567fc89d2a0837e5.ssl.cf1.rackcdn.com/PaginaConteudo/depositphotos46976671xl-2015-copia.jpg'},
@@ -110,6 +113,10 @@ export const MediumStore = ({ children }: any) => {
             console.log('Erro ao carregar a lista de médiuns', error)
         })
     }
+
+    useEffect(() => {
+        loadMedium(token)
+    }, [])
 
     return (
         <MediumContext.Provider value={{medium, mediuns, loadMedium}} >

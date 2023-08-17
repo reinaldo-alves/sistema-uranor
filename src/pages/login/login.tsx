@@ -1,11 +1,11 @@
-import { useContext, useState } from 'react'
+import { useContext, useState, useEffect } from 'react'
 import logo from '../../assets/jaguar.jpg'
 import { LoginCard, LoginCardContainer, LoginError, LoginForm, LoginHeader, TitleContainer } from './styles'
 import { UserContext } from 'src/contexts/UserContext'
 import { useNavigate } from 'react-router-dom'
 
 function Login() {
-    const { handleLogin } = useContext(UserContext)
+    const { handleLogin, login, errorMessage, setErrorMessage } = useContext(UserContext)
     
     const [name, setName] = useState('');
     const [password, setPassword] = useState('');
@@ -13,9 +13,22 @@ function Login() {
     const navigate = useNavigate();
 
     const loginButtonFunc = () => {
-        handleLogin(name, password);
-        navigate('/');
+        if(name.trim() && password.trim()){
+            handleLogin(name, password);
+            if(errorMessage === 'Autenticado com sucesso') {
+                navigate('/');
+            }
+        } else {
+            setErrorMessage('Preencha todos os dados corretamente')
+        }
     }
+
+    useEffect(() => {
+        if(login) {
+            navigate('/')
+        }
+        setErrorMessage('');
+    }, [])
     
     return (
         <>
@@ -36,7 +49,7 @@ function Login() {
                         <input type="password" name="password" value={password} onChange={(e) => setPassword(e.target.value)} />
                         <button id='button-login' onClick={loginButtonFunc}>Entrar</button>
                     </LoginForm>
-                    <LoginError>{''}<br /></LoginError>
+                    <LoginError>{errorMessage}</LoginError>
                 </LoginCard>
             </LoginCardContainer>
         </>

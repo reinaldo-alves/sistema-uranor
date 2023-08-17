@@ -1,5 +1,6 @@
+import { useEffect } from 'react';
 import Login from './pages/login/login';
-import { BrowserRouter, Routes, Route } from 'react-router-dom'; 
+import { BrowserRouter, Routes, Route, Navigate, Outlet } from 'react-router-dom'; 
 import Home from './pages/home/home';
 import CantosChaves from './pages/cantosechaves/cantosechaves';
 import DocumentosUteis from './pages/documentosuteis/documentosuteis';
@@ -18,7 +19,7 @@ import ShowMedium from './pages/mediuns/ShowMedium/ShowMedium';
 import Maintenance from './pages/maintenance/maintenance';
 import Adjuntos from './pages/maintenance/adjuntos/adjuntos';
 import Ministros from './pages/maintenance/ministros/ministros';
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
 import { UserContext } from './contexts/UserContext';
 import Guias from './pages/maintenance/guias/guias';
 import Cavaleiros from './pages/maintenance/cavaleiros/cavaleiros';
@@ -26,13 +27,33 @@ import Templos from './pages/maintenance/templos/templos';
 import Falanges from './pages/maintenance/falanges/falanges';
 import Users from './pages/maintenance/users/users';
 import Backup from './pages/maintenance/backup/backup';
+import PrivateRoutes from './utilities/PrivateRoutes';
 
 function App() {
+  const [mainContainer, setMainContainer] = useState('199')
+  
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth > 786) {
+        setMainContainer('199');
+      } else if (window.innerWidth > 675) {
+        setMainContainer('194');
+      } else {
+        setMainContainer('138');
+      }
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
+  
   const theme = {
     height: {
       loginContent: 'calc(100vh - 158px)',
       homeContent: 'calc(100vh - 162px)',
-      mainContent: 'calc(100vh - 199px)'
+      mainContent: `calc(100vh - ${mainContainer}px)`
     },
     color: {
       lighterColor: '#fff',
@@ -42,53 +63,42 @@ function App() {
     }
   }
 
-  const { login, user } = useContext(UserContext)
-
-  if(!login) {
-    return (
-      <ThemeProvider theme={theme}>
-        <Background>
-          <BrowserRouter>
-            <Routes>
-              <Route path='*' element={<Login />} />
-            </Routes>
-          </BrowserRouter>
-        </Background>
-      </ThemeProvider>
-    )
-  }
+  const { user, login } = useContext(UserContext)
   
   return (
     <ThemeProvider theme={theme}>
       <Background>
         <BrowserRouter>
           <Routes>
-            <Route path='/' element={<Home />} />
-            {user.level === 'Administrador' ? 
-              <>
-                <Route path='/manutencao' element={<Maintenance />} />
-                <Route path='/manutencao/ministros' element={<Ministros />} />
-                <Route path='/manutencao/cavaleiros' element={<Cavaleiros />} />
-                <Route path='/manutencao/guias' element={<Guias />} />
-                <Route path='/manutencao/adjuntos' element={<Adjuntos />} />
-                <Route path='/manutencao/templos' element={<Templos />} />
-                <Route path='/manutencao/falanges' element={<Falanges />} />
-                <Route path='/manutencao/usuarios' element={<Users />} />
-                <Route path='/manutencao/backup' element={<Backup />} />
-              </>  
-            : ''}
-            <Route path='/mediuns/consulta' element={<SearchMedium />} />
-            <Route path='/mediuns/consulta/:id' element={<ShowMedium />} />
-            <Route path='/mediuns/cadastro' element={<AddMedium />} />
-            <Route path='/mediuns/menor' element={<YoungMedium />} />
-            <Route path='/cantosechaves' element={<CantosChaves />} />
-            <Route path='/desenvolvimento' element={<Desenvolvimento />} />
-            <Route path='/cursos' element={<Cursos />} />
-            <Route path='/consagracoes' element={<Consagracoes />} />
-            <Route path='/relatorios' element={<Relatorios />} /> 
-            <Route path='/documentosuteis' element={<DocumentosUteis />} />
-            <Route path='/biblioteca' element={<Biblioteca />} />
-            <Route path='*' element={<PageNotFound />} />
+            <Route element={<PrivateRoutes />}>
+              <Route path='/' element={<Home />} />
+              {user.level === 'Administrador' ? 
+                <>
+                  <Route path='/manutencao' element={<Maintenance />} />
+                  <Route path='/manutencao/ministros' element={<Ministros />} />
+                  <Route path='/manutencao/cavaleiros' element={<Cavaleiros />} />
+                  <Route path='/manutencao/guias' element={<Guias />} />
+                  <Route path='/manutencao/adjuntos' element={<Adjuntos />} />
+                  <Route path='/manutencao/templos' element={<Templos />} />
+                  <Route path='/manutencao/falanges' element={<Falanges />} />
+                  <Route path='/manutencao/usuarios' element={<Users />} />
+                  <Route path='/manutencao/backup' element={<Backup />} />
+                </>  
+              : ''}
+              <Route path='/mediuns/consulta' element={<SearchMedium />} />
+              <Route path='/mediuns/consulta/:id' element={<ShowMedium />} />
+              <Route path='/mediuns/cadastro' element={<AddMedium />} />
+              <Route path='/mediuns/menor' element={<YoungMedium />} />
+              <Route path='/cantosechaves' element={<CantosChaves />} />
+              <Route path='/desenvolvimento' element={<Desenvolvimento />} />
+              <Route path='/cursos' element={<Cursos />} />
+              <Route path='/consagracoes' element={<Consagracoes />} />
+              <Route path='/relatorios' element={<Relatorios />} /> 
+              <Route path='/documentosuteis' element={<DocumentosUteis />} />
+              <Route path='/biblioteca' element={<Biblioteca />} />
+              <Route path='*' element={<PageNotFound />} />
+            </Route>
+            <Route path='/login' element={!login? <Login /> : <Navigate to='/' />} />
           </Routes>
         </BrowserRouter>
         <Footer>Sistema Uranor - v.0.0.0 - ©2023 Uranor do Amanhecer. Todos os direitos reservados.</Footer>
@@ -98,3 +108,5 @@ function App() {
 }
 
 export default App;
+
+//Integrar tela de criar médium e implementar editar medium
