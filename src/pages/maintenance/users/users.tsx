@@ -8,6 +8,7 @@ import MainTitle from "src/components/MainTitle/MainTitle";
 import { MediumContext } from "src/contexts/MediumContext";
 import { UserContext } from "src/contexts/UserContext";
 import api from "src/api";
+import { useNavigate } from "react-router-dom";
 
 function Users() {
     const defaultUser = {user_id: 0, name: '', password: '', level: '', medium_id: 0}
@@ -18,9 +19,13 @@ function Users() {
     const [selected, setSelected] = useState(defaultUser);
     const [edited, setEdited] = useState(defaultUser);
     const [showModal, setShowModal] = useState(false);
+    const [password1, setPassword1] = useState('');
+    const [password2, setPassword2] = useState('');
     
-    const { users, token, loadUser } = useContext(UserContext);
+    const { users, token, loadUser, setUserChangePassword } = useContext(UserContext);
     const { mediuns } = useContext(MediumContext);
+
+    const navigate = useNavigate();
 
     useEffect(() => {
         loadUser(token)
@@ -60,8 +65,8 @@ function Users() {
         setSelected(defaultUser);
     }
 
-    const addUser = (user: IUser, token: string) => {
-        const {user_id, ...newUser} = user;
+    const addUser = (name: string, password: string, level: string, medium: number, token: string) => {
+        const newUser = {name: name, password: password, level: level, medium_id: medium};
         api.post('/user/create', newUser, {headers:{Authorization: token}}).then(() => {
             alert('Usuário adicionado com sucesso');
             loadUser(token);
@@ -71,10 +76,23 @@ function Users() {
         })
     }
 
+    const handleAddUser = (name: string, password: Array<string>, level: string, medium: number) => {
+        if(name.trim() && password[0].trim() && password[1].trim() && level && medium) {
+            if (password[0] === password[1]) {
+                const finalPassword = password[1];
+                addUser(name, finalPassword, level, medium, token)
+            } else {
+                alert('As senhas não são iguais. Tente novamente.')
+            }
+        } else {
+            alert('Preencha todos os dados corretamente.')
+        }
+    }
+
     const editUser = (newUser: IUser, oldUser: IUser, token: string) => {
         const changedFields = {} as any
         for (const key in newUser){
-            if (newUser[key as keyof IUser] !== oldUser[key as keyof IUser]){
+            if (key !== 'password' && newUser[key as keyof IUser] !== oldUser[key as keyof IUser]){
                 changedFields[key as keyof IUser] = newUser[key as keyof IUser]
             }
         }
@@ -181,23 +199,26 @@ function Users() {
                         <ModalButton 
                             color="green"
                             style={{alignSelf: 'center'}}
-                            onClick={() => {}
-                        }>Alterar Senha</ModalButton>
+                            onClick={() => {
+                                setUserChangePassword(selected);
+                                navigate('/manutencao/usuarios/alterarsenha');
+                            }}
+                        >Alterar Senha</ModalButton>
                     : 
                         <>         
                             <InputContainer>
                                 <label>Senha</label>
-                                <input type="password" />
+                                <input type="password" value={password1} onChange={(e) => setPassword1(e.target.value)} />
                             </InputContainer>
                             <InputContainer>
                                 <label>Confirmar Senha</label>
-                                <input type="password" />
+                                <input type="password" value={password2} onChange={(e) => setPassword2(e.target.value)} />
                             </InputContainer>
                         </>
                     }
                     <div style={{display: 'flex', gap: '20px'}}>
                         <ModalButton color="red" onClick={() => closeModal()}>Cancelar</ModalButton>
-                        <ModalButton color='green' onClick={edit? () => editUser(edited, selected, token) : () => addUser(edited, token)}>Salvar</ModalButton>
+                        <ModalButton color='green' onClick={edit? () => editUser(edited, selected, token) : () => handleAddUser(edited.name, [password1, password2], edited.level, edited.medium_id)}>Salvar</ModalButton>
                     </div>
                 </ModalContent>
             </Modal>

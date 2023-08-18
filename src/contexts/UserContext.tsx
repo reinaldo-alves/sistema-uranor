@@ -13,6 +13,7 @@ export const UserStore = ({ children }: any) => {
     const [user, setUser] = useState({} as IUser);
     const [token, setToken] = useState(localStorage.getItem('token') as string);
     const [users, setUsers] = useState([] as Array<IUser>);
+    const [userChangePassword, setUserChangePassword] = useState({} as IUser);
     const [errorMessage, setErrorMessage] = useState('');
 
     const { getData } = useContext(ListContext);
@@ -70,7 +71,7 @@ export const UserStore = ({ children }: any) => {
     }
 
     return (
-        <UserContext.Provider value={{login, user, users, token, getUser, handleLogin, logOut, loadUser, errorMessage, setErrorMessage}} >
+        <UserContext.Provider value={{login, user, users, token, getUser, handleLogin, logOut, loadUser, errorMessage, setErrorMessage, userChangePassword, setUserChangePassword}} >
             {loading ? <Loading /> : children }
         </UserContext.Provider>
     )

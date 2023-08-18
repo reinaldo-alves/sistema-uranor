@@ -28,6 +28,7 @@ import Falanges from './pages/maintenance/falanges/falanges';
 import Users from './pages/maintenance/users/users';
 import Backup from './pages/maintenance/backup/backup';
 import PrivateRoutes from './utilities/PrivateRoutes';
+import ChangePassword from './pages/maintenance/changePassword/changePassword';
 
 function App() {
   const [mainContainer, setMainContainer] = useState('199')
@@ -85,6 +86,7 @@ function App() {
                   <Route path='/manutencao/backup' element={<Backup />} />
                 </>  
               : ''}
+              <Route path='/manutencao/usuarios/alterarsenha' element={<ChangePassword />} />
               <Route path='/mediuns/consulta' element={<SearchMedium />} />
               <Route path='/mediuns/consulta/:id' element={<ShowMedium />} />
               <Route path='/mediuns/cadastro' element={<AddMedium />} />

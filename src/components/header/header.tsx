@@ -7,12 +7,18 @@ import { MenuContext } from 'src/contexts/MenuContext'
 import { useNavigate } from 'react-router-dom'
 
 function Header() {
-    const { user, logOut } = useContext(UserContext);
+    const { user, logOut, setUserChangePassword } = useContext(UserContext);
     const { setOpenMenu } = useContext(MenuContext);
     const navigate = useNavigate();
 
     const titleButton = user.level === 'Administrador' ? 'Manutenção' : 'Alterar senha';
-    const clickButton = user.level === 'Administrador' ? () => navigate('/manutencao') : () => navigate('/manutencao/usuarios/alterarsenha');
+    const clickButton = user.level === 'Administrador' ? 
+        () => navigate('/manutencao')
+        :
+        () => {
+            setUserChangePassword(user);
+            navigate('/manutencao/usuarios/alterarsenha');
+        };
 
     return (
         <HeaderContainer>
