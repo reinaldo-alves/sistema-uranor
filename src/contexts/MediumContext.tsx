@@ -64,7 +64,7 @@ export const MediumStore = ({ children }: any) => {
                 dtSetimo: item.dtSetimo === null ? '' : item.dtSetimo,
                 adjOrigem: item.adjOrigem === null ? 0 : item.adjOrigem,
                 temploOrigem: item.temploOrigem === null ? 0 : item.temploOrigem,
-                colete: item.colete === null ? '' : item.colete,
+                colete: item.colete === null ? 0 : item.colete,
                 classMest: item.classMest === null ? '' : item.classMest,
                 falMest: item.falMest === null ? '' : item.falMest,
                 povo: item.povo === null ? '' : item.povo,

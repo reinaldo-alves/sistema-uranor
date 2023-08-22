@@ -8,6 +8,7 @@ import SideMenu from "src/components/SideMenu/SideMenu";
 import SubMenu from "src/components/SubMenu/SubMenu";
 import Header from "src/components/header/header";
 import { UserContext } from "src/contexts/UserContext";
+import { setSituation } from "src/utilities/functions";
 
 function SearchMedium() {
     
@@ -116,7 +117,7 @@ function SearchMedium() {
                                     <TextContainer>
                                         <MediumInfo>Mediunidade: <span>{selected.med}</span></MediumInfo>
                                         <MediumInfo>Sexo: <span>{selected.sex}</span></MediumInfo>
-                                        <MediumInfo>Situação: <span>{'selected.situacao'}</span></MediumInfo>
+                                        <MediumInfo>Situação: <span>{setSituation(selected)}</span></MediumInfo>
                                         <MediumInfo>Templo: <span>{templos.filter((temp: ITemplo) => temp.templo_id === selected.templo)[0].cidade} - {templos.filter((temp: ITemplo) => temp.templo_id === selected.templo)[0].estado.abrev}</span></MediumInfo>
                                         <MediumInfo>Condição Atual: <span>{selected.condicao}</span></MediumInfo>
                                     </TextContainer>

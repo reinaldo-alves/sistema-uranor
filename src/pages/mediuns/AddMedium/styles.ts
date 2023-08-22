@@ -276,3 +276,27 @@ export const Divider = styled.div`
     height: 1px;
     background-color: ${(props) => {return props.theme.color.lighterColor}};
 `;
+
+export const CustomInput = styled.div`
+    position: relative;
+`;
+
+export const OptionsList = styled.div<{show: boolean}>`
+    display: ${({ show }) => show ? 'block' : 'none'};
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    border: 1px solid #ccc;
+    background-color: white;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    max-height: 250px;
+    overflow-x: auto;
+
+    ul li {
+        padding: 8px;
+        cursor: pointer;
+    }
+`;

@@ -1,6 +1,6 @@
 import { useContext, useState, useEffect } from "react";
 import { ListContext } from "src/contexts/ListContext";
-import { Divider, FieldContainer, FieldContainerBox, GridContainer, GridDatesContainer, InputContainer, MainContainer, MainContent, MainInfoContainer, MediumButton, Observations, PersonalCard, PhotoContainer, SectionTitle } from "./styles";
+import { CustomInput, Divider, FieldContainer, FieldContainerBox, GridContainer, GridDatesContainer, InputContainer, MainContainer, MainContent, MainInfoContainer, MediumButton, Observations, OptionsList, PersonalCard, PhotoContainer, SectionTitle } from "./styles";
 import { IAdjunto, ICavaleiro, IEstado, IFalange, IMedium, IMentor, ITemplo } from "src/types/types";
 import SideMenu from "src/components/SideMenu/SideMenu";
 import SubMenu from "src/components/SubMenu/SubMenu";
@@ -8,6 +8,7 @@ import Header from "src/components/header/header";
 import { UserContext } from "src/contexts/UserContext";
 import api from "src/api";
 import { MediumContext } from "src/contexts/MediumContext";
+import { formatCep, formatCpf, formatPhoneNumber } from "src/utilities/functions";
 
 function AddMedium() {
     const { templos, estados, adjuntos, coletes, classMest, falMest, povos, falMiss, turnoL, turnoT, ministros, cavaleiros, guias, estrelas, princesas, classificacao } = useContext(ListContext);
@@ -23,7 +24,7 @@ function AddMedium() {
         templo: 0,
         dtNasc: '',
         rg: '',
-        cpf: 0,
+        cpf: '',
         mae: '',
         pai: '',
         natur: '',
@@ -31,15 +32,15 @@ function AddMedium() {
         profissao: '',
         estCivil: '',
         conjuge: '',
-        cep: 0,
+        cep: '',
         endereco: '',
         endNumero: '',
         endCompl: '',
         endBairro: '',
         endCidade: '',
         endUF: '',
-        telefone1: 0,
-        telefone2: 0,
+        telefone1: '',
+        telefone2: '',
         email: '',
         dtIngresso: '',
         dtEmplac: '',
@@ -96,12 +97,18 @@ function AddMedium() {
     const [listFalMiss, setListFalMiss] = useState([]);
     const [listTurnoL, setListTurnoL] = useState([]);
     const [listTurnoT, setListTurnoT] = useState([]);
-    const [listCav, setListCav] = useState([]);
+    const [listCav, setListCav] = useState([] as Array<ICavaleiro>);
     const [listEst, setListEst] = useState([]);
     const [listClass, setListClass] = useState([]);
     const [tSol, setTSol] = useState(false);
     const [photo, setPhoto] = useState<File | null>(null);
     const [preview, setPreview] = useState<string | null>(null);
+    const [dropMin, setDropMin] = useState(false);
+    const [dropCav, setDropCav] = useState(false);
+    const [dropGuia, setDropGuia] = useState(false);
+    const [searchMin, setSearchMin] = useState('');
+    const [searchCav, setSearchCav] = useState('');
+    const [searchGuia, setSearchGuia] = useState('');
 
     useEffect(() => {
         console.log(newMedium)
@@ -201,6 +208,7 @@ function AddMedium() {
             dtClassif: medium.dtClassif === '' ? null : medium.dtClassif,
             dtTrinoSol: medium.dtTrinoSol === '' ? null : medium.dtTrinoSol,
             dtTrinoSar: medium.dtTrinoSar === '' ? null : medium.dtTrinoSar,
+            colete: medium.colete === 0 ? null : medium.colete,
             ministro: medium.ministro === 0 ? null : medium.ministro,
             cavaleiro: medium.cavaleiro === 0 ? null : medium.cavaleiro,
             guia: medium.guia === 0 ? null : medium.guia,
@@ -280,7 +288,7 @@ function AddMedium() {
                         <label>RG: </label>
                         <input type="text" value={newMedium.rg} onChange={(e) => updateProps('rg', e.target.value)}/>
                         <label>CPF: </label>
-                        <input type="text" value={newMedium.cpf} onChange={(e) => updateProps('cpf', e.target.value)}/>
+                        <input type="text" maxLength={14} value={newMedium.cpf} onChange={(e) => updateProps('cpf', formatCpf(e.target.value))}/>
                         <label>Mãe: </label>
                         <input type="text" value={newMedium.mae} onChange={(e) => updateProps('mae', e.target.value)}/>
                         <label>Pai: </label>
@@ -307,7 +315,7 @@ function AddMedium() {
                         <label>Cônjuge: </label>
                         <input type="text" value={newMedium.conjuge} onChange={(e) => updateProps('conjuge', e.target.value)}/>
                         <label>CEP: </label>
-                        <input type="text" value={newMedium.cep} onChange={(e) => updateProps('cep', e.target.value)}/>
+                        <input type="text" maxLength={9} value={newMedium.cep} onChange={(e) => updateProps('cep', formatCep(e.target.value))}/>
                         <label>Endereço: </label>
                         <input type="text" value={newMedium.endereco} onChange={(e) => updateProps('endereco', e.target.value)}/>
                         <label>Número: </label>
@@ -326,9 +334,9 @@ function AddMedium() {
                             ))}
                         </select>
                         <label>Telefone 1: </label>
-                        <input type="text" value={newMedium.telefone1} onChange={(e) => updateProps('telefone1', e.target.value)}/>
+                        <input type="tel" maxLength={15} value={newMedium.telefone1} onChange={(e) => updateProps('telefone1', formatPhoneNumber(e.target.value))}/>
                         <label>Telefone 2: </label>
-                        <input type="text" value={newMedium.telefone2} onChange={(e) => updateProps('telefone2', e.target.value)}/>
+                        <input type="tel" maxLength={15} value={newMedium.telefone2} onChange={(e) => updateProps('telefone2', formatPhoneNumber(e.target.value))}/>
                         <label>E-mail: </label>
                         <input type="text" value={newMedium.email} onChange={(e) => updateProps('email', e.target.value)}/>
                     </GridContainer>
@@ -428,21 +436,80 @@ function AddMedium() {
                             <Divider></Divider>
                             <GridContainer>
                                 <label>Ministro: </label>
-                                <select value={newMedium.ministro} onChange={(e) => updateProps('ministro', e.target.value)}>
-                                    <option value={0}></option>
-                                    {ministros.map((item: IMentor, index: number) => (
-                                        <option key={index} value={item.id}>{item.nome}</option>
-                                    ))}
-                                </select>
+                                <CustomInput>
+                                    <input
+                                        type="text"
+                                        value={searchMin}
+                                        onChange={(e) => setSearchMin(e.target.value)}
+                                        onFocus={() => setDropMin(true)}
+                                        onBlur={() => setTimeout(() => setDropMin(false), 150)}
+                                    />
+                                    <OptionsList show={dropMin}>
+                                        <ul>
+                                            {ministros
+                                                .filter((item: IMentor) => item.nome.toLowerCase().includes(searchMin.toLowerCase().trim()))
+                                                .length === 0
+                                            ? (
+                                                <li style={{fontStyle: 'italic', color: '#777'}}>- Não encontrado -</li>
+                                            ) : (
+                                                ministros
+                                                    .filter((item: IMentor) => item.nome.toLowerCase().includes(searchMin.toLowerCase().trim()))
+                                                    .map((item: IMentor, index: number) => (
+                                                        <li
+                                                            key={index}
+                                                            onClick={() => {
+                                                                updateProps('ministro', item.id);
+                                                                setSearchMin(ministros.find((min: IMentor) => min.id === item.id).nome);
+                                                                setDropMin(false);
+                                                            }}
+                                                        >
+                                                            {item.nome}
+                                                        </li>
+                                                ))
+                                            )}
+                                        </ul>
+                                    </OptionsList>
+                                </CustomInput>
                                 <label>Data Ministro: </label>
                                 <input type="date" value={newMedium.dtMinistro} onChange={(e) => updateProps('dtMinistro', e.target.value)}/>
                                 <label>Cavaleiro: </label>
-                                <select value={newMedium.cavaleiro} onChange={(e) => updateProps('cavaleiro', e.target.value)}>
-                                    <option value={0}></option>
-                                    {listCav.map((item: ICavaleiro, index: number) => (
-                                        <option key={index} value={item.id}>{item.nome}</option>
-                                    ))}
-                                </select>
+                                <CustomInput>
+                                    <input
+                                        type="text"
+                                        value={searchCav}
+                                        onChange={(e) => setSearchCav(e.target.value)}
+                                        onFocus={() => setDropCav(true)}
+                                        onBlur={() => setTimeout(() => setDropCav(false), 150)}
+                                    />
+                                    <OptionsList show={dropCav}>
+                                        <ul>
+                                            {listCav
+                                                .filter((item: ICavaleiro) => item.nome.toLowerCase().includes(searchCav.toLowerCase().trim()))
+                                                .length === 0
+                                            ? (
+                                                <li style={{fontStyle: 'italic', color: '#777'}}>- Não encontrado -</li>
+                                            ) : (
+                                                listCav
+                                                    .filter((item: ICavaleiro) => item.nome.toLowerCase().includes(searchCav.toLowerCase().trim()))
+                                                    .map((item: ICavaleiro, index: number) => (
+                                                        <li
+                                                            key={index}
+                                                            onClick={() => {
+                                                                updateProps('cavaleiro', item.id);
+                                                                const foundCav = listCav.find((cav: ICavaleiro) => cav.id === item.id)
+                                                                if (foundCav) {
+                                                                    setSearchCav(foundCav.nome);
+                                                                }
+                                                                setDropCav(false);
+                                                            }}
+                                                        >
+                                                            {item.nome}
+                                                        </li>
+                                                ))
+                                            )}
+                                        </ul>
+                                    </OptionsList>
+                                </CustomInput>
                                 <label>Cor do Cavaleiro: </label>
                                 <select value={newMedium.cor} onChange={(e) => updateProps('cor', e.target.value)}>
                                     {newMedium.med==='Doutrinador'?
@@ -484,12 +551,40 @@ function AddMedium() {
                                     ))}
                                 </select>
                                 <label>Guia Missionária: </label>
-                                <select value={newMedium.guia} onChange={(e) => updateProps('guia', e.target.value)}>
-                                    <option value={0}></option>
-                                    {guias.map((item: IMentor, index: number) => (
-                                        <option key={index} value={item.id}>{item.nome}</option>
-                                    ))}
-                                </select>
+                                <CustomInput>
+                                    <input
+                                        type="text"
+                                        value={searchGuia}
+                                        onChange={(e) => setSearchGuia(e.target.value)}
+                                        onFocus={() => setDropGuia(true)}
+                                        onBlur={() => setTimeout(() => setDropGuia(false), 150)}
+                                    />
+                                    <OptionsList show={dropGuia}>
+                                        <ul>
+                                            {guias
+                                                .filter((item: IMentor) => item.nome.toLowerCase().includes(searchGuia.toLowerCase().trim()))
+                                                .length === 0
+                                            ? (
+                                                <li style={{fontStyle: 'italic', color: '#777'}}>- Não encontrado -</li>
+                                            ) : (
+                                                guias
+                                                    .filter((item: IMentor) => item.nome.toLowerCase().includes(searchGuia.toLowerCase().trim()))
+                                                    .map((item: IMentor, index: number) => (
+                                                        <li
+                                                            key={index}
+                                                            onClick={() => {
+                                                                updateProps('guia', item.id);
+                                                                setSearchGuia(guias.find((guia: IMentor) => guia.id === item.id).nome);
+                                                                setDropGuia(false);
+                                                            }}
+                                                        >
+                                                            {item.nome}
+                                                        </li>
+                                                ))
+                                            )}
+                                        </ul>
+                                    </OptionsList>
+                                </CustomInput>
                                 <label>Cor da Guia: </label>
                                 <select value={newMedium.cor} onChange={(e) => updateProps('cor', e.target.value)}>
                                     <option value={undefined}></option>

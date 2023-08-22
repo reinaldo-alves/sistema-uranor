@@ -7,7 +7,7 @@ import { useParams } from "react-router-dom";
 import { MediumContext } from "src/contexts/MediumContext";
 import { IAdjunto, ICavaleiro, IFalange, IMedium, IMentor, ITemplo } from "src/types/types";
 import { UserContext } from "src/contexts/UserContext";
-import { convertDate } from "src/utilities/functions";
+import { convertDate, setSituation } from "src/utilities/functions";
 import { ListContext } from "src/contexts/ListContext";
 import PageNotFound from "src/pages/PageNotFound/PageNotFound";
 import Loading from "src/utilities/Loading";
@@ -20,8 +20,6 @@ function ShowMedium() {
     const { mediuns, loadMedium } = useContext(MediumContext);
     const { ministros, cavaleiros, guias, adjuntos, templos, falMiss, getData } = useContext(ListContext);
     const params = useParams();
-
-    //const medium: IMedium = mediuns.filter((item: IMedium) => item.medium_id === Number(params.id))[0]
     
     const getInfo = async () => {
         await loadMedium(token);
@@ -90,6 +88,7 @@ function ShowMedium() {
                             <MediumMainInfo>Mediunidade: <span>{medium.med}</span></MediumMainInfo>
                             <MediumMainInfo>Sexo: <span>{medium.sex}</span></MediumMainInfo>
                             <MediumMainInfo>Templo: <span>{templos.filter((item: ITemplo) => item.templo_id === medium.templo)[0].cidade} - {templos.filter((item: ITemplo) => item.templo_id === medium.templo)[0].estado.abrev}</span></MediumMainInfo>
+                            <MediumMainInfo>Situação: <span>{setSituation(medium)}</span></MediumMainInfo>
                             <MediumMainInfo>Condição Atual: <span>{medium.condicao}</span></MediumMainInfo>
                             <MediumButton color="green">Gerar Emissão</MediumButton>
                             <MediumButton color="green">Editar</MediumButton>
@@ -104,7 +103,7 @@ function ShowMedium() {
                             <SectionTitle>Dados Pessoais</SectionTitle>
                             <InfoContainer>
                                 <MediumInfo>Data de Nascimento: <span>{convertDate(medium.dtNasc)}</span></MediumInfo>
-                                <MediumInfo>Natural de: <span>{medium.natur} - {medium.naturUF}</span></MediumInfo>
+                                <MediumInfo>Natural de: <span>{medium.natur ? `${medium.natur} - ${medium.naturUF}` : ''}</span></MediumInfo>
                                 <MediumInfo>RG: <span>{medium.rg}</span></MediumInfo>
                                 <MediumInfo>CPF: <span>{medium.cpf}</span></MediumInfo>
                                 <MediumInfo>Nome do Pai: <span>{medium.pai}</span></MediumInfo>
@@ -133,9 +132,9 @@ function ShowMedium() {
                         <PersonalCard>
                             <SectionTitle>Dados Mediúnicos</SectionTitle>
                             <InfoContainer>
-                                <MediumInfo>Adjunto de Origem: <span>{ministros.filter((item: IMentor) => item.id === adjuntos.filter((ad: IAdjunto) => ad.adjunto_id === medium.adjOrigem)[0].ministro)[0]? ministros.filter((item: IMentor) => item.id === adjuntos.filter((ad: IAdjunto) => ad.adjunto_id === medium.adjOrigem)[0].ministro)[0].nome : ''} - Mestre {adjuntos.filter((item: IAdjunto) => item.adjunto_id === medium.adjOrigem)[0]? adjuntos.filter((item: IAdjunto) => item.adjunto_id === medium.adjOrigem)[0].nome : ''}</span></MediumInfo>
-                                <MediumInfo>Templo de Origem: <span>{templos.filter((item: ITemplo) => item.templo_id === medium.templo)[0].cidade} - {templos.filter((item: ITemplo) => item.templo_id === medium.templo)[0].estado.abrev}</span></MediumInfo>
-                                <MediumInfo>Colete n°: <span>{medium.colete}</span></MediumInfo>
+                                <MediumInfo>Adjunto de Origem: <span>{medium.adjOrigem ? ministros.filter((item: IMentor) => item.id === adjuntos.filter((ad: IAdjunto) => ad.adjunto_id === medium.adjOrigem)[0].ministro)[0]? ministros.filter((item: IMentor) => item.id === adjuntos.filter((ad: IAdjunto) => ad.adjunto_id === medium.adjOrigem)[0].ministro)[0].nome : '' : ''} {medium.adjOrigem ? '- Mestre' : ''} {adjuntos.filter((item: IAdjunto) => item.adjunto_id === medium.adjOrigem)[0]? adjuntos.filter((item: IAdjunto) => item.adjunto_id === medium.adjOrigem)[0].nome : ''}</span></MediumInfo>
+                                <MediumInfo>Templo de Origem: <span>{medium.temploOrigem ? `${templos.filter((item: ITemplo) => item.templo_id === medium.templo)[0].cidade} - ${templos.filter((item: ITemplo) => item.templo_id === medium.templo)[0].estado.abrev}` : ''}</span></MediumInfo>
+                                <MediumInfo>Colete n°: <span>{medium.colete ? medium.colete : ''}</span></MediumInfo>
                                 <MediumInfo>Classificação: <span>{medium.classMest}</span></MediumInfo>
                                 <MediumInfo>Falange de Mestrado: <span>{medium.falMest}</span></MediumInfo>
                                 <MediumInfo>Povo: <span>{medium.povo}</span></MediumInfo>

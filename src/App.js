@@ -111,7 +111,8 @@ function App() {
 
 export default App;
 
-//Criar padrão para telefone, cep e cpf, convertendo-os para string
-//Implementar situação atual (Em desenvolvimento, emplacado...)
 //Implementar editar medium
+//Implementar alert personalizado
+//Carregar fotos no site e fazer correspondência com o cadastro
+//Gerar PDF a partir do site
 //Validações (ex: exibir determinados campos apenas quando médium for centurião)
