@@ -7,6 +7,7 @@ import { IMedium, ITemplo } from "src/types/types";
 import SideMenu from "src/components/SideMenu/SideMenu";
 import SubMenu from "src/components/SubMenu/SubMenu";
 import Header from "src/components/header/header";
+import { UserContext } from "src/contexts/UserContext";
 
 function SearchMedium() {
     
@@ -21,8 +22,12 @@ function SearchMedium() {
     const [textPosition, setTextPosition] = useState('');
     
     const { templos } = useContext(ListContext);
+    const { token } = useContext(UserContext);
+    const { mediuns, loadMedium } = useContext(MediumContext);
 
-    const { mediuns } = useContext(MediumContext);
+    useEffect(() => {
+        loadMedium(token);
+    }, [])
 
     useEffect(() => {
         const handleResize = () => {

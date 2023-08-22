@@ -42,7 +42,7 @@ function Templos() {
         setShowModal(true);
     }
 
-    const modalEditTemp: any = (temp: ITemplo) => {
+    const modalEditTemp = (temp: ITemplo) => {
         setEdit(true);
         setEdited(temp);
         setSelected(temp);

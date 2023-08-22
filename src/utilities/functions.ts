@@ -1,12 +1,12 @@
-export function convertDate(date: Date) {
-    const fullDate = new Date(date);
-    const day = String(fullDate.getUTCDate()).padStart(2, '0');
-    const month = String(fullDate.getUTCMonth() + 1).padStart(2, '0');
-    const year = fullDate.getUTCFullYear();
+export function convertDate(date: string) {
+    const dateParts = date.split('-');
+    const day = parseInt(dateParts[2]);
+    const month = dateParts[1];
+    const year = dateParts[0];
 
     if(!day || !month || !year) {
         return ''
     }
 
-    return `${day}/${month}/${year}`;
+    return `${day}/${month}/${year}`; 
 }

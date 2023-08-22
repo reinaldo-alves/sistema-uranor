@@ -5,7 +5,7 @@ import SubMenu from "src/components/SubMenu/SubMenu";
 import SideMenu from "src/components/SideMenu/SideMenu";
 import { useParams } from "react-router-dom";
 import { MediumContext } from "src/contexts/MediumContext";
-import { IAdjunto, IFalange, IMedium, IMentor, ITemplo } from "src/types/types";
+import { IAdjunto, ICavaleiro, IFalange, IMedium, IMentor, ITemplo } from "src/types/types";
 import { UserContext } from "src/contexts/UserContext";
 import { convertDate } from "src/utilities/functions";
 import { ListContext } from "src/contexts/ListContext";
@@ -18,7 +18,7 @@ function ShowMedium() {
     
     const { token, getUser } = useContext(UserContext);
     const { mediuns, loadMedium } = useContext(MediumContext);
-    const { ministros, adjuntos, templos, falMiss, getData } = useContext(ListContext);
+    const { ministros, cavaleiros, guias, adjuntos, templos, falMiss, getData } = useContext(ListContext);
     const params = useParams();
 
     //const medium: IMedium = mediuns.filter((item: IMedium) => item.medium_id === Number(params.id))[0]
@@ -51,11 +51,12 @@ function ShowMedium() {
 
     const positionsAndFunctions = (medium: IMedium) => {
         const array = [];
-        if (medium.comando && medium.janata){array.push('Comandante Janatã')}
-        else if (medium.comando){array.push('Comandante')};
-        if (medium.lVermelha){array.push('Lança Vermelha')};
-        if (medium.presidente){array.push('Presidente')};
-        if (medium.vicePres){array.push('Vice-presidente')};
+        if (medium.comando === 'Comandante'){array.push('Comandante')}
+        else if (medium.comando === 'Janatã'){array.push('Comandante Janatã')}
+        else if (medium.comando === 'Lança'){array.push('Comandante, Lança Vermelha')}
+        else if (medium.comando === 'JanatãLança'){array.push('Comandante Janatã, Lança Vermelha')};
+        if (medium.presidente === 'Presidente'){array.push('Presidente')}
+        else if (medium.presidente === 'Vice'){array.push('Vice-presidente')};
         if (medium.recepcao){array.push('Recepcionista')};
         if (medium.devas){array.push(medium.sex === 'Feminino'? 'Filha de Devas' : 'Filho de Devas')};
         if (medium.regente){array.push('Regente')};
@@ -147,8 +148,8 @@ function ShowMedium() {
                                 <>
                                     <Divider></Divider>
                                     <InfoContainer>
-                                        <MediumInfo>Ministro: <span>{ministros.filter((item: IMentor) => item.id === medium.ministro)[0] ? ministros.filter((item: IMentor) => item.id === medium.ministro)[0].nome : ''}</span></MediumInfo>
-                                        <MediumInfo>Cavaleiro: <span>{medium.cavaleiro} {medium.cavaleiro? medium.cor : ''}</span></MediumInfo>
+                                        <MediumInfo>Ministro: <span>{ministros.find((item: IMentor) => item.id === medium.ministro) ? ministros.find((item: IMentor) => item.id === medium.ministro).nome : ''}</span></MediumInfo>
+                                        <MediumInfo>Cavaleiro: <span>{cavaleiros.find((item: ICavaleiro) => item.id === medium.cavaleiro) ? cavaleiros.find((item: ICavaleiro) => item.id === medium.cavaleiro).nome : ''} {medium.cavaleiro? medium.cor : ''}</span></MediumInfo>
                                         <MediumInfo>Data Ministro: <span>{convertDate(medium.dtMinistro)}</span></MediumInfo>
                                         <MediumInfo>Data Classificação Atual: <span>{convertDate(medium.dtClassif)}</span></MediumInfo>
                                     </InfoContainer>
@@ -158,8 +159,8 @@ function ShowMedium() {
                                 <>
                                     <Divider></Divider>
                                     <InfoContainer>
-                                        <MediumInfo>Estrela: <span>{medium.ministro}</span></MediumInfo>
-                                        <MediumInfo>Guia Missionária: <span>{medium.guia} {medium.guia? medium.cor : ''}</span></MediumInfo>
+                                        <MediumInfo>Estrela: <span>{medium.estrela}</span></MediumInfo>
+                                        <MediumInfo>Guia Missionária: <span>{guias.find((item: IMentor) => item.id === medium.guia) ? guias.find((item: IMentor) => item.id === medium.guia).nome : ''} {medium.guia? medium.cor : ''}</span></MediumInfo>
                                     </InfoContainer>
                                 </>
                             : ''}
@@ -187,23 +188,23 @@ function ShowMedium() {
                             <SectionTitle>Povo</SectionTitle>
                             {medium.sex.concat(medium.med)==='MasculinoDoutrinador'?
                                 <InfoContainer>
-                                    <MediumInfo>Escrava: <span>{medium.ninfa}</span></MediumInfo>
-                                    <MediumInfo>Madrinha: <span>{medium.madrinha}</span></MediumInfo>
-                                    <MediumInfo>Padrinho: <span>{medium.padrinho}</span></MediumInfo>
+                                    <MediumInfo>Escrava: <span>{mediuns.find((item: IMedium) => item.medium_id === medium.ninfa) ? mediuns.find((item: IMedium) => item.medium_id === medium.ninfa).nome : ''}</span></MediumInfo>
+                                    <MediumInfo>Madrinha: <span>{mediuns.find((item: IMedium) => item.medium_id === medium.madrinha) ? mediuns.find((item: IMedium) => item.medium_id === medium.madrinha).nome : ''}</span></MediumInfo>
+                                    <MediumInfo>Padrinho: <span>{mediuns.find((item: IMedium) => item.medium_id === medium.padrinho) ? mediuns.find((item: IMedium) => item.medium_id === medium.padrinho).nome : ''}</span></MediumInfo>
                                 </InfoContainer>
                             : medium.sex.concat(medium.med)==='MasculinoApará'? 
                                 <InfoContainer>
-                                    <MediumInfo>Afilhado: <span>{medium.afilhado}</span></MediumInfo>
-                                    <MediumInfo>Ninfa Sol: <span>{medium.ninfa}</span></MediumInfo>
+                                    <MediumInfo>Afilhado: <span>{mediuns.find((item: IMedium) => item.medium_id === medium.afilhado) ? mediuns.find((item: IMedium) => item.medium_id === medium.afilhado).nome : ''}</span></MediumInfo>
+                                    <MediumInfo>Ninfa Sol: <span>{mediuns.find((item: IMedium) => item.medium_id === medium.ninfa) ? mediuns.find((item: IMedium) => item.medium_id === medium.ninfa).nome : ''}</span></MediumInfo>
                                 </InfoContainer>
                             : medium.sex.concat(medium.med)==='FemininoDoutrinador'?
                                 <InfoContainer>
-                                    <MediumInfo>Afilhado: <span>{medium.afilhado}</span></MediumInfo>
-                                    <MediumInfo>Ajanã: <span>{medium.mestre}</span></MediumInfo>
+                                    <MediumInfo>Afilhado: <span>{mediuns.find((item: IMedium) => item.medium_id === medium.afilhado) ? mediuns.find((item: IMedium) => item.medium_id === medium.afilhado).nome : ''}</span></MediumInfo>
+                                    <MediumInfo>Ajanã: <span>{mediuns.find((item: IMedium) => item.medium_id === medium.mestre) ? mediuns.find((item: IMedium) => item.medium_id === medium.mestre).nome : ''}</span></MediumInfo>
                                 </InfoContainer>
                             : medium.sex.concat(medium.med)==='FemininoApará'?
                                 <InfoContainer>
-                                    <MediumInfo>Mestre: <span>{medium.mestre}</span></MediumInfo>
+                                    <MediumInfo>Mestre: <span>{mediuns.find((item: IMedium) => item.medium_id === medium.mestre) ? mediuns.find((item: IMedium) => item.medium_id === medium.mestre).nome : ''}</span></MediumInfo>
                                 </InfoContainer>
                             : <div></div>}
                         </PersonalCard>

@@ -1,18 +1,97 @@
 import { useContext, useState, useEffect } from "react";
 import { ListContext } from "src/contexts/ListContext";
 import { Divider, FieldContainer, FieldContainerBox, GridContainer, GridDatesContainer, InputContainer, MainContainer, MainContent, MainInfoContainer, MediumButton, Observations, PersonalCard, PhotoContainer, SectionTitle } from "./styles";
-import { ICavaleiro, IEstado, IFalange, IMentor, ITemplo } from "src/types/types";
+import { IAdjunto, ICavaleiro, IEstado, IFalange, IMedium, IMentor, ITemplo } from "src/types/types";
 import SideMenu from "src/components/SideMenu/SideMenu";
 import SubMenu from "src/components/SubMenu/SubMenu";
 import Header from "src/components/header/header";
-
-interface IAdjuntos {id: string, min: string, adj: string}
+import { UserContext } from "src/contexts/UserContext";
+import api from "src/api";
+import { MediumContext } from "src/contexts/MediumContext";
 
 function AddMedium() {
     const { templos, estados, adjuntos, coletes, classMest, falMest, povos, falMiss, turnoL, turnoT, ministros, cavaleiros, guias, estrelas, princesas, classificacao } = useContext(ListContext);
-    
-    const [med, setMed] = useState('');
-    const [sex, setSex] = useState('');
+    const { token } = useContext(UserContext);
+    const { loadMedium } = useContext(MediumContext);
+    const defaultMedium = {
+        medium_id: 0,
+        nome: '',
+        med: '',
+        sex: '',
+        foto: '',
+        condicao: 'Ativo',
+        templo: 0,
+        dtNasc: '',
+        rg: '',
+        cpf: 0,
+        mae: '',
+        pai: '',
+        natur: '',
+        naturUF: '',
+        profissao: '',
+        estCivil: '',
+        conjuge: '',
+        cep: 0,
+        endereco: '',
+        endNumero: '',
+        endCompl: '',
+        endBairro: '',
+        endCidade: '',
+        endUF: '',
+        telefone1: 0,
+        telefone2: 0,
+        email: '',
+        dtIngresso: '',
+        dtEmplac: '',
+        dtIniciacao: '',
+        dtElevacao: '',
+        dtCenturia: '',
+        dtSetimo: '',
+        adjOrigem: 0,
+        temploOrigem: 0,
+        colete: 0,
+        classMest: '',
+        falMest: '',
+        povo: '',
+        falMiss: 0,
+        adjDevas: '',
+        turnoLeg: '',
+        turnoTrab: '',
+        ministro: 0,
+        cavaleiro: 0,
+        dtMinistro: '',
+        guia: 0,
+        dtGuia: '',
+        cor: '',
+        estrela: '',
+        classif: '',
+        dtClassif: '',
+        princesa: '',
+        pretovelho: '',
+        caboclo: '',
+        medico: '',
+        nomeEmissao: '',
+        ninfa: 0,
+        mestre: 0,
+        padrinho: 0,
+        madrinha: 0,
+        afilhado: 0,
+        comando: '',
+        presidente: '',
+        recepcao: false,
+        devas: false,
+        regente: false,
+        janda: false,
+        trinoSol: '',
+        dtTrinoSol: '',
+        trinoSar: false,
+        dtTrinoSar: '',
+        herdeiro: 0,
+        filho: false,
+        observ: ''
+    } as IMedium;
+
+    const [newMedium, setNewMedium] = useState(defaultMedium);
     const [listClassMest, setListClassMest] = useState([]);
     const [listFalMiss, setListFalMiss] = useState([]);
     const [listTurnoL, setListTurnoL] = useState([]);
@@ -21,12 +100,15 @@ function AddMedium() {
     const [listEst, setListEst] = useState([]);
     const [listClass, setListClass] = useState([]);
     const [tSol, setTSol] = useState(false);
-    const [tSar, setTSar] = useState(false);
     const [photo, setPhoto] = useState<File | null>(null);
     const [preview, setPreview] = useState<string | null>(null);
 
     useEffect(() => {
-        switch (sex) {
+        console.log(newMedium)
+    }, [newMedium])
+
+    useEffect(() => {
+        switch (newMedium.sex) {
             case 'Masculino':
                 setListFalMiss(falMiss.filter((item: IFalange) => item.ninfa === false));
                 setListTurnoL(turnoL.jaguar);
@@ -42,10 +124,10 @@ function AddMedium() {
                 setListTurnoL([]);
                 setListTurnoL([]);
         }
-    }, [sex])
+    }, [newMedium.sex])
 
     useEffect(() => {
-        switch (sex.concat(med)) {
+        switch (newMedium.sex.concat(newMedium.med)) {
             case 'MasculinoDoutrinador':
                 setListClassMest(classMest.MS);
                 setListCav(cavaleiros.filter((item: ICavaleiro) => item.med === 'Doutrinador'));
@@ -70,7 +152,7 @@ function AddMedium() {
                 setListEst([]);
                 setListClass([]);
         }
-    }, [med, sex])
+    }, [newMedium.med, newMedium.sex])
 
     const imageUpdate = (event: React.ChangeEvent<HTMLInputElement>) => {
         if (event.target.files && event.target.files[0]) {
@@ -97,6 +179,49 @@ function AddMedium() {
         {title: 'Médium Menor', click: '/mediuns/menor'}
     ]
 
+    const updateProps = (property: string, newValue: any) => {
+        setNewMedium((prevData: any) => ({
+        ...prevData,
+        [property]: newValue
+        }));
+    };
+
+    const addMedium = (medium: IMedium, token: string) => {
+        const mediumObj = {
+            ...medium,
+            dtNasc: medium.dtNasc === '' ? null : medium.dtNasc,
+            dtIngresso: medium.dtIngresso === '' ? null : medium.dtIngresso,
+            dtEmplac: medium.dtEmplac === '' ? null : medium.dtEmplac,
+            dtIniciacao: medium.dtIniciacao === '' ? null : medium.dtIniciacao,
+            dtElevacao: medium.dtElevacao === '' ? null : medium.dtElevacao,
+            dtCenturia: medium.dtCenturia === '' ? null : medium.dtCenturia,
+            dtSetimo: medium.dtSetimo === '' ? null : medium.dtSetimo,
+            dtMinistro: medium.dtMinistro === '' ? null : medium.dtMinistro,
+            dtGuia: medium.dtGuia === '' ? null : medium.dtGuia,
+            dtClassif: medium.dtClassif === '' ? null : medium.dtClassif,
+            dtTrinoSol: medium.dtTrinoSol === '' ? null : medium.dtTrinoSol,
+            dtTrinoSar: medium.dtTrinoSar === '' ? null : medium.dtTrinoSar,
+            ministro: medium.ministro === 0 ? null : medium.ministro,
+            cavaleiro: medium.cavaleiro === 0 ? null : medium.cavaleiro,
+            guia: medium.guia === 0 ? null : medium.guia,
+            falMiss: medium.falMiss === 0 ? null : medium.falMiss,
+            adjOrigem: medium.adjOrigem === 0 ? null : medium.adjOrigem,
+            temploOrigem: medium.temploOrigem === 0 ? null : medium.temploOrigem,
+            mestre: medium.mestre === 0 ? null : medium.mestre,
+            ninfa: medium.ninfa === 0 ? null : medium.ninfa,
+            padrinho: medium.padrinho === 0 ? null : medium.padrinho,
+            madrinha: medium.madrinha === 0 ? null : medium.madrinha,
+            afilhado: medium.afilhado === 0 ? null : medium.afilhado
+        };
+        const {medium_id, ...newMediumObj} = mediumObj;
+        api.post('/medium/create', newMediumObj, {headers:{Authorization: token}}).then(() => {
+            alert('Médium adicionado com sucesso');
+            loadMedium(token);
+        }).catch((error) => {
+            console.log('Não foi possível adicionar o médium', error);
+        })
+    }
+
     return (
         <>
             <Header />
@@ -108,30 +233,30 @@ function AddMedium() {
                             <SectionTitle>Novo Médium</SectionTitle>
                             <FieldContainer>
                                 <label>Nome Médium: </label>
-                                <input type="text" />
+                                <input type="text" value={newMedium.nome} onChange={(e) => updateProps('nome', e.target.value)}/>
                             </FieldContainer>
                             <GridContainer>
                                 <label>Sexo: </label>
-                                <select value={sex} onChange={(e) => setSex(e.target.value)}>
-                                    <option value={undefined}></option>
+                                <select value={newMedium.sex} onChange={(e) => updateProps('sex', e.target.value)}>
+                                    <option value={''}></option>
                                     <option value={'Feminino'}>Feminino</option>
                                     <option value={'Masculino'}>Masculino</option>
                                 </select>
                                 <label>Mediunidade: </label>
-                                <select value={med} onChange={(e) => setMed(e.target.value)}>
-                                    <option value={undefined}></option>
+                                <select value={newMedium.med} onChange={(e) => updateProps('med', e.target.value)}>
+                                    <option value={''}></option>
                                     <option value={'Apará'}>Apará</option>
                                     <option value={'Doutrinador'}>Doutrinador</option>
                                 </select>
                                 <label>Templo: </label>
-                                <select>
-                                    <option value={undefined}></option>
+                                <select value={newMedium.templo} onChange={(e) => updateProps('templo', e.target.value)}>
+                                    <option value={0}></option>
                                     {templos.map((item: ITemplo, index: number) => (
                                         <option key={index} value={item.templo_id}>{item.cidade} - {item.estado.abrev}</option>
                                     ))}
                                 </select>
                                 <label>Condição Atual: </label>
-                                <select>
+                                <select value={newMedium.condicao} onChange={(e) => updateProps('condicao', e.target.value)}>
                                     <option value={'Ativo'}>Ativo</option>
                                     <option value={'Afastado'}>Afastado</option>
                                     <option value={'Entregou as Armas'}>Entregou as Armas</option>
@@ -149,29 +274,29 @@ function AddMedium() {
                     <SectionTitle>Dados Pessoais</SectionTitle>
                     <GridContainer>
                         <label>Data Nascimento: </label>
-                        <input type="date" />
+                        <input type="date" value={newMedium.dtNasc} onChange={(e) => updateProps('dtNasc', e.target.value)}/>
                         <label>Profissão: </label>
-                        <input type="text" />
+                        <input type="text" value={newMedium.profissao} onChange={(e) => updateProps('profissao', e.target.value)}/>
                         <label>RG: </label>
-                        <input type="text" />
+                        <input type="text" value={newMedium.rg} onChange={(e) => updateProps('rg', e.target.value)}/>
                         <label>CPF: </label>
-                        <input type="text" />
+                        <input type="text" value={newMedium.cpf} onChange={(e) => updateProps('cpf', e.target.value)}/>
                         <label>Mãe: </label>
-                        <input type="text" />
+                        <input type="text" value={newMedium.mae} onChange={(e) => updateProps('mae', e.target.value)}/>
                         <label>Pai: </label>
-                        <input type="text" />
+                        <input type="text" value={newMedium.pai} onChange={(e) => updateProps('pai', e.target.value)}/>
                         <label>Natural de: </label>
-                        <input type="text" />
+                        <input type="text" value={newMedium.natur} onChange={(e) => updateProps('natur', e.target.value)}/>
                         <label>UF: </label>
-                        <select>
-                            <option value={undefined}></option>
+                        <select value={newMedium.naturUF} onChange={(e) => updateProps('naturUF', e.target.value)}>
+                            <option value={''}></option>
                             {estados.map((item: IEstado, index: number) => (
                                 <option key={index} value={item.abrev}>{item.state}</option>
                             ))}
                         </select>
                         <label>Estado Civil: </label>
-                        <select>
-                            <option value={undefined}></option>
+                        <select value={newMedium.estCivil} onChange={(e) => updateProps('estCivil', e.target.value)}>
+                            <option value={''}></option>
                             <option value={'Casado'}>Casado</option>
                             <option value={'Divorciado'}>Divorciado</option>
                             <option value={'Solteiro'}>Solteiro</option>
@@ -180,162 +305,162 @@ function AddMedium() {
                             <option value={'Viúvo'}>Viúvo</option>
                         </select>
                         <label>Cônjuge: </label>
-                        <input type="text" />
+                        <input type="text" value={newMedium.conjuge} onChange={(e) => updateProps('conjuge', e.target.value)}/>
                         <label>CEP: </label>
-                        <input type="text" />
+                        <input type="text" value={newMedium.cep} onChange={(e) => updateProps('cep', e.target.value)}/>
                         <label>Endereço: </label>
-                        <input type="text" />
+                        <input type="text" value={newMedium.endereco} onChange={(e) => updateProps('endereco', e.target.value)}/>
                         <label>Número: </label>
-                        <input type="text" />
+                        <input type="text" value={newMedium.endNumero} onChange={(e) => updateProps('endNumero', e.target.value)}/>
                         <label>Complemento: </label>
-                        <input type="text" />
+                        <input type="text" value={newMedium.endCompl} onChange={(e) => updateProps('endCompl', e.target.value)}/>
                         <label>Bairro: </label>
-                        <input type="text" />
+                        <input type="text" value={newMedium.endBairro} onChange={(e) => updateProps('endBairro', e.target.value)}/>
                         <label>Cidade: </label>
-                        <input type="text" />
+                        <input type="text" value={newMedium.endCidade} onChange={(e) => updateProps('endCidade', e.target.value)}/>
                         <label>UF: </label>
-                        <select>
-                            <option value={undefined}></option>
+                        <select value={newMedium.endUF} onChange={(e) => updateProps('endUF', e.target.value)}>
+                            <option value={''}></option>
                             {estados.map((item: IEstado, index: number) => (
                                 <option key={index} value={item.abrev}>{item.state}</option>
                             ))}
                         </select>
                         <label>Telefone 1: </label>
-                        <input type="text" />
+                        <input type="text" value={newMedium.telefone1} onChange={(e) => updateProps('telefone1', e.target.value)}/>
                         <label>Telefone 2: </label>
-                        <input type="text" />
+                        <input type="text" value={newMedium.telefone2} onChange={(e) => updateProps('telefone2', e.target.value)}/>
                         <label>E-mail: </label>
-                        <input type="text" />
+                        <input type="text" value={newMedium.email} onChange={(e) => updateProps('email', e.target.value)}/>
                     </GridContainer>
                 </PersonalCard>
                 <PersonalCard>
                     <SectionTitle>Datas Mediúnicas</SectionTitle>
                     <GridDatesContainer>
                         <label>Data Ingresso: </label>
-                        <input type="date" />
+                        <input type="date" value={newMedium.dtIngresso} onChange={(e) => updateProps('dtIngresso', e.target.value)}/>
                         <label>Data Emplacamento: </label>
-                        <input type="date" />
+                        <input type="date" value={newMedium.dtEmplac} onChange={(e) => updateProps('dtEmplac', e.target.value)}/>
                         <label>Data Iniciação: </label>
-                        <input type="date" />
+                        <input type="date" value={newMedium.dtIniciacao} onChange={(e) => updateProps('dtIniciacao', e.target.value)}/>
                         <label>Data Elevação: </label>
-                        <input type="date" />
+                        <input type="date" value={newMedium.dtElevacao} onChange={(e) => updateProps('dtElevacao', e.target.value)}/>
                         <label>Data Centúria: </label>
-                        <input type="date" />
+                        <input type="date" value={newMedium.dtCenturia} onChange={(e) => updateProps('dtCenturia', e.target.value)}/>
                         <label>Data Sétimo: </label>
-                        <input type="date" />
+                        <input type="date" value={newMedium.dtSetimo} onChange={(e) => updateProps('dtSetimo', e.target.value)}/>
                     </GridDatesContainer>
                 </PersonalCard>
                 <PersonalCard>
                     <SectionTitle>Dados Mediúnicos</SectionTitle>
                     <GridContainer>
                         <label>Adjunto Origem.: </label>
-                        <select>
-                            <option value={undefined}></option>
-                            {adjuntos.map((item: IAdjuntos, index: number) => (
-                                <option key={index} value={item.id}>Adj. {item.min} - Mestre {item.adj}</option>
+                        <select value={newMedium.adjOrigem} onChange={(e) => updateProps('adjOrigem', e.target.value)}>
+                            <option value={0}></option>
+                            {adjuntos.map((item: IAdjunto, index: number) => (
+                                <option key={index} value={item.adjunto_id}>Adj. {ministros.find((min: IMentor) => min.id === item.ministro).nome} - Mestre {item.nome}</option>
                             ))}
                         </select>
                         <label>Templo Origem: </label>
-                        <select>
-                            <option value={undefined}></option>
+                        <select value={newMedium.temploOrigem} onChange={(e) => updateProps('temploOrigem', e.target.value)}>
+                            <option value={0}></option>
                             {templos.map((item: ITemplo, index: number) => (
                                 <option key={index} value={item.templo_id}>{item.cidade} - {item.estado.abrev}</option>
                             ))}
                         </select>
                         <label>Colete N°: </label>
-                        <select>
-                            <option value={undefined}></option>
-                            {coletes.map((item: string, index: number) => (
+                        <select value={newMedium.colete} onChange={(e) => updateProps('colete', e.target.value)}>
+                            <option value={0}></option>
+                            {coletes.map((item: number, index: number) => (
                                 <option key={index} value={item}>{item}</option>
                             ))}
                         </select>
                         <label>Classificação: </label>
-                        <select>
-                            <option value={undefined}></option>
+                        <select value={newMedium.classMest} onChange={(e) => updateProps('classMest', e.target.value)}>
+                            <option value={''}></option>
                             {listClassMest.map((item: string, index: number) => (
                                 <option key={index} value={item}>{item}</option>
                             ))}
                         </select>
                         <label>Falange Mestrado: </label>
-                        <select>
-                            <option value={undefined}></option>
+                        <select value={newMedium.falMest} onChange={(e) => updateProps('falMest', e.target.value)}>
+                            <option value={''}></option>
                             {falMest.map((item: string, index: number) => (
                                 <option key={index} value={item}>{item}</option>
                             ))}
                         </select>
                         <label>Povo: </label>
-                        <select>
-                            <option value={undefined}></option>
+                        <select value={newMedium.povo} onChange={(e) => updateProps('povo', e.target.value)}>
+                            <option value={''}></option>
                             {povos.map((item: string, index: number) => (
                                 <option key={index} value={item}>{item}</option>
                             ))}
                         </select>
                         <label>Falange Missionária: </label>
-                        <select>
-                            <option value={undefined}></option>
+                        <select value={newMedium.falMiss} onChange={(e) => updateProps('falMiss', e.target.value)}>
+                            <option value={''}></option>
                             {listFalMiss.map((item: IFalange, index: number) => (
                                 <option key={index} value={item.falange_id}>{item.nome}</option>
                             ))}
                         </select>
                         <label>Adjunto Devas: </label>
-                        <select>
-                            <option value={undefined}></option>
+                        <select value={newMedium.adjDevas} onChange={(e) => updateProps('adjDevas', e.target.value)}>
+                            <option value={''}></option>
                             <option value={'Adejã'}>Adejã</option>
                             <option value={'Alufã'}>Alufã</option>
                         </select>
                         <label>Turno: </label>
-                        <select>
-                            <option value={undefined}></option>
+                        <select value={newMedium.turnoLeg} onChange={(e) => updateProps('turnoLeg', e.target.value)}>
+                            <option value={''}></option>
                             {listTurnoL.map((item: string, index: number) => (
                                 <option key={index} value={item}>{item}</option>
                             ))}
                         </select>
                         <label>Turno Trabalho: </label>
-                        <select>
-                            <option value={undefined}></option>
+                        <select value={newMedium.turnoTrab} onChange={(e) => updateProps('turnoTrab', e.target.value)}>
+                            <option value={''}></option>
                             {listTurnoT.map((item: string, index: number) => (
                                 <option key={index} value={item}>{item}</option>
                             ))}
                         </select>
                     </GridContainer>
-                    {sex==='Masculino'?
+                    {newMedium.sex==='Masculino'?
                         <>
                             <Divider></Divider>
                             <GridContainer>
                                 <label>Ministro: </label>
-                                <select>
-                                    <option value={undefined}></option>
+                                <select value={newMedium.ministro} onChange={(e) => updateProps('ministro', e.target.value)}>
+                                    <option value={0}></option>
                                     {ministros.map((item: IMentor, index: number) => (
                                         <option key={index} value={item.id}>{item.nome}</option>
                                     ))}
                                 </select>
                                 <label>Data Ministro: </label>
-                                <input type="date" />
+                                <input type="date" value={newMedium.dtMinistro} onChange={(e) => updateProps('dtMinistro', e.target.value)}/>
                                 <label>Cavaleiro: </label>
-                                <select>
-                                    <option value={undefined}></option>
+                                <select value={newMedium.cavaleiro} onChange={(e) => updateProps('cavaleiro', e.target.value)}>
+                                    <option value={0}></option>
                                     {listCav.map((item: ICavaleiro, index: number) => (
                                         <option key={index} value={item.id}>{item.nome}</option>
                                     ))}
                                 </select>
                                 <label>Cor do Cavaleiro: </label>
-                                <select>
-                                    {med==='Doutrinador'?
+                                <select value={newMedium.cor} onChange={(e) => updateProps('cor', e.target.value)}>
+                                    {newMedium.med==='Doutrinador'?
                                         <option value={'Verde'}>Verde</option>
-                                    : med==='Apará'?
+                                    : newMedium.med==='Apará'?
                                         <>
-                                            <option value={undefined}></option>
+                                            <option value={''}></option>
                                             <option value={'Verde'}>Verde</option>
                                             <option value={'Vermelho'}>Vermelho</option>
                                         </>
-                                    : <option value={undefined}></option>}
+                                    : <option value={''}></option>}
                                 </select>
                             </GridContainer>
                             <InputContainer>
                                 <FieldContainer>
                                     <label>Classificação Atual: </label>
-                                    <select>
-                                        <option value={undefined}></option>
+                                    <select value={newMedium.classif} onChange={(e) => updateProps('classif', e.target.value)}>
+                                        <option value={''}></option>
                                         {listClass.map((item: string, index: number) => (
                                             <option key={index} value={item}>{item}</option>
                                         ))}
@@ -343,32 +468,30 @@ function AddMedium() {
                                 </FieldContainer>
                                 <FieldContainer width="190px">
                                     <label>Data: </label>
-                                    <input type="date" />
+                                    <input type="date" value={newMedium.dtClassif} onChange={(e) => updateProps('dtClassif', e.target.value)}/>
                                 </FieldContainer>
                             </InputContainer>
                         </>
-                    : sex==='Feminino'?
+                    : newMedium.sex==='Feminino'?
                         <>
                             <Divider></Divider>
                             <GridContainer>
                                 <label>Estrela: </label>
-                                <select>
-                                    <option value={undefined}></option>
+                                <select value={newMedium.estrela} onChange={(e) => updateProps('estrela', e.target.value)}>
+                                    <option value={''}></option>
                                     {listEst.map((item: string, index: number) => (
                                         <option key={index} value={item}>{item}</option>
                                     ))}
                                 </select>
-                                <label>Data Guia: </label>
-                                <input type="date" />
                                 <label>Guia Missionária: </label>
-                                <select>
-                                    <option value={undefined}></option>
+                                <select value={newMedium.guia} onChange={(e) => updateProps('guia', e.target.value)}>
+                                    <option value={0}></option>
                                     {guias.map((item: IMentor, index: number) => (
                                         <option key={index} value={item.id}>{item.nome}</option>
                                     ))}
                                 </select>
                                 <label>Cor da Guia: </label>
-                                <select>
+                                <select value={newMedium.cor} onChange={(e) => updateProps('cor', e.target.value)}>
                                     <option value={undefined}></option>
                                     <option value={'Amarela'}>Amarela</option>
                                     <option value={'Azul'}>Azul</option>
@@ -378,97 +501,99 @@ function AddMedium() {
                                     <option value={'Verde'}>Verde</option>
                                     <option value={'Vermelha'}>Vermelha</option>
                                 </select>
+                                <label>Data Guia: </label>
+                                <input type="date" value={newMedium.dtGuia} onChange={(e) => updateProps('dtGuia', e.target.value)}/>
                             </GridContainer>
                         </>
                     : ''}
-                    {med==='Doutrinador'?
+                    {newMedium.med==='Doutrinador'?
                         <>
                             <Divider></Divider>
                             <GridContainer>
                                 <label>Princesa: </label>
-                                <select>
-                                    <option value={undefined}></option>
+                                <select value={newMedium.princesa} onChange={(e) => updateProps('princesa', e.target.value)}>
+                                    <option value={''}></option>
                                     {princesas.map((item: string, index: number) => (
                                         <option key={index} value={item}>{item}</option>
                                     ))}
                                 </select>
                                 <label>Nome na emissão: </label>
-                                <input type="text" />
+                                <input type="text" value={newMedium.nomeEmissao} onChange={(e) => updateProps('nomeEmissao', e.target.value)}/>
                             </GridContainer>
                         </>
-                    : med==='Apará'?
+                    : newMedium.med==='Apará'?
                         <>
                             <Divider></Divider>
                             <GridContainer>
                                 <label>Preto Velho: </label>
-                                <input type="text" />
+                                <input type="text" value={newMedium.pretovelho} onChange={(e) => updateProps('pretovelho', e.target.value)}/>
                                 <label>Caboclo: </label>
-                                <input type="text" />
+                                <input type="text" value={newMedium.caboclo} onChange={(e) => updateProps('caboclo', e.target.value)}/>
                                 <label>Médico: </label>
-                                <input type="text" />
+                                <input type="text" value={newMedium.medico} onChange={(e) => updateProps('medico', e.target.value)}/>
                                 <label>Nome na emissão: </label>
-                                <input type="text" />
+                                <input type="text" value={newMedium.nomeEmissao} onChange={(e) => updateProps('nomeEmissao', e.target.value)}/>
                             </GridContainer> 
                         </>
                     : ''}
                 </PersonalCard>
                 <PersonalCard>
                     <SectionTitle>Povo</SectionTitle>
-                    {sex.concat(med)==='MasculinoDoutrinador'?
+                    {newMedium.sex.concat(newMedium.med)==='MasculinoDoutrinador'?
                         <GridContainer>
                             <label>Escrava: </label>
-                            <select>
-                                <option value={undefined}></option>
+                            <select value={newMedium.ninfa} onChange={(e) => updateProps('ninfa', e.target.value)}>
+                                <option value={0}></option>
                             </select>
                             <label>Madrinha: </label>
-                            <select>
-                                <option value={undefined}></option>
+                            <select value={newMedium.madrinha} onChange={(e) => updateProps('madrinha', e.target.value)}>
+                                <option value={0}></option>
                             </select>
                             <label>Padrinho: </label>
-                            <select>
-                                <option value={undefined}></option>
+                            <select value={newMedium.padrinho} onChange={(e) => updateProps('padrinho', e.target.value)}>
+                                <option value={0}></option>
                             </select>
                         </GridContainer>
-                    : sex.concat(med)==='MasculinoApará'? 
+                    : newMedium.sex.concat(newMedium.med)==='MasculinoApará'? 
                         <GridContainer>
                             <label>Afilhado: </label>
-                            <select>
-                                <option value={undefined}></option>
+                            <select value={newMedium.afilhado} onChange={(e) => updateProps('afilhado', e.target.value)}>
+                                <option value={0}></option>
                             </select>
                             <label>Ninfa Sol: </label>
-                            <select>
-                                <option value={undefined}></option>
+                            <select value={newMedium.ninfa} onChange={(e) => updateProps('ninfa', e.target.value)}>
+                                <option value={0}></option>
                             </select>
                         </GridContainer>
-                    : sex.concat(med)==='FemininoDoutrinador'?
+                    : newMedium.sex.concat(newMedium.med)==='FemininoDoutrinador'?
                         <GridContainer>
                             <label>Afilhado: </label>
-                            <select>
-                                <option value={undefined}></option>
+                            <select value={newMedium.afilhado} onChange={(e) => updateProps('afilhado', e.target.value)}>
+                                <option value={0}></option>
                             </select>
                             <label>Ajanã: </label>
-                            <select>
-                                <option value={undefined}></option>
+                            <select value={newMedium.mestre} onChange={(e) => updateProps('mestre', e.target.value)}>
+                                <option value={0}></option>
                             </select>
                         </GridContainer>
-                    : sex.concat(med)==='FemininoApará'?
+                    : newMedium.sex.concat(newMedium.med)==='FemininoApará'?
                         <GridContainer>
                             <label>Mestre: </label>
-                            <select>
-                                <option value={undefined}></option>
+                            <select value={newMedium.mestre} onChange={(e) => updateProps('mestre', e.target.value)}>
+                                <option value={0}></option>
                             </select>
                         </GridContainer>
                     : <div></div>}
                 </PersonalCard>
                 <PersonalCard>
                     <SectionTitle>Cargos e Funções</SectionTitle>
-                    {sex.concat(med)==='MasculinoDoutrinador'?
+                    {newMedium.sex.concat(newMedium.med)==='MasculinoDoutrinador'?
                         <>
                             <InputContainer>
                                 <FieldContainer>
                                     <label>Comando: </label>
-                                    <select>
-                                        <option value={undefined}></option>
+                                    <select value={newMedium.comando} onChange={(e) => updateProps('comando', e.target.value)}>
+                                        <option value={''}></option>
                                         <option value={'Comandante'}>Comandante</option>
                                         <option value={'Janatã'}>Comandante Janatã</option>
                                         <option value={'Lança'}>Lança Vermelha</option>
@@ -477,23 +602,23 @@ function AddMedium() {
                                 </FieldContainer>
                                 <FieldContainer>        
                                     <label>Presidência: </label>
-                                    <select>
-                                        <option value={undefined}></option>
+                                    <select value={newMedium.presidente} onChange={(e) => updateProps('presidente', e.target.value)}>
+                                        <option value={''}></option>
                                         <option value={'Presidente'}>Presidente</option>
                                         <option value={'Vice'}>Vice-presidente</option>
                                     </select>
                                 </FieldContainer>
                                 <div style={{display: 'flex'}}>
                                     <FieldContainerBox>
-                                        <input type="checkBox" />
+                                        <input type="checkBox" checked={newMedium.recepcao} onChange={(e) => updateProps('recepcao', e.target.checked)}/>
                                         <label>Recepcionista</label>
                                     </FieldContainerBox>
                                     <FieldContainerBox>
-                                        <input type="checkBox" />
+                                        <input type="checkBox" checked={newMedium.devas} onChange={(e) => updateProps('devas', e.target.checked)}/>
                                         <label>Filho de Devas</label>
                                     </FieldContainerBox>
                                     <FieldContainerBox>
-                                        <input type="checkBox" />
+                                        <input type="checkBox" checked={newMedium.regente} onChange={(e) => updateProps('regente', e.target.checked)}/>
                                         <label>Regente</label>
                                     </FieldContainerBox>
                                 </div>
@@ -502,12 +627,12 @@ function AddMedium() {
                             <InputContainer>
                                 <div style={{width: '100%', display: 'flex', gap: '10px'}}>
                                     <FieldContainerBox>
-                                        <input type="checkBox" onChange={(e) => setTSol(!tSol)}/>
+                                        <input type="checkBox" checked={tSol} onChange={(e) => setTSol(e.target.checked)}/>
                                         <label>Trino Solitário</label>
                                     </FieldContainerBox> 
                                     <FieldContainer>
-                                        <select disabled={!tSol}>
-                                            <option value={undefined}></option>
+                                        <select disabled={!tSol} value={newMedium.trinoSol} onChange={(e) => updateProps('trinoSol', e.target.value)}>
+                                            <option value={''}></option>
                                             <option value={'Juremá'}>Juremá</option>
                                             <option value={'Iramar'}>Iramar</option>
                                         </select>
@@ -515,48 +640,48 @@ function AddMedium() {
                                 </div>
                                 <FieldContainer width="190px">
                                     <label>Data: </label>
-                                    <input type="date" disabled={!tSol} />
+                                    <input type="date" disabled={!tSol} value={newMedium.dtTrinoSol} onChange={(e) => updateProps('dtTrinoSol', e.target.value)}/>
                                 </FieldContainer>
                             </InputContainer>
                             <Divider></Divider>
                             <InputContainer>
                                 <div style={{display: 'flex', gap: '10px'}}>
                                     <FieldContainerBox>
-                                        <input type="checkBox" onChange={(e) => setTSar(!tSar)} />
+                                        <input type="checkBox" checked={newMedium.trinoSar} onChange={(e) => updateProps('trinoSar', e.target.checked)} />
                                         <label>Trino Sardyos</label>
                                     </FieldContainerBox>
                                     <FieldContainer width="190px">
                                         <label>Data: </label>
-                                        <input type="date" disabled={!tSar}/>
+                                        <input type="date" disabled={!newMedium.trinoSar} value={newMedium.dtTrinoSar} onChange={(e) => updateProps('dtTrinoSar', e.target.value)}/>
                                     </FieldContainer>
                                 </div>
                                 <div style={{width: '100%', display: 'flex', justifyContent: 'space-between', gap: '20px'}}>
                                     <FieldContainer>
                                         <label>Herdeiro do Mestre: </label>
-                                        <select disabled={!tSar}>
+                                        <select disabled={!newMedium.trinoSar} value={newMedium.herdeiro} onChange={(e) => updateProps('herdeiro', e.target.value)}>
                                             <option value={undefined}></option>
                                         </select>
                                     </FieldContainer>
                                     <FieldContainerBox>
-                                        <input type="checkBox" disabled={!tSar} />
+                                        <input type="checkBox" disabled={!newMedium.trinoSar} checked={newMedium.filho} onChange={(e) => updateProps('filho', e.target.checked)}/>
                                         <label>Filho?</label>
                                     </FieldContainerBox>
                                 </div>
                             </InputContainer>
                         </>
-                    : sex.concat(med)==='MasculinoApará'? 
+                    : newMedium.sex.concat(newMedium.med)==='MasculinoApará'? 
                         <>
                             <div style={{display: 'flex', justifyContent: 'center', gap: '10px', flexWrap: 'wrap'}}>
                                 <FieldContainerBox>
-                                    <input type="checkBox" />
+                                    <input type="checkBox" checked={newMedium.recepcao} onChange={(e) => updateProps('recepcao', e.target.checked)}/>
                                     <label>Recepcionista</label>
                                 </FieldContainerBox>
                                 <FieldContainerBox>
-                                    <input type="checkBox" />
+                                    <input type="checkBox" checked={newMedium.devas} onChange={(e) => updateProps('devas', e.target.checked)}/>
                                     <label>Filho de Devas</label>
                                 </FieldContainerBox>
                                 <FieldContainerBox>
-                                    <input type="checkBox" />
+                                    <input type="checkBox" checked={newMedium.regente} onChange={(e) => updateProps('regente', e.target.checked)}/>
                                     <label>Regente</label>
                                 </FieldContainerBox>
                             </div>
@@ -564,59 +689,59 @@ function AddMedium() {
                             <InputContainer>
                                 <div style={{display: 'flex', gap: '10px'}}>
                                     <FieldContainerBox>
-                                        <input type="checkBox" onChange={(e) => setTSar(!tSar)} />
+                                        <input type="checkBox" checked={newMedium.trinoSar} onChange={(e) => updateProps('trinoSar', e.target.checked)} />
                                         <label>Trino Sardyos</label>
                                     </FieldContainerBox>
                                     <FieldContainer width="190px">
-                                        <label>Data: </label>
-                                        <input type="date" disabled={!tSar}/>
+                                        <label>Data:</label>
+                                        <input type="date" disabled={!newMedium.trinoSar} value={newMedium.dtTrinoSar} onChange={(e) => updateProps('dtTrinoSar', e.target.value)}/>
                                     </FieldContainer>
                                 </div>
                                 <div style={{width: '100%', display: 'flex', justifyContent: 'space-between', gap: '20px'}}>
                                     <FieldContainer>
                                         <label>Herdeiro do Mestre: </label>
-                                        <select disabled={!tSar}>
+                                        <select disabled={!newMedium.trinoSar} value={newMedium.herdeiro} onChange={(e) => updateProps('herdeiro', e.target.value)}>
                                             <option value={undefined}></option>
                                         </select>
                                     </FieldContainer>
                                     <FieldContainerBox>
-                                        <input type="checkBox" disabled={!tSar} />
+                                        <input type="checkBox" disabled={!newMedium.trinoSar} checked={newMedium.filho} onChange={(e) => updateProps('filho', e.target.checked)}/>
                                         <label>Filho?</label>
                                     </FieldContainerBox>
                                 </div>
                             </InputContainer>
                         </>
-                    : sex.concat(med)==='FemininoDoutrinador'?
+                    : newMedium.sex.concat(newMedium.med)==='FemininoDoutrinador'?
                         <div style={{display: 'flex', justifyContent:'center', gap: '10px', flexWrap: 'wrap'}}>
                             <FieldContainerBox>
-                                <input type="checkBox" />
+                                <input type="checkBox" checked={newMedium.recepcao} onChange={(e) => updateProps('recepcao', e.target.checked)}/>
                                 <label>Recepcionista</label>
                             </FieldContainerBox>
                             <FieldContainerBox>
-                                <input type="checkBox" />
+                                <input type="checkBox" checked={newMedium.devas} onChange={(e) => updateProps('devas', e.target.checked)}/>
                                 <label>Filha de Devas</label>
                             </FieldContainerBox>
                             <FieldContainerBox>
-                                <input type="checkBox" />
+                                <input type="checkBox" checked={newMedium.regente} onChange={(e) => updateProps('regente', e.target.checked)}/>
                                 <label>Regente</label>
                             </FieldContainerBox>
                             <FieldContainerBox>
-                                <input type="checkBox" />
+                                <input type="checkBox" checked={newMedium.janda} onChange={(e) => updateProps('janda', e.target.checked)}/>
                                 <label>Janda</label>
                             </FieldContainerBox>
                         </div>
-                    : sex.concat(med)==='FemininoApará'?
+                    : newMedium.sex.concat(newMedium.med)==='FemininoApará'?
                         <div style={{display: 'flex', justifyContent: 'center', gap: '10px', flexWrap: 'wrap'}}>
                             <FieldContainerBox>
-                                <input type="checkBox" />
+                                <input type="checkBox" checked={newMedium.recepcao} onChange={(e) => updateProps('recepcao', e.target.checked)}/>
                                 <label>Recepcionista</label>
                             </FieldContainerBox>
                             <FieldContainerBox>
-                                <input type="checkBox" />
+                                <input type="checkBox" checked={newMedium.devas} onChange={(e) => updateProps('devas', e.target.checked)}/>
                                 <label>Filha de Devas</label>
                             </FieldContainerBox>
                             <FieldContainerBox>
-                                <input type="checkBox" />
+                                <input type="checkBox" checked={newMedium.regente} onChange={(e) => updateProps('regente', e.target.checked)}/>
                                 <label>Regente</label>
                             </FieldContainerBox>
                         </div>
@@ -624,11 +749,11 @@ function AddMedium() {
                 </PersonalCard>
                 <PersonalCard>
                     <SectionTitle>Observações</SectionTitle>
-                    <Observations rows={4} />
+                    <Observations rows={4} value={newMedium.observ} onChange={(e) => updateProps('observ', e.target.value)}/>
                 </PersonalCard>
                 <div style={{width: '90%', maxWidth: '1200px', display: 'flex', justifyContent: 'space-around'}}>
-                    <MediumButton color="red">Cancelar</MediumButton>
-                    <MediumButton color="green">Cadastrar</MediumButton>
+                    <MediumButton color="red" onClick={() => setNewMedium(defaultMedium)}>Cancelar</MediumButton>
+                    <MediumButton color="green" onClick={() => addMedium(newMedium, token)}>Cadastrar</MediumButton>
                 </div>
             </MainContainer>
             <SideMenu list={listSubMenu} />

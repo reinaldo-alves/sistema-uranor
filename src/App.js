@@ -111,4 +111,7 @@ function App() {
 
 export default App;
 
-//Integrar tela de criar médium e implementar editar medium
+//Criar padrão para telefone, cep e cpf, convertendo-os para string
+//Implementar situação atual (Em desenvolvimento, emplacado...)
+//Implementar editar medium
+//Validações (ex: exibir determinados campos apenas quando médium for centurião)
