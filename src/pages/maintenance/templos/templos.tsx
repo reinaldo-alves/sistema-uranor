@@ -8,6 +8,7 @@ import { IAdjunto, IEstado, IMentor, ITemplo } from "src/types/types";
 import MainTitle from "src/components/MainTitle/MainTitle";
 import { UserContext } from "src/contexts/UserContext";
 import api from "src/api";
+import { Alert } from "src/utilities/popups";
 
 function Templos() {
     const defaultTemp = {templo_id: 0, cidade: '', estado: {abrev: '', state: ''}, presidente: 0}
@@ -58,7 +59,7 @@ function Templos() {
     const addTemp = (templo: ITemplo, token: string) => {
         const {templo_id, ...newTemplo} = templo;
         api.post('/templo/create', newTemplo, {headers:{Authorization: token}}).then(() => {
-            alert('Templo adicionado com sucesso');
+            Alert('Templo adicionado com sucesso', 'success');
             loadTemplo(token);
             closeModal();
         }).catch((error) => {
@@ -77,7 +78,7 @@ function Templos() {
         }
         if (Object.keys(changedFields).length > 0) {
             api.put('/templo/update', {templo_id: oldTempConverted.templo_id, ...changedFields}, {headers:{Authorization: token}}).then(() => {
-                alert('Templo editado com sucesso');
+                Alert('Templo editado com sucesso', 'success');
                 loadTemplo(token);
                 setEdited(defaultTemp);
                 setSelected(defaultTemp);
@@ -86,7 +87,7 @@ function Templos() {
                 console.log('Não foi possível editar o templo', error);
             })
         } else {
-            alert('Não foi feita nenhuma alteração no templo')
+            Alert('Não foi feita nenhuma alteração no templo', 'info')
         }
     }
     

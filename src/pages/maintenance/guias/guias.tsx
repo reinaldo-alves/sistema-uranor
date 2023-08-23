@@ -8,6 +8,7 @@ import { IMentor } from "src/types/types";
 import MainTitle from "src/components/MainTitle/MainTitle";
 import { UserContext } from "src/contexts/UserContext";
 import api from "src/api";
+import { Alert } from "src/utilities/popups";
 
 function Guias() {
     const [search, setSearch] = useState('');
@@ -46,7 +47,7 @@ function Guias() {
 
     const addGuia = (nome: string, token: string) => {
         api.post('/guia/create', {nome}, {headers:{Authorization: token}}).then(() => {
-            alert('Guia missionária adicionada com sucesso');
+            Alert('Guia missionária adicionada com sucesso', 'success');
             loadGuia(token);
             closeModal();
         }).catch((error) => {
@@ -56,7 +57,7 @@ function Guias() {
 
     const editGuia = (guia_id: number, nome: string, token: string) => {
         api.put('/guia/update', {guia_id, nome}, {headers:{Authorization: token}}).then(() => {
-            alert('Guia missionária editada com sucesso');
+            Alert('Guia missionária editada com sucesso', 'success');
             loadGuia(token);
             closeModal();
         }).catch((error) => {

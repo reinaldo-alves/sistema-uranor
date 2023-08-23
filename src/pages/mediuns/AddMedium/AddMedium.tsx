@@ -9,6 +9,7 @@ import { UserContext } from "src/contexts/UserContext";
 import api from "src/api";
 import { MediumContext } from "src/contexts/MediumContext";
 import { formatCep, formatCpf, formatPhoneNumber } from "src/utilities/functions";
+import { Alert } from "src/utilities/popups";
 
 function AddMedium() {
     const { templos, estados, adjuntos, coletes, classMest, falMest, povos, falMiss, turnoL, turnoT, ministros, cavaleiros, guias, estrelas, princesas, classificacao } = useContext(ListContext);
@@ -223,7 +224,7 @@ function AddMedium() {
         };
         const {medium_id, ...newMediumObj} = mediumObj;
         api.post('/medium/create', newMediumObj, {headers:{Authorization: token}}).then(() => {
-            alert('Médium adicionado com sucesso');
+            Alert('Médium adicionado com sucesso', 'success');
             loadMedium(token);
         }).catch((error) => {
             console.log('Não foi possível adicionar o médium', error);

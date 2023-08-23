@@ -8,6 +8,7 @@ import { ICavaleiro } from "src/types/types";
 import MainTitle from "src/components/MainTitle/MainTitle";
 import { UserContext } from "src/contexts/UserContext";
 import api from "src/api";
+import { Alert } from "src/utilities/popups";
 
 function Cavaleiros() {
     const defaultCav = {id: 0, nome: '', med: ''}
@@ -55,7 +56,7 @@ function Cavaleiros() {
 
     const addCav = (cavaleiro: ICavaleiro, token: string) => {
         api.post('/cavaleiro/create', {nome:cavaleiro.nome, med:cavaleiro.med}, {headers:{Authorization: token}}).then(() => {
-            alert('Cavaleiro adicionado com sucesso');
+            Alert('Cavaleiro adicionado com sucesso', 'success');
             loadCavaleiro(token);
             closeModal();
         }).catch((error) => {
@@ -72,7 +73,7 @@ function Cavaleiros() {
         }
         if (Object.keys(changedFields).length > 0) {
             api.put('/cavaleiro/update', {cavaleiro_id: oldCav.id, ...changedFields}, {headers:{Authorization: token}}).then(() => {
-                alert('Cavaleiro editado com sucesso');
+                Alert('Cavaleiro editado com sucesso', 'success');
                 loadCavaleiro(token);
                 setEdited(defaultCav);
                 setSelected(defaultCav);
@@ -81,7 +82,7 @@ function Cavaleiros() {
                 console.log('Não foi possível editar o cavaleiro', error);
             })
         } else {
-            alert('Não foi feita nenhuma alteração no cavaleiro')
+            Alert('Não foi feita nenhuma alteração no cavaleiro', 'info')
         }
     }
     

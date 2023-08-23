@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 import MainTitle from "src/components/MainTitle/MainTitle";
 import { UserContext } from "src/contexts/UserContext";
 import api from "src/api";
+import { Alert } from "src/utilities/popups";
 
 function ChangePassword() {
     const { user, userChangePassword, loadUser, token } = useContext(UserContext)
@@ -38,10 +39,10 @@ function ChangePassword() {
             if(password1 === password2) {
                 setShowConfirm(true);
             } else {
-                alert('As senhas não são iguais. Tente novamente.')
+                Alert('As senhas não são iguais. Tente novamente.', 'error')
             }
         } else {
-            alert('Preencha todos os campos corretamente.')
+            Alert('Preencha todos os campos corretamente.', 'info')
         }
     }
 
@@ -50,7 +51,7 @@ function ChangePassword() {
             api.post('/user/login', {name: user.name, password: currentPassword}).then(({ data }) => {
                 if(data.token) {
                     api.put('/user/change-password', {user_id: userChangePassword.user_id, password: password1}, {headers:{Authorization: token}}).then(({ data }) => {
-                        alert('Senha alterada com sucesso!');
+                        Alert('Senha alterada com sucesso!', 'success');
                         loadUser(token);
                         closeModal();
                         navigate(redirectTo);
@@ -58,14 +59,14 @@ function ChangePassword() {
                         console.log('Não foi possível alterar a sua senha', error);
                     })
                 } else {
-                    alert('Senha incorreta. Tente novamente.');
+                    Alert('Senha incorreta. Tente novamente.', 'error');
                     setCurrentPassword('');
                 }
             }).catch((error) => {
                 console.log('Não foi possível confirmar a sua senha', error);
             })
         } else {
-            alert('Digite sua senha.')
+            Alert('Digite sua senha.', 'info')
         }
     }
     

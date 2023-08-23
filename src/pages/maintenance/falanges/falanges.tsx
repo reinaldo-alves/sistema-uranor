@@ -8,6 +8,7 @@ import { IFalange } from "src/types/types";
 import MainTitle from "src/components/MainTitle/MainTitle";
 import { UserContext } from "src/contexts/UserContext";
 import api from "src/api";
+import { Alert } from "src/utilities/popups";
 
 function Falanges() {   
     const [search, setSearch] = useState('');
@@ -52,11 +53,11 @@ function Falanges() {
         if (Object.keys(changedFields).length > 0) {
             api.put('/falange/update', {falange_id: oldFal.falange_id, ...changedFields}, {headers:{Authorization: token}}).then(() => {
                 if(oldFal.falange_id === 1) {
-                    alert('Falange missionária editada com sucesso. Por favor, altere também a falange NITYAMA MADRUXA');
+                    Alert('Falange missionária editada com sucesso. Por favor, altere também a falange NITYAMA MADRUXA', 'success');
                 } else if(oldFal.falange_id === 2) {
-                    alert('Falange missionária editada com sucesso. Por favor, altere também a falange NITYAMA');
+                    Alert('Falange missionária editada com sucesso. Por favor, altere também a falange NITYAMA', 'success');
                 } else {
-                    alert('Falange missionária editada com sucesso');
+                    Alert('Falange missionária editada com sucesso', 'success');
                 }
                 loadFalMiss(token);
                 setEdited({} as IFalange);
@@ -66,7 +67,7 @@ function Falanges() {
                 console.log('Não foi possível editar a falange missionária', error);
             })
         } else {
-            alert('Não foi feita nenhuma alteração na falange missionária')
+            Alert('Não foi feita nenhuma alteração na falange missionária', 'info')
         }
     }
 

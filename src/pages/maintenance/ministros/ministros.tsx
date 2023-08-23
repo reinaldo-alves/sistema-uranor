@@ -8,6 +8,7 @@ import { IMentor } from "src/types/types";
 import MainTitle from "src/components/MainTitle/MainTitle";
 import api from "src/api";
 import { UserContext } from "src/contexts/UserContext";
+import { Alert } from "src/utilities/popups";
 
 function Ministros() {
     const [search, setSearch] = useState('');
@@ -46,7 +47,7 @@ function Ministros() {
 
     const addMin = (nome: string, token: string) => {
         api.post('/ministro/create', {nome}, {headers:{Authorization: token}}).then(() => {
-            alert('Ministro adicionado com sucesso');
+            Alert('Ministro adicionado com sucesso', 'success');
             loadMinistro(token);
             closeModal();
         }).catch((error) => {
@@ -56,7 +57,7 @@ function Ministros() {
 
     const editMin = (ministro_id: number, nome: string, token: string) => {
         api.put('/ministro/update', {ministro_id, nome}, {headers:{Authorization: token}}).then(() => {
-            alert('Ministro editado com sucesso');
+            Alert('Ministro editado com sucesso', 'success');
             loadMinistro(token);
             closeModal();
         }).catch((error) => {

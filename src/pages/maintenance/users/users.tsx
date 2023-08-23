@@ -9,6 +9,7 @@ import { MediumContext } from "src/contexts/MediumContext";
 import { UserContext } from "src/contexts/UserContext";
 import api from "src/api";
 import { useNavigate } from "react-router-dom";
+import { Alert } from "src/utilities/popups";
 
 function Users() {
     const defaultUser = {user_id: 0, name: '', password: '', level: '', medium_id: 0}
@@ -68,7 +69,7 @@ function Users() {
     const addUser = (name: string, password: string, level: string, medium: number, token: string) => {
         const newUser = {name: name, password: password, level: level, medium_id: medium};
         api.post('/user/create', newUser, {headers:{Authorization: token}}).then(() => {
-            alert('Usuário adicionado com sucesso');
+            Alert('Usuário adicionado com sucesso', 'success');
             loadUser(token);
             closeModal();
         }).catch((error) => {
@@ -82,10 +83,10 @@ function Users() {
                 const finalPassword = password[1];
                 addUser(name, finalPassword, level, medium, token)
             } else {
-                alert('As senhas não são iguais. Tente novamente.')
+                Alert('As senhas não são iguais. Tente novamente.', 'error')
             }
         } else {
-            alert('Preencha todos os dados corretamente.')
+            Alert('Preencha todos os dados corretamente.', 'info')
         }
     }
 
@@ -98,7 +99,7 @@ function Users() {
         }
         if (Object.keys(changedFields).length > 0) {
             api.put('/user/update', {user_id: oldUser.user_id, ...changedFields}, {headers:{Authorization: token}}).then(() => {
-                alert('Usuário editado com sucesso');
+                Alert('Usuário editado com sucesso', 'success');
                 loadUser(token);
                 setEdited(defaultUser);
                 setSelected(defaultUser);
@@ -107,7 +108,7 @@ function Users() {
                 console.log('Não foi possível editar o usuário', error);
             })
         } else {
-            alert('Não foi feita nenhuma alteração no usuário')
+            Alert('Não foi feita nenhuma alteração no usuário', 'info')
         }
     }
     

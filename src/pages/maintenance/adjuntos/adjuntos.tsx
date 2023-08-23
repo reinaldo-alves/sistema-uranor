@@ -8,6 +8,7 @@ import { IAdjunto, IMentor } from "src/types/types";
 import MainTitle from "src/components/MainTitle/MainTitle";
 import { UserContext } from "src/contexts/UserContext";
 import api from "src/api";
+import { Alert } from "src/utilities/popups";
 
 function Adjuntos() {
     const defaultAdj = {adjunto_id: 0, nome: '', ministro: 0, classif: '', esperanca: false}
@@ -57,7 +58,7 @@ function Adjuntos() {
     const addAdj = (adjunto: IAdjunto, token: string) => {
         const {adjunto_id, ...newAdjunto} = adjunto;
         api.post('/adjunto/create', newAdjunto, {headers:{Authorization: token}}).then(() => {
-            alert('Adjunto adicionado com sucesso');
+            Alert('Adjunto adicionado com sucesso', 'success');
             loadAdjunto(token);
             closeModal();
         }).catch((error) => {
@@ -74,7 +75,7 @@ function Adjuntos() {
         }
         if (Object.keys(changedFields).length > 0) {
             api.put('/adjunto/update', {adjunto_id: oldAdj.adjunto_id, ...changedFields}, {headers:{Authorization: token}}).then(() => {
-                alert('Adjunto editado com sucesso');
+                Alert('Adjunto editado com sucesso', 'success');
                 loadAdjunto(token);
                 setEdited(defaultAdj);
                 setSelected(defaultAdj);
@@ -83,7 +84,7 @@ function Adjuntos() {
                 console.log('Não foi possível editar o adjunto', error);
             })
         } else {
-            alert('Não foi feita nenhuma alteração no adjunto')
+            Alert('Não foi feita nenhuma alteração no adjunto', 'info')
         }
     }
     
