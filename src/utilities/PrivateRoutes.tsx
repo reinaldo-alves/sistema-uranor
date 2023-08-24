@@ -4,7 +4,7 @@ import { UserContext } from "src/contexts/UserContext";
 
 function PrivateRoutes(){
     const token = localStorage.getItem('token');
-    const login = useContext(UserContext);
+    const { login } = useContext(UserContext);
     return ( token && login ? <Outlet /> : <Navigate to='/login' />)
 }
 

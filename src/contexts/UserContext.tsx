@@ -1,3 +1,4 @@
+import jwtDecode from "jwt-decode";
 import { createContext, useContext, useEffect, useState } from "react";
 import api from '../api';
 import { IUser } from "src/types/types";
@@ -6,6 +7,13 @@ import { MediumContext } from "./MediumContext";
 import Loading from "src/utilities/Loading";
 
 export const UserContext = createContext({} as any);
+
+interface IToken {
+    id: number,
+    name: string,
+    iat: number,
+    exp: number
+}
 
 export const UserStore = ({ children }: any) => {
     const [loading, setLoading] = useState(true);
@@ -28,6 +36,19 @@ export const UserStore = ({ children }: any) => {
             console.log('Usuário não autenticado', error)
         })
     }
+
+    const tokenValidation = (token: string) => {
+        if(!token) {
+            setLogin(false);
+        }
+        try {
+            const decodedToken: IToken = jwtDecode(token);
+            const currentTime = Date.now() / 1000;
+            setLogin(decodedToken.exp > currentTime);
+        } catch(error) {
+            setLogin(false);
+        }
+    }
     
     const getInfo = async () => {
         await getUser(token);
@@ -37,6 +58,7 @@ export const UserStore = ({ children }: any) => {
     }
 
     useEffect(() => {
+        tokenValidation(token);
         getInfo();
     }, [token])
 

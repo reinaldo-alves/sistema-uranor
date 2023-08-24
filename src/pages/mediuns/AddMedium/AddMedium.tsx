@@ -194,7 +194,29 @@ function AddMedium() {
         }));
     };
 
+    const uploadImage = async (medium_id: number,token: string) => {
+        if(photo){
+            const formData = new FormData();
+            formData.append('image', photo);
+            const headers = {
+                'headers': {
+                    'Authorization': token,
+                    'Content-Type': 'multipart/form-data'
+                }
+            }
+            await api.post(`/medium/upload-image?medium_id=${medium_id}`, formData, headers).then(({ data }) => {
+                updateProps('foto', data.filename);
+                console.log('Foto adicionada ao objeto', newMedium);
+            }).catch((error) => {
+                console.log('Erro ao fazer upload da imagem', error);
+            })
+        } else {
+            console.log('Nenhuma foto foi adicionada');
+        }
+    }
+
     const addMedium = (medium: IMedium, token: string) => {
+        uploadImage(0, token);
         const mediumObj = {
             ...medium,
             dtNasc: medium.dtNasc === '' ? null : medium.dtNasc,
