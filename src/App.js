@@ -111,7 +111,7 @@ function App() {
 
 export default App;
 
+//Corrigir posicionamento do campo Herdeiro do Mestre
 //Implementar editar medium
-//Carregar fotos no site e fazer correspondência com o cadastro
 //Gerar PDF a partir do site
 //Validações (ex: exibir determinados campos apenas quando médium for centurião)

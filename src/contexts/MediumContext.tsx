@@ -35,7 +35,7 @@ export const MediumStore = ({ children }: any) => {
         api.get('/medium/get-mediuns', {headers:{Authorization: token}}).then(({ data }) => {
             const medium = data.medium.map((item: IMediumAPI) => ({
                 ...item,
-                foto: item.foto === null ? '' : item.foto,
+                foto: item.foto === null ? '' : `http://localhost:4000/upload/medium/${item.foto}`,
                 condicao: item.condicao === null ? '' : item.condicao,
                 dtNasc: item.dtNasc === null ? '' : item.dtNasc,
                 rg: item.rg === null ? '' : item.rg,

@@ -10,11 +10,12 @@ import api from "src/api";
 import { MediumContext } from "src/contexts/MediumContext";
 import { formatCep, formatCpf, formatPhoneNumber } from "src/utilities/functions";
 import { Alert } from "src/utilities/popups";
+import axios from "axios";
 
 function AddMedium() {
     const { templos, estados, adjuntos, coletes, classMest, falMest, povos, falMiss, turnoL, turnoT, ministros, cavaleiros, guias, estrelas, princesas, classificacao } = useContext(ListContext);
     const { token } = useContext(UserContext);
-    const { loadMedium } = useContext(MediumContext);
+    const { mediuns, loadMedium } = useContext(MediumContext);
     const defaultMedium = {
         medium_id: 0,
         nome: '',
@@ -107,9 +108,19 @@ function AddMedium() {
     const [dropMin, setDropMin] = useState(false);
     const [dropCav, setDropCav] = useState(false);
     const [dropGuia, setDropGuia] = useState(false);
+    const [dropMes, setDropMes] = useState(false);
+    const [dropNin, setDropNin] = useState(false);
+    const [dropPad, setDropPad] = useState(false);
+    const [dropMad, setDropMad] = useState(false);
+    const [dropAfi, setDropAfi] = useState(false);
     const [searchMin, setSearchMin] = useState('');
     const [searchCav, setSearchCav] = useState('');
     const [searchGuia, setSearchGuia] = useState('');
+    const [searchMes, setSearchMes] = useState('');
+    const [searchNin, setSearchNin] = useState('');
+    const [searchPad, setSearchPad] = useState('');
+    const [searchMad, setSearchMad] = useState('');
+    const [searchAfi, setSearchAfi] = useState('');
 
     useEffect(() => {
         console.log(newMedium)
@@ -186,6 +197,21 @@ function AddMedium() {
         {title: 'Cadastrar Médium', click: '/mediuns/cadastro'},
         {title: 'Médium Menor', click: '/mediuns/menor'}
     ]
+
+    const fillAddressByCep = async () => {
+        const cepNumber = newMedium.cep.replace(/\D/g,'')
+        if(cepNumber.length === 8) {
+            try {
+                const responseCep = await axios.get(`http://viacep.com.br/ws/${cepNumber}/json/`);
+                updateProps('endereco', responseCep.data.logradouro);
+                updateProps('endBairro', responseCep.data.bairro);
+                updateProps('endCidade', responseCep.data.localidade);
+                updateProps('endUF', responseCep.data.uf);
+            } catch(error) {
+                console.log(error)
+            }
+        }
+    }
 
     const updateProps = (property: string, newValue: any) => {
         setNewMedium((prevData: any) => ({
@@ -338,7 +364,7 @@ function AddMedium() {
                         <label>Cônjuge: </label>
                         <input type="text" value={newMedium.conjuge} onChange={(e) => updateProps('conjuge', e.target.value)}/>
                         <label>CEP: </label>
-                        <input type="text" maxLength={9} value={newMedium.cep} onChange={(e) => updateProps('cep', formatCep(e.target.value))}/>
+                        <input type="text" maxLength={9} value={newMedium.cep} onChange={(e) => updateProps('cep', formatCep(e.target.value))} onBlur={fillAddressByCep}/>
                         <label>Endereço: </label>
                         <input type="text" value={newMedium.endereco} onChange={(e) => updateProps('endereco', e.target.value)}/>
                         <label>Número: </label>
@@ -660,46 +686,310 @@ function AddMedium() {
                     {newMedium.sex.concat(newMedium.med)==='MasculinoDoutrinador'?
                         <GridContainer>
                             <label>Escrava: </label>
-                            <select value={newMedium.ninfa} onChange={(e) => updateProps('ninfa', e.target.value)}>
-                                <option value={0}></option>
-                            </select>
+                            <CustomInput>
+                                <input
+                                    type="text"
+                                    value={searchNin}
+                                    onChange={(e) => setSearchNin(e.target.value)}
+                                    onFocus={() => setDropNin(true)}
+                                    onBlur={() => setTimeout(() => setDropNin(false), 150)}
+                                />
+                                <OptionsList show={dropNin}>
+                                    <ul>
+                                        {mediuns
+                                            .filter((item: IMedium) => item.dtCenturia && item.med === 'Apará' && item.sex === 'Feminino')
+                                            .filter((item: IMedium) => item.nome.toLowerCase().includes(searchNin.toLowerCase().trim()))
+                                            .length === 0
+                                        ? (
+                                            <li style={{fontStyle: 'italic', color: '#777'}}>- Não encontrado -</li>
+                                        ) : (
+                                            mediuns
+                                                .filter((item: IMedium) => item.dtCenturia && item.med === 'Apará' && item.sex === 'Feminino')
+                                                .filter((item: IMedium) => item.nome.toLowerCase().includes(searchNin.toLowerCase().trim()))
+                                                .map((item: IMedium, index: number) => (
+                                                    <li
+                                                        key={index}
+                                                        onClick={() => {
+                                                            updateProps('ninfa', item.medium_id);
+                                                            setSearchNin(mediuns.find((med: IMedium) => med.medium_id === item.medium_id).nome);
+                                                            setDropNin(false);
+                                                        }}
+                                                    >
+                                                        {item.nome}
+                                                    </li>
+                                            ))
+                                        )}
+                                    </ul>
+                                </OptionsList>
+                            </CustomInput>
                             <label>Madrinha: </label>
-                            <select value={newMedium.madrinha} onChange={(e) => updateProps('madrinha', e.target.value)}>
-                                <option value={0}></option>
-                            </select>
+                            <CustomInput>
+                                <input
+                                    type="text"
+                                    value={searchMad}
+                                    onChange={(e) => setSearchMad(e.target.value)}
+                                    onFocus={() => setDropMad(true)}
+                                    onBlur={() => setTimeout(() => setDropMad(false), 150)}
+                                />
+                                <OptionsList show={dropMad}>
+                                    <ul>
+                                        {mediuns
+                                            .filter((item: IMedium) => item.dtCenturia && item.med === 'Doutrinador' && item.sex === 'Feminino')
+                                            .filter((item: IMedium) => item.nome.toLowerCase().includes(searchMad.toLowerCase().trim()))
+                                            .length === 0
+                                        ? (
+                                            <li style={{fontStyle: 'italic', color: '#777'}}>- Não encontrado -</li>
+                                        ) : (
+                                            mediuns
+                                                .filter((item: IMedium) => item.dtCenturia && item.med === 'Doutrinador' && item.sex === 'Feminino')
+                                                .filter((item: IMedium) => item.nome.toLowerCase().includes(searchMad.toLowerCase().trim()))
+                                                .map((item: IMedium, index: number) => (
+                                                    <li
+                                                        key={index}
+                                                        onClick={() => {
+                                                            updateProps('madrinha', item.medium_id);
+                                                            setSearchMad(mediuns.find((med: IMedium) => med.medium_id === item.medium_id).nome);
+                                                            setDropMad(false);
+                                                        }}
+                                                    >
+                                                        {item.nome}
+                                                    </li>
+                                            ))
+                                        )}
+                                    </ul>
+                                </OptionsList>
+                            </CustomInput>
                             <label>Padrinho: </label>
-                            <select value={newMedium.padrinho} onChange={(e) => updateProps('padrinho', e.target.value)}>
-                                <option value={0}></option>
-                            </select>
+                            <CustomInput>
+                                <input
+                                    type="text"
+                                    value={searchPad}
+                                    onChange={(e) => setSearchPad(e.target.value)}
+                                    onFocus={() => setDropPad(true)}
+                                    onBlur={() => setTimeout(() => setDropPad(false), 150)}
+                                />
+                                <OptionsList show={dropPad}>
+                                    <ul>
+                                        {mediuns
+                                            .filter((item: IMedium) => item.dtCenturia && item.med === 'Apará' && item.sex === 'Masculino')
+                                            .filter((item: IMedium) => item.nome.toLowerCase().includes(searchPad.toLowerCase().trim()))
+                                            .length === 0
+                                        ? (
+                                            <li style={{fontStyle: 'italic', color: '#777'}}>- Não encontrado -</li>
+                                        ) : (
+                                            mediuns
+                                                .filter((item: IMedium) => item.dtCenturia && item.med === 'Apará' && item.sex === 'Masculino')
+                                                .filter((item: IMedium) => item.nome.toLowerCase().includes(searchPad.toLowerCase().trim()))
+                                                .map((item: IMedium, index: number) => (
+                                                    <li
+                                                        key={index}
+                                                        onClick={() => {
+                                                            updateProps('padrinho', item.medium_id);
+                                                            setSearchPad(mediuns.find((med: IMedium) => med.medium_id === item.medium_id).nome);
+                                                            setDropPad(false);
+                                                        }}
+                                                    >
+                                                        {item.nome}
+                                                    </li>
+                                            ))
+                                        )}
+                                    </ul>
+                                </OptionsList>
+                            </CustomInput>
                         </GridContainer>
                     : newMedium.sex.concat(newMedium.med)==='MasculinoApará'? 
                         <GridContainer>
                             <label>Afilhado: </label>
-                            <select value={newMedium.afilhado} onChange={(e) => updateProps('afilhado', e.target.value)}>
-                                <option value={0}></option>
-                            </select>
+                            <CustomInput>
+                                <input
+                                    type="text"
+                                    value={searchAfi}
+                                    onChange={(e) => setSearchAfi(e.target.value)}
+                                    onFocus={() => setDropAfi(true)}
+                                    onBlur={() => setTimeout(() => setDropAfi(false), 150)}
+                                />
+                                <OptionsList show={dropAfi}>
+                                    <ul>
+                                        {mediuns
+                                            .filter((item: IMedium) => item.dtCenturia && item.med === 'Doutrinador' && item.sex === 'Masculino')
+                                            .filter((item: IMedium) => item.nome.toLowerCase().includes(searchAfi.toLowerCase().trim()))
+                                            .length === 0
+                                        ? (
+                                            <li style={{fontStyle: 'italic', color: '#777'}}>- Não encontrado -</li>
+                                        ) : (
+                                            mediuns
+                                                .filter((item: IMedium) => item.dtCenturia && item.med === 'Doutrinador' && item.sex === 'Masculino')
+                                                .filter((item: IMedium) => item.nome.toLowerCase().includes(searchAfi.toLowerCase().trim()))
+                                                .map((item: IMedium, index: number) => (
+                                                    <li
+                                                        key={index}
+                                                        onClick={() => {
+                                                            updateProps('afilhado', item.medium_id);
+                                                            setSearchAfi(mediuns.find((med: IMedium) => med.medium_id === item.medium_id).nome);
+                                                            setDropAfi(false);
+                                                        }}
+                                                    >
+                                                        {item.nome}
+                                                    </li>
+                                            ))
+                                        )}
+                                    </ul>
+                                </OptionsList>
+                            </CustomInput>
                             <label>Ninfa Sol: </label>
-                            <select value={newMedium.ninfa} onChange={(e) => updateProps('ninfa', e.target.value)}>
-                                <option value={0}></option>
-                            </select>
+                            <CustomInput>
+                                <input
+                                    type="text"
+                                    value={searchNin}
+                                    onChange={(e) => setSearchNin(e.target.value)}
+                                    onFocus={() => setDropNin(true)}
+                                    onBlur={() => setTimeout(() => setDropNin(false), 150)}
+                                />
+                                <OptionsList show={dropNin}>
+                                    <ul>
+                                        {mediuns
+                                            .filter((item: IMedium) => item.dtCenturia && item.med === 'Doutrinador' && item.sex === 'Feminino')
+                                            .filter((item: IMedium) => item.nome.toLowerCase().includes(searchNin.toLowerCase().trim()))
+                                            .length === 0
+                                        ? (
+                                            <li style={{fontStyle: 'italic', color: '#777'}}>- Não encontrado -</li>
+                                        ) : (
+                                            mediuns
+                                                .filter((item: IMedium) => item.dtCenturia && item.med === 'Doutrinador' && item.sex === 'Feminino')
+                                                .filter((item: IMedium) => item.nome.toLowerCase().includes(searchNin.toLowerCase().trim()))
+                                                .map((item: IMedium, index: number) => (
+                                                    <li
+                                                        key={index}
+                                                        onClick={() => {
+                                                            updateProps('ninfa', item.medium_id);
+                                                            setSearchNin(mediuns.find((med: IMedium) => med.medium_id === item.medium_id).nome);
+                                                            setDropNin(false);
+                                                        }}
+                                                    >
+                                                        {item.nome}
+                                                    </li>
+                                            ))
+                                        )}
+                                    </ul>
+                                </OptionsList>
+                            </CustomInput>
                         </GridContainer>
                     : newMedium.sex.concat(newMedium.med)==='FemininoDoutrinador'?
                         <GridContainer>
                             <label>Afilhado: </label>
-                            <select value={newMedium.afilhado} onChange={(e) => updateProps('afilhado', e.target.value)}>
-                                <option value={0}></option>
-                            </select>
+                            <CustomInput>
+                                <input
+                                    type="text"
+                                    value={searchAfi}
+                                    onChange={(e) => setSearchAfi(e.target.value)}
+                                    onFocus={() => setDropAfi(true)}
+                                    onBlur={() => setTimeout(() => setDropAfi(false), 150)}
+                                />
+                                <OptionsList show={dropAfi}>
+                                    <ul>
+                                        {mediuns
+                                            .filter((item: IMedium) => item.dtCenturia && item.med === 'Doutrinador' && item.sex === 'Masculino')
+                                            .filter((item: IMedium) => item.nome.toLowerCase().includes(searchAfi.toLowerCase().trim()))
+                                            .length === 0
+                                        ? (
+                                            <li style={{fontStyle: 'italic', color: '#777'}}>- Não encontrado -</li>
+                                        ) : (
+                                            mediuns
+                                                .filter((item: IMedium) => item.dtCenturia && item.med === 'Doutrinador' && item.sex === 'Masculino')
+                                                .filter((item: IMedium) => item.nome.toLowerCase().includes(searchAfi.toLowerCase().trim()))
+                                                .map((item: IMedium, index: number) => (
+                                                    <li
+                                                        key={index}
+                                                        onClick={() => {
+                                                            updateProps('afilhado', item.medium_id);
+                                                            setSearchAfi(mediuns.find((med: IMedium) => med.medium_id === item.medium_id).nome);
+                                                            setDropAfi(false);
+                                                        }}
+                                                    >
+                                                        {item.nome}
+                                                    </li>
+                                            ))
+                                        )}
+                                    </ul>
+                                </OptionsList>
+                            </CustomInput>
                             <label>Ajanã: </label>
-                            <select value={newMedium.mestre} onChange={(e) => updateProps('mestre', e.target.value)}>
-                                <option value={0}></option>
-                            </select>
+                            <CustomInput>
+                                <input
+                                    type="text"
+                                    value={searchMes}
+                                    onChange={(e) => setSearchMes(e.target.value)}
+                                    onFocus={() => setDropMes(true)}
+                                    onBlur={() => setTimeout(() => setDropMes(false), 150)}
+                                />
+                                <OptionsList show={dropMes}>
+                                    <ul>
+                                        {mediuns
+                                            .filter((item: IMedium) => item.dtCenturia && item.med === 'Apará' && item.sex === 'Masculino')
+                                            .filter((item: IMedium) => item.nome.toLowerCase().includes(searchMes.toLowerCase().trim()))
+                                            .length === 0
+                                        ? (
+                                            <li style={{fontStyle: 'italic', color: '#777'}}>- Não encontrado -</li>
+                                        ) : (
+                                            mediuns
+                                                .filter((item: IMedium) => item.dtCenturia && item.med === 'Apará' && item.sex === 'Masculino')
+                                                .filter((item: IMedium) => item.nome.toLowerCase().includes(searchMes.toLowerCase().trim()))
+                                                .map((item: IMedium, index: number) => (
+                                                    <li
+                                                        key={index}
+                                                        onClick={() => {
+                                                            updateProps('mestre', item.medium_id);
+                                                            setSearchMes(mediuns.find((med: IMedium) => med.medium_id === item.medium_id).nome);
+                                                            setDropMes(false);
+                                                        }}
+                                                    >
+                                                        {item.nome}
+                                                    </li>
+                                            ))
+                                        )}
+                                    </ul>
+                                </OptionsList>
+                            </CustomInput>
                         </GridContainer>
                     : newMedium.sex.concat(newMedium.med)==='FemininoApará'?
                         <GridContainer>
                             <label>Mestre: </label>
-                            <select value={newMedium.mestre} onChange={(e) => updateProps('mestre', e.target.value)}>
-                                <option value={0}></option>
-                            </select>
+                            <CustomInput>
+                                <input
+                                    type="text"
+                                    value={searchMes}
+                                    onChange={(e) => setSearchMes(e.target.value)}
+                                    onFocus={() => setDropMes(true)}
+                                    onBlur={() => setTimeout(() => setDropMes(false), 150)}
+                                />
+                                <OptionsList show={dropMes}>
+                                    <ul>
+                                        {mediuns
+                                            .filter((item: IMedium) => item.dtCenturia && item.med === 'Doutrinador' && item.sex === 'Masculino')
+                                            .filter((item: IMedium) => item.nome.toLowerCase().includes(searchMes.toLowerCase().trim()))
+                                            .length === 0
+                                        ? (
+                                            <li style={{fontStyle: 'italic', color: '#777'}}>- Não encontrado -</li>
+                                        ) : (
+                                            mediuns
+                                                .filter((item: IMedium) => item.dtCenturia && item.med === 'Doutrinador' && item.sex === 'Masculino')
+                                                .filter((item: IMedium) => item.nome.toLowerCase().includes(searchMes.toLowerCase().trim()))
+                                                .map((item: IMedium, index: number) => (
+                                                    <li
+                                                        key={index}
+                                                        onClick={() => {
+                                                            updateProps('mestre', item.medium_id);
+                                                            setSearchMes(mediuns.find((med: IMedium) => med.medium_id === item.medium_id).nome);
+                                                            setDropMes(false);
+                                                        }}
+                                                    >
+                                                        {item.nome}
+                                                    </li>
+                                            ))
+                                        )}
+                                    </ul>
+                                </OptionsList>
+                            </CustomInput>
                         </GridContainer>
                     : <div></div>}
                 </PersonalCard>
@@ -776,9 +1066,43 @@ function AddMedium() {
                                 <div style={{width: '100%', display: 'flex', justifyContent: 'space-between', gap: '20px'}}>
                                     <FieldContainer>
                                         <label>Herdeiro do Mestre: </label>
-                                        <select disabled={!newMedium.trinoSar} value={newMedium.herdeiro} onChange={(e) => updateProps('herdeiro', e.target.value)}>
-                                            <option value={undefined}></option>
-                                        </select>
+                                        <CustomInput>
+                                            <input 
+                                                disabled={!newMedium.trinoSar}
+                                                type="text"
+                                                value={searchMes}
+                                                onChange={(e) => setSearchMes(e.target.value)}
+                                                onFocus={() => setDropMes(true)}
+                                                onBlur={() => setTimeout(() => setDropMes(false), 150)}
+                                            />
+                                            <OptionsList show={dropMes}>
+                                                <ul>
+                                                    {mediuns
+                                                        .filter((item: IMedium) => item.classif === 'Adjunto Koatay 108 Herdeiro Triada Harpásios 7° Raio Adjuração Arcanos Rama 2000')
+                                                        .filter((item: IMedium) => item.nome.toLowerCase().includes(searchMes.toLowerCase().trim()))
+                                                        .length === 0
+                                                    ? (
+                                                        <li style={{fontStyle: 'italic', color: '#777'}}>- Não encontrado -</li>
+                                                    ) : (
+                                                        mediuns
+                                                            .filter((item: IMedium) => item.classif === 'Adjunto Koatay 108 Herdeiro Triada Harpásios 7° Raio Adjuração Arcanos Rama 2000')
+                                                            .filter((item: IMedium) => item.nome.toLowerCase().includes(searchMes.toLowerCase().trim()))
+                                                            .map((item: IMedium, index: number) => (
+                                                                <li
+                                                                    key={index}
+                                                                    onClick={() => {
+                                                                        updateProps('herdeiro', item.medium_id);
+                                                                        setSearchMes(mediuns.find((med: IMedium) => med.medium_id === item.medium_id).nome);
+                                                                        setDropMes(false);
+                                                                    }}
+                                                                >
+                                                                    {item.nome}
+                                                                </li>
+                                                        ))
+                                                    )}
+                                                </ul>
+                                            </OptionsList>
+                                        </CustomInput>
                                     </FieldContainer>
                                     <FieldContainerBox>
                                         <input type="checkBox" disabled={!newMedium.trinoSar} checked={newMedium.filho} onChange={(e) => updateProps('filho', e.target.checked)}/>
@@ -818,9 +1142,43 @@ function AddMedium() {
                                 <div style={{width: '100%', display: 'flex', justifyContent: 'space-between', gap: '20px'}}>
                                     <FieldContainer>
                                         <label>Herdeiro do Mestre: </label>
-                                        <select disabled={!newMedium.trinoSar} value={newMedium.herdeiro} onChange={(e) => updateProps('herdeiro', e.target.value)}>
-                                            <option value={undefined}></option>
-                                        </select>
+                                        <CustomInput>
+                                            <input 
+                                                disabled={!newMedium.trinoSar}
+                                                type="text"
+                                                value={searchMes}
+                                                onChange={(e) => setSearchMes(e.target.value)}
+                                                onFocus={() => setDropMes(true)}
+                                                onBlur={() => setTimeout(() => setDropMes(false), 150)}
+                                            />
+                                            <OptionsList show={dropMes}>
+                                                <ul>
+                                                    {mediuns
+                                                        .filter((item: IMedium) => item.classif === 'Adjunto Koatay 108 Herdeiro Triada Harpásios 7° Raio Adjuração Arcanos Rama 2000')
+                                                        .filter((item: IMedium) => item.nome.toLowerCase().includes(searchMes.toLowerCase().trim()))
+                                                        .length === 0
+                                                    ? (
+                                                        <li style={{fontStyle: 'italic', color: '#777'}}>- Não encontrado -</li>
+                                                    ) : (
+                                                        mediuns
+                                                            .filter((item: IMedium) => item.classif === 'Adjunto Koatay 108 Herdeiro Triada Harpásios 7° Raio Adjuração Arcanos Rama 2000')
+                                                            .filter((item: IMedium) => item.nome.toLowerCase().includes(searchMes.toLowerCase().trim()))
+                                                            .map((item: IMedium, index: number) => (
+                                                                <li
+                                                                    key={index}
+                                                                    onClick={() => {
+                                                                        updateProps('herdeiro', item.medium_id);
+                                                                        setSearchMes(mediuns.find((med: IMedium) => med.medium_id === item.medium_id).nome);
+                                                                        setDropMes(false);
+                                                                    }}
+                                                                >
+                                                                    {item.nome}
+                                                                </li>
+                                                        ))
+                                                    )}
+                                                </ul>
+                                            </OptionsList>
+                                        </CustomInput>
                                     </FieldContainer>
                                     <FieldContainerBox>
                                         <input type="checkBox" disabled={!newMedium.trinoSar} checked={newMedium.filho} onChange={(e) => updateProps('filho', e.target.checked)}/>
