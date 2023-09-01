@@ -1,0 +1,14 @@
+- Data de ingresso pelo menos 15 anos maior que a data de Nascimento
+- Data de emplacamento maior que data de ingresso
+- Data de iniciação maior que data de emplacamento
+- Data de elevação maior que data de iniciação
+- Data de centúria maior que data de elevação
+- Data de sétimo maior que data de centúria
+- Se tiver falange missionária, tem que ter adjunto devas
+- Se for da falange de corte, tem que ser falange de sublimação
+- Data da guia maior que a data da centúria
+- Data do ministro maior que a data da centúria
+- Observações só podem ter 250 caracteres
+- Se for trino sardyos, tem que ter herdeiro de
+- Se for trino solitário, tem que ter iramar ou juremá
+- Fazer verificação de turno de trabalho, turno de legião e origem (caso for arcanos) para casos de padrinho, madrinha e escrava

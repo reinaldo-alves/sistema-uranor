@@ -90,7 +90,7 @@ export const SectionTitle = styled.h2`
     text-align: center;
 `;
 
-export const InputContainer = styled.div`
+export const InputContainer = styled.div<{herdeiro?: boolean}>`
     width: 100%;
     display: flex;
     justify-content: flex-start;
@@ -98,8 +98,12 @@ export const InputContainer = styled.div`
     gap: 20px;
 
     @media (max-width: 800px) {
+        flex-direction: ${({ herdeiro }) => herdeiro? 'row' : 'column'};
+        align-items: ${({ herdeiro }) => herdeiro? 'center' : 'flex-start'};
+    }
+
+    @media (max-width: 520px) {
         flex-direction: column;
-        align-items: flex-start;
     }
 `;
 
@@ -177,9 +181,10 @@ export const FieldContainerBox = styled.div`
 
     label {
         text-align: left;
+        flex: 1;
     }
     
-    input {
+    input[type=checkbox] {
         margin-right: 10px;
         width: 25px;
         height: 25px;
@@ -187,17 +192,11 @@ export const FieldContainerBox = styled.div`
         border: solid 1px ${(props) => {return props.theme.color.darkerColor}};
         display: block;
         padding: 0;
-    }
 
-    select {
-        width: 100%;
-        height: 35px;
-        padding: 6px;
-        font-size: 18px;
-        font-weight: bold;
-        border-radius: 8px;
-        border: solid 1px ${(props) => {return props.theme.color.darkerColor}};
-        display: block;
+        @media (max-width: 1000px) {
+            width: 20px;
+            height: 20px;
+        }
     }
 `;
 
@@ -279,6 +278,7 @@ export const Divider = styled.div`
 
 export const CustomInput = styled.div`
     position: relative;
+    width: 100%;
 `;
 
 export const OptionsList = styled.div<{show: boolean}>`
@@ -294,6 +294,7 @@ export const OptionsList = styled.div<{show: boolean}>`
     margin: 0;
     max-height: 250px;
     overflow-x: auto;
+    z-index: 3;
 
     ul li {
         padding: 8px;

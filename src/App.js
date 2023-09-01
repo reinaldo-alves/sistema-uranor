@@ -111,7 +111,12 @@ function App() {
 
 export default App;
 
-//Corrigir posicionamento do campo Herdeiro do Mestre
+//Colocar adjunto devas como disabled quando não tiver falange
+//Colocar regente como disabled quando não tiver falange
+//Colocar janda como disabled quando não for aponara ou yuricy
+//Colocar recepcionista como disabled quando filho de devas for marcado e vice-versa.
+//Colocar trino solitário como disabled se não for rama 2000 ou se for presidente.
+//Colocar presidencia como disabled se não for rama 2000.
 //Implementar editar medium
 //Gerar PDF a partir do site
 //Validações (ex: exibir determinados campos apenas quando médium for centurião)

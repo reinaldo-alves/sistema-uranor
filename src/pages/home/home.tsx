@@ -10,6 +10,8 @@ import Rel from '../../assets/relatorios.jpg'
 import Doc from '../../assets/documentosuteis.jpg'
 import Bib from '../../assets/biblioteca.jpg'
 import SideMenu from "src/components/SideMenu/SideMenu";
+import { useEffect, useState } from "react";
+import Loading from "src/utilities/Loading";
 
 interface IMenu {
     title: string,
@@ -18,6 +20,7 @@ interface IMenu {
 }
 
 function Home() {
+    const [loading, setLoading] = useState(true);
     const navigate = useNavigate();
     
     const menu = [
@@ -30,6 +33,14 @@ function Home() {
         {title: 'Documentos Úteis', image: Doc, link: 'documentosuteis'},
         {title: 'Biblioteca', image: Bib, link: 'biblioteca'}
     ]
+
+    useEffect(() => {
+        setLoading(false)
+    }, [])
+
+    if(loading) {
+        return <Loading />
+    }
 
     return (
         <>
