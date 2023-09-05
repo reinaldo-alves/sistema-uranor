@@ -432,55 +432,63 @@ function AddMedium() {
                             ))}
                         </select>
                         <label>Classificação: </label>
-                        <select value={newMedium.classMest} onChange={(e) => updateProps('classMest', e.target.value)}>
+                        <select value={newMedium.classMest} disabled={!newMedium.dtElevacao} onChange={(e) => updateProps('classMest', e.target.value)}>
                             <option value={''}></option>
                             {listClassMest.map((item: string, index: number) => (
                                 <option key={index} value={item}>{item}</option>
                             ))}
                         </select>
                         <label>Falange Mestrado: </label>
-                        <select value={newMedium.falMest} onChange={(e) => updateProps('falMest', e.target.value)}>
+                        <select value={newMedium.falMest} disabled={!newMedium.dtElevacao} onChange={(e) => updateProps('falMest', e.target.value)}>
                             <option value={''}></option>
                             {falMest.map((item: string, index: number) => (
                                 <option key={index} value={item}>{item}</option>
                             ))}
                         </select>
                         <label>Povo: </label>
-                        <select value={newMedium.povo} onChange={(e) => updateProps('povo', e.target.value)}>
+                        <select value={newMedium.povo} disabled={!newMedium.dtCenturia} onChange={(e) => updateProps('povo', e.target.value)}>
                             <option value={''}></option>
                             {povos.map((item: string, index: number) => (
                                 <option key={index} value={item}>{item}</option>
                             ))}
                         </select>
                         <label>Falange Missionária: </label>
-                        <select value={newMedium.falMiss} onChange={(e) => updateProps('falMiss', e.target.value)}>
-                            <option value={''}></option>
+                        <select
+                            value={newMedium.falMiss}
+                            onChange={(e) => {
+                                updateProps('falMiss', parseInt(e.target.value))
+                                if(parseInt(e.target.value) === 0){
+                                    updateProps('regente', false);
+                                }
+                            }}
+                        >
+                            <option value={0}></option>
                             {listFalMiss.map((item: IFalange, index: number) => (
                                 <option key={index} value={item.falange_id}>{item.nome}</option>
                             ))}
                         </select>
                         <label>Adjunto Devas: </label>
-                        <select value={newMedium.adjDevas} onChange={(e) => updateProps('adjDevas', e.target.value)}>
+                        <select value={newMedium.adjDevas} disabled={!newMedium.falMiss} onChange={(e) => updateProps('adjDevas', e.target.value)}>
                             <option value={''}></option>
                             <option value={'Adejã'}>Adejã</option>
                             <option value={'Alufã'}>Alufã</option>
                         </select>
                         <label>Turno: </label>
-                        <select value={newMedium.turnoLeg} onChange={(e) => updateProps('turnoLeg', e.target.value)}>
+                        <select value={newMedium.turnoLeg} disabled={!newMedium.dtCenturia} onChange={(e) => updateProps('turnoLeg', e.target.value)}>
                             <option value={''}></option>
                             {listTurnoL.map((item: string, index: number) => (
                                 <option key={index} value={item}>{item}</option>
                             ))}
                         </select>
                         <label>Turno Trabalho: </label>
-                        <select value={newMedium.turnoTrab} onChange={(e) => updateProps('turnoTrab', e.target.value)}>
+                        <select value={newMedium.turnoTrab} disabled={!newMedium.dtCenturia} onChange={(e) => updateProps('turnoTrab', e.target.value)}>
                             <option value={''}></option>
                             {listTurnoT.map((item: string, index: number) => (
                                 <option key={index} value={item}>{item}</option>
                             ))}
                         </select>
                     </GridContainer>
-                    {newMedium.sex==='Masculino'?
+                    {newMedium.sex==='Masculino' && newMedium.dtCenturia?
                         <>
                             <Divider></Divider>
                             <GridContainer>
@@ -588,7 +596,7 @@ function AddMedium() {
                                 </FieldContainer>
                             </InputContainer>
                         </>
-                    : newMedium.sex==='Feminino'?
+                    : newMedium.sex==='Feminino' && newMedium.dtCenturia?
                         <>
                             <Divider></Divider>
                             <GridContainer>
@@ -681,7 +689,7 @@ function AddMedium() {
                         </>
                     : ''}
                 </PersonalCard>
-                <PersonalCard>
+                <PersonalCard hide={newMedium.sex.concat(newMedium.med).length < 10 || !newMedium.dtCenturia}>
                     <SectionTitle>Povo</SectionTitle>
                     {newMedium.sex.concat(newMedium.med)==='MasculinoDoutrinador'?
                         <GridContainer>
@@ -993,7 +1001,7 @@ function AddMedium() {
                         </GridContainer>
                     : <div></div>}
                 </PersonalCard>
-                <PersonalCard>
+                <PersonalCard hide={newMedium.sex.concat(newMedium.med).length < 10 || !newMedium.dtCenturia}>
                     <SectionTitle>Cargos e Funções</SectionTitle>
                     {newMedium.sex.concat(newMedium.med)==='MasculinoDoutrinador'?
                         <>
@@ -1010,7 +1018,7 @@ function AddMedium() {
                                 </FieldContainer>
                                 <FieldContainer>        
                                     <label>Presidência: </label>
-                                    <select value={newMedium.presidente} onChange={(e) => updateProps('presidente', e.target.value)}>
+                                    <select value={newMedium.presidente} disabled={!newMedium.classif.includes('Adjunto Koatay 108 Herdeiro Triada Harpásios')} onChange={(e) => updateProps('presidente', e.target.value)}>
                                         <option value={''}></option>
                                         <option value={'Presidente'}>Presidente</option>
                                         <option value={'Vice'}>Vice-presidente</option>
@@ -1019,109 +1027,113 @@ function AddMedium() {
                             </InputContainer>
                             <div style={{display: 'flex', justifyContent: 'center', gap: '10px', flexWrap: 'wrap'}}>
                                 <FieldContainerBox>
-                                    <input type="checkBox" checked={newMedium.recepcao} onChange={(e) => updateProps('recepcao', e.target.checked)}/>
+                                    <input type="checkBox" disabled={newMedium.devas} checked={newMedium.recepcao} onChange={(e) => updateProps('recepcao', e.target.checked)}/>
                                     <label>Recepcionista</label>
                                 </FieldContainerBox>
                                 <FieldContainerBox>
-                                    <input type="checkBox" checked={newMedium.devas} onChange={(e) => updateProps('devas', e.target.checked)}/>
+                                    <input type="checkBox" disabled={newMedium.recepcao} checked={newMedium.devas} onChange={(e) => updateProps('devas', e.target.checked)}/>
                                     <label>Filho de Devas</label>
                                 </FieldContainerBox>
                                 <FieldContainerBox>
-                                    <input type="checkBox" checked={newMedium.regente} onChange={(e) => updateProps('regente', e.target.checked)}/>
+                                    <input type="checkBox" disabled={!newMedium.falMiss} checked={newMedium.regente} onChange={(e) => updateProps('regente', e.target.checked)}/>
                                     <label>Regente</label>
                                 </FieldContainerBox>
                             </div>
-                            <Divider></Divider>
-                            <InputContainer>
-                                <div style={{width: '100%', display: 'flex', gap: '10px'}}>
-                                    <FieldContainerBox>
-                                        <input type="checkBox" checked={tSol} onChange={(e) => setTSol(e.target.checked)}/>
-                                        <label>Trino Solitário</label>
-                                    </FieldContainerBox> 
-                                    <FieldContainer>
-                                        <select disabled={!tSol} value={newMedium.trinoSol} onChange={(e) => updateProps('trinoSol', e.target.value)}>
-                                            <option value={''}></option>
-                                            <option value={'Juremá'}>Juremá</option>
-                                            <option value={'Iramar'}>Iramar</option>
-                                        </select>
-                                    </FieldContainer>
-                                </div>
-                                <FieldContainer width="190px">
-                                    <label>Data: </label>
-                                    <input type="date" disabled={!tSol} value={newMedium.dtTrinoSol} onChange={(e) => updateProps('dtTrinoSol', e.target.value)}/>
-                                </FieldContainer>
-                            </InputContainer>
-                            <Divider></Divider>
-                            <div style={{display: 'flex', gap: '10px'}}>
-                                <FieldContainerBox>
-                                    <input type="checkBox" checked={newMedium.trinoSar} onChange={(e) => updateProps('trinoSar', e.target.checked)} />
-                                    <label>Trino Sardyos</label>
-                                </FieldContainerBox>
-                                <FieldContainer>
-                                    <label>Data: </label>
-                                    <input type="date" disabled={!newMedium.trinoSar} value={newMedium.dtTrinoSar} onChange={(e) => updateProps('dtTrinoSar', e.target.value)}/>
-                                </FieldContainer>
-                            </div>
-                            <InputContainer herdeiro>
-                                <FieldContainer>
-                                    <label>Herdeiro de: </label>
-                                    <CustomInput>
-                                        <input 
-                                            disabled={!newMedium.trinoSar}
-                                            type="text"
-                                            value={searchMes}
-                                            onChange={(e) => setSearchMes(e.target.value)}
-                                            onFocus={() => setDropMes(true)}
-                                            onBlur={() => setTimeout(() => setDropMes(false), 150)}
-                                        />
-                                        <OptionsList show={dropMes}>
-                                            <ul>
-                                                {mediuns
-                                                    .filter((item: IMedium) => item.classif === 'Adjunto Koatay 108 Herdeiro Triada Harpásios 7° Raio Adjuração Arcanos Rama 2000')
-                                                    .filter((item: IMedium) => item.nome.toLowerCase().includes(searchMes.toLowerCase().trim()))
-                                                    .length === 0
-                                                ? (
-                                                    <li style={{fontStyle: 'italic', color: '#777'}}>- Não encontrado -</li>
-                                                ) : (
-                                                    mediuns
-                                                        .filter((item: IMedium) => item.classif === 'Adjunto Koatay 108 Herdeiro Triada Harpásios 7° Raio Adjuração Arcanos Rama 2000')
-                                                        .filter((item: IMedium) => item.nome.toLowerCase().includes(searchMes.toLowerCase().trim()))
-                                                        .map((item: IMedium, index: number) => (
-                                                            <li
-                                                                key={index}
-                                                                onClick={() => {
-                                                                    updateProps('herdeiro', item.medium_id);
-                                                                    setSearchMes(mediuns.find((med: IMedium) => med.medium_id === item.medium_id).nome);
-                                                                    setDropMes(false);
-                                                                }}
-                                                            >
-                                                                {item.nome}
-                                                            </li>
-                                                        ))
-                                                    )}
-                                            </ul>
-                                        </OptionsList>
-                                    </CustomInput>
-                                </FieldContainer>
-                                <FieldContainerBox>
-                                    <input type="checkBox" disabled={!newMedium.trinoSar} checked={newMedium.filho} onChange={(e) => updateProps('filho', e.target.checked)}/>
-                                    <label>Filho?</label>
-                                </FieldContainerBox>
-                            </InputContainer>
+                            {newMedium.classif === 'Adjunto Koatay 108 Herdeiro Triada Harpásios 7° Raio Adjuração Arcanos Rama 2000' || newMedium.presidente === 'Presidente' ? '' : 
+                                <>
+                                    <Divider></Divider>
+                                    <InputContainer>
+                                        <div style={{width: '100%', display: 'flex', gap: '10px'}}>
+                                            <FieldContainerBox>
+                                                <input type="checkBox" checked={tSol} disabled={newMedium.classif !== 'Adjunto Koatay 108 Herdeiro Triada Harpásios Raio Adjuração Rama 2000' || newMedium.presidente === 'Presidente'} onChange={(e) => setTSol(e.target.checked)}/>
+                                                <label>Trino Solitário</label>
+                                            </FieldContainerBox> 
+                                            <FieldContainer>
+                                                <select disabled={!tSol} value={newMedium.trinoSol} onChange={(e) => updateProps('trinoSol', e.target.value)}>
+                                                    <option value={''}></option>
+                                                    <option value={'Juremá'}>Juremá</option>
+                                                    <option value={'Iramar'}>Iramar</option>
+                                                </select>
+                                            </FieldContainer>
+                                        </div>
+                                        <FieldContainer width="190px">
+                                            <label>Data: </label>
+                                            <input type="date" disabled={!tSol} value={newMedium.dtTrinoSol} onChange={(e) => updateProps('dtTrinoSol', e.target.value)}/>
+                                        </FieldContainer>
+                                    </InputContainer>
+                                    <Divider></Divider>
+                                    <div style={{display: 'flex', gap: '10px'}}>
+                                        <FieldContainerBox>
+                                            <input type="checkBox" checked={newMedium.trinoSar} onChange={(e) => updateProps('trinoSar', e.target.checked)} />
+                                            <label>Trino Sardyos</label>
+                                        </FieldContainerBox>
+                                        <FieldContainer>
+                                            <label>Data: </label>
+                                            <input type="date" disabled={!newMedium.trinoSar} value={newMedium.dtTrinoSar} onChange={(e) => updateProps('dtTrinoSar', e.target.value)}/>
+                                        </FieldContainer>
+                                    </div>
+                                    <InputContainer herdeiro>
+                                        <FieldContainer>
+                                            <label>Herdeiro de: </label>
+                                            <CustomInput>
+                                                <input 
+                                                    disabled={!newMedium.trinoSar}
+                                                    type="text"
+                                                    value={searchMes}
+                                                    onChange={(e) => setSearchMes(e.target.value)}
+                                                    onFocus={() => setDropMes(true)}
+                                                    onBlur={() => setTimeout(() => setDropMes(false), 150)}
+                                                />
+                                                <OptionsList show={dropMes}>
+                                                    <ul>
+                                                        {mediuns
+                                                            .filter((item: IMedium) => item.classif === 'Adjunto Koatay 108 Herdeiro Triada Harpásios 7° Raio Adjuração Arcanos Rama 2000')
+                                                            .filter((item: IMedium) => item.nome.toLowerCase().includes(searchMes.toLowerCase().trim()))
+                                                            .length === 0
+                                                        ? (
+                                                            <li style={{fontStyle: 'italic', color: '#777'}}>- Não encontrado -</li>
+                                                        ) : (
+                                                            mediuns
+                                                                .filter((item: IMedium) => item.classif === 'Adjunto Koatay 108 Herdeiro Triada Harpásios 7° Raio Adjuração Arcanos Rama 2000')
+                                                                .filter((item: IMedium) => item.nome.toLowerCase().includes(searchMes.toLowerCase().trim()))
+                                                                .map((item: IMedium, index: number) => (
+                                                                    <li
+                                                                        key={index}
+                                                                        onClick={() => {
+                                                                            updateProps('herdeiro', item.medium_id);
+                                                                            setSearchMes(mediuns.find((med: IMedium) => med.medium_id === item.medium_id).nome);
+                                                                            setDropMes(false);
+                                                                        }}
+                                                                    >
+                                                                        {item.nome}
+                                                                    </li>
+                                                                ))
+                                                            )}
+                                                    </ul>
+                                                </OptionsList>
+                                            </CustomInput>
+                                        </FieldContainer>
+                                        <FieldContainerBox>
+                                            <input type="checkBox" disabled={!newMedium.trinoSar} checked={newMedium.filho} onChange={(e) => updateProps('filho', e.target.checked)}/>
+                                            <label>Filho?</label>
+                                        </FieldContainerBox>
+                                    </InputContainer>
+                                </>
+                            }
                         </>
                     : newMedium.sex.concat(newMedium.med)==='MasculinoApará'? 
                         <>
                             <div style={{display: 'flex', justifyContent: 'center', gap: '10px', flexWrap: 'wrap'}}>
                                 <FieldContainerBox>
-                                    <input type="checkBox" checked={newMedium.recepcao} onChange={(e) => updateProps('recepcao', e.target.checked)}/>
+                                    <input type="checkBox" disabled={newMedium.devas} checked={newMedium.recepcao} onChange={(e) => updateProps('recepcao', e.target.checked)}/>
                                     <label>Recepcionista</label>
                                 </FieldContainerBox>
                                 <FieldContainerBox>
-                                    <input type="checkBox" checked={newMedium.devas} onChange={(e) => updateProps('devas', e.target.checked)}/>
+                                    <input type="checkBox" disabled={newMedium.recepcao} checked={newMedium.devas} onChange={(e) => updateProps('devas', e.target.checked)}/>
                                     <label>Filho de Devas</label>
                                 </FieldContainerBox>
                                 <FieldContainerBox>
-                                    <input type="checkBox" checked={newMedium.regente} onChange={(e) => updateProps('regente', e.target.checked)}/>
+                                    <input type="checkBox" disabled={!newMedium.falMiss} checked={newMedium.regente} onChange={(e) => updateProps('regente', e.target.checked)}/>
                                     <label>Regente</label>
                                 </FieldContainerBox>
                             </div>
@@ -1186,34 +1198,34 @@ function AddMedium() {
                     : newMedium.sex.concat(newMedium.med)==='FemininoDoutrinador'?
                         <div style={{display: 'flex', justifyContent:'center', gap: '10px', flexWrap: 'wrap'}}>
                             <FieldContainerBox>
-                                <input type="checkBox" checked={newMedium.recepcao} onChange={(e) => updateProps('recepcao', e.target.checked)}/>
+                                <input type="checkBox" disabled={newMedium.devas} checked={newMedium.recepcao} onChange={(e) => updateProps('recepcao', e.target.checked)}/>
                                 <label>Recepcionista</label>
                             </FieldContainerBox>
                             <FieldContainerBox>
-                                <input type="checkBox" checked={newMedium.devas} onChange={(e) => updateProps('devas', e.target.checked)}/>
+                                <input type="checkBox" disabled={newMedium.recepcao} checked={newMedium.devas} onChange={(e) => updateProps('devas', e.target.checked)}/>
                                 <label>Filha de Devas</label>
                             </FieldContainerBox>
                             <FieldContainerBox>
-                                <input type="checkBox" checked={newMedium.regente} onChange={(e) => updateProps('regente', e.target.checked)}/>
+                                <input type="checkBox" disabled={!newMedium.falMiss} checked={newMedium.regente} onChange={(e) => updateProps('regente', e.target.checked)}/>
                                 <label>Regente</label>
                             </FieldContainerBox>
                             <FieldContainerBox>
-                                <input type="checkBox" checked={newMedium.janda} onChange={(e) => updateProps('janda', e.target.checked)}/>
+                                <input type="checkBox" disabled={newMedium.falMiss !== 23 && newMedium.falMiss !== 8} checked={newMedium.janda} onChange={(e) => updateProps('janda', e.target.checked)}/>
                                 <label>Janda</label>
                             </FieldContainerBox>
                         </div>
                     : newMedium.sex.concat(newMedium.med)==='FemininoApará'?
                         <div style={{display: 'flex', justifyContent: 'center', gap: '10px', flexWrap: 'wrap'}}>
                             <FieldContainerBox>
-                                <input type="checkBox" checked={newMedium.recepcao} onChange={(e) => updateProps('recepcao', e.target.checked)}/>
+                                <input type="checkBox" disabled={newMedium.devas} checked={newMedium.recepcao} onChange={(e) => updateProps('recepcao', e.target.checked)}/>
                                 <label>Recepcionista</label>
                             </FieldContainerBox>
                             <FieldContainerBox>
-                                <input type="checkBox" checked={newMedium.devas} onChange={(e) => updateProps('devas', e.target.checked)}/>
+                                <input type="checkBox" disabled={newMedium.recepcao} checked={newMedium.devas} onChange={(e) => updateProps('devas', e.target.checked)}/>
                                 <label>Filha de Devas</label>
                             </FieldContainerBox>
                             <FieldContainerBox>
-                                <input type="checkBox" checked={newMedium.regente} onChange={(e) => updateProps('regente', e.target.checked)}/>
+                                <input type="checkBox" disabled={!newMedium.falMiss} checked={newMedium.regente} onChange={(e) => updateProps('regente', e.target.checked)}/>
                                 <label>Regente</label>
                             </FieldContainerBox>
                         </div>

@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import Login from './pages/login/login';
-import { BrowserRouter, Routes, Route, Navigate, Outlet } from 'react-router-dom'; 
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'; 
 import Home from './pages/home/home';
 import CantosChaves from './pages/cantosechaves/cantosechaves';
 import DocumentosUteis from './pages/documentosuteis/documentosuteis';
@@ -111,12 +111,7 @@ function App() {
 
 export default App;
 
-//Colocar adjunto devas como disabled quando não tiver falange
-//Colocar regente como disabled quando não tiver falange
-//Colocar janda como disabled quando não for aponara ou yuricy
-//Colocar recepcionista como disabled quando filho de devas for marcado e vice-versa.
-//Colocar trino solitário como disabled se não for rama 2000 ou se for presidente.
-//Colocar presidencia como disabled se não for rama 2000.
+//Resolver questão da mudança de mediunidade, inclusive datas
+//Implementar validações ao criar (ou editar?) médium
 //Implementar editar medium
 //Gerar PDF a partir do site
-//Validações (ex: exibir determinados campos apenas quando médium for centurião)

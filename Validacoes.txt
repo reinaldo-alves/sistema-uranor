@@ -1,4 +1,3 @@
-- Data de ingresso pelo menos 15 anos maior que a data de Nascimento
 - Data de emplacamento maior que data de ingresso
 - Data de iniciação maior que data de emplacamento
 - Data de elevação maior que data de iniciação
@@ -11,4 +10,5 @@
 - Observações só podem ter 250 caracteres
 - Se for trino sardyos, tem que ter herdeiro de
 - Se for trino solitário, tem que ter iramar ou juremá
+- Fazer verificação se o mestre/ninfa selecionado já é escrava/madrinha/padrinho/afilhado/ninfa de outro mestre/ninfa
 - Fazer verificação de turno de trabalho, turno de legião e origem (caso for arcanos) para casos de padrinho, madrinha e escrava

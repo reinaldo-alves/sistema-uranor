@@ -15,7 +15,7 @@ export const MainInfoContainer = styled.div`
     gap: 15px;
 `;
 
-export const PersonalCard = styled.div`
+export const PersonalCard = styled.div<{hide?: boolean}>`
     margin-top: 30px;
     width: 90%;
     max-width: 1200px;
@@ -23,7 +23,7 @@ export const PersonalCard = styled.div`
     padding: 15px;
     background-color: ${(props) => {return props.theme.color.mediumColorTr}};
     border: solid 1px ${(props) => {return props.theme.color.darkerColor}};
-    display: flex;
+    display: ${({ hide }) => hide? 'none' : 'flex'};
     flex-direction: column;
     gap: 15px;
 
