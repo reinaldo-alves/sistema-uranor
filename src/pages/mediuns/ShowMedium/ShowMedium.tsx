@@ -3,7 +3,7 @@ import Header from "src/components/header/header";
 import { Divider, GridContainer, InfoContainer, MainContainer, MainInfoContainer, MediumButton, MediumInfo, MediumMainInfo, MediumText, NameAndId, PersonalCard, PhotoContainer, SectionTitle } from "./styles";
 import SubMenu from "src/components/SubMenu/SubMenu";
 import SideMenu from "src/components/SideMenu/SideMenu";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { MediumContext } from "src/contexts/MediumContext";
 import { IAdjunto, ICavaleiro, IFalange, IMedium, IMentor, ITemplo } from "src/types/types";
 import { UserContext } from "src/contexts/UserContext";
@@ -20,6 +20,7 @@ function ShowMedium() {
     const { mediuns, loadMedium } = useContext(MediumContext);
     const { ministros, cavaleiros, guias, adjuntos, templos, falMiss, getData } = useContext(ListContext);
     const params = useParams();
+    const navigate = useNavigate();
     
     const getInfo = async () => {
         await loadMedium(token);
@@ -27,6 +28,12 @@ function ShowMedium() {
         await getUser(token);
         setLoading(false);
     }
+
+    const navigateToTop = (route: string) => {
+        setLoading(true)
+        navigate(route);
+        window.scrollTo({top: 0});
+    };
     
     useEffect(() => {
         getInfo();
@@ -187,23 +194,23 @@ function ShowMedium() {
                             <SectionTitle>Povo</SectionTitle>
                             {medium.sex.concat(medium.med)==='MasculinoDoutrinador'?
                                 <InfoContainer>
-                                    <MediumInfo>Escrava: <span>{mediuns.find((item: IMedium) => item.medium_id === medium.ninfa) ? mediuns.find((item: IMedium) => item.medium_id === medium.ninfa).nome : ''}</span></MediumInfo>
-                                    <MediumInfo>Madrinha: <span>{mediuns.find((item: IMedium) => item.medium_id === medium.madrinha) ? mediuns.find((item: IMedium) => item.medium_id === medium.madrinha).nome : ''}</span></MediumInfo>
-                                    <MediumInfo>Padrinho: <span>{mediuns.find((item: IMedium) => item.medium_id === medium.padrinho) ? mediuns.find((item: IMedium) => item.medium_id === medium.padrinho).nome : ''}</span></MediumInfo>
+                                    <MediumInfo>Escrava: <span style={{cursor: 'pointer'}} onClick={() => navigateToTop(`/mediuns/consulta/${mediuns.find((item: IMedium) => item.medium_id === medium.ninfa).medium_id}`)}>{mediuns.find((item: IMedium) => item.medium_id === medium.ninfa) ? mediuns.find((item: IMedium) => item.medium_id === medium.ninfa).nome : ''}</span></MediumInfo>
+                                    <MediumInfo>Madrinha: <span style={{cursor: 'pointer'}} onClick={() => navigateToTop(`/mediuns/consulta/${mediuns.find((item: IMedium) => item.medium_id === medium.madrinha).medium_id}`)}>{mediuns.find((item: IMedium) => item.medium_id === medium.madrinha) ? mediuns.find((item: IMedium) => item.medium_id === medium.madrinha).nome : ''}</span></MediumInfo>
+                                    <MediumInfo>Padrinho: <span style={{cursor: 'pointer'}} onClick={() => navigateToTop(`/mediuns/consulta/${mediuns.find((item: IMedium) => item.medium_id === medium.padrinho).medium_id}`)}>{mediuns.find((item: IMedium) => item.medium_id === medium.padrinho) ? mediuns.find((item: IMedium) => item.medium_id === medium.padrinho).nome : ''}</span></MediumInfo>
                                 </InfoContainer>
                             : medium.sex.concat(medium.med)==='MasculinoApará'? 
                                 <InfoContainer>
-                                    <MediumInfo>Afilhado: <span>{mediuns.find((item: IMedium) => item.medium_id === medium.afilhado) ? mediuns.find((item: IMedium) => item.medium_id === medium.afilhado).nome : ''}</span></MediumInfo>
-                                    <MediumInfo>Ninfa Sol: <span>{mediuns.find((item: IMedium) => item.medium_id === medium.ninfa) ? mediuns.find((item: IMedium) => item.medium_id === medium.ninfa).nome : ''}</span></MediumInfo>
+                                    <MediumInfo>Afilhado: <span style={{cursor: 'pointer'}} onClick={() => navigateToTop(`/mediuns/consulta/${mediuns.find((item: IMedium) => item.medium_id === medium.afilhado).medium_id}`)}>{mediuns.find((item: IMedium) => item.medium_id === medium.afilhado) ? mediuns.find((item: IMedium) => item.medium_id === medium.afilhado).nome : ''}</span></MediumInfo>
+                                    <MediumInfo>Ninfa Sol: <span style={{cursor: 'pointer'}} onClick={() => navigateToTop(`/mediuns/consulta/${mediuns.find((item: IMedium) => item.medium_id === medium.ninfa).medium_id}`)}>{mediuns.find((item: IMedium) => item.medium_id === medium.ninfa) ? mediuns.find((item: IMedium) => item.medium_id === medium.ninfa).nome : ''}</span></MediumInfo>
                                 </InfoContainer>
                             : medium.sex.concat(medium.med)==='FemininoDoutrinador'?
                                 <InfoContainer>
-                                    <MediumInfo>Afilhado: <span>{mediuns.find((item: IMedium) => item.medium_id === medium.afilhado) ? mediuns.find((item: IMedium) => item.medium_id === medium.afilhado).nome : ''}</span></MediumInfo>
-                                    <MediumInfo>Ajanã: <span>{mediuns.find((item: IMedium) => item.medium_id === medium.mestre) ? mediuns.find((item: IMedium) => item.medium_id === medium.mestre).nome : ''}</span></MediumInfo>
+                                    <MediumInfo>Afilhado: <span style={{cursor: 'pointer'}} onClick={() => navigateToTop(`/mediuns/consulta/${mediuns.find((item: IMedium) => item.medium_id === medium.afilhado).medium_id}`)}>{mediuns.find((item: IMedium) => item.medium_id === medium.afilhado) ? mediuns.find((item: IMedium) => item.medium_id === medium.afilhado).nome : ''}</span></MediumInfo>
+                                    <MediumInfo>Ajanã: <span style={{cursor: 'pointer'}} onClick={() => navigateToTop(`/mediuns/consulta/${mediuns.find((item: IMedium) => item.medium_id === medium.mestre).medium_id}`)}>{mediuns.find((item: IMedium) => item.medium_id === medium.mestre) ? mediuns.find((item: IMedium) => item.medium_id === medium.mestre).nome : ''}</span></MediumInfo>
                                 </InfoContainer>
                             : medium.sex.concat(medium.med)==='FemininoApará'?
                                 <InfoContainer>
-                                    <MediumInfo>Mestre: <span>{mediuns.find((item: IMedium) => item.medium_id === medium.mestre) ? mediuns.find((item: IMedium) => item.medium_id === medium.mestre).nome : ''}</span></MediumInfo>
+                                    <MediumInfo>Mestre: <span style={{cursor: 'pointer'}} onClick={() => navigateToTop(`/mediuns/consulta/${mediuns.find((item: IMedium) => item.medium_id === medium.mestre).medium_id}`)}>{mediuns.find((item: IMedium) => item.medium_id === medium.mestre) ? mediuns.find((item: IMedium) => item.medium_id === medium.mestre).nome : ''}</span></MediumInfo>
                                 </InfoContainer>
                             : <div></div>}
                         </PersonalCard>

@@ -1,6 +1,6 @@
 import { createContext, useState, useContext, useEffect } from "react";
 import api from "src/api";
-import { IAdjunto, ICavaleiro, IEstado, IFalange, IMentor, ITemplo } from "src/types/types";
+import { IAdjunto, ICavaleiro, IEstado, IFalange, IMentor, ITemplo, ITurno } from "src/types/types";
 import { IAdjuntoAPI, ICavaleiroAPI, IFalangeAPI, IGuiaAPI, IMinistroAPI, ITemploAPI } from "src/types/typesAPI";
 import { UserContext } from "./UserContext";
 
@@ -55,9 +55,9 @@ export const ListStore = ({ children }: any) => {
 
     const povos = ['Abatã', 'Açanã', 'Açay', 'Amaray', 'Amarê', 'Anaçã', 'Anaçuê', 'Anay', 'Araçê', 'Aramê', 'Aramês', 'Aramôs', 'Arianos', 'Aruã', 'Aruaçã', 'Aruçay', 'Aryatã', 'Camuxy', 'Caporã', 'Carapuana', 'Carybãs', 'Cayrã', 'Cayrus', 'Garacy', 'Guacy', 'Ibaporã', 'Ipuã', 'Ipurã', 'Jaçã', 'Jaçay', 'Jaçuy', 'Jacy', 'Jaguary', 'Janatã', 'Japatã', 'Jaranã', 'Jaruã', 'Joacy', 'Jurupy', 'Juruy', 'Jussay', 'Koaçã', 'Muaçuy', 'Muray', 'Murugy', 'Omayã', 'Peguys', 'Pegy', 'Pery', 'Suadã', 'Tapiris', 'Taporã', 'Tapuã', 'Tapurã', 'Tarymã', 'Tumarê', 'Tupagy', 'Tupinambás', 'Tupuy', 'Uray', 'Uruanã', 'Yaçã', 'Yacy', 'Ymucy', 'Yorimã', 'Ytuporã', 'Yubatã', 'Yucarã', 'Yumary', 'Zanays']
 
-    const turnoL = {ninfa: ['Doragana', 'Sabarana'], jaguar: ['Dubali', 'Reili']}
+    const turnoL: ITurno = {ninfa: ['Doragana', 'Sabarana'], jaguar: ['Dubali', 'Reili']}
 
-    const turnoT = {
+    const turnoT: ITurno = {
         ninfa: ['Adelanas', 'Adanares', 'Aganaras', 'Ajouramas', 'Amoranas', 'Galanas', 'Gramaras', 'Maturamas', 'Muranas', 'Savanas', 'Tanaras', 'Tavanas', 'Valúrias', 'Vouganas'],
         jaguar: ['Adelanos', 'Adonares', 'Aganaros', 'Ajouros', 'Amoros', 'Galeros', 'Gramouros', 'Maturos', 'Muranos', 'Savanos', 'Tanaros', 'Tavores', 'Valúrios', 'Vougues']
     }

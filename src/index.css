@@ -33,6 +33,10 @@ code {
     monospace;
 }
 
+input:disabled, select:disabled {
+  background-color: rgba(255, 255, 255, 0.5);
+}
+
 .popup {
   border-radius: 10px !important;
   border: 1px solid #002776 !important;
@@ -41,6 +45,13 @@ code {
 
 .confirmButton {
   background-color: green !important;
+}
+
+.cancelButton {
+  background-color: red !important;
+}
+
+.confirmButton, .cancelButton {
   border: 1px solid #002776 !important;
   border-radius: 8px !important;
   font-weight: bold !important;
@@ -57,6 +68,6 @@ code {
   box-shadow: none !important;
 }
 
-.confirmButton:hover {
+.confirmButton:hover, .cancelButton:hover {
   transform: scale(1.02) !important;
 }

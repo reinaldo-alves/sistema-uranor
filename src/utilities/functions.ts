@@ -1,4 +1,4 @@
-import { IMedium } from "src/types/types";
+import { IMedium, ITurno } from "src/types/types";
 
 export function convertDate(date: string) {
     const dateParts = date.split('-');
@@ -43,4 +43,16 @@ export function setSituation(medium: IMedium) {
     else if (!medium.dtSetimo) {return 'Centurião'}
     else if (medium.dtSetimo) {return 'Centurião 7° Raio'}
     else {return ''}
+}
+
+export const oppositeTurno = (obj: ITurno, turno: string) => {
+    if(obj.jaguar.includes(turno)) {
+        const index = obj.jaguar.indexOf(turno);
+        return obj.ninfa[index] || ''
+    } else if(obj.ninfa.includes(turno)) {
+        const index = obj.ninfa.indexOf(turno);
+        return obj.jaguar[index] || ''
+    } else {
+        return ''
+    }
 }

@@ -1,3 +1,8 @@
+export interface ITurno {
+    ninfa: Array<string>,
+    jaguar: Array<string>
+}
+
 export interface IAdjunto {
     adjunto_id: number,
     nome: string,
@@ -80,6 +85,14 @@ export interface IMedium {
     dtElevacao: string,
     dtCenturia: string,
     dtSetimo: string,
+    dtTestD: string,
+    dtTestA: string,
+    dtEmplD: string,
+    dtEmplA: string,
+    dtInicD: string,
+    dtInicA: string,
+    dtElevD: string,
+    dtElevA: string,
     adjOrigem: number,
     temploOrigem: number,
     colete: number,

@@ -1,7 +1,7 @@
 import { useContext, useState, useEffect } from "react";
 import { ListContext } from "src/contexts/ListContext";
 import { CustomInput, Divider, FieldContainer, FieldContainerBox, GridContainer, GridDatesContainer, InputContainer, MainContainer, MainContent, MainInfoContainer, MediumButton, Observations, OptionsList, PersonalCard, PhotoContainer, SectionTitle } from "./styles";
-import { IAdjunto, ICavaleiro, IEstado, IFalange, IMedium, IMentor, ITemplo } from "src/types/types";
+import { IAdjunto, ICavaleiro, IEstado, IFalange, IMedium, IMentor, ITemplo, ITurno } from "src/types/types";
 import SideMenu from "src/components/SideMenu/SideMenu";
 import SubMenu from "src/components/SubMenu/SubMenu";
 import Header from "src/components/header/header";
@@ -9,8 +9,9 @@ import { UserContext } from "src/contexts/UserContext";
 import api from "src/api";
 import { MediumContext } from "src/contexts/MediumContext";
 import { formatCep, formatCpf, formatPhoneNumber } from "src/utilities/functions";
-import { Alert } from "src/utilities/popups";
+import { Alert, Confirm } from "src/utilities/popups";
 import axios from "axios";
+import { validateAddMedium } from "src/utilities/validations";
 
 function AddMedium() {
     const { templos, estados, adjuntos, coletes, classMest, falMest, povos, falMiss, turnoL, turnoT, ministros, cavaleiros, guias, estrelas, princesas, classificacao } = useContext(ListContext);
@@ -50,6 +51,14 @@ function AddMedium() {
         dtElevacao: '',
         dtCenturia: '',
         dtSetimo: '',
+        dtTestD: '',
+        dtTestA: '',
+        dtEmplD: '',
+        dtEmplA: '',
+        dtInicD: '',
+        dtInicA: '',
+        dtElevD: '',
+        dtElevA: '',
         adjOrigem: 0,
         temploOrigem: 0,
         colete: 0,
@@ -121,6 +130,8 @@ function AddMedium() {
     const [searchPad, setSearchPad] = useState('');
     const [searchMad, setSearchMad] = useState('');
     const [searchAfi, setSearchAfi] = useState('');
+
+    const now = new Date().toISOString().split('T')[0];
 
     useEffect(() => {
         console.log(newMedium)
@@ -241,6 +252,79 @@ function AddMedium() {
         }
     }
 
+    const setComponentes = (medium: IMedium) => {
+        const mestre = mediuns.find((item: IMedium) => item.medium_id === medium.mestre);
+        const ninfa = mediuns.find((item: IMedium) => item.medium_id === medium.ninfa);
+        const madrinha = mediuns.find((item: IMedium) => item.medium_id === medium.madrinha);
+        const padrinho = mediuns.find((item: IMedium) => item.medium_id === medium.padrinho);
+        const afilhado = mediuns.find((item: IMedium) => item.medium_id === medium.afilhado);
+        
+        if (medium.sex.concat(medium.med) === 'MasculinoDoutrinador') {
+            if(ninfa) {
+                api.put('/medium/update', {medium_id: ninfa.medium_id, mestre: medium.medium_id}, {headers:{Authorization: token}}).then(() => {
+                    console.log(`${ninfa.nome} agora é escrava de ${medium.nome}`)
+                }).catch((error) => {
+                    console.log('Erro ao adicionar escrava', error);
+                })
+            }
+            if(madrinha) {
+                api.put('/medium/update', {medium_id: madrinha.medium_id, afilhado: medium.medium_id, mestre: padrinho? padrinho.medium_id : 0}, {headers:{Authorization: token}}).then(() => {
+                    console.log(`${madrinha.nome} agora é madrinha de ${medium.nome}`)
+                }).catch((error) => {
+                    console.log('Erro ao adicionar madrinha', error);
+                })
+            }
+            if(padrinho) {
+                api.put('/medium/update', {medium_id: padrinho.medium_id, afilhado: medium.medium_id, ninfa: madrinha? madrinha.medium_id : 0}, {headers:{Authorization: token}}).then(() => {
+                    console.log(`${padrinho.nome} agora é padrinho de ${medium.nome}`)
+                }).catch((error) => {
+                    console.log('Erro ao adicionar padrinho', error);
+                })
+            }  
+        } else if (medium.sex.concat(medium.med) === 'MasculinoApará') {
+            if(afilhado) {
+                api.put('/medium/update', {medium_id: afilhado.medium_id, padrinho: medium.medium_id}, {headers:{Authorization: token}}).then(() => {
+                    console.log(`${afilhado.nome} agora é afilhado de ${medium.nome}`)
+                }).catch((error) => {
+                    console.log('Erro ao adicionar afilhado', error);
+                })
+            }
+        } else if (medium.sex.concat(medium.med) === 'FemininoDoutrinador') {
+            if(afilhado) {
+                api.put('/medium/update', {medium_id: afilhado.medium_id, madrinha: medium.medium_id}, {headers:{Authorization: token}}).then(() => {
+                    console.log(`${afilhado.nome} agora é afilhado de ${medium.nome}`)
+                }).catch((error) => {
+                    console.log('Erro ao adicionar afilhado', error);
+                })
+            }
+        } else if (medium.sex.concat(medium.med) === 'FemininoApará') {
+            if(mestre) {
+                api.put('/medium/update', {medium_id: mestre.medium_id, ninfa: medium.medium_id}, {headers:{Authorization: token}}).then(() => {
+                    console.log(`${mestre.nome} agora é mestre de ${medium.nome}`)
+                }).catch((error) => {
+                    console.log('Erro ao adicionar mestre', error);
+                })
+            }
+        } else {
+            console.log('');
+        }
+    }   
+
+    const resetNewMedium = () => {
+        setNewMedium(defaultMedium);
+        setTSol(false);
+        setSearchMin('');
+        setSearchCav('');
+        setSearchGuia('');
+        setSearchMes('');
+        setSearchNin('');
+        setSearchPad('');
+        setSearchMad('');
+        setSearchAfi('');
+        setPhoto(null);
+        setPreview(null);
+    }
+
     const addMedium = (medium: IMedium, token: string) => {
         uploadImage(0, token);
         const mediumObj = {
@@ -252,6 +336,14 @@ function AddMedium() {
             dtElevacao: medium.dtElevacao === '' ? null : medium.dtElevacao,
             dtCenturia: medium.dtCenturia === '' ? null : medium.dtCenturia,
             dtSetimo: medium.dtSetimo === '' ? null : medium.dtSetimo,
+            dtTestD: medium.med === 'Doutrinador' ? medium.dtIngresso : null,
+            dtTestA: medium.med === 'Apará' ? medium.dtIngresso : null,
+            dtEmplD: medium.med === 'Doutrinador' ? medium.dtEmplac : null,
+            dtEmplA: medium.med === 'Apará' ? medium.dtEmplac : null,
+            dtInicD: medium.med === 'Doutrinador' ? medium.dtIniciacao : null,
+            dtInicA: medium.med === 'Apará' ? medium.dtIniciacao : null,
+            dtElevD: medium.med === 'Doutrinador' ? medium.dtElevacao : null,
+            dtElevA: medium.med === 'Apará' ? medium.dtElevacao : null,
             dtMinistro: medium.dtMinistro === '' ? null : medium.dtMinistro,
             dtGuia: medium.dtGuia === '' ? null : medium.dtGuia,
             dtClassif: medium.dtClassif === '' ? null : medium.dtClassif,
@@ -271,8 +363,11 @@ function AddMedium() {
             afilhado: medium.afilhado === 0 ? null : medium.afilhado
         };
         const {medium_id, ...newMediumObj} = mediumObj;
-        api.post('/medium/create', newMediumObj, {headers:{Authorization: token}}).then(() => {
+        api.post('/medium/create', newMediumObj, {headers:{Authorization: token}}).then((response) => {
+            const { medium_id } = response.data;
+            setComponentes({...medium, medium_id});
             Alert('Médium adicionado com sucesso', 'success');
+            resetNewMedium();
             loadMedium(token);
         }).catch((error) => {
             console.log('Não foi possível adicionar o médium', error);
@@ -294,7 +389,35 @@ function AddMedium() {
                             </FieldContainer>
                             <GridContainer>
                                 <label>Sexo: </label>
-                                <select value={newMedium.sex} onChange={(e) => updateProps('sex', e.target.value)}>
+                                <select
+                                    value={newMedium.sex}
+                                    onChange={(e) => {
+                                        updateProps('sex', e.target.value);
+                                        updateProps('classMest', '');
+                                        updateProps('falMiss', 0);
+                                        updateProps('turnoLeg', '');
+                                        updateProps('turnoTrab', '');
+                                        updateProps('presidente', false);
+                                        updateProps('trinoSol', '');
+                                        updateProps('trinoSar', false);
+                                        updateProps('classif', '');
+                                        updateProps('ministro', 0);
+                                        updateProps('cavaleiro', 0);
+                                        updateProps('guia', 0);
+                                        updateProps('estrela', '');
+                                        updateProps('dtTrinoSar', '');
+                                        updateProps('dtTrinoSol', '');
+                                        updateProps('dtClassif', '');
+                                        updateProps('herdeiro', 0);
+                                        updateProps('madrinha', 0);
+                                        updateProps('padrinho', 0);
+                                        updateProps('ninfa', 0);
+                                        updateProps('mestre', 0);
+                                        updateProps('afilhado', 0);
+                                        updateProps('comando', '');
+                                        updateProps('janda', false);
+                                    }}
+                                >
                                     <option value={''}></option>
                                     <option value={'Feminino'}>Feminino</option>
                                     <option value={'Masculino'}>Masculino</option>
@@ -331,7 +454,7 @@ function AddMedium() {
                     <SectionTitle>Dados Pessoais</SectionTitle>
                     <GridContainer>
                         <label>Data Nascimento: </label>
-                        <input type="date" value={newMedium.dtNasc} onChange={(e) => updateProps('dtNasc', e.target.value)}/>
+                        <input type="date" value={newMedium.dtNasc} onChange={(e) => updateProps('dtNasc', e.target.value)} max={now} />
                         <label>Profissão: </label>
                         <input type="text" value={newMedium.profissao} onChange={(e) => updateProps('profissao', e.target.value)}/>
                         <label>RG: </label>
@@ -394,17 +517,17 @@ function AddMedium() {
                     <SectionTitle>Datas Mediúnicas</SectionTitle>
                     <GridDatesContainer>
                         <label>Data Ingresso: </label>
-                        <input type="date" value={newMedium.dtIngresso} onChange={(e) => updateProps('dtIngresso', e.target.value)}/>
+                        <input type="date" value={newMedium.dtIngresso} onChange={(e) => updateProps('dtIngresso', e.target.value)} min={newMedium.dtNasc}  max={now} />
                         <label>Data Emplacamento: </label>
-                        <input type="date" value={newMedium.dtEmplac} onChange={(e) => updateProps('dtEmplac', e.target.value)}/>
+                        <input type="date" value={newMedium.dtEmplac} onChange={(e) => updateProps('dtEmplac', e.target.value)} min={newMedium.dtIngresso} max={now} disabled={!newMedium.dtIngresso} />
                         <label>Data Iniciação: </label>
-                        <input type="date" value={newMedium.dtIniciacao} onChange={(e) => updateProps('dtIniciacao', e.target.value)}/>
+                        <input type="date" value={newMedium.dtIniciacao} onChange={(e) => updateProps('dtIniciacao', e.target.value)} min={newMedium.dtEmplac} max={now} disabled={!newMedium.dtEmplac} />
                         <label>Data Elevação: </label>
-                        <input type="date" value={newMedium.dtElevacao} onChange={(e) => updateProps('dtElevacao', e.target.value)}/>
+                        <input type="date" value={newMedium.dtElevacao} onChange={(e) => updateProps('dtElevacao', e.target.value)} min={newMedium.dtIniciacao} max={now} disabled={!newMedium.dtIniciacao} />
                         <label>Data Centúria: </label>
-                        <input type="date" value={newMedium.dtCenturia} onChange={(e) => updateProps('dtCenturia', e.target.value)}/>
+                        <input type="date" value={newMedium.dtCenturia} onChange={(e) => updateProps('dtCenturia', e.target.value)} min={newMedium.dtElevacao} max={now} disabled={!newMedium.dtElevacao} />
                         <label>Data Sétimo: </label>
-                        <input type="date" value={newMedium.dtSetimo} onChange={(e) => updateProps('dtSetimo', e.target.value)}/>
+                        <input type="date" value={newMedium.dtSetimo} onChange={(e) => updateProps('dtSetimo', e.target.value)} min={newMedium.dtCenturia} max={now} disabled={!newMedium.dtCenturia} />
                     </GridDatesContainer>
                 </PersonalCard>
                 <PersonalCard>
@@ -528,7 +651,7 @@ function AddMedium() {
                                     </OptionsList>
                                 </CustomInput>
                                 <label>Data Ministro: </label>
-                                <input type="date" value={newMedium.dtMinistro} onChange={(e) => updateProps('dtMinistro', e.target.value)}/>
+                                <input type="date" value={newMedium.dtMinistro} onChange={(e) => updateProps('dtMinistro', e.target.value)} min={newMedium.dtCenturia}  max={now} />
                                 <label>Cavaleiro: </label>
                                 <CustomInput>
                                     <input
@@ -592,7 +715,7 @@ function AddMedium() {
                                 </FieldContainer>
                                 <FieldContainer width="190px">
                                     <label>Data: </label>
-                                    <input type="date" value={newMedium.dtClassif} onChange={(e) => updateProps('dtClassif', e.target.value)}/>
+                                    <input type="date" value={newMedium.dtClassif} onChange={(e) => updateProps('dtClassif', e.target.value)} min={newMedium.dtCenturia}  max={now} />
                                 </FieldContainer>
                             </InputContainer>
                         </>
@@ -614,7 +737,7 @@ function AddMedium() {
                                         value={searchGuia}
                                         onChange={(e) => setSearchGuia(e.target.value)}
                                         onFocus={() => setDropGuia(true)}
-                                        onBlur={() => setTimeout(() => setDropGuia(false), 150)}
+                                        onBlur={() => setTimeout(() => setDropGuia(false), 250)}
                                     />
                                     <OptionsList show={dropGuia}>
                                         <ul>
@@ -654,7 +777,7 @@ function AddMedium() {
                                     <option value={'Vermelha'}>Vermelha</option>
                                 </select>
                                 <label>Data Guia: </label>
-                                <input type="date" value={newMedium.dtGuia} onChange={(e) => updateProps('dtGuia', e.target.value)}/>
+                                <input type="date" value={newMedium.dtGuia} onChange={(e) => updateProps('dtGuia', e.target.value)} min={newMedium.dtCenturia}  max={now} />
                             </GridContainer>
                         </>
                     : ''}
@@ -717,11 +840,12 @@ function AddMedium() {
                                                 .map((item: IMedium, index: number) => (
                                                     <li
                                                         key={index}
-                                                        onClick={() => {
+                                                        style={item.mestre? {fontStyle: 'italic', color: '#777'} : {}}
+                                                        onClick={!item.mestre? () => {
                                                             updateProps('ninfa', item.medium_id);
                                                             setSearchNin(mediuns.find((med: IMedium) => med.medium_id === item.medium_id).nome);
                                                             setDropNin(false);
-                                                        }}
+                                                        } : () => Alert('Ninfa selecionada já é escrava de outro mestre', 'error')}
                                                     >
                                                         {item.nome}
                                                     </li>
@@ -754,11 +878,12 @@ function AddMedium() {
                                                 .map((item: IMedium, index: number) => (
                                                     <li
                                                         key={index}
-                                                        onClick={() => {
+                                                        style={item.afilhado? {fontStyle: 'italic', color: '#777'} : {}}
+                                                        onClick={!item.afilhado? () => {
                                                             updateProps('madrinha', item.medium_id);
                                                             setSearchMad(mediuns.find((med: IMedium) => med.medium_id === item.medium_id).nome);
                                                             setDropMad(false);
-                                                        }}
+                                                        } : () => Alert('Ninfa selecionada já é madrinha de outro mestre', 'error')}
                                                     >
                                                         {item.nome}
                                                     </li>
@@ -791,11 +916,12 @@ function AddMedium() {
                                                 .map((item: IMedium, index: number) => (
                                                     <li
                                                         key={index}
-                                                        onClick={() => {
+                                                        style={item.afilhado? {fontStyle: 'italic', color: '#777'} : {}}
+                                                        onClick={!item.afilhado? () => {
                                                             updateProps('padrinho', item.medium_id);
                                                             setSearchPad(mediuns.find((med: IMedium) => med.medium_id === item.medium_id).nome);
                                                             setDropPad(false);
-                                                        }}
+                                                        } : () => Alert('Mestre selecionado já é padrinho de outro mestre', 'error')}
                                                     >
                                                         {item.nome}
                                                     </li>
@@ -831,11 +957,12 @@ function AddMedium() {
                                                 .map((item: IMedium, index: number) => (
                                                     <li
                                                         key={index}
-                                                        onClick={() => {
+                                                        style={item.padrinho? {fontStyle: 'italic', color: '#777'} : {}}
+                                                        onClick={!item.padrinho? () => {
                                                             updateProps('afilhado', item.medium_id);
                                                             setSearchAfi(mediuns.find((med: IMedium) => med.medium_id === item.medium_id).nome);
                                                             setDropAfi(false);
-                                                        }}
+                                                        } : () => Alert('Mestre selecionado já tem padrinho', 'error')}
                                                     >
                                                         {item.nome}
                                                     </li>
@@ -845,42 +972,7 @@ function AddMedium() {
                                 </OptionsList>
                             </CustomInput>
                             <label>Ninfa Sol: </label>
-                            <CustomInput>
-                                <input
-                                    type="text"
-                                    value={searchNin}
-                                    onChange={(e) => setSearchNin(e.target.value)}
-                                    onFocus={() => setDropNin(true)}
-                                    onBlur={() => setTimeout(() => setDropNin(false), 150)}
-                                />
-                                <OptionsList show={dropNin}>
-                                    <ul>
-                                        {mediuns
-                                            .filter((item: IMedium) => item.dtCenturia && item.med === 'Doutrinador' && item.sex === 'Feminino')
-                                            .filter((item: IMedium) => item.nome.toLowerCase().includes(searchNin.toLowerCase().trim()))
-                                            .length === 0
-                                        ? (
-                                            <li style={{fontStyle: 'italic', color: '#777'}}>- Não encontrado -</li>
-                                        ) : (
-                                            mediuns
-                                                .filter((item: IMedium) => item.dtCenturia && item.med === 'Doutrinador' && item.sex === 'Feminino')
-                                                .filter((item: IMedium) => item.nome.toLowerCase().includes(searchNin.toLowerCase().trim()))
-                                                .map((item: IMedium, index: number) => (
-                                                    <li
-                                                        key={index}
-                                                        onClick={() => {
-                                                            updateProps('ninfa', item.medium_id);
-                                                            setSearchNin(mediuns.find((med: IMedium) => med.medium_id === item.medium_id).nome);
-                                                            setDropNin(false);
-                                                        }}
-                                                    >
-                                                        {item.nome}
-                                                    </li>
-                                            ))
-                                        )}
-                                    </ul>
-                                </OptionsList>
-                            </CustomInput>
+                            <input disabled />
                         </GridContainer>
                     : newMedium.sex.concat(newMedium.med)==='FemininoDoutrinador'?
                         <GridContainer>
@@ -908,11 +1000,12 @@ function AddMedium() {
                                                 .map((item: IMedium, index: number) => (
                                                     <li
                                                         key={index}
-                                                        onClick={() => {
+                                                        style={item.madrinha? {fontStyle: 'italic', color: '#777'} : {}}
+                                                        onClick={!item.madrinha? () => {
                                                             updateProps('afilhado', item.medium_id);
                                                             setSearchAfi(mediuns.find((med: IMedium) => med.medium_id === item.medium_id).nome);
                                                             setDropAfi(false);
-                                                        }}
+                                                        } : () => Alert('Mestre selecionado já tem madrinha', 'error')}
                                                     >
                                                         {item.nome}
                                                     </li>
@@ -922,42 +1015,7 @@ function AddMedium() {
                                 </OptionsList>
                             </CustomInput>
                             <label>Ajanã: </label>
-                            <CustomInput>
-                                <input
-                                    type="text"
-                                    value={searchMes}
-                                    onChange={(e) => setSearchMes(e.target.value)}
-                                    onFocus={() => setDropMes(true)}
-                                    onBlur={() => setTimeout(() => setDropMes(false), 150)}
-                                />
-                                <OptionsList show={dropMes}>
-                                    <ul>
-                                        {mediuns
-                                            .filter((item: IMedium) => item.dtCenturia && item.med === 'Apará' && item.sex === 'Masculino')
-                                            .filter((item: IMedium) => item.nome.toLowerCase().includes(searchMes.toLowerCase().trim()))
-                                            .length === 0
-                                        ? (
-                                            <li style={{fontStyle: 'italic', color: '#777'}}>- Não encontrado -</li>
-                                        ) : (
-                                            mediuns
-                                                .filter((item: IMedium) => item.dtCenturia && item.med === 'Apará' && item.sex === 'Masculino')
-                                                .filter((item: IMedium) => item.nome.toLowerCase().includes(searchMes.toLowerCase().trim()))
-                                                .map((item: IMedium, index: number) => (
-                                                    <li
-                                                        key={index}
-                                                        onClick={() => {
-                                                            updateProps('mestre', item.medium_id);
-                                                            setSearchMes(mediuns.find((med: IMedium) => med.medium_id === item.medium_id).nome);
-                                                            setDropMes(false);
-                                                        }}
-                                                    >
-                                                        {item.nome}
-                                                    </li>
-                                            ))
-                                        )}
-                                    </ul>
-                                </OptionsList>
-                            </CustomInput>
+                            <input disabled />
                         </GridContainer>
                     : newMedium.sex.concat(newMedium.med)==='FemininoApará'?
                         <GridContainer>
@@ -985,11 +1043,12 @@ function AddMedium() {
                                                 .map((item: IMedium, index: number) => (
                                                     <li
                                                         key={index}
-                                                        onClick={() => {
+                                                        style={item.ninfa? {fontStyle: 'italic', color: '#777'} : {}}
+                                                        onClick={!item.ninfa? () => {
                                                             updateProps('mestre', item.medium_id);
                                                             setSearchMes(mediuns.find((med: IMedium) => med.medium_id === item.medium_id).nome);
                                                             setDropMes(false);
-                                                        }}
+                                                        } : () => Alert('Mestre selecionado já tem escrava', 'error')}
                                                     >
                                                         {item.nome}
                                                     </li>
@@ -1058,7 +1117,7 @@ function AddMedium() {
                                         </div>
                                         <FieldContainer width="190px">
                                             <label>Data: </label>
-                                            <input type="date" disabled={!tSol} value={newMedium.dtTrinoSol} onChange={(e) => updateProps('dtTrinoSol', e.target.value)}/>
+                                            <input type="date" disabled={!tSol} value={newMedium.dtTrinoSol} onChange={(e) => updateProps('dtTrinoSol', e.target.value)} min={newMedium.dtCenturia}  max={now} />
                                         </FieldContainer>
                                     </InputContainer>
                                     <Divider></Divider>
@@ -1069,7 +1128,7 @@ function AddMedium() {
                                         </FieldContainerBox>
                                         <FieldContainer>
                                             <label>Data: </label>
-                                            <input type="date" disabled={!newMedium.trinoSar} value={newMedium.dtTrinoSar} onChange={(e) => updateProps('dtTrinoSar', e.target.value)}/>
+                                            <input type="date" disabled={!newMedium.trinoSar} value={newMedium.dtTrinoSar} onChange={(e) => updateProps('dtTrinoSar', e.target.value)} min={newMedium.dtCenturia}  max={now} />
                                         </FieldContainer>
                                     </div>
                                     <InputContainer herdeiro>
@@ -1145,7 +1204,7 @@ function AddMedium() {
                                 </FieldContainerBox>
                                 <FieldContainer>
                                     <label>Data: </label>
-                                    <input type="date" disabled={!newMedium.trinoSar} value={newMedium.dtTrinoSar} onChange={(e) => updateProps('dtTrinoSar', e.target.value)}/>
+                                    <input type="date" disabled={!newMedium.trinoSar} value={newMedium.dtTrinoSar} onChange={(e) => updateProps('dtTrinoSar', e.target.value)} min={newMedium.dtCenturia}  max={now} />
                                 </FieldContainer>
                             </div>
                             <InputContainer herdeiro> 
@@ -1233,11 +1292,12 @@ function AddMedium() {
                 </PersonalCard>
                 <PersonalCard>
                     <SectionTitle>Observações</SectionTitle>
-                    <Observations rows={5} value={newMedium.observ} onChange={(e) => updateProps('observ', e.target.value)}/>
+                    <Observations rows={5} maxLength={250} value={newMedium.observ} onChange={(e) => updateProps('observ', e.target.value)}/>
                 </PersonalCard>
                 <div style={{width: '90%', maxWidth: '1200px', display: 'flex', justifyContent: 'space-around'}}>
-                    <MediumButton color="red" onClick={() => setNewMedium(defaultMedium)}>Cancelar</MediumButton>
-                    <MediumButton color="green" onClick={() => addMedium(newMedium, token)}>Cadastrar</MediumButton>
+                    <MediumButton color="red" onClick={() => resetNewMedium()}>Cancelar</MediumButton>
+                    <MediumButton color="gray" onClick={() => validateAddMedium(newMedium, () => Alert('Tudo certo!', 'success'))}>Teste</MediumButton>
+                    <MediumButton color="green" onClick={() => validateAddMedium(newMedium, () => addMedium(newMedium, token))}>Cadastrar</MediumButton>
                 </div>
             </MainContainer>
             <SideMenu list={listSubMenu} />
