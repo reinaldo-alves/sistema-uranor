@@ -1,1 +1,21 @@
 - Fazer verificação de turno de trabalho, turno de legião e origem (caso for arcanos) para casos de padrinho, madrinha e escrava
+
+med
+oldFoto, oldDtEmplac, oldDtIniciacao, oldDtElevacao, oldDtTest, oldClassMest, oldCavaleiro, oldDtMinistro, oldEstrela, oldClassif, oldDtClassif
+(trinoSol, dtTrinoSol, princesa, preto velho, caboclo)
+
+ALTER TABLE `api-devas`.`medium`
+ADD COLUMN oldFoto VARCHAR(100) NULL,
+ADD COLUMN oldDtTest DATE NULL,
+ADD COLUMN oldDtEmplac DATE NULL,
+ADD COLUMN oldDtIniciacao DATE NULL,
+ADD COLUMN oldDtElevacao DATE NULL,
+ADD COLUMN oldClassMest VARCHAR(45) NULL,
+ADD COLUMN oldCavaleiro INT(11) NULL,
+ADD COLUMN oldDtMinistro DATE NULL,
+ADD COLUMN oldEstrela VARCHAR(45) NULL;
+ADD COLUMN oldClassif VARCHAR(100) NULL;
+ADD COLUMN oldDtClassif DATE NULL;
+
+ALTER TABLE `api-devas`.`medium`
+ADD COLUMN dtTest DATE NULL AFTER dtSetimo;

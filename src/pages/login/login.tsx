@@ -3,6 +3,7 @@ import logo from '../../assets/jaguar.jpg'
 import { LoginCard, LoginCardContainer, LoginError, LoginForm, LoginHeader, TitleContainer } from './styles'
 import { UserContext } from 'src/contexts/UserContext'
 import { useNavigate } from 'react-router-dom'
+import { Alert } from 'src/utilities/popups'
 
 function Login() {
     const { handleLogin, login, errorMessage, setErrorMessage } = useContext(UserContext)
@@ -12,11 +13,16 @@ function Login() {
 
     const navigate = useNavigate();
 
-    const loginButtonFunc = () => {
+    const loginButtonFunc = async () => {
         if(name.trim() && password.trim()){
-            handleLogin(name, password);
-            if(errorMessage === 'Autenticado com sucesso') {
-                navigate('/');
+            try {
+                await handleLogin(name, password);
+                if(errorMessage === 'Autenticado com sucesso') {
+                    navigate('/');
+                }
+            } catch (error) {
+                console.log('Não foi possível fazer o login', error);
+                Alert('Não foi possível fazer o login', 'error');
             }
         } else {
             setErrorMessage('Preencha todos os dados corretamente')

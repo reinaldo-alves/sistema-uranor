@@ -3,6 +3,7 @@ import api from "src/api";
 import { IAdjunto, ICavaleiro, IEstado, IFalange, IMentor, ITemplo, ITurno } from "src/types/types";
 import { IAdjuntoAPI, ICavaleiroAPI, IFalangeAPI, IGuiaAPI, IMinistroAPI, ITemploAPI } from "src/types/typesAPI";
 import { UserContext } from "./UserContext";
+import { Alert } from "src/utilities/popups";
 
 export const ListContext = createContext({} as any);
 
@@ -74,45 +75,52 @@ export const ListStore = ({ children }: any) => {
         lua: ['5° Yurê Raio Autorizado Cautanenses Raio Rama Ajanã', '5° Yurê Adjunto Regente Cautanenses Raio Rama Ajanã', '5° Yurê Adjunto Koatay 108 Cautanenses Raio Rama Ajanã', '5° Yurê Adjunto Koatay 108 Cautanenses Raio Ajanã Rama 2000', '5° Yurê Adjunto Koatay 108 Vancares Raio Ajanã Rama 2000']
     }
 
-    const loadMinistro = (token: string) => {
-        api.get('/ministro/get-ministros', {headers:{Authorization: token}}).then(({ data }) => {
+    const loadMinistro = async (token: string) => {
+        try {
+            const { data } = await api.get('/ministro/get-ministros', {headers:{Authorization: token}})
             const ministro = data.ministro.map((item: IMinistroAPI) => ({
                 id: item.ministro_id,
                 nome: item.nome
             }))
             setMinistros(ministro)
-        }).catch((error) => {
-            console.log('Erro ao carregar a lista de ministros', error)
-        })
+        } catch (error) {
+            console.log('Erro ao carregar a lista de ministros', error);
+            Alert('Erro ao carregar a lista de ministros', 'error');
+        }
     }
 
-    const loadCavaleiro = (token: string) => {
-        api.get('/cavaleiro/get-cavaleiros', {headers:{Authorization: token}}).then(({ data }) => {
+    const loadCavaleiro = async (token: string) => {
+        try {
+            const { data } = await api.get('/cavaleiro/get-cavaleiros', {headers:{Authorization: token}})
             const cavaleiro = data.cavaleiro.map((item: ICavaleiroAPI) => ({
                 id: item.cavaleiro_id,
                 nome: item.nome,
                 med: item.med
             }))
             setCavaleiros(cavaleiro)
-        }).catch((error) => {
-            console.log('Erro ao carregar a lista de cavaleiros', error)
-        })
+        } catch (error) {
+            console.log('Erro ao carregar a lista de cavaleiros', error);
+            Alert('Erro ao carregar a lista de cavaleiros', 'error')
+        }
     }
 
-    const loadGuia = (token: string) => {
-        api.get('/guia/get-guias', {headers:{Authorization: token}}).then(({ data }) => {
+    const loadGuia = async (token: string) => {
+        try {
+            const { data } = await api.get('/guia/get-guias', {headers:{Authorization: token}})
             const guia = data.guia.map((item: IGuiaAPI) => ({
                 id: item.guia_id,
                 nome: item.nome
             }))
             setGuias(guia)
-        }).catch((error) => {
+        } catch (error) {
             console.log('Erro ao carregar a lista de guias missionárias', error)
-        })
+            Alert('Erro ao carregar a lista de guias missionárias', 'error')
+        }
     }
 
-    const loadFalMiss = (token: string) => {
-        api.get('/falange/get-falanges', {headers:{Authorization: token}}).then(({ data }) => {
+    const loadFalMiss = async (token: string) => {
+        try {
+            const { data } = await api.get('/falange/get-falanges', {headers:{Authorization: token}})
             const falange = data.falange.map((item: IFalangeAPI) => ({
                 ...item,
                 adjMin: item.adjMin === null ? '' : item.adjMin,
@@ -122,47 +130,48 @@ export const ListStore = ({ children }: any) => {
                 ninfa: item.ninfa === 1 ? true : false
             }))
             setFalMiss(falange)
-        }).catch((error) => {
-            console.log('Erro ao carregar a lista de falanges missionárias', error)
-        })
+        } catch (error) {
+            console.log('Erro ao carregar a lista de falanges missionárias', error);
+            Alert('Erro ao carregar a lista de guias missionárias', 'error');
+        }
     }
 
-    const loadAdjunto = (token: string) => {
-        api.get('/adjunto/get-adjuntos', {headers:{Authorization: token}}).then(({ data }) => {
+    const loadAdjunto = async (token: string) => {
+        try {
+            const { data } = await api.get('/adjunto/get-adjuntos', {headers:{Authorization: token}})
             const adjunto = data.adjunto.map((item: IAdjuntoAPI) => ({
                 ...item,
                 esperanca: item.esperanca === 1 ? true : false
             }))
             setAdjuntos(adjunto)
-        }).catch((error) => {
-            console.log('Erro ao carregar a lista de adjuntos', error)
-        })
+        } catch (error) {
+            console.log('Erro ao carregar a lista de adjuntos', error);
+            Alert('Erro ao carregar a lista de adjuntos', 'error')
+        }
     }
 
-    const loadTemplo = (token: string) => {
-        api.get('/templo/get-templos', {headers:{Authorization: token}}).then(({ data }) => {
+    const loadTemplo = async (token: string) => {
+        try {
+            const { data } = await api.get('/templo/get-templos', {headers:{Authorization: token}})
             const templo = data.templo.map((item: ITemploAPI) => ({
                 ...item,
                 estado: estados.filter((est: IEstado) => est.abrev === item.estado)[0]
             }))
             setTemplos(templo)
-        }).catch((error) => {
-            console.log('Erro ao carregar a lista de templos', error)
-        })
+        } catch (error) {
+            console.log('Erro ao carregar a lista de templos', error);
+            Alert('Erro ao carregar a lista de templos', 'error')
+        }
     }
 
-    const getData = (token: string) => {
-        loadMinistro(token);
-        loadGuia(token);
-        loadCavaleiro(token);
-        loadFalMiss(token);
-        loadAdjunto(token);
-        loadTemplo(token);
+    const getData = async (token: string) => {
+        await loadMinistro(token);
+        await loadGuia(token);
+        await loadCavaleiro(token);
+        await loadFalMiss(token);
+        await loadAdjunto(token);
+        await loadTemplo(token);
     };
-
-    useEffect(() => {
-        getData(token);
-    }, [])
 
     return (
         <ListContext.Provider value={{templos, estados, users, adjuntos, coletes, classMest, falMest, falMiss, povos, turnoL, turnoT, ministros, cavaleiros, guias, estrelas, princesas, classificacao, getData, loadMinistro, loadCavaleiro, loadGuia, loadFalMiss, loadAdjunto, loadTemplo}} >

@@ -111,7 +111,7 @@ function SearchMedium() {
                                         <ButtonContainer>
                                             <MediumInfo>ID: <span>{selected.medium_id.toString().padStart(5, '0')}</span></MediumInfo>
                                             <MediumButton onClick={() => navigate(`/mediuns/consulta/${selected.medium_id}`)}>Exibir</MediumButton>
-                                            <MediumButton>Editar</MediumButton>
+                                            <MediumButton onClick={() => navigate(`/mediuns/editar/${selected.medium_id}`)}>Editar</MediumButton>
                                         </ButtonContainer>
                                     </InfoContainer>
                                     <TextContainer>

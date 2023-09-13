@@ -70,6 +70,18 @@ export const PersonalCard = styled.div<{hide?: boolean}>`
         }
     }
 
+    span {
+        font-weight: bold;
+        font-size: 18px;
+        color: ${(props) => {return props.theme.color.darkerColor}};
+        white-space: nowrap;
+        text-decoration: underline;
+        
+        @media (max-width: 1000px) {
+            font-size: 14px;
+        }
+    }
+
 `;
 
 export const MainContent = styled.div`

@@ -12,13 +12,14 @@ export const Alert = (message: string, icon: SweetAlertIcon) => Swal.fire({
     }
 })
 
-export const Confirm = (message: string, icon: SweetAlertIcon, action: () => void) => Swal.fire({
+export const Confirm = (message: string, icon: SweetAlertIcon, cancelText: string, confirmText: string, action: () => void) => Swal.fire({
     icon: icon,
     iconColor: '#002776',
     title: message,
     showCancelButton: true,
     reverseButtons: true,
-    confirmButtonText: 'Continue',
+    cancelButtonText: cancelText,
+    confirmButtonText: confirmText,
     padding: '20px',
     color: '#002776',
     customClass: {

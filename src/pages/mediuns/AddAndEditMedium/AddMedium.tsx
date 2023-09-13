@@ -9,14 +9,14 @@ import { UserContext } from "src/contexts/UserContext";
 import api from "src/api";
 import { MediumContext } from "src/contexts/MediumContext";
 import { formatCep, formatCpf, formatPhoneNumber } from "src/utilities/functions";
-import { Alert, Confirm } from "src/utilities/popups";
+import { Alert } from "src/utilities/popups";
 import axios from "axios";
 import { validateAddMedium } from "src/utilities/validations";
 
 function AddMedium() {
     const { templos, estados, adjuntos, coletes, classMest, falMest, povos, falMiss, turnoL, turnoT, ministros, cavaleiros, guias, estrelas, princesas, classificacao } = useContext(ListContext);
     const { token } = useContext(UserContext);
-    const { mediuns, loadMedium } = useContext(MediumContext);
+    const { mediuns, loadMedium, setComponentes } = useContext(MediumContext);
     const defaultMedium = {
         medium_id: 0,
         nome: '',
@@ -51,14 +51,7 @@ function AddMedium() {
         dtElevacao: '',
         dtCenturia: '',
         dtSetimo: '',
-        dtTestD: '',
-        dtTestA: '',
-        dtEmplD: '',
-        dtEmplA: '',
-        dtInicD: '',
-        dtInicA: '',
-        dtElevD: '',
-        dtElevA: '',
+        dtTest: '',
         adjOrigem: 0,
         temploOrigem: 0,
         colete: 0,
@@ -100,7 +93,18 @@ function AddMedium() {
         dtTrinoSar: '',
         herdeiro: 0,
         filho: false,
-        observ: ''
+        observ: '',
+        oldFoto: '',
+        oldDtTest: '',
+        oldDtEmplac: '',
+        oldDtIniciacao: '',
+        oldDtElevacao: '',
+        oldClassMest: '',
+        oldCavaleiro: 0,
+        oldDtMinistro: '',
+        oldEstrela: '',
+        oldClassif: '',
+        oldDtClassif: ''
     } as IMedium;
 
     const [newMedium, setNewMedium] = useState(defaultMedium);
@@ -184,6 +188,58 @@ function AddMedium() {
         }
     }, [newMedium.med, newMedium.sex])
 
+    useEffect(() => {
+        if(newMedium.classMest) {
+            if(newMedium.sex.concat(newMedium.med) === 'MasculinoDoutrinador') {
+                if(newMedium.classMest.includes('Mestre Sol')) {
+                    if(newMedium.falMiss === 6) {updateProps('classMest', 'Mestre Sol Mago')}
+                    else if(newMedium.falMiss === 7) {updateProps('classMest', 'Mestre Sol Príncipe Maya')}
+                    else {updateProps('classMest', 'Mestre Sol')}
+                }
+                if(newMedium.classMest.includes('Mestre Luz')) {
+                    if(newMedium.falMiss === 6) {updateProps('classMest', 'Mestre Luz Mago')}
+                    else if(newMedium.falMiss === 7) {updateProps('classMest', 'Mestre Luz Príncipe Maya')}
+                    else {updateProps('classMest', 'Mestre Luz')}
+                }
+            }
+            if(newMedium.sex.concat(newMedium.med) === 'MasculinoApará') {
+                if(newMedium.falMiss === 6) {updateProps('classMest', 'Mestre Lua Mago')}
+                else if(newMedium.falMiss === 7) {updateProps('classMest', 'Mestre Lua Príncipe')}
+                else {updateProps('classMest', 'Mestre Lua')}
+            }
+            if(newMedium.sex.concat(newMedium.med) === 'FemininoDoutrinador') {
+                if(newMedium.falMiss === 1 || newMedium.falMiss === 2) {updateProps('classMest', 'Ninfa Sol Nityama')}
+                else if(newMedium.falMiss === 4) {updateProps('classMest', 'Ninfa Sol Grega')}
+                else if(newMedium.falMiss === 5) {updateProps('classMest', 'Ninfa Sol Maya')}
+                else {updateProps('classMest', 'Ninfa Sol')}
+            }
+            if(newMedium.sex.concat(newMedium.med) === 'FemininoApará') {
+                if(newMedium.falMiss === 1 || newMedium.falMiss === 2) {updateProps('classMest', 'Ninfa Lua Nityama')}
+                else if(newMedium.falMiss === 4) {updateProps('classMest', 'Ninfa Lua Grega')}
+                else if(newMedium.falMiss === 5) {updateProps('classMest', 'Ninfa Lua Maya')}
+                else {updateProps('classMest', 'Ninfa Lua')}
+            }
+        }
+    }, [newMedium.falMiss])
+
+    useEffect(() => {
+        if(newMedium.classMest === 'Mestre Sol' || newMedium.classMest === 'Mestre Luz' || newMedium.classMest === 'Mestre Lua') {
+            updateProps('falMiss', 0);
+        }
+        if(newMedium.classMest === 'Ninfa Sol Grega' || newMedium.classMest === 'Ninfa Lua Grega') {
+            updateProps('falMiss', 4);
+        }
+        if(newMedium.classMest === 'Ninfa Sol Maya' || newMedium.classMest === 'Ninfa Lua Maya') {
+            updateProps('falMiss', 5);
+        }
+        if(newMedium.classMest === 'Mestre Sol Mago' || newMedium.classMest === 'Mestre Luz Mago' || newMedium.classMest === 'Mestre Lua Mago') {
+            updateProps('falMiss', 6);
+        }
+        if(newMedium.classMest === 'Mestre Sol Príncipe' || newMedium.classMest === 'Mestre Luz Príncipe' || newMedium.classMest === 'Mestre Lua Príncipe') {
+            updateProps('falMiss', 7);
+        }
+    }, [newMedium.classMest])
+
     const imageUpdate = (event: React.ChangeEvent<HTMLInputElement>) => {
         if (event.target.files && event.target.files[0]) {
             setPhoto(event.target.files[0]);
@@ -241,74 +297,17 @@ function AddMedium() {
                     'Content-Type': 'multipart/form-data'
                 }
             }
-            await api.post(`/medium/upload-image?medium_id=${medium_id}`, formData, headers).then(({ data }) => {
-                updateProps('foto', data.filename);
-                console.log('Foto adicionada ao objeto', newMedium);
-            }).catch((error) => {
+            try {
+                const { data } = await api.post(`/medium/upload-image?medium_id=${medium_id}`, formData, headers)
+                console.log(`Foto ${data.filename} adicionada ao banco de dados`);
+            } catch (error) {
                 console.log('Erro ao fazer upload da imagem', error);
-            })
+                Alert('Erro ao fazer upload da imagem', 'error');
+            }
         } else {
             console.log('Nenhuma foto foi adicionada');
         }
     }
-
-    const setComponentes = (medium: IMedium) => {
-        const mestre = mediuns.find((item: IMedium) => item.medium_id === medium.mestre);
-        const ninfa = mediuns.find((item: IMedium) => item.medium_id === medium.ninfa);
-        const madrinha = mediuns.find((item: IMedium) => item.medium_id === medium.madrinha);
-        const padrinho = mediuns.find((item: IMedium) => item.medium_id === medium.padrinho);
-        const afilhado = mediuns.find((item: IMedium) => item.medium_id === medium.afilhado);
-        
-        if (medium.sex.concat(medium.med) === 'MasculinoDoutrinador') {
-            if(ninfa) {
-                api.put('/medium/update', {medium_id: ninfa.medium_id, mestre: medium.medium_id}, {headers:{Authorization: token}}).then(() => {
-                    console.log(`${ninfa.nome} agora é escrava de ${medium.nome}`)
-                }).catch((error) => {
-                    console.log('Erro ao adicionar escrava', error);
-                })
-            }
-            if(madrinha) {
-                api.put('/medium/update', {medium_id: madrinha.medium_id, afilhado: medium.medium_id, mestre: padrinho? padrinho.medium_id : 0}, {headers:{Authorization: token}}).then(() => {
-                    console.log(`${madrinha.nome} agora é madrinha de ${medium.nome}`)
-                }).catch((error) => {
-                    console.log('Erro ao adicionar madrinha', error);
-                })
-            }
-            if(padrinho) {
-                api.put('/medium/update', {medium_id: padrinho.medium_id, afilhado: medium.medium_id, ninfa: madrinha? madrinha.medium_id : 0}, {headers:{Authorization: token}}).then(() => {
-                    console.log(`${padrinho.nome} agora é padrinho de ${medium.nome}`)
-                }).catch((error) => {
-                    console.log('Erro ao adicionar padrinho', error);
-                })
-            }  
-        } else if (medium.sex.concat(medium.med) === 'MasculinoApará') {
-            if(afilhado) {
-                api.put('/medium/update', {medium_id: afilhado.medium_id, padrinho: medium.medium_id}, {headers:{Authorization: token}}).then(() => {
-                    console.log(`${afilhado.nome} agora é afilhado de ${medium.nome}`)
-                }).catch((error) => {
-                    console.log('Erro ao adicionar afilhado', error);
-                })
-            }
-        } else if (medium.sex.concat(medium.med) === 'FemininoDoutrinador') {
-            if(afilhado) {
-                api.put('/medium/update', {medium_id: afilhado.medium_id, madrinha: medium.medium_id}, {headers:{Authorization: token}}).then(() => {
-                    console.log(`${afilhado.nome} agora é afilhado de ${medium.nome}`)
-                }).catch((error) => {
-                    console.log('Erro ao adicionar afilhado', error);
-                })
-            }
-        } else if (medium.sex.concat(medium.med) === 'FemininoApará') {
-            if(mestre) {
-                api.put('/medium/update', {medium_id: mestre.medium_id, ninfa: medium.medium_id}, {headers:{Authorization: token}}).then(() => {
-                    console.log(`${mestre.nome} agora é mestre de ${medium.nome}`)
-                }).catch((error) => {
-                    console.log('Erro ao adicionar mestre', error);
-                })
-            }
-        } else {
-            console.log('');
-        }
-    }   
 
     const resetNewMedium = () => {
         setNewMedium(defaultMedium);
@@ -325,8 +324,7 @@ function AddMedium() {
         setPreview(null);
     }
 
-    const addMedium = (medium: IMedium, token: string) => {
-        uploadImage(0, token);
+    const addMedium = async (medium: IMedium, token: string) => {
         const mediumObj = {
             ...medium,
             dtNasc: medium.dtNasc === '' ? null : medium.dtNasc,
@@ -336,14 +334,7 @@ function AddMedium() {
             dtElevacao: medium.dtElevacao === '' ? null : medium.dtElevacao,
             dtCenturia: medium.dtCenturia === '' ? null : medium.dtCenturia,
             dtSetimo: medium.dtSetimo === '' ? null : medium.dtSetimo,
-            dtTestD: medium.med === 'Doutrinador' ? medium.dtIngresso : null,
-            dtTestA: medium.med === 'Apará' ? medium.dtIngresso : null,
-            dtEmplD: medium.med === 'Doutrinador' ? medium.dtEmplac : null,
-            dtEmplA: medium.med === 'Apará' ? medium.dtEmplac : null,
-            dtInicD: medium.med === 'Doutrinador' ? medium.dtIniciacao : null,
-            dtInicA: medium.med === 'Apará' ? medium.dtIniciacao : null,
-            dtElevD: medium.med === 'Doutrinador' ? medium.dtElevacao : null,
-            dtElevA: medium.med === 'Apará' ? medium.dtElevacao : null,
+            dtTest: medium.dtTest === '' ? null : medium.dtTest,
             dtMinistro: medium.dtMinistro === '' ? null : medium.dtMinistro,
             dtGuia: medium.dtGuia === '' ? null : medium.dtGuia,
             dtClassif: medium.dtClassif === '' ? null : medium.dtClassif,
@@ -360,18 +351,28 @@ function AddMedium() {
             ninfa: medium.ninfa === 0 ? null : medium.ninfa,
             padrinho: medium.padrinho === 0 ? null : medium.padrinho,
             madrinha: medium.madrinha === 0 ? null : medium.madrinha,
-            afilhado: medium.afilhado === 0 ? null : medium.afilhado
+            afilhado: medium.afilhado === 0 ? null : medium.afilhado,
+            oldDtTest: medium.oldDtTest === '' ? null : medium.oldDtTest,
+            oldDtEmplac: medium.oldDtEmplac === '' ? null : medium.oldDtEmplac,
+            oldDtIniciacao: medium.oldDtIniciacao === '' ? null : medium.oldDtIniciacao,
+            oldDtElevacao: medium.oldDtElevacao === '' ? null : medium.oldDtElevacao,
+            oldCavaleiro: medium.oldCavaleiro === 0 ? null : medium.oldCavaleiro,
+            oldDtMinistro: medium.oldDtMinistro === '' ? null : medium.oldDtMinistro,
+            oldDtClassif: medium.oldDtClassif === '' ? null : medium.oldDtClassif
         };
         const {medium_id, ...newMediumObj} = mediumObj;
-        api.post('/medium/create', newMediumObj, {headers:{Authorization: token}}).then((response) => {
+        try {
+            const response = await api.post('/medium/create', newMediumObj, {headers:{Authorization: token}})
             const { medium_id } = response.data;
-            setComponentes({...medium, medium_id});
+            await uploadImage(medium_id, token);
+            await setComponentes({...medium, medium_id});
             Alert('Médium adicionado com sucesso', 'success');
             resetNewMedium();
-            loadMedium(token);
-        }).catch((error) => {
+            await loadMedium(token);
+        } catch (error) {
             console.log('Não foi possível adicionar o médium', error);
-        })
+            Alert('Não foi possível adicionar o médium', 'error');
+        }
     }
 
     return (
@@ -1296,8 +1297,7 @@ function AddMedium() {
                 </PersonalCard>
                 <div style={{width: '90%', maxWidth: '1200px', display: 'flex', justifyContent: 'space-around'}}>
                     <MediumButton color="red" onClick={() => resetNewMedium()}>Cancelar</MediumButton>
-                    <MediumButton color="gray" onClick={() => validateAddMedium(newMedium, () => Alert('Tudo certo!', 'success'))}>Teste</MediumButton>
-                    <MediumButton color="green" onClick={() => validateAddMedium(newMedium, () => addMedium(newMedium, token))}>Cadastrar</MediumButton>
+                    <MediumButton color="green" onClick={() => validateAddMedium(newMedium, async () => await addMedium(newMedium, token))}>Cadastrar</MediumButton>
                 </div>
             </MainContainer>
             <SideMenu list={listSubMenu} />

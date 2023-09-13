@@ -56,18 +56,20 @@ function Templos() {
         setSelected(defaultTemp);
     }
 
-    const addTemp = (templo: ITemplo, token: string) => {
+    const addTemp = async (templo: ITemplo, token: string) => {
         const {templo_id, ...newTemplo} = templo;
-        api.post('/templo/create', newTemplo, {headers:{Authorization: token}}).then(() => {
+        try {
+            await api.post('/templo/create', newTemplo, {headers:{Authorization: token}})
             Alert('Templo adicionado com sucesso', 'success');
-            loadTemplo(token);
+            await loadTemplo(token);
             closeModal();
-        }).catch((error) => {
+        } catch (error) {
             console.log('Não foi possível adicionar o templo', error);
-        })
+            Alert('Não foi possível adicionar o templo', 'error');
+        }
     }
 
-    const editTemp = (newTemp: ITemplo, oldTemp: ITemplo, token: string) => {
+    const editTemp = async (newTemp: ITemplo, oldTemp: ITemplo, token: string) => {
         const changedFields = {} as any;
         const newTempConverted = {...newTemp, estado: newTemp.estado.abrev};
         const oldTempConverted = {...oldTemp, estado: oldTemp.estado.abrev};
@@ -77,15 +79,17 @@ function Templos() {
             }
         }
         if (Object.keys(changedFields).length > 0) {
-            api.put('/templo/update', {templo_id: oldTempConverted.templo_id, ...changedFields}, {headers:{Authorization: token}}).then(() => {
+            try {
+                await api.put('/templo/update', {templo_id: oldTempConverted.templo_id, ...changedFields}, {headers:{Authorization: token}})
                 Alert('Templo editado com sucesso', 'success');
-                loadTemplo(token);
+                await loadTemplo(token);
                 setEdited(defaultTemp);
                 setSelected(defaultTemp);
                 closeModal();
-            }).catch((error) => {
+            } catch (error) {
                 console.log('Não foi possível editar o templo', error);
-            })
+                Alert('Não foi possível editar o templo', 'error');
+            }
         } else {
             Alert('Não foi feita nenhuma alteração no templo', 'info')
         }
@@ -185,7 +189,7 @@ function Templos() {
                     </InputContainer>
                     <div style={{display: 'flex', gap: '20px'}}>
                         <ModalButton color="red" onClick={() => closeModal()}>Cancelar</ModalButton>
-                        <ModalButton color='green' onClick={edit? () => editTemp(edited, selected, token) : () => addTemp(edited, token)}>Salvar</ModalButton>
+                        <ModalButton color='green' onClick={edit? async () => await editTemp(edited, selected, token) : async () => await addTemp(edited, token)}>Salvar</ModalButton>
                     </div>
                 </ModalContent>
             </Modal>

@@ -21,8 +21,8 @@ function ButtonMenu(props: IButtonMenu) {
             <DropdownContainer active={props.active}>
                 <Dropdown active={props.active}>
                     <ul>
-                        {props.list.map((item: ICanto) => (
-                            <li>
+                        {props.list.map((item: ICanto, index: number) => (
+                            <li key={index}>
                                 <a href={item.link} target='_blank' rel='noreferrer'>{item.canto}</a>
                             </li>
                         ))}

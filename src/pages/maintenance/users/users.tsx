@@ -66,22 +66,24 @@ function Users() {
         setSelected(defaultUser);
     }
 
-    const addUser = (name: string, password: string, level: string, medium: number, token: string) => {
+    const addUser = async (name: string, password: string, level: string, medium: number, token: string) => {
         const newUser = {name: name, password: password, level: level, medium_id: medium};
-        api.post('/user/create', newUser, {headers:{Authorization: token}}).then(() => {
+        try {
+            await api.post('/user/create', newUser, {headers:{Authorization: token}})
             Alert('Usuário adicionado com sucesso', 'success');
-            loadUser(token);
+            await loadUser(token);
             closeModal();
-        }).catch((error) => {
+        } catch (error) {
             console.log('Não foi possível adicionar o usuário', error);
-        })
+            Alert('Não foi possível adicionar o usuário', 'error');
+        }
     }
 
-    const handleAddUser = (name: string, password: Array<string>, level: string, medium: number) => {
+    const handleAddUser = async (name: string, password: Array<string>, level: string, medium: number) => {
         if(name.trim() && password[0].trim() && password[1].trim() && level && medium) {
             if (password[0] === password[1]) {
                 const finalPassword = password[1];
-                addUser(name, finalPassword, level, medium, token)
+                await addUser(name, finalPassword, level, medium, token)
             } else {
                 Alert('As senhas não são iguais. Tente novamente.', 'error')
             }
@@ -90,7 +92,7 @@ function Users() {
         }
     }
 
-    const editUser = (newUser: IUser, oldUser: IUser, token: string) => {
+    const editUser = async (newUser: IUser, oldUser: IUser, token: string) => {
         const changedFields = {} as any
         for (const key in newUser){
             if (key !== 'password' && newUser[key as keyof IUser] !== oldUser[key as keyof IUser]){
@@ -98,15 +100,17 @@ function Users() {
             }
         }
         if (Object.keys(changedFields).length > 0) {
-            api.put('/user/update', {user_id: oldUser.user_id, ...changedFields}, {headers:{Authorization: token}}).then(() => {
+            try {
+                await api.put('/user/update', {user_id: oldUser.user_id, ...changedFields}, {headers:{Authorization: token}})
                 Alert('Usuário editado com sucesso', 'success');
-                loadUser(token);
+                await loadUser(token);
                 setEdited(defaultUser);
                 setSelected(defaultUser);
                 closeModal();
-            }).catch((error) => {
+            } catch (error) {
                 console.log('Não foi possível editar o usuário', error);
-            })
+                Alert('Não foi possível editar o usuário', 'error');
+            }
         } else {
             Alert('Não foi feita nenhuma alteração no usuário', 'info')
         }
@@ -219,7 +223,7 @@ function Users() {
                     }
                     <div style={{display: 'flex', gap: '20px'}}>
                         <ModalButton color="red" onClick={() => closeModal()}>Cancelar</ModalButton>
-                        <ModalButton color='green' onClick={edit? () => editUser(edited, selected, token) : () => handleAddUser(edited.name, [password1, password2], edited.level, edited.medium_id)}>Salvar</ModalButton>
+                        <ModalButton color='green' onClick={edit? async () => await editUser(edited, selected, token) : async () => await handleAddUser(edited.name, [password1, password2], edited.level, edited.medium_id)}>Salvar</ModalButton>
                     </div>
                 </ModalContent>
             </Modal>

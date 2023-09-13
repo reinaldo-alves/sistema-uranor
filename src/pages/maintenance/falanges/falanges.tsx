@@ -43,7 +43,7 @@ function Falanges() {
         setSelected({} as IFalange);
     }
 
-    const editFal = (newFal: IFalange, oldFal: IFalange, token: string) => {
+    const editFal = async (newFal: IFalange, oldFal: IFalange, token: string) => {
         const changedFields = {} as any
         for (const key in newFal){
             if (newFal[key as keyof IFalange] !== oldFal[key as keyof IFalange]){
@@ -51,7 +51,8 @@ function Falanges() {
             }
         }
         if (Object.keys(changedFields).length > 0) {
-            api.put('/falange/update', {falange_id: oldFal.falange_id, ...changedFields}, {headers:{Authorization: token}}).then(() => {
+            try {
+                await api.put('/falange/update', {falange_id: oldFal.falange_id, ...changedFields}, {headers:{Authorization: token}})
                 if(oldFal.falange_id === 1) {
                     Alert('Falange missionária editada com sucesso. Por favor, altere também a falange NITYAMA MADRUXA', 'success');
                 } else if(oldFal.falange_id === 2) {
@@ -59,13 +60,14 @@ function Falanges() {
                 } else {
                     Alert('Falange missionária editada com sucesso', 'success');
                 }
-                loadFalMiss(token);
+                await loadFalMiss(token);
                 setEdited({} as IFalange);
                 setSelected({} as IFalange);
                 closeModal();
-            }).catch((error) => {
+            } catch (error) {
                 console.log('Não foi possível editar a falange missionária', error);
-            })
+                Alert('Não foi possível editar a falange missionária', 'error');
+            }
         } else {
             Alert('Não foi feita nenhuma alteração na falange missionária', 'info')
         }
@@ -124,7 +126,7 @@ function Falanges() {
                     </InputContainer>
                     <div style={{display: 'flex', gap: '20px'}}>
                         <ModalButton color="red" onClick={() => closeModal()}>Cancelar</ModalButton>
-                        <ModalButton color='green' onClick={() => editFal(edited, selected, token)}>Salvar</ModalButton>
+                        <ModalButton color='green' onClick={async () => await editFal(edited, selected, token)}>Salvar</ModalButton>
                     </div>
                 </ModalContent>
             </Modal>

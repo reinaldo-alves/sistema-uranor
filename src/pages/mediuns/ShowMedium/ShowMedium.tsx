@@ -11,24 +11,25 @@ import { convertDate, setSituation } from "src/utilities/functions";
 import { ListContext } from "src/contexts/ListContext";
 import PageNotFound from "src/pages/PageNotFound/PageNotFound";
 import Loading from "src/utilities/Loading";
+import { Confirm } from "src/utilities/popups";
 
 function ShowMedium() {
     const [loading, setLoading] = useState(true);
     const [medium, setMedium] = useState({} as IMedium);
     
     const { token, getUser } = useContext(UserContext);
-    const { mediuns, loadMedium } = useContext(MediumContext);
+    const { mediuns, loadMedium, changeMed } = useContext(MediumContext);
     const { ministros, cavaleiros, guias, adjuntos, templos, falMiss, getData } = useContext(ListContext);
     const params = useParams();
     const navigate = useNavigate();
     
     const getInfo = async () => {
+        await getUser(token);
         await loadMedium(token);
         await getData(token);
-        await getUser(token);
         setLoading(false);
     }
-
+    
     const navigateToTop = (route: string) => {
         setLoading(true)
         navigate(route);
@@ -37,9 +38,10 @@ function ShowMedium() {
     
     useEffect(() => {
         getInfo();
+        console.log(mediuns)
         const foundMedium = mediuns.find((item: IMedium) => item.medium_id === Number(params.id));
         setMedium(foundMedium);
-    }, [params.id, mediuns])
+    }, [loading])
 
     
     if(loading) {
@@ -70,6 +72,14 @@ function ShowMedium() {
         return array.join(', ')
     }
 
+    const confirmChangeMed = async () => {
+        await Confirm(`O médium será cadastrado como ${medium.med === 'Doutrinador' ? 'Apará' : medium.med === 'Apará' ? 'Doutrinador' : ''}. Continuar?`, 'warning', 'Não', 'Sim', async () => {
+            await changeMed(medium, token);
+            setLoading(true);
+        });
+        await getInfo();
+    }
+
     const listSubMenu = [
         {title: 'Página Inicial', click: '/'},
         {title: 'Consultar Médium', click: '/mediuns/consulta'},
@@ -98,10 +108,11 @@ function ShowMedium() {
                             <MediumMainInfo>Situação: <span>{setSituation(medium)}</span></MediumMainInfo>
                             <MediumMainInfo>Condição Atual: <span>{medium.condicao}</span></MediumMainInfo>
                             <MediumButton color="green">Gerar Emissão</MediumButton>
-                            <MediumButton color="green">Editar</MediumButton>
+                            <MediumButton onClick={() => navigate(`/mediuns/editar/${medium.medium_id}`)} color="green">Editar</MediumButton>
                             <MediumButton color="green">Gerar Ficha</MediumButton>
                             <MediumButton color="green">Autorização</MediumButton>
                             <MediumButton color="green">Linha do Tempo</MediumButton>
+                            <MediumButton onClick={confirmChangeMed} color="red">Mudar Med.</MediumButton>
                             <MediumButton color="red">Excluir</MediumButton>
                         </MainInfoContainer>
                     </PersonalCard>
@@ -150,7 +161,7 @@ function ShowMedium() {
                                 <MediumInfo>Turno: <span>{medium.turnoLeg}</span></MediumInfo>
                                 <MediumInfo>Turno de Trabalho: <span>{medium.turnoTrab}</span></MediumInfo>
                             </InfoContainer>
-                            {medium.sex==='Masculino'?
+                            {medium.sex==='Masculino' && medium.dtCenturia?
                                 <>
                                     <Divider></Divider>
                                     <InfoContainer>
@@ -161,7 +172,7 @@ function ShowMedium() {
                                     </InfoContainer>
                                         <MediumInfo out>Classificação Atual: <span>{medium.classif}</span></MediumInfo>
                                 </>
-                            : medium.sex==='Feminino'?
+                            : medium.sex==='Feminino' && medium.dtCenturia?
                                 <>
                                     <Divider></Divider>
                                     <InfoContainer>
@@ -190,7 +201,7 @@ function ShowMedium() {
                                 </>
                             : ''}
                         </PersonalCard>
-                        <PersonalCard>
+                        <PersonalCard hide={medium.sex.concat(medium.med).length < 10 || !medium.dtCenturia}>
                             <SectionTitle>Povo</SectionTitle>
                             {medium.sex.concat(medium.med)==='MasculinoDoutrinador'?
                                 <InfoContainer>
@@ -214,7 +225,7 @@ function ShowMedium() {
                                 </InfoContainer>
                             : <div></div>}
                         </PersonalCard>
-                        <PersonalCard>
+                        <PersonalCard hide={medium.sex.concat(medium.med).length < 10 || !medium.dtCenturia}>
                             <SectionTitle>Cargos e Funções</SectionTitle>
                             <MediumText>
                                 {positionsAndFunctions(medium)}

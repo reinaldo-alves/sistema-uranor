@@ -54,17 +54,19 @@ function Cavaleiros() {
         setSelected(defaultCav);
     }
 
-    const addCav = (cavaleiro: ICavaleiro, token: string) => {
-        api.post('/cavaleiro/create', {nome:cavaleiro.nome, med:cavaleiro.med}, {headers:{Authorization: token}}).then(() => {
+    const addCav = async (cavaleiro: ICavaleiro, token: string) => {
+        try {
+            await api.post('/cavaleiro/create', {nome:cavaleiro.nome, med:cavaleiro.med}, {headers:{Authorization: token}})
             Alert('Cavaleiro adicionado com sucesso', 'success');
-            loadCavaleiro(token);
+            await loadCavaleiro(token);
             closeModal();
-        }).catch((error) => {
+        } catch (error) {
             console.log('Não foi possível adicionar o cavaleiro', error);
-        })
+            Alert('Não foi possível adicionar o cavaleiro', 'error');
+        }
     }
 
-    const editCav = (newCav: ICavaleiro, oldCav: ICavaleiro, token: string) => {
+    const editCav = async (newCav: ICavaleiro, oldCav: ICavaleiro, token: string) => {
         const changedFields = {} as any
         for (const key in newCav){
             if (newCav[key as keyof ICavaleiro] !== oldCav[key as keyof ICavaleiro]){
@@ -72,15 +74,17 @@ function Cavaleiros() {
             }
         }
         if (Object.keys(changedFields).length > 0) {
-            api.put('/cavaleiro/update', {cavaleiro_id: oldCav.id, ...changedFields}, {headers:{Authorization: token}}).then(() => {
+            try {
+                await api.put('/cavaleiro/update', {cavaleiro_id: oldCav.id, ...changedFields}, {headers:{Authorization: token}})
                 Alert('Cavaleiro editado com sucesso', 'success');
-                loadCavaleiro(token);
+                await loadCavaleiro(token);
                 setEdited(defaultCav);
                 setSelected(defaultCav);
                 closeModal();
-            }).catch((error) => {
+            } catch (error) {
                 console.log('Não foi possível editar o cavaleiro', error);
-            })
+                Alert('Não foi possível editar o cavaleiro', 'error');
+            }
         } else {
             Alert('Não foi feita nenhuma alteração no cavaleiro', 'info')
         }
@@ -147,7 +151,7 @@ function Cavaleiros() {
                     </InputContainer>
                     <div style={{display: 'flex', gap: '20px'}}>
                         <ModalButton color="red" onClick={() => closeModal()}>Cancelar</ModalButton>
-                        <ModalButton color='green' onClick={edit? () => editCav(edited, selected, token) : () => addCav(edited, token)}>Salvar</ModalButton>
+                        <ModalButton color='green' onClick={edit? async () => await editCav(edited, selected, token) : async () => await addCav(edited, token)}>Salvar</ModalButton>
                     </div>
                 </ModalContent>
             </Modal>

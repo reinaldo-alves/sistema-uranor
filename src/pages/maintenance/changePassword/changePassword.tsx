@@ -46,27 +46,26 @@ function ChangePassword() {
         }
     }
 
-    const handleChangePassword = () => {
-        if(currentPassword.trim()) {
-            api.post('/user/login', {name: user.name, password: currentPassword}).then(({ data }) => {
+    const handleChangePassword = async () => {
+        try {
+            if(currentPassword.trim()) {
+                const { data } = await api.post('/user/login', {name: user.name, password: currentPassword})
                 if(data.token) {
-                    api.put('/user/change-password', {user_id: userChangePassword.user_id, password: password1}, {headers:{Authorization: token}}).then(({ data }) => {
-                        Alert('Senha alterada com sucesso!', 'success');
-                        loadUser(token);
-                        closeModal();
-                        navigate(redirectTo);
-                    }).catch((error) => {
-                        console.log('Não foi possível alterar a sua senha', error);
-                    })
+                    await api.put('/user/change-password', {user_id: userChangePassword.user_id, password: password1}, {headers:{Authorization: token}})
+                    Alert('Senha alterada com sucesso!', 'success');
+                    await loadUser(token);
+                    closeModal();
+                    navigate(redirectTo);
                 } else {
                     Alert('Senha incorreta. Tente novamente.', 'error');
                     setCurrentPassword('');
                 }
-            }).catch((error) => {
-                console.log('Não foi possível confirmar a sua senha', error);
-            })
-        } else {
-            Alert('Digite sua senha.', 'info')
+            } else {
+                Alert('Digite sua senha.', 'info')
+            }
+        } catch (error) {
+            console.log('Não foi possível alterar a senha', error);
+            Alert('Não foi possível alterar a senha', 'error');
         }
     }
     

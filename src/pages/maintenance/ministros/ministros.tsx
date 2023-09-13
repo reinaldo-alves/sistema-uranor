@@ -45,24 +45,28 @@ function Ministros() {
         setId(0);
     }
 
-    const addMin = (nome: string, token: string) => {
-        api.post('/ministro/create', {nome}, {headers:{Authorization: token}}).then(() => {
+    const addMin = async (nome: string, token: string) => {
+        try {
+            await api.post('/ministro/create', {nome}, {headers:{Authorization: token}})
             Alert('Ministro adicionado com sucesso', 'success');
-            loadMinistro(token);
+            await loadMinistro(token);
             closeModal();
-        }).catch((error) => {
+        } catch (error) {
             console.log('Não foi possível adicionar o ministro', error);
-        })
+            Alert('Não foi possível adicionar o ministro', 'error');
+        }
     }
 
-    const editMin = (ministro_id: number, nome: string, token: string) => {
-        api.put('/ministro/update', {ministro_id, nome}, {headers:{Authorization: token}}).then(() => {
+    const editMin = async (ministro_id: number, nome: string, token: string) => {
+        try {
+            await api.put('/ministro/update', {ministro_id, nome}, {headers:{Authorization: token}})
             Alert('Ministro editado com sucesso', 'success');
-            loadMinistro(token);
+            await loadMinistro(token);
             closeModal();
-        }).catch((error) => {
+        } catch (error) {
             console.log('Não foi possível editar o ministro', error);
-        })
+            Alert('Não foi possível editar o ministro', 'error');
+        }
     }
     
     ministros.sort((minA: IMentor, minB: IMentor) => {
@@ -117,7 +121,7 @@ function Ministros() {
                     </InputContainer>
                     <div style={{display: 'flex', gap: '20px'}}>
                         <ModalButton color="red" onClick={() => closeModal()}>Cancelar</ModalButton>
-                        <ModalButton color='green' onClick={edit ? () => editMin(id, ministro, token) : () => addMin(ministro, token)}>Salvar</ModalButton>
+                        <ModalButton color='green' onClick={edit ? async () => await editMin(id, ministro, token) : async () => await addMin(ministro, token)}>Salvar</ModalButton>
                     </div>
                 </ModalContent>
             </Modal>

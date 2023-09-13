@@ -186,8 +186,8 @@ function CantosChaves() {
             <GlobalContainer>
                 <MainTitle content="Cantos da Individualidade" />
                 <CardsCantoContainer colums={columnIndiv}>
-                    {individualidade.map((item) => (
-                        <ButtonDoc name={item.name} link={item.link} subtitle={item.subtitle} height={'4em'} />
+                    {individualidade.map((item, index) => (
+                        <ButtonDoc key={index} name={item.name} link={item.link} subtitle={item.subtitle} height={'4em'} />
                     ))}
                 </CardsCantoContainer>
                 <MainTitle content="Cantos das Falanges Missionárias" />
@@ -239,8 +239,9 @@ function CantosChaves() {
                 </CardsCantoContainer>
                 <MainTitle content="Chaves dos Trabalhos" />
                 <CardsCantoContainer colums={columnChave}>
-                    {chaves.map((item) => (
+                    {chaves.map((item, index) => (
                         <ButtonMenu
+                            key={index}
                             active={item.active}
                             click={item.click}
                             name={item.name}

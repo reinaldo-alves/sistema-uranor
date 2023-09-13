@@ -55,18 +55,20 @@ function Adjuntos() {
         setSelected(defaultAdj);
     }
 
-    const addAdj = (adjunto: IAdjunto, token: string) => {
+    const addAdj = async (adjunto: IAdjunto, token: string) => {
         const {adjunto_id, ...newAdjunto} = adjunto;
-        api.post('/adjunto/create', newAdjunto, {headers:{Authorization: token}}).then(() => {
+        try {
+            await api.post('/adjunto/create', newAdjunto, {headers:{Authorization: token}})
             Alert('Adjunto adicionado com sucesso', 'success');
-            loadAdjunto(token);
+            await loadAdjunto(token);
             closeModal();
-        }).catch((error) => {
+        } catch (error) {
             console.log('Não foi possível adicionar o adjunto', error);
-        })
+            Alert('Não foi possível adicionar o adjunto', 'error');
+        }
     }
 
-    const editAdj = (newAdj: IAdjunto, oldAdj: IAdjunto, token: string) => {
+    const editAdj = async (newAdj: IAdjunto, oldAdj: IAdjunto, token: string) => {
         const changedFields = {} as any
         for (const key in newAdj){
             if (newAdj[key as keyof IAdjunto] !== oldAdj[key as keyof IAdjunto]){
@@ -74,15 +76,17 @@ function Adjuntos() {
             }
         }
         if (Object.keys(changedFields).length > 0) {
-            api.put('/adjunto/update', {adjunto_id: oldAdj.adjunto_id, ...changedFields}, {headers:{Authorization: token}}).then(() => {
+            try {
+                await api.put('/adjunto/update', {adjunto_id: oldAdj.adjunto_id, ...changedFields}, {headers:{Authorization: token}})
                 Alert('Adjunto editado com sucesso', 'success');
-                loadAdjunto(token);
+                await loadAdjunto(token);
                 setEdited(defaultAdj);
                 setSelected(defaultAdj);
                 closeModal();
-            }).catch((error) => {
+            } catch (error) {
                 console.log('Não foi possível editar o adjunto', error);
-            })
+                Alert('Não foi possível editar o adjunto', 'error');
+            }
         } else {
             Alert('Não foi feita nenhuma alteração no adjunto', 'info')
         }
@@ -172,7 +176,7 @@ function Adjuntos() {
                     </InputContainer>
                     <div style={{display: 'flex', gap: '20px'}}>
                         <ModalButton color="red" onClick={() => closeModal()}>Cancelar</ModalButton>
-                        <ModalButton color='green' onClick={edit? () => editAdj(edited, selected, token) : () => addAdj(edited, token)}>Salvar</ModalButton>
+                        <ModalButton color='green' onClick={edit? async () => await editAdj(edited, selected, token) : async () => await addAdj(edited, token)}>Salvar</ModalButton>
                     </div>
                 </ModalContent>
             </Modal>

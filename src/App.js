@@ -13,7 +13,7 @@ import Relatorios from './pages/relatorios/relatorios';
 import Biblioteca from './pages/biblioteca/biblioteca';
 import PageNotFound from './pages/PageNotFound/PageNotFound';
 import SearchMedium from './pages/mediuns/SearchMedium/SearchMedium';
-import AddMedium from './pages/mediuns/AddMedium/AddMedium';
+import AddMedium from './pages/mediuns/AddAndEditMedium/AddMedium';
 import YoungMedium from './pages/mediuns/YoungMedium/YoungMedium';
 import ShowMedium from './pages/mediuns/ShowMedium/ShowMedium';
 import Maintenance from './pages/maintenance/maintenance';
@@ -29,6 +29,7 @@ import Users from './pages/maintenance/users/users';
 import Backup from './pages/maintenance/backup/backup';
 import PrivateRoutes from './utilities/PrivateRoutes';
 import ChangePassword from './pages/maintenance/changePassword/changePassword';
+import EditMedium from './pages/mediuns/AddAndEditMedium/EditMedium';
 
 function App() {
   const [mainContainer, setMainContainer] = useState('199')
@@ -89,6 +90,7 @@ function App() {
               <Route path='/manutencao/usuarios/alterarsenha' element={<ChangePassword />} />
               <Route path='/mediuns/consulta' element={<SearchMedium />} />
               <Route path='/mediuns/consulta/:id' element={<ShowMedium />} />
+              <Route path='/mediuns/editar/:id' element={<EditMedium />} />
               <Route path='/mediuns/cadastro' element={<AddMedium />} />
               <Route path='/mediuns/menor' element={<YoungMedium />} />
               <Route path='/cantosechaves' element={<CantosChaves />} />
@@ -111,7 +113,7 @@ function App() {
 
 export default App;
 
-//Resolver questão da mudança de mediunidade
+//Corrigir erro do editar medium e replicar no exibir medium (está piscando a pagenotfound)
 //Implementar editar medium
 //Implementar validações ao editar médium
 //Gerar PDF a partir do site

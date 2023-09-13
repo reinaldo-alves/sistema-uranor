@@ -5,6 +5,7 @@ import { IUser } from "src/types/types";
 import { ListContext } from "./ListContext";
 import { MediumContext } from "./MediumContext";
 import Loading from "src/utilities/Loading";
+import { Alert } from "src/utilities/popups";
 
 export const UserContext = createContext({} as any);
 
@@ -28,13 +29,17 @@ export const UserStore = ({ children }: any) => {
     const { loadMedium } = useContext(MediumContext);
     
     const getUser = async (token: string) => {
-        await api.get('/user/get', {headers: {Authorization: token}}).then(({ data }) => {
+        try {
+            const { data } = await api.get('/user/get', {headers: {Authorization: token}})
             setUser(data.user);
             setLogin(true);
             setLoading(false);
-        }).catch((error) => {
-            console.log('Usuário não autenticado', error)
-        })
+        } catch (error) {
+            if(login) {
+                console.log('Usuário não autenticado', error);
+                Alert('Usuário não autenticado', 'error');
+            }
+        }
     }
 
     const tokenValidation = (token: string) => {
@@ -63,18 +68,20 @@ export const UserStore = ({ children }: any) => {
     }, [token])
 
     const handleLogin = async (name: string, password: string) => {
-        await api.post('/user/login', {name, password}).then(({ data }) => {
+        try {
+            const { data } = await api.post('/user/login', {name, password})
             if(data.token) {
                 setLogin(true);
                 localStorage.setItem('token', data.token);
                 setToken(data.token);
-                getUser(data.token);
+                await getUser(data.token);
             }
             setErrorMessage(data.message);
-        }).catch((error) => {
+        } catch (error) {
             console.log('Não foi possível fazer o login', error)
-            setErrorMessage('Não foi possível fazer o login. Tente novamente mais tarde.')
-        })
+            setErrorMessage('Não foi possível fazer o login. Tente novamente mais tarde.');
+            Alert('Não foi possível fazer o login. Tente novamente mais tarde.', 'error')
+        }
     }
 
     const logOut = () => {
@@ -83,13 +90,15 @@ export const UserStore = ({ children }: any) => {
         setUser({} as IUser);
     }
 
-    const loadUser = (token: string) => {
-        api.get('/user/get-users', {headers:{Authorization: token}}).then(({ data }) => {
+    const loadUser = async (token: string) => {
+        try {
+            const { data } = await api.get('/user/get-users', {headers:{Authorization: token}})
             const userList = data.user.map((item: IUser) => ({...item}))
             setUsers(userList)
-        }).catch((error) => {
-            console.log('Erro ao carregar a lista de usuários', error)
-        })
+        } catch (error) {
+            console.log('Erro ao carregar a lista de usuários', error);
+            Alert('Erro ao carregar a lista de usuários', 'error');
+        }
     }
 
     return (

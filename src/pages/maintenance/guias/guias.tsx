@@ -45,24 +45,28 @@ function Guias() {
         setId(0);
     }
 
-    const addGuia = (nome: string, token: string) => {
-        api.post('/guia/create', {nome}, {headers:{Authorization: token}}).then(() => {
+    const addGuia = async (nome: string, token: string) => {
+        try {
+            await api.post('/guia/create', {nome}, {headers:{Authorization: token}})
             Alert('Guia missionária adicionada com sucesso', 'success');
-            loadGuia(token);
+            await loadGuia(token);
             closeModal();
-        }).catch((error) => {
+        } catch (error) {
             console.log('Não foi possível adicionar a guia missionária', error);
-        })
+            Alert('Não foi possível adicionar a guia missionária', 'error');
+        }
     }
 
-    const editGuia = (guia_id: number, nome: string, token: string) => {
-        api.put('/guia/update', {guia_id, nome}, {headers:{Authorization: token}}).then(() => {
+    const editGuia = async (guia_id: number, nome: string, token: string) => {
+        try {
+            await api.put('/guia/update', {guia_id, nome}, {headers:{Authorization: token}})
             Alert('Guia missionária editada com sucesso', 'success');
-            loadGuia(token);
+            await loadGuia(token);
             closeModal();
-        }).catch((error) => {
+        } catch (error) {
             console.log('Não foi possível editar a guia missionária', error);
-        })
+            Alert('Não foi possível editar a guia missionária', 'error');
+        }
     }
     
     guias.sort((guiaA: IMentor, guiaB: IMentor) => {
@@ -117,7 +121,7 @@ function Guias() {
                     </InputContainer>
                     <div style={{display: 'flex', gap: '20px'}}>
                         <ModalButton color="red" onClick={() => closeModal()}>Cancelar</ModalButton>
-                        <ModalButton color='green' onClick={edit ? () => editGuia(id, guia, token) : () => addGuia(guia, token)}>Salvar</ModalButton>
+                        <ModalButton color='green' onClick={edit ? async () => await editGuia(id, guia, token) : async () => await addGuia(guia, token)}>Salvar</ModalButton>
                     </div>
                 </ModalContent>
             </Modal>
