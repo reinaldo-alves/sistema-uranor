@@ -27,7 +27,9 @@ function ShowMedium() {
         await getUser(token);
         await loadMedium(token);
         await getData(token);
-        setLoading(false);
+        if(mediuns) {
+            setLoading(false);
+        }
     }
     
     const navigateToTop = (route: string) => {
@@ -38,11 +40,13 @@ function ShowMedium() {
     
     useEffect(() => {
         getInfo();
+    }, [])
+
+    useEffect(() => {
         console.log(mediuns)
         const foundMedium = mediuns.find((item: IMedium) => item.medium_id === Number(params.id));
         setMedium(foundMedium);
-    }, [loading])
-
+    }, [mediuns])
     
     if(loading) {
         return <Loading />
@@ -167,7 +171,7 @@ function ShowMedium() {
                                     <InfoContainer>
                                         <MediumInfo>Ministro: <span>{ministros.find((item: IMentor) => item.id === medium.ministro) ? ministros.find((item: IMentor) => item.id === medium.ministro).nome : ''}</span></MediumInfo>
                                         <MediumInfo>Cavaleiro: <span>{cavaleiros.find((item: ICavaleiro) => item.id === medium.cavaleiro) ? cavaleiros.find((item: ICavaleiro) => item.id === medium.cavaleiro).nome : ''} {medium.cavaleiro? medium.cor : ''}</span></MediumInfo>
-                                        <MediumInfo>Data Ministro: <span>{convertDate(medium.dtMinistro)}</span></MediumInfo>
+                                        <MediumInfo>Data Ministro: <span>{convertDate(medium.dtMentor)}</span></MediumInfo>
                                         <MediumInfo>Data Classificação Atual: <span>{convertDate(medium.dtClassif)}</span></MediumInfo>
                                     </InfoContainer>
                                         <MediumInfo out>Classificação Atual: <span>{medium.classif}</span></MediumInfo>
@@ -178,6 +182,7 @@ function ShowMedium() {
                                     <InfoContainer>
                                         <MediumInfo>Estrela: <span>{medium.estrela}</span></MediumInfo>
                                         <MediumInfo>Guia Missionária: <span>{guias.find((item: IMentor) => item.id === medium.guia) ? guias.find((item: IMentor) => item.id === medium.guia).nome : ''} {medium.guia? medium.cor : ''}</span></MediumInfo>
+                                        <MediumInfo>Data Guia: <span>{convertDate(medium.dtMentor)}</span></MediumInfo>
                                     </InfoContainer>
                                 </>
                             : ''}
@@ -230,6 +235,35 @@ function ShowMedium() {
                             <MediumText>
                                 {positionsAndFunctions(medium)}
                             </MediumText>
+                        </PersonalCard>
+                        <PersonalCard hide={!medium.med}>
+                            <SectionTitle>Dados como {medium.med === 'Doutrinador' ? 'Apará' : medium.med === 'Apará' ? 'Doutrinador' : ''}</SectionTitle>
+                            <InfoContainer>
+                                <MediumInfo>Data Teste: <span>{convertDate(medium.oldDtTest)}</span></MediumInfo>
+                                <MediumInfo>Data Emplacamento: <span>{convertDate(medium.oldDtEmplac)}</span></MediumInfo>
+                                <MediumInfo>Data Iniciação: <span>{convertDate(medium.oldDtIniciacao)}</span></MediumInfo>
+                                <MediumInfo>Data Elevação: <span>{convertDate(medium.oldDtElevacao)}</span></MediumInfo>
+                                {medium.sex === 'Masculino' ?
+                                    <>
+                                        <MediumInfo>Classificação: <span>{medium.oldClassMest}</span></MediumInfo>
+                                        <MediumInfo>Cavaleiro: <span>{cavaleiros.find((item: ICavaleiro) => item.id === medium.oldCavaleiro) ? cavaleiros.find((item: ICavaleiro) => item.id === medium.oldCavaleiro).nome : ''} {medium.oldCavaleiro? medium.oldCor : ''}</span></MediumInfo>
+                                        <MediumInfo>Data Cavaleiro: <span>{convertDate(medium.oldDtMentor)}</span></MediumInfo>
+                                        <MediumInfo>Última Classif.: <span>{medium.oldClassif}</span></MediumInfo>
+                                        <MediumInfo>Data: <span>{convertDate(medium.oldDtClassif)}</span></MediumInfo>
+                                    </>
+                                : medium.sex === 'Feminino' ?
+                                    <MediumInfo>Estrela: <span>{medium.oldEstrela}</span></MediumInfo>
+                                : <div></div>}
+                                {medium.med === 'Doutrinador' ?
+                                    <>
+                                        <MediumInfo>Preto Velho: <span>{medium.pretovelho}</span></MediumInfo>
+                                        <MediumInfo>Caboclo: <span>{medium.caboclo}</span></MediumInfo>
+                                        <MediumInfo>Médico: <span>{medium.medico}</span></MediumInfo>
+                                    </>
+                                : medium.med === 'Apará' ?
+                                    <MediumInfo>Princesa: <span>{medium.princesa}</span></MediumInfo>
+                                : <div></div>}
+                            </InfoContainer>
                         </PersonalCard>
                         <PersonalCard>
                             <SectionTitle>Observações</SectionTitle>

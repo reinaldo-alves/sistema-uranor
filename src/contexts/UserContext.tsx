@@ -45,6 +45,7 @@ export const UserStore = ({ children }: any) => {
     const tokenValidation = (token: string) => {
         if(!token) {
             setLogin(false);
+            return;
         }
         try {
             const decodedToken: IToken = jwtDecode(token);
@@ -52,14 +53,19 @@ export const UserStore = ({ children }: any) => {
             setLogin(decodedToken.exp > currentTime);
         } catch(error) {
             setLogin(false);
+            return;
         }
     }
     
     const getInfo = async () => {
-        await getUser(token);
-        await getData(token);
-        await loadMedium(token);
-        setLoading(false);
+        try {
+            await getUser(token);
+            await getData(token);
+            await loadMedium(token);
+            setLoading(false);
+        } catch (error) {
+            console.error('Erro ao carregar dados do sistema', error);
+        }
     }
 
     useEffect(() => {

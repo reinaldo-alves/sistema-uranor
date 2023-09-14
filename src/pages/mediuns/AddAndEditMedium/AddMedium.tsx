@@ -64,9 +64,8 @@ function AddMedium() {
         turnoTrab: '',
         ministro: 0,
         cavaleiro: 0,
-        dtMinistro: '',
         guia: 0,
-        dtGuia: '',
+        dtMentor: '',
         cor: '',
         estrela: '',
         classif: '',
@@ -101,7 +100,8 @@ function AddMedium() {
         oldDtElevacao: '',
         oldClassMest: '',
         oldCavaleiro: 0,
-        oldDtMinistro: '',
+        oldCor: '',
+        oldDtMentor: '',
         oldEstrela: '',
         oldClassif: '',
         oldDtClassif: ''
@@ -115,11 +115,16 @@ function AddMedium() {
     const [listCav, setListCav] = useState([] as Array<ICavaleiro>);
     const [listEst, setListEst] = useState([]);
     const [listClass, setListClass] = useState([]);
+    const [oldListClassMest, setOldListClassMest] = useState([]);
+    const [oldListClass, setOldListClass] = useState([]);
+    const [oldListCav, setOldListCav] = useState([] as Array<ICavaleiro>);
+    const [oldListEst, setOldListEst] = useState([]);
     const [tSol, setTSol] = useState(false);
     const [photo, setPhoto] = useState<File | null>(null);
     const [preview, setPreview] = useState<string | null>(null);
     const [dropMin, setDropMin] = useState(false);
     const [dropCav, setDropCav] = useState(false);
+    const [dropOldCav, setDropOldCav] = useState(false);
     const [dropGuia, setDropGuia] = useState(false);
     const [dropMes, setDropMes] = useState(false);
     const [dropNin, setDropNin] = useState(false);
@@ -128,6 +133,7 @@ function AddMedium() {
     const [dropAfi, setDropAfi] = useState(false);
     const [searchMin, setSearchMin] = useState('');
     const [searchCav, setSearchCav] = useState('');
+    const [searchOldCav, setSearchOldCav] = useState('');
     const [searchGuia, setSearchGuia] = useState('');
     const [searchMes, setSearchMes] = useState('');
     const [searchNin, setSearchNin] = useState('');
@@ -158,7 +164,7 @@ function AddMedium() {
                 setListTurnoL([]);
                 setListTurnoL([]);
         }
-    }, [newMedium.sex])
+    }, [newMedium.sex, falMiss])
 
     useEffect(() => {
         switch (newMedium.sex.concat(newMedium.med)) {
@@ -166,19 +172,29 @@ function AddMedium() {
                 setListClassMest(classMest.MS);
                 setListCav(cavaleiros.filter((item: ICavaleiro) => item.med === 'Doutrinador'));
                 setListClass(classificacao.sol);
+                setOldListClassMest(classMest.ML);
+                setOldListCav(cavaleiros.filter((item: ICavaleiro) => item.med === 'Apará'));
+                setOldListClass(classificacao.lua);
                 break;
             case 'MasculinoApará':
                 setListClassMest(classMest.ML);
                 setListCav(cavaleiros.filter((item: ICavaleiro) => item.med === 'Apará'));
                 setListClass(classificacao.lua);
+                setOldListClassMest(classMest.MS);
+                setOldListCav(cavaleiros.filter((item: ICavaleiro) => item.med === 'Doutrinador'));
+                setOldListClass(classificacao.sol);
                 break;
             case 'FemininoDoutrinador':
                 setListClassMest(classMest.NS);
                 setListEst(estrelas.sol);
+                setOldListClassMest(classMest.NL);
+                setOldListEst(estrelas.lua);
                 break;
             case 'FemininoApará':
                 setListClassMest(classMest.NL);
                 setListEst(estrelas.lua);
+                setOldListClassMest(classMest.NS);
+                setOldListEst(estrelas.sol);
                 break;
             default:
                 setListClassMest([]);
@@ -314,6 +330,7 @@ function AddMedium() {
         setTSol(false);
         setSearchMin('');
         setSearchCav('');
+        setSearchOldCav('');
         setSearchGuia('');
         setSearchMes('');
         setSearchNin('');
@@ -334,9 +351,8 @@ function AddMedium() {
             dtElevacao: medium.dtElevacao === '' ? null : medium.dtElevacao,
             dtCenturia: medium.dtCenturia === '' ? null : medium.dtCenturia,
             dtSetimo: medium.dtSetimo === '' ? null : medium.dtSetimo,
-            dtTest: medium.dtTest === '' ? null : medium.dtTest,
-            dtMinistro: medium.dtMinistro === '' ? null : medium.dtMinistro,
-            dtGuia: medium.dtGuia === '' ? null : medium.dtGuia,
+            dtTest: medium.dtIngresso === medium.oldDtTest ? null : medium.dtIngresso,
+            dtMentor: medium.dtMentor === '' ? null : medium.dtMentor,
             dtClassif: medium.dtClassif === '' ? null : medium.dtClassif,
             dtTrinoSol: medium.dtTrinoSol === '' ? null : medium.dtTrinoSol,
             dtTrinoSar: medium.dtTrinoSar === '' ? null : medium.dtTrinoSar,
@@ -357,7 +373,7 @@ function AddMedium() {
             oldDtIniciacao: medium.oldDtIniciacao === '' ? null : medium.oldDtIniciacao,
             oldDtElevacao: medium.oldDtElevacao === '' ? null : medium.oldDtElevacao,
             oldCavaleiro: medium.oldCavaleiro === 0 ? null : medium.oldCavaleiro,
-            oldDtMinistro: medium.oldDtMinistro === '' ? null : medium.oldDtMinistro,
+            oldDtMentor: medium.oldDtMentor === '' ? null : medium.oldDtMentor,
             oldDtClassif: medium.oldDtClassif === '' ? null : medium.oldDtClassif
         };
         const {medium_id, ...newMediumObj} = mediumObj;
@@ -398,12 +414,13 @@ function AddMedium() {
                                         updateProps('falMiss', 0);
                                         updateProps('turnoLeg', '');
                                         updateProps('turnoTrab', '');
-                                        updateProps('presidente', false);
+                                        updateProps('presidente', '');
                                         updateProps('trinoSol', '');
                                         updateProps('trinoSar', false);
                                         updateProps('classif', '');
                                         updateProps('ministro', 0);
                                         updateProps('cavaleiro', 0);
+                                        updateProps('oldCavaleiro', 0);
                                         updateProps('guia', 0);
                                         updateProps('estrela', '');
                                         updateProps('dtTrinoSar', '');
@@ -424,7 +441,24 @@ function AddMedium() {
                                     <option value={'Masculino'}>Masculino</option>
                                 </select>
                                 <label>Mediunidade: </label>
-                                <select value={newMedium.med} onChange={(e) => updateProps('med', e.target.value)}>
+                                <select value={newMedium.med} onChange={(e) => {
+                                    updateProps('med', e.target.value);
+                                    updateProps('cavaleiro', 0);
+                                    updateProps('oldCavaleiro', 0);
+                                    updateProps('cor', '');
+                                    updateProps('oldCor', '');
+                                    updateProps('estrela', '');
+                                    updateProps('classif', '');
+                                    updateProps('madrinha', 0);
+                                    updateProps('padrinho', 0);
+                                    updateProps('ninfa', 0);
+                                    updateProps('mestre', 0);
+                                    updateProps('afilhado', 0);
+                                    updateProps('comando', '');
+                                    updateProps('presidente', '');
+                                    updateProps('janda', false);
+                                    }}
+                                >
                                     <option value={''}></option>
                                     <option value={'Apará'}>Apará</option>
                                     <option value={'Doutrinador'}>Doutrinador</option>
@@ -526,7 +560,7 @@ function AddMedium() {
                         <label>Data Elevação: </label>
                         <input type="date" value={newMedium.dtElevacao} onChange={(e) => updateProps('dtElevacao', e.target.value)} min={newMedium.dtIniciacao} max={now} disabled={!newMedium.dtIniciacao} />
                         <label>Data Centúria: </label>
-                        <input type="date" value={newMedium.dtCenturia} onChange={(e) => updateProps('dtCenturia', e.target.value)} min={newMedium.dtElevacao} max={now} disabled={!newMedium.dtElevacao} />
+                        <input type="date" value={newMedium.dtCenturia} onChange={(e) => updateProps('dtCenturia', e.target.value)} min={newMedium.dtElevacao} max={now} disabled={!newMedium.dtElevacao && !newMedium.oldDtElevacao} />
                         <label>Data Sétimo: </label>
                         <input type="date" value={newMedium.dtSetimo} onChange={(e) => updateProps('dtSetimo', e.target.value)} min={newMedium.dtCenturia} max={now} disabled={!newMedium.dtCenturia} />
                     </GridDatesContainer>
@@ -652,7 +686,7 @@ function AddMedium() {
                                     </OptionsList>
                                 </CustomInput>
                                 <label>Data Ministro: </label>
-                                <input type="date" value={newMedium.dtMinistro} onChange={(e) => updateProps('dtMinistro', e.target.value)} min={newMedium.dtCenturia}  max={now} />
+                                <input type="date" value={newMedium.dtMentor} onChange={(e) => updateProps('dtMentor', e.target.value)} min={newMedium.dtCenturia}  max={now} />
                                 <label>Cavaleiro: </label>
                                 <CustomInput>
                                     <input
@@ -778,7 +812,7 @@ function AddMedium() {
                                     <option value={'Vermelha'}>Vermelha</option>
                                 </select>
                                 <label>Data Guia: </label>
-                                <input type="date" value={newMedium.dtGuia} onChange={(e) => updateProps('dtGuia', e.target.value)} min={newMedium.dtCenturia}  max={now} />
+                                <input type="date" value={newMedium.dtMentor} onChange={(e) => updateProps('dtMentor', e.target.value)} min={newMedium.dtCenturia}  max={now} />
                             </GridContainer>
                         </>
                     : ''}
@@ -1289,6 +1323,149 @@ function AddMedium() {
                                 <label>Regente</label>
                             </FieldContainerBox>
                         </div>
+                    : <div></div>}
+                </PersonalCard>
+                <PersonalCard hide={!newMedium.med}>
+                    <SectionTitle>Dados como {newMedium.med === 'Doutrinador' ? 'Apará' : newMedium.med === 'Apará' ? 'Doutrinador' : ''}</SectionTitle>
+                    <GridContainer>
+                        <label>Data Teste: </label>
+                        <input type="date" value={newMedium.oldDtTest} onChange={(e) => updateProps('oldDtTest', e.target.value)} min={newMedium.dtNasc}  max={now} />
+                        <label>Data Emplacamento: </label>
+                        <input type="date" value={newMedium.oldDtEmplac} onChange={(e) => updateProps('oldDtEmplac', e.target.value)} min={newMedium.oldDtTest} max={now} disabled={!newMedium.oldDtTest} />
+                        <label>Data Iniciação: </label>
+                        <input type="date" value={newMedium.oldDtIniciacao} onChange={(e) => updateProps('oldDtIniciacao', e.target.value)} min={newMedium.oldDtEmplac} max={now} disabled={!newMedium.oldDtEmplac} />
+                        <label>Data Elevação: </label>
+                        <input type="date" value={newMedium.oldDtElevacao} onChange={(e) => updateProps('oldDtElevacao', e.target.value)} min={newMedium.oldDtIniciacao} max={now} disabled={!newMedium.oldDtIniciacao} />
+                        {newMedium.sex === 'Masculino' ?
+                            <>
+                                <label>Classificação: </label>
+                                <select value={newMedium.oldClassMest} disabled={!newMedium.oldDtElevacao} onChange={(e) => updateProps('oldClassMest', e.target.value)}>
+                                    <option value={''}></option>
+                                    {oldListClassMest.map((item: string, index: number) => (
+                                        <option key={index} value={item}>{item}</option>
+                                    ))}
+                                </select>
+                                <label>Cavaleiro: </label>
+                                <CustomInput>
+                                    <input
+                                        type="text"
+                                        value={searchOldCav}
+                                        disabled={!newMedium.dtCenturia}
+                                        onChange={(e) => setSearchOldCav(e.target.value)}
+                                        onFocus={() => setDropOldCav(true)}
+                                        onBlur={() => setTimeout(() => setDropOldCav(false), 150)}
+                                    />
+                                    <OptionsList show={dropOldCav}>
+                                        <ul>
+                                            {oldListCav
+                                                .filter((item: ICavaleiro) => item.nome.toLowerCase().includes(searchOldCav.toLowerCase().trim()))
+                                                .length === 0
+                                            ? (
+                                                <li style={{fontStyle: 'italic', color: '#777'}}>- Não encontrado -</li>
+                                            ) : (
+                                                oldListCav
+                                                    .filter((item: ICavaleiro) => item.nome.toLowerCase().includes(searchOldCav.toLowerCase().trim()))
+                                                    .map((item: ICavaleiro, index: number) => (
+                                                        <li
+                                                            key={index}
+                                                            onClick={() => {
+                                                                updateProps('oldCavaleiro', item.id);
+                                                                const foundCav = oldListCav.find((cav: ICavaleiro) => cav.id === item.id)
+                                                                if (foundCav) {
+                                                                    setSearchOldCav(foundCav.nome);
+                                                                }
+                                                                setDropOldCav(false);
+                                                            }}
+                                                        >
+                                                            {item.nome}
+                                                        </li>
+                                                ))
+                                            )}
+                                        </ul>
+                                    </OptionsList>
+                                </CustomInput>
+                                <label>Cor do Cavaleiro: </label>
+                                <select value={newMedium.oldCor} disabled={newMedium.oldCavaleiro === 0} onChange={(e) => updateProps('oldCor', e.target.value)}>
+                                    {newMedium.med==='Apará'?
+                                        <>
+                                            <option value={''}></option>
+                                            <option value={'Verde'}>Verde</option>
+                                        </>
+                                    : newMedium.med==='Doutrinador'?
+                                        <>
+                                            <option value={''}></option>
+                                            <option value={'Verde'}>Verde</option>
+                                            <option value={'Vermelho'}>Vermelho</option>
+                                        </>
+                                    : <option value={''}></option>}
+                                </select>
+                                <label>Data Cavaleiro: </label>
+                                <input type="date" value={newMedium.oldDtMentor} disabled={newMedium.oldCavaleiro === 0} onChange={(e) => updateProps('oldDtMentor', e.target.value)} min={newMedium.dtCenturia}  max={now} />
+                                <label>Última Classif.: </label>
+                                <select value={newMedium.oldClassif} disabled={!newMedium.dtCenturia} onChange={(e) => updateProps('oldClassif', e.target.value)}>
+                                    <option value={''}></option>
+                                    {oldListClass.map((item: string, index: number) => (
+                                        <option key={index} value={item}>{item}</option>
+                                    ))}
+                                </select>
+                                <label>Data: </label>
+                                <input type="date" value={newMedium.oldDtClassif} onChange={(e) => updateProps('oldDtClassif', e.target.value)} min={newMedium.dtCenturia}  max={now} />
+                            </>
+                        : newMedium.sex === 'Feminino' ?
+                            <>
+                                <label>Estrela: </label>
+                                <select value={newMedium.oldEstrela} onChange={(e) => updateProps('oldEstrela', e.target.value)}>
+                                    <option value={''}></option>
+                                    {oldListEst.map((item: string, index: number) => (
+                                        <option key={index} value={item}>{item}</option>
+                                    ))}
+                                </select> 
+                            </>
+                        : <div></div>}
+                        {newMedium.med === 'Doutrinador' ?
+                            <>
+                                <label>Preto Velho: </label>
+                                <input type="text" value={newMedium.pretovelho} onChange={(e) => updateProps('pretovelho', e.target.value)}/>
+                                <label>Caboclo: </label>
+                                <input type="text" value={newMedium.caboclo} onChange={(e) => updateProps('caboclo', e.target.value)}/>
+                                <label>Médico: </label>
+                                <input type="text" value={newMedium.medico} onChange={(e) => updateProps('medico', e.target.value)}/>
+                            </>
+                        : newMedium.med === 'Apará' ?
+                            <>
+                                <label>Princesa: </label>
+                                <select value={newMedium.princesa} onChange={(e) => updateProps('princesa', e.target.value)}>
+                                    <option value={''}></option>
+                                    {princesas.map((item: string, index: number) => (
+                                        <option key={index} value={item}>{item}</option>
+                                    ))}
+                                </select>
+                            </>
+                        : <div></div>}
+                    </GridContainer>
+                    {newMedium.sex.concat(newMedium.med) === 'MasculinoApará'?
+                        <>
+                            <Divider></Divider>
+                            <InputContainer>
+                                <div style={{width: '100%', display: 'flex', gap: '10px'}}>
+                                    <FieldContainerBox>
+                                        <input type="checkBox" checked={tSol} disabled={newMedium.oldClassif !== 'Adjunto Koatay 108 Herdeiro Triada Harpásios Raio Adjuração Rama 2000' || newMedium.presidente === 'Presidente'} onChange={(e) => setTSol(e.target.checked)}/>
+                                        <label>Trino Solitário</label>
+                                    </FieldContainerBox> 
+                                    <FieldContainer>
+                                        <select disabled={!tSol} value={newMedium.trinoSol} onChange={(e) => updateProps('trinoSol', e.target.value)}>
+                                            <option value={''}></option>
+                                            <option value={'Juremá'}>Juremá</option>
+                                            <option value={'Iramar'}>Iramar</option>
+                                        </select>
+                                    </FieldContainer>
+                                </div>
+                                <FieldContainer width="190px">
+                                    <label>Data: </label>
+                                    <input type="date" disabled={!tSol} value={newMedium.dtTrinoSol} onChange={(e) => updateProps('dtTrinoSol', e.target.value)} min={newMedium.dtCenturia}  max={now} />
+                                </FieldContainer>
+                            </InputContainer>
+                        </>
                     : <div></div>}
                 </PersonalCard>
                 <PersonalCard>

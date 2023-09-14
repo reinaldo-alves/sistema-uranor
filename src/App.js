@@ -113,7 +113,6 @@ function App() {
 
 export default App;
 
-//Corrigir erro do editar medium e replicar no exibir medium (está piscando a pagenotfound)
 //Implementar editar medium
 //Implementar validações ao editar médium
 //Gerar PDF a partir do site

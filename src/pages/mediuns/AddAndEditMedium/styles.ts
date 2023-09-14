@@ -212,6 +212,24 @@ export const FieldContainerBox = styled.div`
     }
 `;
 
+export const PhotoPosition = styled.div<{hide?: boolean}>`
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+    align-self: flex-end;
+
+    span {
+        font-size: 16px;
+        cursor: pointer;
+        visibility: ${({ hide }) => hide? 'hidden' : 'visible'};;
+    }
+
+    @media (max-width: 800px) {
+        align-self: center;
+    }
+`;
+
 export const PhotoContainer = styled.div<{photo: string | null}>`
     height: 182px;
     aspect-ratio: 3 / 4;

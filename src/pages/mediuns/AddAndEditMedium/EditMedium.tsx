@@ -1,6 +1,6 @@
 import { useContext, useState, useEffect } from "react";
 import { ListContext } from "src/contexts/ListContext";
-import { CustomInput, Divider, FieldContainer, FieldContainerBox, GridContainer, GridDatesContainer, InputContainer, MainContainer, MainContent, MainInfoContainer, MediumButton, Observations, OptionsList, PersonalCard, PhotoContainer, SectionTitle } from "./styles";
+import { CustomInput, Divider, FieldContainer, FieldContainerBox, GridContainer, GridDatesContainer, InputContainer, MainContainer, MainContent, MainInfoContainer, MediumButton, Observations, OptionsList, PersonalCard, PhotoContainer, PhotoPosition, SectionTitle } from "./styles";
 import { IAdjunto, ICavaleiro, IEstado, IFalange, IMedium, IMentor, ITemplo, ITurno } from "src/types/types";
 import SideMenu from "src/components/SideMenu/SideMenu";
 import SubMenu from "src/components/SubMenu/SubMenu";
@@ -9,7 +9,7 @@ import { UserContext } from "src/contexts/UserContext";
 import api from "src/api";
 import { MediumContext } from "src/contexts/MediumContext";
 import { formatCep, formatCpf, formatPhoneNumber } from "src/utilities/functions";
-import { Alert } from "src/utilities/popups";
+import { Alert, Confirm } from "src/utilities/popups";
 import axios from "axios";
 import { validateAddMedium } from "src/utilities/validations";
 import { useNavigate, useParams } from "react-router-dom";
@@ -69,9 +69,8 @@ function EditMedium() {
         turnoTrab: '',
         ministro: 0,
         cavaleiro: 0,
-        dtMinistro: '',
         guia: 0,
-        dtGuia: '',
+        dtMentor: '',
         cor: '',
         estrela: '',
         classif: '',
@@ -106,7 +105,8 @@ function EditMedium() {
         oldDtElevacao: '',
         oldClassMest: '',
         oldCavaleiro: 0,
-        oldDtMinistro: '',
+        oldCor: '',
+        oldDtMentor: '',
         oldEstrela: '',
         oldClassif: '',
         oldDtClassif: ''
@@ -121,11 +121,16 @@ function EditMedium() {
     const [listCav, setListCav] = useState([] as Array<ICavaleiro>);
     const [listEst, setListEst] = useState([]);
     const [listClass, setListClass] = useState([]);
+    const [oldListClassMest, setOldListClassMest] = useState([]);
+    const [oldListClass, setOldListClass] = useState([]);
+    const [oldListCav, setOldListCav] = useState([] as Array<ICavaleiro>);
+    const [oldListEst, setOldListEst] = useState([]);
     const [tSol, setTSol] = useState(false);
     const [photo, setPhoto] = useState<File | null>(null);
     const [preview, setPreview] = useState<string | null>(null);
     const [dropMin, setDropMin] = useState(false);
     const [dropCav, setDropCav] = useState(false);
+    const [dropOldCav, setDropOldCav] = useState(false);
     const [dropGuia, setDropGuia] = useState(false);
     const [dropMes, setDropMes] = useState(false);
     const [dropNin, setDropNin] = useState(false);
@@ -134,6 +139,7 @@ function EditMedium() {
     const [dropAfi, setDropAfi] = useState(false);
     const [searchMin, setSearchMin] = useState('');
     const [searchCav, setSearchCav] = useState('');
+    const [searchOldCav, setSearchOldCav] = useState('');
     const [searchGuia, setSearchGuia] = useState('');
     const [searchMes, setSearchMes] = useState('');
     const [searchNin, setSearchNin] = useState('');
@@ -145,7 +151,6 @@ function EditMedium() {
 
     const defineMedium = () => {
         const foundMedium: IMedium = mediuns.find((item: IMedium) => item.medium_id === Number(params.id));
-        console.log(foundMedium)
         const min = ministros.find((item: IMentor) => item.id === foundMedium.ministro);
         const cav = cavaleiros.find((item: ICavaleiro) => item.id === foundMedium.cavaleiro);
         const guia = guias.find((item: IMentor) => item.id === foundMedium.guia);
@@ -163,6 +168,7 @@ function EditMedium() {
         setSearchPad(pad? pad.nome : '');
         setSearchMad(mad? mad.nome : '');
         setSearchAfi(afi? afi.nome : '');
+        setTSol(foundMedium.trinoSol? true : false);
     }
     
     const getInfo = async () => {
@@ -170,25 +176,28 @@ function EditMedium() {
             await loadMedium(token);
             await getData(token);
             await getUser(token);
-            defineMedium();
-            setLoading(false);
         } catch (error) {
             console.error('Erro ao buscar informações', error);
             Alert('Erro ao buscar informações', 'error');
         }
     }
-
-    useEffect(() => {
-        window.scrollTo({top: 0});
-    }, [])
-
+    
     useEffect(() => {
         getInfo();
-        console.log(params.id)
-    }, [params.id])
-
+        window.scrollTo({top: 0});
+    }, [])
+    
+    useEffect(() => {
+        if(mediuns.length > 0){
+            defineMedium();
+        }
+    }, [mediuns])
+    
     useEffect(() => {
         console.log(medium)
+        if(medium !== defaultMedium) {
+            setLoading(false);
+        }
     }, [medium])
 
     useEffect(() => {
@@ -208,7 +217,7 @@ function EditMedium() {
                 setListTurnoL([]);
                 setListTurnoL([]);
         }
-    }, [medium.sex])
+    }, [medium.sex, falMiss])
 
     useEffect(() => {
         switch (medium.sex.concat(medium.med)) {
@@ -216,19 +225,29 @@ function EditMedium() {
                 setListClassMest(classMest.MS);
                 setListCav(cavaleiros.filter((item: ICavaleiro) => item.med === 'Doutrinador'));
                 setListClass(classificacao.sol);
+                setOldListClassMest(classMest.ML);
+                setOldListCav(cavaleiros.filter((item: ICavaleiro) => item.med === 'Apará'));
+                setOldListClass(classificacao.lua);
                 break;
             case 'MasculinoApará':
                 setListClassMest(classMest.ML);
                 setListCav(cavaleiros.filter((item: ICavaleiro) => item.med === 'Apará'));
                 setListClass(classificacao.lua);
+                setOldListClassMest(classMest.MS);
+                setOldListCav(cavaleiros.filter((item: ICavaleiro) => item.med === 'Doutrinador'));
+                setOldListClass(classificacao.sol);
                 break;
             case 'FemininoDoutrinador':
                 setListClassMest(classMest.NS);
                 setListEst(estrelas.sol);
+                setOldListClassMest(classMest.NL);
+                setOldListEst(estrelas.lua);
                 break;
             case 'FemininoApará':
                 setListClassMest(classMest.NL);
                 setListEst(estrelas.lua);
+                setOldListClassMest(classMest.NS);
+                setOldListEst(estrelas.sol);
                 break;
             default:
                 setListClassMest([]);
@@ -296,6 +315,16 @@ function EditMedium() {
         }
     };
 
+    const removeImage = () => {
+        if (photo || medium.foto) {
+            Confirm('Tem certeza que quer remover esta foto?', 'question', 'Cancelar', 'Confirmar', () => {
+                updateProps('foto', '');
+                setPhoto(null);
+                setPreview(null);
+            })
+        }
+    }
+
     useEffect(() => {
         if (photo) {
             const reader = new FileReader();
@@ -303,10 +332,12 @@ function EditMedium() {
             reader.onloadend = () => {
                 setPreview(reader.result as string);
             };
+        } else if (medium.foto) {
+            setPreview(medium.foto);
         } else {
             setPreview(null);
         }
-    }, [photo]);
+    }, [photo, medium.foto]);
 
     const listSubMenu = [
         {title: 'Página Inicial', click: '/'},
@@ -369,9 +400,8 @@ function EditMedium() {
             dtElevacao: medium.dtElevacao === '' ? null : medium.dtElevacao,
             dtCenturia: medium.dtCenturia === '' ? null : medium.dtCenturia,
             dtSetimo: medium.dtSetimo === '' ? null : medium.dtSetimo,
-            dtTest: medium.dtTest === '' ? null : medium.dtTest,
-            dtMinistro: medium.dtMinistro === '' ? null : medium.dtMinistro,
-            dtGuia: medium.dtGuia === '' ? null : medium.dtGuia,
+            dtTest: medium.dtIngresso === medium.oldDtTest ? null : medium.dtIngresso,
+            dtMentor: medium.dtMentor === '' ? null : medium.dtMentor,
             dtClassif: medium.dtClassif === '' ? null : medium.dtClassif,
             dtTrinoSol: medium.dtTrinoSol === '' ? null : medium.dtTrinoSol,
             dtTrinoSar: medium.dtTrinoSar === '' ? null : medium.dtTrinoSar,
@@ -392,7 +422,7 @@ function EditMedium() {
             oldDtIniciacao: medium.oldDtIniciacao === '' ? null : medium.oldDtIniciacao,
             oldDtElevacao: medium.oldDtElevacao === '' ? null : medium.oldDtElevacao,
             oldCavaleiro: medium.oldCavaleiro === 0 ? null : medium.oldCavaleiro,
-            oldDtMinistro: medium.oldDtMinistro === '' ? null : medium.oldDtMinistro,
+            oldDtMentor: medium.oldDtMentor === '' ? null : medium.oldDtMentor,
             oldDtClassif: medium.oldDtClassif === '' ? null : medium.oldDtClassif
         };
         const {medium_id, ...newMediumObj} = mediumObj;
@@ -413,7 +443,7 @@ function EditMedium() {
         return <Loading />
     }
 
-    if(!medium.medium_id) {
+    if(!medium) {
         return <PageNotFound />
     }
 
@@ -453,10 +483,13 @@ function EditMedium() {
                                 </select>
                             </GridContainer>
                         </MainInfoContainer>
-                        <PhotoContainer photo={preview}>
-                            {photo? '' : 'Clique aqui para adicionar uma foto'}
-                            <input type="file" accept="image/*" onChange={imageUpdate} />
-                        </PhotoContainer>
+                        <PhotoPosition hide={!photo && !medium.foto}>
+                            <PhotoContainer photo={preview}>
+                                {photo || medium.foto ? '' : 'Clique aqui para adicionar uma foto'}
+                                <input type="file" accept="image/*" onChange={imageUpdate} />
+                            </PhotoContainer>
+                            <span onClick={removeImage}>Remover foto</span>
+                        </PhotoPosition>
                     </MainContent>
                 </PersonalCard>
                 <PersonalCard>
@@ -534,7 +567,7 @@ function EditMedium() {
                         <label>Data Elevação: </label>
                         <input type="date" value={medium.dtElevacao} onChange={(e) => updateProps('dtElevacao', e.target.value)} min={medium.dtIniciacao} max={now} disabled={!medium.dtIniciacao} />
                         <label>Data Centúria: </label>
-                        <input type="date" value={medium.dtCenturia} onChange={(e) => updateProps('dtCenturia', e.target.value)} min={medium.dtElevacao} max={now} disabled={!medium.dtElevacao} />
+                        <input type="date" value={medium.dtCenturia} onChange={(e) => updateProps('dtCenturia', e.target.value)} min={medium.dtElevacao} max={now} disabled={!medium.dtElevacao && !medium.oldDtElevacao} />
                         <label>Data Sétimo: </label>
                         <input type="date" value={medium.dtSetimo} onChange={(e) => updateProps('dtSetimo', e.target.value)} min={medium.dtCenturia} max={now} disabled={!medium.dtCenturia} />
                     </GridDatesContainer>
@@ -660,7 +693,7 @@ function EditMedium() {
                                     </OptionsList>
                                 </CustomInput>
                                 <label>Data Ministro: </label>
-                                <input type="date" value={medium.dtMinistro} onChange={(e) => updateProps('dtMinistro', e.target.value)} min={medium.dtCenturia}  max={now} />
+                                <input type="date" value={medium.dtMentor} onChange={(e) => updateProps('dtMentor', e.target.value)} min={medium.dtCenturia}  max={now} />
                                 <label>Cavaleiro: </label>
                                 <CustomInput>
                                     <input
@@ -786,7 +819,7 @@ function EditMedium() {
                                     <option value={'Vermelha'}>Vermelha</option>
                                 </select>
                                 <label>Data Guia: </label>
-                                <input type="date" value={medium.dtGuia} onChange={(e) => updateProps('dtGuia', e.target.value)} min={medium.dtCenturia}  max={now} />
+                                <input type="date" value={medium.dtMentor} onChange={(e) => updateProps('dtMentor', e.target.value)} min={medium.dtCenturia}  max={now} />
                             </GridContainer>
                         </>
                     : ''}
@@ -1297,6 +1330,149 @@ function EditMedium() {
                                 <label>Regente</label>
                             </FieldContainerBox>
                         </div>
+                    : <div></div>}
+                </PersonalCard>
+                <PersonalCard hide={!medium.med}>
+                    <SectionTitle>Dados como {medium.med === 'Doutrinador' ? 'Apará' : medium.med === 'Apará' ? 'Doutrinador' : ''}</SectionTitle>
+                    <GridContainer>
+                        <label>Data Teste: </label>
+                        <input type="date" value={medium.oldDtTest} onChange={(e) => updateProps('oldDtTest', e.target.value)} min={medium.dtNasc}  max={now} />
+                        <label>Data Emplacamento: </label>
+                        <input type="date" value={medium.oldDtEmplac} onChange={(e) => updateProps('oldDtEmplac', e.target.value)} min={medium.oldDtTest} max={now} disabled={!medium.oldDtTest} />
+                        <label>Data Iniciação: </label>
+                        <input type="date" value={medium.oldDtIniciacao} onChange={(e) => updateProps('oldDtIniciacao', e.target.value)} min={medium.oldDtEmplac} max={now} disabled={!medium.oldDtEmplac} />
+                        <label>Data Elevação: </label>
+                        <input type="date" value={medium.oldDtElevacao} onChange={(e) => updateProps('oldDtElevacao', e.target.value)} min={medium.oldDtIniciacao} max={now} disabled={!medium.oldDtIniciacao} />
+                        {medium.sex === 'Masculino' ?
+                            <>
+                                <label>Classificação: </label>
+                                <select value={medium.oldClassMest} disabled={!medium.oldDtElevacao} onChange={(e) => updateProps('oldClassMest', e.target.value)}>
+                                    <option value={''}></option>
+                                    {oldListClassMest.map((item: string, index: number) => (
+                                        <option key={index} value={item}>{item}</option>
+                                    ))}
+                                </select>
+                                <label>Cavaleiro: </label>
+                                <CustomInput>
+                                    <input
+                                        type="text"
+                                        value={searchOldCav}
+                                        disabled={!medium.dtCenturia}
+                                        onChange={(e) => setSearchOldCav(e.target.value)}
+                                        onFocus={() => setDropOldCav(true)}
+                                        onBlur={() => setTimeout(() => setDropOldCav(false), 150)}
+                                    />
+                                    <OptionsList show={dropOldCav}>
+                                        <ul>
+                                            {oldListCav
+                                                .filter((item: ICavaleiro) => item.nome.toLowerCase().includes(searchOldCav.toLowerCase().trim()))
+                                                .length === 0
+                                            ? (
+                                                <li style={{fontStyle: 'italic', color: '#777'}}>- Não encontrado -</li>
+                                            ) : (
+                                                oldListCav
+                                                    .filter((item: ICavaleiro) => item.nome.toLowerCase().includes(searchOldCav.toLowerCase().trim()))
+                                                    .map((item: ICavaleiro, index: number) => (
+                                                        <li
+                                                            key={index}
+                                                            onClick={() => {
+                                                                updateProps('oldCavaleiro', item.id);
+                                                                const foundCav = oldListCav.find((cav: ICavaleiro) => cav.id === item.id)
+                                                                if (foundCav) {
+                                                                    setSearchOldCav(foundCav.nome);
+                                                                }
+                                                                setDropOldCav(false);
+                                                            }}
+                                                        >
+                                                            {item.nome}
+                                                        </li>
+                                                ))
+                                            )}
+                                        </ul>
+                                    </OptionsList>
+                                </CustomInput>
+                                <label>Cor do Cavaleiro: </label>
+                                <select value={medium.oldCor} disabled={medium.oldCavaleiro === 0} onChange={(e) => updateProps('oldCor', e.target.value)}>
+                                    {medium.med==='Apará'?
+                                        <>
+                                            <option value={''}></option>
+                                            <option value={'Verde'}>Verde</option>
+                                        </>
+                                    : medium.med==='Doutrinador'?
+                                        <>
+                                            <option value={''}></option>
+                                            <option value={'Verde'}>Verde</option>
+                                            <option value={'Vermelho'}>Vermelho</option>
+                                        </>
+                                    : <option value={''}></option>}
+                                </select>
+                                <label>Data Cavaleiro: </label>
+                                <input type="date" value={medium.oldDtMentor} disabled={medium.oldCavaleiro === 0} onChange={(e) => updateProps('oldDtMentor', e.target.value)} min={medium.dtCenturia}  max={now} />
+                                <label>Última Classif.: </label>
+                                <select value={medium.oldClassif} disabled={!medium.dtCenturia} onChange={(e) => updateProps('oldClassif', e.target.value)}>
+                                    <option value={''}></option>
+                                    {oldListClass.map((item: string, index: number) => (
+                                        <option key={index} value={item}>{item}</option>
+                                    ))}
+                                </select>
+                                <label>Data: </label>
+                                <input type="date" value={medium.oldDtClassif} onChange={(e) => updateProps('oldDtClassif', e.target.value)} min={medium.dtCenturia}  max={now} />
+                            </>
+                        : medium.sex === 'Feminino' ?
+                            <>
+                                <label>Estrela: </label>
+                                <select value={medium.oldEstrela} onChange={(e) => updateProps('oldEstrela', e.target.value)}>
+                                    <option value={''}></option>
+                                    {oldListEst.map((item: string, index: number) => (
+                                        <option key={index} value={item}>{item}</option>
+                                    ))}
+                                </select> 
+                            </>
+                        : <div></div>}
+                        {medium.med === 'Doutrinador' ?
+                            <>
+                                <label>Preto Velho: </label>
+                                <input type="text" value={medium.pretovelho} onChange={(e) => updateProps('pretovelho', e.target.value)}/>
+                                <label>Caboclo: </label>
+                                <input type="text" value={medium.caboclo} onChange={(e) => updateProps('caboclo', e.target.value)}/>
+                                <label>Médico: </label>
+                                <input type="text" value={medium.medico} onChange={(e) => updateProps('medico', e.target.value)}/>
+                            </>
+                        : medium.med === 'Apará' ?
+                            <>
+                                <label>Princesa: </label>
+                                <select value={medium.princesa} onChange={(e) => updateProps('princesa', e.target.value)}>
+                                    <option value={''}></option>
+                                    {princesas.map((item: string, index: number) => (
+                                        <option key={index} value={item}>{item}</option>
+                                    ))}
+                                </select>
+                            </>
+                        : <div></div>}
+                    </GridContainer>
+                    {medium.sex.concat(medium.med) === 'MasculinoApará'?
+                        <>
+                            <Divider></Divider>
+                            <InputContainer>
+                                <div style={{width: '100%', display: 'flex', gap: '10px'}}>
+                                    <FieldContainerBox>
+                                        <input type="checkBox" checked={tSol} disabled={medium.oldClassif !== 'Adjunto Koatay 108 Herdeiro Triada Harpásios Raio Adjuração Rama 2000' || medium.presidente === 'Presidente'} onChange={(e) => setTSol(e.target.checked)}/>
+                                        <label>Trino Solitário</label>
+                                    </FieldContainerBox> 
+                                    <FieldContainer>
+                                        <select disabled={!tSol} value={medium.trinoSol} onChange={(e) => updateProps('trinoSol', e.target.value)}>
+                                            <option value={''}></option>
+                                            <option value={'Juremá'}>Juremá</option>
+                                            <option value={'Iramar'}>Iramar</option>
+                                        </select>
+                                    </FieldContainer>
+                                </div>
+                                <FieldContainer width="190px">
+                                    <label>Data: </label>
+                                    <input type="date" disabled={!tSol} value={medium.dtTrinoSol} onChange={(e) => updateProps('dtTrinoSol', e.target.value)} min={medium.dtCenturia}  max={now} />
+                                </FieldContainer>
+                            </InputContainer>
+                        </>
                     : <div></div>}
                 </PersonalCard>
                 <PersonalCard>
