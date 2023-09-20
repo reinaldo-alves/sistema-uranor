@@ -35,18 +35,19 @@ function ShowMedium() {
     const navigateToTop = (route: string) => {
         setLoading(true)
         navigate(route);
+        getInfo();
         window.scrollTo({top: 0});
     };
     
     useEffect(() => {
         getInfo();
+        window.scrollTo({top: 0});
     }, [])
 
     useEffect(() => {
-        console.log(mediuns)
         const foundMedium = mediuns.find((item: IMedium) => item.medium_id === Number(params.id));
         setMedium(foundMedium);
-    }, [mediuns])
+    }, [mediuns, params.id])
     
     if(loading) {
         return <Loading />

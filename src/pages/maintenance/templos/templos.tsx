@@ -9,10 +9,9 @@ import MainTitle from "src/components/MainTitle/MainTitle";
 import { UserContext } from "src/contexts/UserContext";
 import api from "src/api";
 import { Alert } from "src/utilities/popups";
+import { defaultTemp } from "src/utilities/default";
 
 function Templos() {
-    const defaultTemp = {templo_id: 0, cidade: '', estado: {abrev: '', state: ''}, presidente: 0}
-    
     const [searchName, setSearchName] = useState('');
     const [searchState, setSearchState] = useState('');
     const [searchMin, setSearchMin] = useState('');

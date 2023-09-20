@@ -9,10 +9,9 @@ import MainTitle from "src/components/MainTitle/MainTitle";
 import { UserContext } from "src/contexts/UserContext";
 import api from "src/api";
 import { Alert } from "src/utilities/popups";
+import { defaultAdj } from "src/utilities/default";
 
 function Adjuntos() {
-    const defaultAdj = {adjunto_id: 0, nome: '', ministro: 0, classif: '', esperanca: false}
-    
     const [searchMin, setSearchMin] = useState('');
     const [searchAdj, setSearchAdj] = useState('');
     const [edit, setEdit] = useState(false);

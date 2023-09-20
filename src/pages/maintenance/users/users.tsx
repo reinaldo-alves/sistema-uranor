@@ -10,10 +10,9 @@ import { UserContext } from "src/contexts/UserContext";
 import api from "src/api";
 import { useNavigate } from "react-router-dom";
 import { Alert } from "src/utilities/popups";
+import { defaultUser } from "src/utilities/default";
 
 function Users() {
-    const defaultUser = {user_id: 0, name: '', password: '', level: '', medium_id: 0}
-    
     const [searchName, setSearchName] = useState('');
     const [searchLevel, setSearchLevel] = useState('');
     const [edit, setEdit] = useState(false);

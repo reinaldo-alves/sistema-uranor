@@ -85,7 +85,6 @@ export const ListStore = ({ children }: any) => {
             setMinistros(ministro)
         } catch (error) {
             console.log('Erro ao carregar a lista de ministros', error);
-            Alert('Erro ao carregar a lista de ministros', 'error');
         }
     }
 
@@ -100,7 +99,6 @@ export const ListStore = ({ children }: any) => {
             setCavaleiros(cavaleiro)
         } catch (error) {
             console.log('Erro ao carregar a lista de cavaleiros', error);
-            Alert('Erro ao carregar a lista de cavaleiros', 'error')
         }
     }
 
@@ -114,7 +112,6 @@ export const ListStore = ({ children }: any) => {
             setGuias(guia)
         } catch (error) {
             console.log('Erro ao carregar a lista de guias missionárias', error)
-            Alert('Erro ao carregar a lista de guias missionárias', 'error')
         }
     }
 
@@ -132,7 +129,6 @@ export const ListStore = ({ children }: any) => {
             setFalMiss(falange)
         } catch (error) {
             console.log('Erro ao carregar a lista de falanges missionárias', error);
-            Alert('Erro ao carregar a lista de guias missionárias', 'error');
         }
     }
 
@@ -146,7 +142,6 @@ export const ListStore = ({ children }: any) => {
             setAdjuntos(adjunto)
         } catch (error) {
             console.log('Erro ao carregar a lista de adjuntos', error);
-            Alert('Erro ao carregar a lista de adjuntos', 'error')
         }
     }
 
@@ -160,7 +155,6 @@ export const ListStore = ({ children }: any) => {
             setTemplos(templo)
         } catch (error) {
             console.log('Erro ao carregar a lista de templos', error);
-            Alert('Erro ao carregar a lista de templos', 'error')
         }
     }
 

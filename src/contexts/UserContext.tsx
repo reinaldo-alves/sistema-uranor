@@ -35,8 +35,8 @@ export const UserStore = ({ children }: any) => {
             setLogin(true);
             setLoading(false);
         } catch (error) {
+            console.log('Usuário não autenticado', error);
             if(login) {
-                console.log('Usuário não autenticado', error);
                 Alert('Usuário não autenticado', 'error');
             }
         }
@@ -65,6 +65,9 @@ export const UserStore = ({ children }: any) => {
             setLoading(false);
         } catch (error) {
             console.error('Erro ao carregar dados do sistema', error);
+            if(login) {
+                Alert('Erro ao carregar dados do sistema', 'error')
+            }
         }
     }
 

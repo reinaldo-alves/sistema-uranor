@@ -9,14 +9,13 @@ import MainTitle from "src/components/MainTitle/MainTitle";
 import { UserContext } from "src/contexts/UserContext";
 import api from "src/api";
 import { Alert } from "src/utilities/popups";
+import { defaultCavaleiro } from "src/utilities/default";
 
 function Cavaleiros() {
-    const defaultCav = {id: 0, nome: '', med: ''}
-
     const [search, setSearch] = useState('');
     const [edit, setEdit] = useState(false);
-    const [selected, setSelected] = useState(defaultCav);
-    const [edited, setEdited] = useState(defaultCav);
+    const [selected, setSelected] = useState(defaultCavaleiro);
+    const [edited, setEdited] = useState(defaultCavaleiro);
     const [showModal, setShowModal] = useState(false);
     
     const { token } = useContext(UserContext);
@@ -36,8 +35,8 @@ function Cavaleiros() {
 
     const modalAddCav = () => {
         setEdit(false);
-        setEdited(defaultCav);
-        setSelected(defaultCav);
+        setEdited(defaultCavaleiro);
+        setSelected(defaultCavaleiro);
         setShowModal(true);
     }
 
@@ -50,8 +49,8 @@ function Cavaleiros() {
 
     const closeModal = () => {
         setShowModal(false);
-        setEdited(defaultCav);
-        setSelected(defaultCav);
+        setEdited(defaultCavaleiro);
+        setSelected(defaultCavaleiro);
     }
 
     const addCav = async (cavaleiro: ICavaleiro, token: string) => {
@@ -78,8 +77,8 @@ function Cavaleiros() {
                 await api.put('/cavaleiro/update', {cavaleiro_id: oldCav.id, ...changedFields}, {headers:{Authorization: token}})
                 Alert('Cavaleiro editado com sucesso', 'success');
                 await loadCavaleiro(token);
-                setEdited(defaultCav);
-                setSelected(defaultCav);
+                setEdited(defaultCavaleiro);
+                setSelected(defaultCavaleiro);
                 closeModal();
             } catch (error) {
                 console.log('Não foi possível editar o cavaleiro', error);

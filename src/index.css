@@ -71,3 +71,25 @@ input:disabled, select:disabled {
 .confirmButton:hover, .cancelButton:hover {
   transform: scale(1.02) !important;
 }
+
+.MuiAutocomplete-listbox {
+  background-color: #fff !important;
+  border: 1px solid #ccc !important;
+  border-radius: none !important;
+}
+
+.MuiAutocomplete-option {
+  padding: 2px 8px !important;
+  font-size: 18px !important;
+  min-height: 28px !important;
+}
+
+.MuiAutocomplete-option[aria-selected='true'] {
+  font-weight: bold;
+  background-color: rgb(153, 187, 255) !important;
+}
+
+.MuiAutocomplete-option.Mui-focused {
+  background-color: #0078d4 !important;
+  color: #fff !important;
+}

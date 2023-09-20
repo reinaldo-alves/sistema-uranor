@@ -1,7 +1,7 @@
 import { useContext, useState, useEffect } from "react";
 import { ListContext } from "src/contexts/ListContext";
-import { CustomInput, Divider, FieldContainer, FieldContainerBox, GridContainer, GridDatesContainer, InputContainer, MainContainer, MainContent, MainInfoContainer, MediumButton, Observations, OptionsList, PersonalCard, PhotoContainer, PhotoPosition, SectionTitle } from "./styles";
-import { IAdjunto, ICavaleiro, IEstado, IFalange, IMedium, IMentor, ITemplo, ITurno } from "src/types/types";
+import { Divider, FieldContainer, FieldContainerBox, GridContainer, GridDatesContainer, InputContainer, MainContainer, MainContent, MainInfoContainer, MediumButton, Observations, PersonalCard, PhotoContainer, PhotoPosition, SectionTitle } from "./styles";
+import { IAdjunto, ICavaleiro, IEstado, IFalange, IMedium, IMentor, ITemplo } from "src/types/types";
 import SideMenu from "src/components/SideMenu/SideMenu";
 import SubMenu from "src/components/SubMenu/SubMenu";
 import Header from "src/components/header/header";
@@ -15,105 +15,19 @@ import { validateAddMedium } from "src/utilities/validations";
 import { useNavigate, useParams } from "react-router-dom";
 import Loading from "src/utilities/Loading";
 import PageNotFound from "src/pages/PageNotFound/PageNotFound";
+import AutocompleteInput from "src/components/AutocompleteInput/AutocompleteInput";
+import { defaultCavaleiro, defaultMedium, defaultMentor } from "src/utilities/default";
 
 function EditMedium() {
     const { templos, estados, adjuntos, coletes, classMest, falMest, povos, falMiss, turnoL, turnoT, ministros, cavaleiros, guias, estrelas, princesas, classificacao, getData } = useContext(ListContext);
     const { token, getUser } = useContext(UserContext);
-    const { mediuns, loadMedium, setComponentes } = useContext(MediumContext);
+    const { mediuns, loadMedium, convertMediumToSend, setComponentes, uploadImage } = useContext(MediumContext);
     const params = useParams();
     const navigate = useNavigate();
-    const defaultMedium = {
-        medium_id: 0,
-        nome: '',
-        med: '',
-        sex: '',
-        foto: '',
-        condicao: 'Ativo',
-        templo: 0,
-        dtNasc: '',
-        rg: '',
-        cpf: '',
-        mae: '',
-        pai: '',
-        natur: '',
-        naturUF: '',
-        profissao: '',
-        estCivil: '',
-        conjuge: '',
-        cep: '',
-        endereco: '',
-        endNumero: '',
-        endCompl: '',
-        endBairro: '',
-        endCidade: '',
-        endUF: '',
-        telefone1: '',
-        telefone2: '',
-        email: '',
-        dtIngresso: '',
-        dtEmplac: '',
-        dtIniciacao: '',
-        dtElevacao: '',
-        dtCenturia: '',
-        dtSetimo: '',
-        dtTest: '',
-        adjOrigem: 0,
-        temploOrigem: 0,
-        colete: 0,
-        classMest: '',
-        falMest: '',
-        povo: '',
-        falMiss: 0,
-        adjDevas: '',
-        turnoLeg: '',
-        turnoTrab: '',
-        ministro: 0,
-        cavaleiro: 0,
-        guia: 0,
-        dtMentor: '',
-        cor: '',
-        estrela: '',
-        classif: '',
-        dtClassif: '',
-        princesa: '',
-        pretovelho: '',
-        caboclo: '',
-        medico: '',
-        nomeEmissao: '',
-        ninfa: 0,
-        mestre: 0,
-        padrinho: 0,
-        madrinha: 0,
-        afilhado: 0,
-        comando: '',
-        presidente: '',
-        recepcao: false,
-        devas: false,
-        regente: false,
-        janda: false,
-        trinoSol: '',
-        dtTrinoSol: '',
-        trinoSar: false,
-        dtTrinoSar: '',
-        herdeiro: 0,
-        filho: false,
-        observ: '',
-        oldFoto: '',
-        oldDtTest: '',
-        oldDtEmplac: '',
-        oldDtIniciacao: '',
-        oldDtElevacao: '',
-        oldClassMest: '',
-        oldCavaleiro: 0,
-        oldCor: '',
-        oldDtMentor: '',
-        oldEstrela: '',
-        oldClassif: '',
-        oldDtClassif: ''
-    } as IMedium;
 
     const [loading, setLoading] = useState(true);
     const [medium, setMedium] = useState(defaultMedium);
+    const [selected, setSelected] = useState(defaultMedium);
     const [listClassMest, setListClassMest] = useState([]);
     const [listFalMiss, setListFalMiss] = useState([]);
     const [listTurnoL, setListTurnoL] = useState([]);
@@ -128,15 +42,15 @@ function EditMedium() {
     const [tSol, setTSol] = useState(false);
     const [photo, setPhoto] = useState<File | null>(null);
     const [preview, setPreview] = useState<string | null>(null);
-    const [dropMin, setDropMin] = useState(false);
-    const [dropCav, setDropCav] = useState(false);
-    const [dropOldCav, setDropOldCav] = useState(false);
-    const [dropGuia, setDropGuia] = useState(false);
-    const [dropMes, setDropMes] = useState(false);
-    const [dropNin, setDropNin] = useState(false);
-    const [dropPad, setDropPad] = useState(false);
-    const [dropMad, setDropMad] = useState(false);
-    const [dropAfi, setDropAfi] = useState(false);
+    const [dropMin, setDropMin] = useState(defaultMentor);
+    const [dropCav, setDropCav] = useState(defaultCavaleiro);
+    const [dropOldCav, setDropOldCav] = useState(defaultCavaleiro);
+    const [dropGuia, setDropGuia] = useState(defaultMentor);
+    const [dropMes, setDropMes] = useState(defaultMedium);
+    const [dropNin, setDropNin] = useState(defaultMedium);
+    const [dropPad, setDropPad] = useState(defaultMedium);
+    const [dropMad, setDropMad] = useState(defaultMedium);
+    const [dropAfi, setDropAfi] = useState(defaultMedium);
     const [searchMin, setSearchMin] = useState('');
     const [searchCav, setSearchCav] = useState('');
     const [searchOldCav, setSearchOldCav] = useState('');
@@ -153,6 +67,7 @@ function EditMedium() {
         const foundMedium: IMedium = mediuns.find((item: IMedium) => item.medium_id === Number(params.id));
         const min = ministros.find((item: IMentor) => item.id === foundMedium.ministro);
         const cav = cavaleiros.find((item: ICavaleiro) => item.id === foundMedium.cavaleiro);
+        const oldCav = cavaleiros.find((item: ICavaleiro) => item.id === foundMedium.oldCavaleiro);
         const guia = guias.find((item: IMentor) => item.id === foundMedium.guia);
         const mes = mediuns.find((item: IMedium) => item.medium_id === foundMedium.mestre);
         const nin = mediuns.find((item: IMedium) => item.medium_id === foundMedium.ninfa);
@@ -160,14 +75,16 @@ function EditMedium() {
         const mad = mediuns.find((item: IMedium) => item.medium_id === foundMedium.madrinha);
         const afi = mediuns.find((item: IMedium) => item.medium_id === foundMedium.afilhado);
         setMedium(foundMedium);
-        setSearchMin(min? min.nome : '');
-        setSearchCav(cav? cav.nome : '');
-        setSearchGuia(guia? guia.nome : '');
-        setSearchMes(mes? mes.nome : '');
-        setSearchNin(nin? nin.nome : '');
-        setSearchPad(pad? pad.nome : '');
-        setSearchMad(mad? mad.nome : '');
-        setSearchAfi(afi? afi.nome : '');
+        setSelected(foundMedium);
+        setDropMin(min? min : defaultMentor);
+        setDropCav(cav? cav : defaultCavaleiro);
+        setDropOldCav(oldCav? oldCav : defaultCavaleiro);
+        setDropGuia(guia? guia : defaultMentor);
+        setDropMes(mes? mes : defaultMedium);
+        setDropNin(nin? nin : defaultMedium);
+        setDropPad(pad? pad : defaultMedium);
+        setDropMad(mad? mad : defaultMedium);
+        setDropAfi(afi? afi : defaultMedium);
         setTSol(foundMedium.trinoSol? true : false);
     }
     
@@ -191,7 +108,7 @@ function EditMedium() {
         if(mediuns.length > 0){
             defineMedium();
         }
-    }, [mediuns])
+    }, [mediuns, params.id])
     
     useEffect(() => {
         console.log(medium)
@@ -252,8 +169,12 @@ function EditMedium() {
             default:
                 setListClassMest([]);
                 setListCav([]);
+                setOldListCav([]);
                 setListEst([]);
                 setListClass([]);
+                setOldListClass([]);
+                setOldListClassMest([]);
+                setOldListEst([]);
         }
     }, [medium.med, medium.sex])
 
@@ -339,6 +260,82 @@ function EditMedium() {
         }
     }, [photo, medium.foto]);
 
+    useEffect(() => {
+        if(dropMin) {
+            updateProps('ministro', dropMin.id)
+        } else {
+            updateProps('ministro', 0)
+        }
+    }, [dropMin])
+
+    useEffect(() => {
+        if(dropCav) {
+            updateProps('cavaleiro', dropCav.id)
+        } else {
+            updateProps('cavaleiro', 0)
+        }
+    }, [dropCav])
+
+    useEffect(() => {
+        if(dropOldCav) {
+            updateProps('oldCavaleiro', dropOldCav.id)
+        } else {
+            updateProps('oldCavaleiro', 0)
+        }
+    }, [dropOldCav])
+
+    useEffect(() => {
+        if(dropGuia) {
+            updateProps('guia', dropGuia.id)
+        } else {
+            updateProps('guia', 0)
+        }
+    }, [dropGuia])
+
+    useEffect(() => {
+        if(dropMes) {
+            if(medium.sex === 'Masculino') {
+                updateProps('herdeiro', dropMes.medium_id)
+            } else if (medium.sex === 'Feminino') {
+                updateProps('mestre', dropMes.medium_id)
+            }
+        } else {
+            updateProps('mestre', 0)
+        }
+    }, [dropMes])
+
+    useEffect(() => {
+        if(dropNin) {
+            updateProps('ninfa', dropNin.medium_id)
+        } else {
+            updateProps('ninfa', 0)
+        }
+    }, [dropNin])
+
+    useEffect(() => {
+        if(dropPad) {
+            updateProps('padrinho', dropPad.medium_id)
+        } else {
+            updateProps('padrinho', 0)
+        }
+    }, [dropPad])
+
+    useEffect(() => {
+        if(dropMad) {
+            updateProps('madrinha', dropMad.medium_id)
+        } else {
+            updateProps('madrinha', 0)
+        }
+    }, [dropMad])
+
+    useEffect(() => {
+        if(dropAfi) {
+            updateProps('afilhado', dropAfi.medium_id)
+        } else {
+            updateProps('afilhado', 0)
+        }
+    }, [dropAfi])
+
     const listSubMenu = [
         {title: 'Página Inicial', click: '/'},
         {title: 'Consultar Médium', click: '/mediuns/consulta'},
@@ -368,74 +365,35 @@ function EditMedium() {
         }));
     };
 
-    const uploadImage = async (medium_id: number,token: string) => {
-        if(photo){
-            const formData = new FormData();
-            formData.append('image', photo);
-            const headers = {
-                'headers': {
-                    'Authorization': token,
-                    'Content-Type': 'multipart/form-data'
-                }
+    const editMedium = async (newMedium: IMedium, oldMedium: IMedium, token: string) => {
+        const newMediumObj = convertMediumToSend(newMedium);
+        const oldMediumObj = convertMediumToSend(oldMedium);
+        const changedFields = {} as any
+        for (const key in newMediumObj){
+            if (newMediumObj[key as keyof IMedium] !== oldMediumObj[key as keyof IMedium]){
+                changedFields[key as keyof IMedium] = newMediumObj[key as keyof IMedium]
             }
+        }
+        if (Object.keys(changedFields).length > 0) {
             try {
-                const { data } = await api.post(`/medium/upload-image?medium_id=${medium_id}`, formData, headers)
-                console.log(`Foto ${data.filename} adicionada ao banco de dados`);
+                await Confirm('Tem certeza que quer editar este médium?', 'question', 'Cancelar', 'Confirmar', async () => {
+                    await api.put('/medium/update', {medium_id: oldMediumObj.medium_id, ...changedFields}, {headers:{Authorization: token}})
+                    if (newMediumObj.foto !== oldMediumObj.foto) {
+                        await uploadImage(oldMediumObj.medium_id, token, photo);
+                    }
+                    if (newMediumObj.mestre !== oldMediumObj.mestre || newMediumObj.ninfa !== oldMediumObj.ninfa || newMediumObj.padrinho !== oldMediumObj.padrinho || newMediumObj.madrinha !== oldMediumObj.madrinha || newMediumObj.afilhado !== oldMediumObj.afilhado) {
+                        await setComponentes(newMediumObj, token);
+                    }
+                    Alert('Médium editado com sucesso', 'success');
+                    await loadMedium(token);
+                    navigate(`/mediuns/consulta/${params.id}`);
+                })
             } catch (error) {
-                console.log('Erro ao fazer upload da imagem', error);
-                Alert('Erro ao fazer upload da imagem', 'error');
+                console.log('Não foi possível editar o médium', error);
+                Alert('Não foi possível editar o médium', 'error');
             }
         } else {
-            console.log('Nenhuma foto foi adicionada');
-        }
-    }
-
-    const addMedium = async (medium: IMedium, token: string) => {
-        const mediumObj = {
-            ...medium,
-            dtNasc: medium.dtNasc === '' ? null : medium.dtNasc,
-            dtIngresso: medium.dtIngresso === '' ? null : medium.dtIngresso,
-            dtEmplac: medium.dtEmplac === '' ? null : medium.dtEmplac,
-            dtIniciacao: medium.dtIniciacao === '' ? null : medium.dtIniciacao,
-            dtElevacao: medium.dtElevacao === '' ? null : medium.dtElevacao,
-            dtCenturia: medium.dtCenturia === '' ? null : medium.dtCenturia,
-            dtSetimo: medium.dtSetimo === '' ? null : medium.dtSetimo,
-            dtTest: medium.dtIngresso === medium.oldDtTest ? null : medium.dtIngresso,
-            dtMentor: medium.dtMentor === '' ? null : medium.dtMentor,
-            dtClassif: medium.dtClassif === '' ? null : medium.dtClassif,
-            dtTrinoSol: medium.dtTrinoSol === '' ? null : medium.dtTrinoSol,
-            dtTrinoSar: medium.dtTrinoSar === '' ? null : medium.dtTrinoSar,
-            colete: medium.colete === 0 ? null : medium.colete,
-            ministro: medium.ministro === 0 ? null : medium.ministro,
-            cavaleiro: medium.cavaleiro === 0 ? null : medium.cavaleiro,
-            guia: medium.guia === 0 ? null : medium.guia,
-            falMiss: medium.falMiss === 0 ? null : medium.falMiss,
-            adjOrigem: medium.adjOrigem === 0 ? null : medium.adjOrigem,
-            temploOrigem: medium.temploOrigem === 0 ? null : medium.temploOrigem,
-            mestre: medium.mestre === 0 ? null : medium.mestre,
-            ninfa: medium.ninfa === 0 ? null : medium.ninfa,
-            padrinho: medium.padrinho === 0 ? null : medium.padrinho,
-            madrinha: medium.madrinha === 0 ? null : medium.madrinha,
-            afilhado: medium.afilhado === 0 ? null : medium.afilhado,
-            oldDtTest: medium.oldDtTest === '' ? null : medium.oldDtTest,
-            oldDtEmplac: medium.oldDtEmplac === '' ? null : medium.oldDtEmplac,
-            oldDtIniciacao: medium.oldDtIniciacao === '' ? null : medium.oldDtIniciacao,
-            oldDtElevacao: medium.oldDtElevacao === '' ? null : medium.oldDtElevacao,
-            oldCavaleiro: medium.oldCavaleiro === 0 ? null : medium.oldCavaleiro,
-            oldDtMentor: medium.oldDtMentor === '' ? null : medium.oldDtMentor,
-            oldDtClassif: medium.oldDtClassif === '' ? null : medium.oldDtClassif
-        };
-        const {medium_id, ...newMediumObj} = mediumObj;
-        try {
-            const response = await api.post('/medium/create', newMediumObj, {headers:{Authorization: token}})
-            const { medium_id } = response.data;
-            await uploadImage(medium_id, token);
-            await setComponentes({...medium, medium_id});
-            Alert('Médium adicionado com sucesso', 'success');
-            await loadMedium(token);
-        } catch (error) {
-            console.log('Não foi possível adicionar o médium', error);
-            Alert('Não foi possível adicionar o médium', 'error');
+            Alert('Não foi feita nenhuma alteração no médium', 'info')
         }
     }
 
@@ -456,7 +414,7 @@ function EditMedium() {
                     <MainContent>
                         <MainInfoContainer>
                             <SectionTitle>Editar Médium</SectionTitle>
-                            <SectionTitle>{medium.nome} - ID: {medium.medium_id.toString().padStart(5, '0')}</SectionTitle>
+                            <SectionTitle>{selected.nome} - ID: {selected.medium_id.toString().padStart(5, '0')}</SectionTitle>
                             <Divider></Divider>
                             <FieldContainer>
                                 <label>Nome Médium: </label>
@@ -658,80 +616,27 @@ function EditMedium() {
                             <Divider></Divider>
                             <GridContainer>
                                 <label>Ministro: </label>
-                                <CustomInput>
-                                    <input
-                                        type="text"
-                                        value={searchMin}
-                                        onChange={(e) => setSearchMin(e.target.value)}
-                                        onFocus={() => setDropMin(true)}
-                                        onBlur={() => setTimeout(() => setDropMin(false), 150)}
-                                    />
-                                    <OptionsList show={dropMin}>
-                                        <ul>
-                                            {ministros
-                                                .filter((item: IMentor) => item.nome.toLowerCase().includes(searchMin.toLowerCase().trim()))
-                                                .length === 0
-                                            ? (
-                                                <li style={{fontStyle: 'italic', color: '#777'}}>- Não encontrado -</li>
-                                            ) : (
-                                                ministros
-                                                    .filter((item: IMentor) => item.nome.toLowerCase().includes(searchMin.toLowerCase().trim()))
-                                                    .map((item: IMentor, index: number) => (
-                                                        <li
-                                                            key={index}
-                                                            onClick={() => {
-                                                                updateProps('ministro', item.id);
-                                                                setSearchMin(ministros.find((min: IMentor) => min.id === item.id).nome);
-                                                                setDropMin(false);
-                                                            }}
-                                                        >
-                                                            {item.nome}
-                                                        </li>
-                                                ))
-                                            )}
-                                        </ul>
-                                    </OptionsList>
-                                </CustomInput>
+                                <AutocompleteInput 
+                                    default={defaultMentor}
+                                    options={ministros}
+                                    equality={(option, value) => option.id === value.id}
+                                    value={dropMin}
+                                    setValue={setDropMin}
+                                    inputValue={searchMin}
+                                    setInputValue={setSearchMin}
+                                />
                                 <label>Data Ministro: </label>
                                 <input type="date" value={medium.dtMentor} onChange={(e) => updateProps('dtMentor', e.target.value)} min={medium.dtCenturia}  max={now} />
                                 <label>Cavaleiro: </label>
-                                <CustomInput>
-                                    <input
-                                        type="text"
-                                        value={searchCav}
-                                        onChange={(e) => setSearchCav(e.target.value)}
-                                        onFocus={() => setDropCav(true)}
-                                        onBlur={() => setTimeout(() => setDropCav(false), 150)}
-                                    />
-                                    <OptionsList show={dropCav}>
-                                        <ul>
-                                            {listCav
-                                                .filter((item: ICavaleiro) => item.nome.toLowerCase().includes(searchCav.toLowerCase().trim()))
-                                                .length === 0
-                                            ? (
-                                                <li style={{fontStyle: 'italic', color: '#777'}}>- Não encontrado -</li>
-                                            ) : (
-                                                listCav
-                                                    .filter((item: ICavaleiro) => item.nome.toLowerCase().includes(searchCav.toLowerCase().trim()))
-                                                    .map((item: ICavaleiro, index: number) => (
-                                                        <li
-                                                            key={index}
-                                                            onClick={() => {
-                                                                updateProps('cavaleiro', item.id);
-                                                                const foundCav = listCav.find((cav: ICavaleiro) => cav.id === item.id)
-                                                                if (foundCav) {
-                                                                    setSearchCav(foundCav.nome);
-                                                                }
-                                                                setDropCav(false);
-                                                            }}
-                                                        >
-                                                            {item.nome}
-                                                        </li>
-                                                ))
-                                            )}
-                                        </ul>
-                                    </OptionsList>
-                                </CustomInput>
+                                <AutocompleteInput 
+                                    default={defaultCavaleiro}
+                                    options={listCav}
+                                    equality={(option, value) => option.id === value.id}
+                                    value={dropCav}
+                                    setValue={setDropCav}
+                                    inputValue={searchCav}
+                                    setInputValue={setSearchCav}
+                                />
                                 <label>Cor do Cavaleiro: </label>
                                 <select value={medium.cor} onChange={(e) => updateProps('cor', e.target.value)}>
                                     {medium.med==='Doutrinador'?
@@ -773,40 +678,15 @@ function EditMedium() {
                                     ))}
                                 </select>
                                 <label>Guia Missionária: </label>
-                                <CustomInput>
-                                    <input
-                                        type="text"
-                                        value={searchGuia}
-                                        onChange={(e) => setSearchGuia(e.target.value)}
-                                        onFocus={() => setDropGuia(true)}
-                                        onBlur={() => setTimeout(() => setDropGuia(false), 250)}
-                                    />
-                                    <OptionsList show={dropGuia}>
-                                        <ul>
-                                            {guias
-                                                .filter((item: IMentor) => item.nome.toLowerCase().includes(searchGuia.toLowerCase().trim()))
-                                                .length === 0
-                                            ? (
-                                                <li style={{fontStyle: 'italic', color: '#777'}}>- Não encontrado -</li>
-                                            ) : (
-                                                guias
-                                                    .filter((item: IMentor) => item.nome.toLowerCase().includes(searchGuia.toLowerCase().trim()))
-                                                    .map((item: IMentor, index: number) => (
-                                                        <li
-                                                            key={index}
-                                                            onClick={() => {
-                                                                updateProps('guia', item.id);
-                                                                setSearchGuia(guias.find((guia: IMentor) => guia.id === item.id).nome);
-                                                                setDropGuia(false);
-                                                            }}
-                                                        >
-                                                            {item.nome}
-                                                        </li>
-                                                ))
-                                            )}
-                                        </ul>
-                                    </OptionsList>
-                                </CustomInput>
+                                <AutocompleteInput 
+                                    default={defaultMentor}
+                                    options={guias}
+                                    equality={(option, value) => option.id === value.id}
+                                    value={dropGuia}
+                                    setValue={setDropGuia}
+                                    inputValue={searchGuia}
+                                    setInputValue={setSearchGuia}
+                                />
                                 <label>Cor da Guia: </label>
                                 <select value={medium.cor} onChange={(e) => updateProps('cor', e.target.value)}>
                                     <option value={undefined}></option>
@@ -859,246 +739,84 @@ function EditMedium() {
                     {medium.sex.concat(medium.med)==='MasculinoDoutrinador'?
                         <GridContainer>
                             <label>Escrava: </label>
-                            <CustomInput>
-                                <input
-                                    type="text"
-                                    value={searchNin}
-                                    onChange={(e) => setSearchNin(e.target.value)}
-                                    onFocus={() => setDropNin(true)}
-                                    onBlur={() => setTimeout(() => setDropNin(false), 150)}
-                                />
-                                <OptionsList show={dropNin}>
-                                    <ul>
-                                        {mediuns
-                                            .filter((item: IMedium) => item.dtCenturia && item.med === 'Apará' && item.sex === 'Feminino')
-                                            .filter((item: IMedium) => item.nome.toLowerCase().includes(searchNin.toLowerCase().trim()))
-                                            .length === 0
-                                        ? (
-                                            <li style={{fontStyle: 'italic', color: '#777'}}>- Não encontrado -</li>
-                                        ) : (
-                                            mediuns
-                                                .filter((item: IMedium) => item.dtCenturia && item.med === 'Apará' && item.sex === 'Feminino')
-                                                .filter((item: IMedium) => item.nome.toLowerCase().includes(searchNin.toLowerCase().trim()))
-                                                .map((item: IMedium, index: number) => (
-                                                    <li
-                                                        key={index}
-                                                        style={item.mestre? {fontStyle: 'italic', color: '#777'} : {}}
-                                                        onClick={!item.mestre? () => {
-                                                            updateProps('ninfa', item.medium_id);
-                                                            setSearchNin(mediuns.find((med: IMedium) => med.medium_id === item.medium_id).nome);
-                                                            setDropNin(false);
-                                                        } : () => Alert('Ninfa selecionada já é escrava de outro mestre', 'error')}
-                                                    >
-                                                        {item.nome}
-                                                    </li>
-                                            ))
-                                        )}
-                                    </ul>
-                                </OptionsList>
-                            </CustomInput>
+                            <AutocompleteInput 
+                                default={defaultMedium}
+                                options={mediuns.filter((item: IMedium) => item.dtCenturia && item.med === 'Apará' && item.sex === 'Feminino')}
+                                disabledOptions={(option: IMedium) => option.mestre !== 0}
+                                equality={(option, value) => option.medium_id === value.medium_id}
+                                value={dropNin}
+                                setValue={setDropNin}
+                                inputValue={searchNin}
+                                setInputValue={setSearchNin}
+                            />
                             <label>Madrinha: </label>
-                            <CustomInput>
-                                <input
-                                    type="text"
-                                    value={searchMad}
-                                    onChange={(e) => setSearchMad(e.target.value)}
-                                    onFocus={() => setDropMad(true)}
-                                    onBlur={() => setTimeout(() => setDropMad(false), 150)}
-                                />
-                                <OptionsList show={dropMad}>
-                                    <ul>
-                                        {mediuns
-                                            .filter((item: IMedium) => item.dtCenturia && item.med === 'Doutrinador' && item.sex === 'Feminino')
-                                            .filter((item: IMedium) => item.nome.toLowerCase().includes(searchMad.toLowerCase().trim()))
-                                            .length === 0
-                                        ? (
-                                            <li style={{fontStyle: 'italic', color: '#777'}}>- Não encontrado -</li>
-                                        ) : (
-                                            mediuns
-                                                .filter((item: IMedium) => item.dtCenturia && item.med === 'Doutrinador' && item.sex === 'Feminino')
-                                                .filter((item: IMedium) => item.nome.toLowerCase().includes(searchMad.toLowerCase().trim()))
-                                                .map((item: IMedium, index: number) => (
-                                                    <li
-                                                        key={index}
-                                                        style={item.afilhado? {fontStyle: 'italic', color: '#777'} : {}}
-                                                        onClick={!item.afilhado? () => {
-                                                            updateProps('madrinha', item.medium_id);
-                                                            setSearchMad(mediuns.find((med: IMedium) => med.medium_id === item.medium_id).nome);
-                                                            setDropMad(false);
-                                                        } : () => Alert('Ninfa selecionada já é madrinha de outro mestre', 'error')}
-                                                    >
-                                                        {item.nome}
-                                                    </li>
-                                            ))
-                                        )}
-                                    </ul>
-                                </OptionsList>
-                            </CustomInput>
+                            <AutocompleteInput 
+                                default={defaultMedium}
+                                options={mediuns.filter((item: IMedium) => item.dtCenturia && item.med === 'Doutrinador' && item.sex === 'Feminino')}
+                                disabledOptions={(option: IMedium) => option.afilhado !== 0}
+                                equality={(option, value) => option.medium_id === value.medium_id}
+                                value={dropMad}
+                                setValue={setDropMad}
+                                inputValue={searchMad}
+                                setInputValue={setSearchMad}
+                            />
                             <label>Padrinho: </label>
-                            <CustomInput>
-                                <input
-                                    type="text"
-                                    value={searchPad}
-                                    onChange={(e) => setSearchPad(e.target.value)}
-                                    onFocus={() => setDropPad(true)}
-                                    onBlur={() => setTimeout(() => setDropPad(false), 150)}
-                                />
-                                <OptionsList show={dropPad}>
-                                    <ul>
-                                        {mediuns
-                                            .filter((item: IMedium) => item.dtCenturia && item.med === 'Apará' && item.sex === 'Masculino')
-                                            .filter((item: IMedium) => item.nome.toLowerCase().includes(searchPad.toLowerCase().trim()))
-                                            .length === 0
-                                        ? (
-                                            <li style={{fontStyle: 'italic', color: '#777'}}>- Não encontrado -</li>
-                                        ) : (
-                                            mediuns
-                                                .filter((item: IMedium) => item.dtCenturia && item.med === 'Apará' && item.sex === 'Masculino')
-                                                .filter((item: IMedium) => item.nome.toLowerCase().includes(searchPad.toLowerCase().trim()))
-                                                .map((item: IMedium, index: number) => (
-                                                    <li
-                                                        key={index}
-                                                        style={item.afilhado? {fontStyle: 'italic', color: '#777'} : {}}
-                                                        onClick={!item.afilhado? () => {
-                                                            updateProps('padrinho', item.medium_id);
-                                                            setSearchPad(mediuns.find((med: IMedium) => med.medium_id === item.medium_id).nome);
-                                                            setDropPad(false);
-                                                        } : () => Alert('Mestre selecionado já é padrinho de outro mestre', 'error')}
-                                                    >
-                                                        {item.nome}
-                                                    </li>
-                                            ))
-                                        )}
-                                    </ul>
-                                </OptionsList>
-                            </CustomInput>
+                            <AutocompleteInput 
+                                default={defaultMedium}
+                                options={mediuns.filter((item: IMedium) => item.dtCenturia && item.med === 'Apará' && item.sex === 'Masculino')}
+                                disabledOptions={(option: IMedium) => option.afilhado !== 0}
+                                equality={(option, value) => option.medium_id === value.medium_id}
+                                value={dropPad}
+                                setValue={setDropPad}
+                                inputValue={searchPad}
+                                setInputValue={setSearchPad}
+                            />
                         </GridContainer>
                     : medium.sex.concat(medium.med)==='MasculinoApará'? 
                         <GridContainer>
                             <label>Afilhado: </label>
-                            <CustomInput>
-                                <input
-                                    type="text"
-                                    value={searchAfi}
-                                    onChange={(e) => setSearchAfi(e.target.value)}
-                                    onFocus={() => setDropAfi(true)}
-                                    onBlur={() => setTimeout(() => setDropAfi(false), 150)}
-                                />
-                                <OptionsList show={dropAfi}>
-                                    <ul>
-                                        {mediuns
-                                            .filter((item: IMedium) => item.dtCenturia && item.med === 'Doutrinador' && item.sex === 'Masculino')
-                                            .filter((item: IMedium) => item.nome.toLowerCase().includes(searchAfi.toLowerCase().trim()))
-                                            .length === 0
-                                        ? (
-                                            <li style={{fontStyle: 'italic', color: '#777'}}>- Não encontrado -</li>
-                                        ) : (
-                                            mediuns
-                                                .filter((item: IMedium) => item.dtCenturia && item.med === 'Doutrinador' && item.sex === 'Masculino')
-                                                .filter((item: IMedium) => item.nome.toLowerCase().includes(searchAfi.toLowerCase().trim()))
-                                                .map((item: IMedium, index: number) => (
-                                                    <li
-                                                        key={index}
-                                                        style={item.padrinho? {fontStyle: 'italic', color: '#777'} : {}}
-                                                        onClick={!item.padrinho? () => {
-                                                            updateProps('afilhado', item.medium_id);
-                                                            setSearchAfi(mediuns.find((med: IMedium) => med.medium_id === item.medium_id).nome);
-                                                            setDropAfi(false);
-                                                        } : () => Alert('Mestre selecionado já tem padrinho', 'error')}
-                                                    >
-                                                        {item.nome}
-                                                    </li>
-                                            ))
-                                        )}
-                                    </ul>
-                                </OptionsList>
-                            </CustomInput>
+                            <AutocompleteInput 
+                                default={defaultMedium}
+                                options={mediuns.filter((item: IMedium) => item.dtCenturia && item.med === 'Doutrinador' && item.sex === 'Masculino')}
+                                disabledOptions={(option: IMedium) => option.padrinho !== 0}
+                                equality={(option, value) => option.medium_id === value.medium_id}
+                                value={dropAfi}
+                                setValue={setDropAfi}
+                                inputValue={searchAfi}
+                                setInputValue={setSearchAfi}
+                            />
                             <label>Ninfa Sol: </label>
                             <input disabled />
                         </GridContainer>
                     : medium.sex.concat(medium.med)==='FemininoDoutrinador'?
                         <GridContainer>
                             <label>Afilhado: </label>
-                            <CustomInput>
-                                <input
-                                    type="text"
-                                    value={searchAfi}
-                                    onChange={(e) => setSearchAfi(e.target.value)}
-                                    onFocus={() => setDropAfi(true)}
-                                    onBlur={() => setTimeout(() => setDropAfi(false), 150)}
-                                />
-                                <OptionsList show={dropAfi}>
-                                    <ul>
-                                        {mediuns
-                                            .filter((item: IMedium) => item.dtCenturia && item.med === 'Doutrinador' && item.sex === 'Masculino')
-                                            .filter((item: IMedium) => item.nome.toLowerCase().includes(searchAfi.toLowerCase().trim()))
-                                            .length === 0
-                                        ? (
-                                            <li style={{fontStyle: 'italic', color: '#777'}}>- Não encontrado -</li>
-                                        ) : (
-                                            mediuns
-                                                .filter((item: IMedium) => item.dtCenturia && item.med === 'Doutrinador' && item.sex === 'Masculino')
-                                                .filter((item: IMedium) => item.nome.toLowerCase().includes(searchAfi.toLowerCase().trim()))
-                                                .map((item: IMedium, index: number) => (
-                                                    <li
-                                                        key={index}
-                                                        style={item.madrinha? {fontStyle: 'italic', color: '#777'} : {}}
-                                                        onClick={!item.madrinha? () => {
-                                                            updateProps('afilhado', item.medium_id);
-                                                            setSearchAfi(mediuns.find((med: IMedium) => med.medium_id === item.medium_id).nome);
-                                                            setDropAfi(false);
-                                                        } : () => Alert('Mestre selecionado já tem madrinha', 'error')}
-                                                    >
-                                                        {item.nome}
-                                                    </li>
-                                            ))
-                                        )}
-                                    </ul>
-                                </OptionsList>
-                            </CustomInput>
+                            <AutocompleteInput 
+                                default={defaultMedium}
+                                options={mediuns.filter((item: IMedium) => item.dtCenturia && item.med === 'Doutrinador' && item.sex === 'Masculino')}
+                                disabledOptions={(option: IMedium) => option.madrinha !== 0}
+                                equality={(option, value) => option.medium_id === value.medium_id}
+                                value={dropAfi}
+                                setValue={setDropAfi}
+                                inputValue={searchAfi}
+                                setInputValue={setSearchAfi}
+                            />
                             <label>Ajanã: </label>
                             <input disabled />
                         </GridContainer>
                     : medium.sex.concat(medium.med)==='FemininoApará'?
                         <GridContainer>
                             <label>Mestre: </label>
-                            <CustomInput>
-                                <input
-                                    type="text"
-                                    value={searchMes}
-                                    onChange={(e) => setSearchMes(e.target.value)}
-                                    onFocus={() => setDropMes(true)}
-                                    onBlur={() => setTimeout(() => setDropMes(false), 150)}
-                                />
-                                <OptionsList show={dropMes}>
-                                    <ul>
-                                        {mediuns
-                                            .filter((item: IMedium) => item.dtCenturia && item.med === 'Doutrinador' && item.sex === 'Masculino')
-                                            .filter((item: IMedium) => item.nome.toLowerCase().includes(searchMes.toLowerCase().trim()))
-                                            .length === 0
-                                        ? (
-                                            <li style={{fontStyle: 'italic', color: '#777'}}>- Não encontrado -</li>
-                                        ) : (
-                                            mediuns
-                                                .filter((item: IMedium) => item.dtCenturia && item.med === 'Doutrinador' && item.sex === 'Masculino')
-                                                .filter((item: IMedium) => item.nome.toLowerCase().includes(searchMes.toLowerCase().trim()))
-                                                .map((item: IMedium, index: number) => (
-                                                    <li
-                                                        key={index}
-                                                        style={item.ninfa? {fontStyle: 'italic', color: '#777'} : {}}
-                                                        onClick={!item.ninfa? () => {
-                                                            updateProps('mestre', item.medium_id);
-                                                            setSearchMes(mediuns.find((med: IMedium) => med.medium_id === item.medium_id).nome);
-                                                            setDropMes(false);
-                                                        } : () => Alert('Mestre selecionado já tem escrava', 'error')}
-                                                    >
-                                                        {item.nome}
-                                                    </li>
-                                            ))
-                                        )}
-                                    </ul>
-                                </OptionsList>
-                            </CustomInput>
+                            <AutocompleteInput 
+                                default={defaultMedium}
+                                options={mediuns.filter((item: IMedium) => item.dtCenturia && item.med === 'Doutrinador' && item.sex === 'Masculino')}
+                                disabledOptions={(option: IMedium) => option.ninfa !== 0}
+                                equality={(option, value) => option.medium_id === value.medium_id}
+                                value={dropMes}
+                                setValue={setDropMes}
+                                inputValue={searchMes}
+                                setInputValue={setSearchMes}
+                            />
                         </GridContainer>
                     : <div></div>}
                 </PersonalCard>
@@ -1176,43 +894,16 @@ function EditMedium() {
                                     <InputContainer herdeiro>
                                         <FieldContainer>
                                             <label>Herdeiro de: </label>
-                                            <CustomInput>
-                                                <input 
-                                                    disabled={!medium.trinoSar}
-                                                    type="text"
-                                                    value={searchMes}
-                                                    onChange={(e) => setSearchMes(e.target.value)}
-                                                    onFocus={() => setDropMes(true)}
-                                                    onBlur={() => setTimeout(() => setDropMes(false), 150)}
-                                                />
-                                                <OptionsList show={dropMes}>
-                                                    <ul>
-                                                        {mediuns
-                                                            .filter((item: IMedium) => item.classif === 'Adjunto Koatay 108 Herdeiro Triada Harpásios 7° Raio Adjuração Arcanos Rama 2000')
-                                                            .filter((item: IMedium) => item.nome.toLowerCase().includes(searchMes.toLowerCase().trim()))
-                                                            .length === 0
-                                                        ? (
-                                                            <li style={{fontStyle: 'italic', color: '#777'}}>- Não encontrado -</li>
-                                                        ) : (
-                                                            mediuns
-                                                                .filter((item: IMedium) => item.classif === 'Adjunto Koatay 108 Herdeiro Triada Harpásios 7° Raio Adjuração Arcanos Rama 2000')
-                                                                .filter((item: IMedium) => item.nome.toLowerCase().includes(searchMes.toLowerCase().trim()))
-                                                                .map((item: IMedium, index: number) => (
-                                                                    <li
-                                                                        key={index}
-                                                                        onClick={() => {
-                                                                            updateProps('herdeiro', item.medium_id);
-                                                                            setSearchMes(mediuns.find((med: IMedium) => med.medium_id === item.medium_id).nome);
-                                                                            setDropMes(false);
-                                                                        }}
-                                                                    >
-                                                                        {item.nome}
-                                                                    </li>
-                                                                ))
-                                                            )}
-                                                    </ul>
-                                                </OptionsList>
-                                            </CustomInput>
+                                            <AutocompleteInput 
+                                                default={defaultMedium}
+                                                options={mediuns.filter((item: IMedium) => item.classif === 'Adjunto Koatay 108 Herdeiro Triada Harpásios 7° Raio Adjuração Arcanos Rama 2000')}
+                                                disabled={!medium.trinoSar}
+                                                equality={(option, value) => option.medium_id === value.medium_id}
+                                                value={dropMes}
+                                                setValue={setDropMes}
+                                                inputValue={searchMes}
+                                                setInputValue={setSearchMes}
+                                            />
                                         </FieldContainer>
                                         <FieldContainerBox>
                                             <input type="checkBox" disabled={!medium.trinoSar} checked={medium.filho} onChange={(e) => updateProps('filho', e.target.checked)}/>
@@ -1252,43 +943,16 @@ function EditMedium() {
                             <InputContainer herdeiro> 
                                 <FieldContainer>
                                     <label>Herdeiro de: </label>
-                                    <CustomInput>
-                                        <input 
-                                            disabled={!medium.trinoSar}
-                                            type="text"
-                                            value={searchMes}
-                                            onChange={(e) => setSearchMes(e.target.value)}
-                                            onFocus={() => setDropMes(true)}
-                                            onBlur={() => setTimeout(() => setDropMes(false), 150)}
-                                        />
-                                        <OptionsList show={dropMes}>
-                                            <ul>
-                                                {mediuns
-                                                    .filter((item: IMedium) => item.classif === 'Adjunto Koatay 108 Herdeiro Triada Harpásios 7° Raio Adjuração Arcanos Rama 2000')
-                                                    .filter((item: IMedium) => item.nome.toLowerCase().includes(searchMes.toLowerCase().trim()))
-                                                    .length === 0
-                                                ? (
-                                                    <li style={{fontStyle: 'italic', color: '#777'}}>- Não encontrado -</li>
-                                                ) : (
-                                                    mediuns
-                                                        .filter((item: IMedium) => item.classif === 'Adjunto Koatay 108 Herdeiro Triada Harpásios 7° Raio Adjuração Arcanos Rama 2000')
-                                                        .filter((item: IMedium) => item.nome.toLowerCase().includes(searchMes.toLowerCase().trim()))
-                                                        .map((item: IMedium, index: number) => (
-                                                            <li
-                                                                key={index}
-                                                                onClick={() => {
-                                                                    updateProps('herdeiro', item.medium_id);
-                                                                    setSearchMes(mediuns.find((med: IMedium) => med.medium_id === item.medium_id).nome);
-                                                                    setDropMes(false);
-                                                                }}
-                                                            >
-                                                                {item.nome}
-                                                            </li>
-                                                    ))
-                                                )}
-                                            </ul>
-                                        </OptionsList>
-                                    </CustomInput>
+                                    <AutocompleteInput 
+                                        default={defaultMedium}
+                                        options={mediuns.filter((item: IMedium) => item.classif === 'Adjunto Koatay 108 Herdeiro Triada Harpásios 7° Raio Adjuração Arcanos Rama 2000')}
+                                        disabled={!medium.trinoSar}
+                                        equality={(option, value) => option.medium_id === value.medium_id}
+                                        value={dropMes}
+                                        setValue={setDropMes}
+                                        inputValue={searchMes}
+                                        setInputValue={setSearchMes}
+                                    />
                                 </FieldContainer>
                                 <FieldContainerBox>
                                     <input type="checkBox" disabled={!medium.trinoSar} checked={medium.filho} onChange={(e) => updateProps('filho', e.target.checked)}/>
@@ -1353,44 +1017,16 @@ function EditMedium() {
                                     ))}
                                 </select>
                                 <label>Cavaleiro: </label>
-                                <CustomInput>
-                                    <input
-                                        type="text"
-                                        value={searchOldCav}
-                                        disabled={!medium.dtCenturia}
-                                        onChange={(e) => setSearchOldCav(e.target.value)}
-                                        onFocus={() => setDropOldCav(true)}
-                                        onBlur={() => setTimeout(() => setDropOldCav(false), 150)}
-                                    />
-                                    <OptionsList show={dropOldCav}>
-                                        <ul>
-                                            {oldListCav
-                                                .filter((item: ICavaleiro) => item.nome.toLowerCase().includes(searchOldCav.toLowerCase().trim()))
-                                                .length === 0
-                                            ? (
-                                                <li style={{fontStyle: 'italic', color: '#777'}}>- Não encontrado -</li>
-                                            ) : (
-                                                oldListCav
-                                                    .filter((item: ICavaleiro) => item.nome.toLowerCase().includes(searchOldCav.toLowerCase().trim()))
-                                                    .map((item: ICavaleiro, index: number) => (
-                                                        <li
-                                                            key={index}
-                                                            onClick={() => {
-                                                                updateProps('oldCavaleiro', item.id);
-                                                                const foundCav = oldListCav.find((cav: ICavaleiro) => cav.id === item.id)
-                                                                if (foundCav) {
-                                                                    setSearchOldCav(foundCav.nome);
-                                                                }
-                                                                setDropOldCav(false);
-                                                            }}
-                                                        >
-                                                            {item.nome}
-                                                        </li>
-                                                ))
-                                            )}
-                                        </ul>
-                                    </OptionsList>
-                                </CustomInput>
+                                <AutocompleteInput 
+                                    disabled={!medium.dtCenturia}
+                                    default={defaultCavaleiro}
+                                    options={oldListCav}
+                                    equality={(option, value) => option.id === value.id}
+                                    value={dropOldCav}
+                                    setValue={setDropOldCav}
+                                    inputValue={searchOldCav}
+                                    setInputValue={setSearchOldCav}
+                                />
                                 <label>Cor do Cavaleiro: </label>
                                 <select value={medium.oldCor} disabled={medium.oldCavaleiro === 0} onChange={(e) => updateProps('oldCor', e.target.value)}>
                                     {medium.med==='Apará'?
@@ -1481,7 +1117,7 @@ function EditMedium() {
                 </PersonalCard>
                 <div style={{width: '90%', maxWidth: '1200px', display: 'flex', justifyContent: 'space-around'}}>
                     <MediumButton color="red" onClick={() => navigate(`/mediuns/consulta/${params.id}`)}>Cancelar</MediumButton>
-                    <MediumButton color="green" onClick={() => validateAddMedium(medium, async () => await addMedium(medium, token))}>Salvar</MediumButton>
+                    <MediumButton color="green" onClick={() => validateAddMedium(medium, async () => await editMedium(medium, selected, token))}>Salvar</MediumButton>
                 </div>
             </MainContainer>
             <SideMenu list={listSubMenu} />
