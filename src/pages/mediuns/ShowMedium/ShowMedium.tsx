@@ -59,6 +59,7 @@ function ShowMedium() {
 
     const endNum = medium.endNumero? 'n° ' + medium.endNumero : ''
     const cityUF = [medium.endCidade, medium.endUF].filter(el => el !== '').join(" - ")
+    const naturCityUF = [medium.natur, medium.naturUF].filter(el => el !== '').join(" - ")
     const fullAddress = [medium.endereco, endNum, medium.endCompl, medium.endBairro, cityUF].filter(el => el !== '').join(", ")
 
     const positionsAndFunctions = (medium: IMedium) => {
@@ -126,7 +127,7 @@ function ShowMedium() {
                             <SectionTitle>Dados Pessoais</SectionTitle>
                             <InfoContainer>
                                 <MediumInfo>Data de Nascimento: <span>{convertDate(medium.dtNasc)}</span></MediumInfo>
-                                <MediumInfo>Natural de: <span>{medium.natur ? `${medium.natur} - ${medium.naturUF}` : ''}</span></MediumInfo>
+                                <MediumInfo>Natural de: <span>{naturCityUF}</span></MediumInfo>
                                 <MediumInfo>RG: <span>{medium.rg}</span></MediumInfo>
                                 <MediumInfo>CPF: <span>{medium.cpf}</span></MediumInfo>
                                 <MediumInfo>Nome do Pai: <span>{medium.pai}</span></MediumInfo>

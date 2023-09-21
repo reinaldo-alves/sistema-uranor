@@ -11,7 +11,7 @@ import { MediumContext } from "src/contexts/MediumContext";
 import { formatCep, formatCpf, formatPhoneNumber } from "src/utilities/functions";
 import { Alert, Confirm } from "src/utilities/popups";
 import axios from "axios";
-import { validateAddMedium } from "src/utilities/validations";
+import { validateMedium } from "src/utilities/validations";
 import { useNavigate, useParams } from "react-router-dom";
 import Loading from "src/utilities/Loading";
 import PageNotFound from "src/pages/PageNotFound/PageNotFound";
@@ -21,7 +21,7 @@ import { defaultCavaleiro, defaultMedium, defaultMentor } from "src/utilities/de
 function EditMedium() {
     const { templos, estados, adjuntos, coletes, classMest, falMest, povos, falMiss, turnoL, turnoT, ministros, cavaleiros, guias, estrelas, princesas, classificacao, getData } = useContext(ListContext);
     const { token, getUser } = useContext(UserContext);
-    const { mediuns, loadMedium, convertMediumToSend, setComponentes, uploadImage } = useContext(MediumContext);
+    const { mediuns, loadMedium, convertMediumToSend, setComponentes, removeComponentes, uploadImage } = useContext(MediumContext);
     const params = useParams();
     const navigate = useNavigate();
 
@@ -40,6 +40,7 @@ function EditMedium() {
     const [oldListCav, setOldListCav] = useState([] as Array<ICavaleiro>);
     const [oldListEst, setOldListEst] = useState([]);
     const [tSol, setTSol] = useState(false);
+    const [updatePhoto, setUpdatePhoto] = useState(false);
     const [photo, setPhoto] = useState<File | null>(null);
     const [preview, setPreview] = useState<string | null>(null);
     const [dropMin, setDropMin] = useState(defaultMentor);
@@ -233,6 +234,7 @@ function EditMedium() {
     const imageUpdate = (event: React.ChangeEvent<HTMLInputElement>) => {
         if (event.target.files && event.target.files[0]) {
             setPhoto(event.target.files[0]);
+            setUpdatePhoto(true);
         }
     };
 
@@ -242,6 +244,7 @@ function EditMedium() {
                 updateProps('foto', '');
                 setPhoto(null);
                 setPreview(null);
+                setUpdatePhoto(true);
             })
         }
     }
@@ -378,11 +381,19 @@ function EditMedium() {
             try {
                 await Confirm('Tem certeza que quer editar este médium?', 'question', 'Cancelar', 'Confirmar', async () => {
                     await api.put('/medium/update', {medium_id: oldMediumObj.medium_id, ...changedFields}, {headers:{Authorization: token}})
-                    if (newMediumObj.foto !== oldMediumObj.foto) {
+                    if (newMediumObj.foto && newMediumObj.foto !== oldMediumObj.foto) {
                         await uploadImage(oldMediumObj.medium_id, token, photo);
+                        console.log('foto editada')
                     }
                     if (newMediumObj.mestre !== oldMediumObj.mestre || newMediumObj.ninfa !== oldMediumObj.ninfa || newMediumObj.padrinho !== oldMediumObj.padrinho || newMediumObj.madrinha !== oldMediumObj.madrinha || newMediumObj.afilhado !== oldMediumObj.afilhado) {
-                        await setComponentes(newMediumObj, token);
+                        await removeComponentes(oldMediumObj, token);
+                        if (newMediumObj.sex.concat(newMediumObj.med) === 'MasculinoApará' && !newMediumObj.afilhado && newMediumObj.ninfa) {
+                            await setComponentes({...newMediumObj, ninfa: null}, token);
+                        } else if (newMediumObj.sex.concat(newMediumObj.med) === 'FemininoDoutrinador' && !newMediumObj.afilhado && newMediumObj.mestre) {
+                            await setComponentes({...newMediumObj, mestre: null}, token);
+                        } else {
+                            await setComponentes(newMediumObj, token);
+                        }
                     }
                     Alert('Médium editado com sucesso', 'success');
                     await loadMedium(token);
@@ -391,6 +402,19 @@ function EditMedium() {
             } catch (error) {
                 console.log('Não foi possível editar o médium', error);
                 Alert('Não foi possível editar o médium', 'error');
+            }
+        } else if (updatePhoto) {
+            if (photo) {
+                try {
+                    await Confirm('Tem certeza que quer editar este médium?', 'question', 'Cancelar', 'Confirmar', async () => {
+                        await uploadImage(oldMediumObj.medium_id, token, photo)
+                        console.log('foto editada')
+                        Alert('Médium editado com sucesso', 'success');
+                    })
+                } catch (error) {
+                    console.log('Não foi possível editar a foto do médium', error);
+                    Alert('Não foi possível editar a foto do médium', 'error');
+                }
             }
         } else {
             Alert('Não foi feita nenhuma alteração no médium', 'info')
@@ -742,7 +766,7 @@ function EditMedium() {
                             <AutocompleteInput 
                                 default={defaultMedium}
                                 options={mediuns.filter((item: IMedium) => item.dtCenturia && item.med === 'Apará' && item.sex === 'Feminino')}
-                                disabledOptions={(option: IMedium) => option.mestre !== 0}
+                                disabledOptions={(option: IMedium) => option.mestre !== 0 && option.medium_id !== selected.ninfa}
                                 equality={(option, value) => option.medium_id === value.medium_id}
                                 value={dropNin}
                                 setValue={setDropNin}
@@ -753,7 +777,7 @@ function EditMedium() {
                             <AutocompleteInput 
                                 default={defaultMedium}
                                 options={mediuns.filter((item: IMedium) => item.dtCenturia && item.med === 'Doutrinador' && item.sex === 'Feminino')}
-                                disabledOptions={(option: IMedium) => option.afilhado !== 0}
+                                disabledOptions={(option: IMedium) => option.afilhado !== 0 && option.medium_id !== selected.madrinha}
                                 equality={(option, value) => option.medium_id === value.medium_id}
                                 value={dropMad}
                                 setValue={setDropMad}
@@ -764,7 +788,7 @@ function EditMedium() {
                             <AutocompleteInput 
                                 default={defaultMedium}
                                 options={mediuns.filter((item: IMedium) => item.dtCenturia && item.med === 'Apará' && item.sex === 'Masculino')}
-                                disabledOptions={(option: IMedium) => option.afilhado !== 0}
+                                disabledOptions={(option: IMedium) => option.afilhado !== 0 && option.medium_id !== selected.padrinho}
                                 equality={(option, value) => option.medium_id === value.medium_id}
                                 value={dropPad}
                                 setValue={setDropPad}
@@ -778,7 +802,7 @@ function EditMedium() {
                             <AutocompleteInput 
                                 default={defaultMedium}
                                 options={mediuns.filter((item: IMedium) => item.dtCenturia && item.med === 'Doutrinador' && item.sex === 'Masculino')}
-                                disabledOptions={(option: IMedium) => option.padrinho !== 0}
+                                disabledOptions={(option: IMedium) => option.padrinho !== 0  && option.medium_id !== selected.afilhado}
                                 equality={(option, value) => option.medium_id === value.medium_id}
                                 value={dropAfi}
                                 setValue={setDropAfi}
@@ -786,7 +810,7 @@ function EditMedium() {
                                 setInputValue={setSearchAfi}
                             />
                             <label>Ninfa Sol: </label>
-                            <input disabled />
+                            <input disabled value={medium.afilhado !== selected.afilhado ? '' : mediuns.find((item: IMedium) => item.medium_id === medium.ninfa) ? mediuns.find((item: IMedium) => item.medium_id === medium.ninfa).nome : ''} />
                         </GridContainer>
                     : medium.sex.concat(medium.med)==='FemininoDoutrinador'?
                         <GridContainer>
@@ -794,7 +818,7 @@ function EditMedium() {
                             <AutocompleteInput 
                                 default={defaultMedium}
                                 options={mediuns.filter((item: IMedium) => item.dtCenturia && item.med === 'Doutrinador' && item.sex === 'Masculino')}
-                                disabledOptions={(option: IMedium) => option.madrinha !== 0}
+                                disabledOptions={(option: IMedium) => option.madrinha !== 0  && option.medium_id !== selected.afilhado}
                                 equality={(option, value) => option.medium_id === value.medium_id}
                                 value={dropAfi}
                                 setValue={setDropAfi}
@@ -802,7 +826,7 @@ function EditMedium() {
                                 setInputValue={setSearchAfi}
                             />
                             <label>Ajanã: </label>
-                            <input disabled />
+                            <input disabled value={medium.afilhado !== selected.afilhado ? '' : mediuns.find((item: IMedium) => item.medium_id === medium.mestre) ? mediuns.find((item: IMedium) => item.medium_id === medium.mestre).nome : ''} />
                         </GridContainer>
                     : medium.sex.concat(medium.med)==='FemininoApará'?
                         <GridContainer>
@@ -810,7 +834,7 @@ function EditMedium() {
                             <AutocompleteInput 
                                 default={defaultMedium}
                                 options={mediuns.filter((item: IMedium) => item.dtCenturia && item.med === 'Doutrinador' && item.sex === 'Masculino')}
-                                disabledOptions={(option: IMedium) => option.ninfa !== 0}
+                                disabledOptions={(option: IMedium) => option.ninfa !== 0  && option.medium_id !== selected.mestre}
                                 equality={(option, value) => option.medium_id === value.medium_id}
                                 value={dropMes}
                                 setValue={setDropMes}
@@ -1117,7 +1141,7 @@ function EditMedium() {
                 </PersonalCard>
                 <div style={{width: '90%', maxWidth: '1200px', display: 'flex', justifyContent: 'space-around'}}>
                     <MediumButton color="red" onClick={() => navigate(`/mediuns/consulta/${params.id}`)}>Cancelar</MediumButton>
-                    <MediumButton color="green" onClick={() => validateAddMedium(medium, async () => await editMedium(medium, selected, token))}>Salvar</MediumButton>
+                    <MediumButton color="green" onClick={() => validateMedium(medium, async () => await editMedium(medium, selected, token))}>Salvar</MediumButton>
                 </div>
             </MainContainer>
             <SideMenu list={listSubMenu} />

@@ -1,7 +1,7 @@
 import { IMedium } from "src/types/types";
 import { Alert } from "./popups";
 
-export const validateAddMedium = (medium: IMedium, action: () => void) => {
+export const validateMedium = (medium: IMedium, action: () => void) => {
     const dtIngresso = new Date(medium.dtIngresso);
     const dtEmplac = new Date(medium.dtEmplac);
     const dtIniciacao = new Date(medium.dtIniciacao);

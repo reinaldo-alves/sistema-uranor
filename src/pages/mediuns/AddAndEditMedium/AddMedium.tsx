@@ -11,7 +11,7 @@ import { MediumContext } from "src/contexts/MediumContext";
 import { formatCep, formatCpf, formatPhoneNumber } from "src/utilities/functions";
 import { Alert } from "src/utilities/popups";
 import axios from "axios";
-import { validateAddMedium } from "src/utilities/validations";
+import { validateMedium } from "src/utilities/validations";
 import AutocompleteInput from "src/components/AutocompleteInput/AutocompleteInput";
 import { defaultCavaleiro, defaultMedium, defaultMentor } from "src/utilities/default";
 
@@ -1090,7 +1090,7 @@ function AddMedium() {
                 </PersonalCard>
                 <div style={{width: '90%', maxWidth: '1200px', display: 'flex', justifyContent: 'space-around'}}>
                     <MediumButton color="red" onClick={() => resetNewMedium()}>Cancelar</MediumButton>
-                    <MediumButton color="green" onClick={() => validateAddMedium(newMedium, async () => await addMedium(newMedium, token))}>Cadastrar</MediumButton>
+                    <MediumButton color="green" onClick={() => validateMedium(newMedium, async () => await addMedium(newMedium, token))}>Cadastrar</MediumButton>
                 </div>
             </MainContainer>
             <SideMenu list={listSubMenu} />

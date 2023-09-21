@@ -1,16 +1,13 @@
-import { createContext, useState, useEffect, useContext } from "react";
+import { createContext, useState } from "react";
 import api from "src/api";
 import { IMedium } from "src/types/types";
 import { IMediumAPI } from "src/types/typesAPI";
-import { UserContext } from "./UserContext";
 import { Alert } from "src/utilities/popups";
 
 export const MediumContext = createContext({} as any);
 
 export const MediumStore = ({ children }: any) => {
     const [mediuns, setMediuns] = useState([] as Array<IMedium>);
-
-    const { token } = useContext(UserContext);
 
     const loadMedium = async (token: string) => {
         try {
@@ -143,14 +140,9 @@ export const MediumStore = ({ children }: any) => {
         return mediumObj
     }
 
-    const setComponentes = async (medium: IMedium, token: string) => {
-        const mestre = mediuns.find((item: IMedium) => item.medium_id === medium.mestre);
+    const updateNinfa = async (medium: IMedium, token: string) => {
         const ninfa = mediuns.find((item: IMedium) => item.medium_id === medium.ninfa);
-        const madrinha = mediuns.find((item: IMedium) => item.medium_id === medium.madrinha);
-        const padrinho = mediuns.find((item: IMedium) => item.medium_id === medium.padrinho);
-        const afilhado = mediuns.find((item: IMedium) => item.medium_id === medium.afilhado);
-
-        const updateNinfa = async (ninfa: IMedium, medium: IMedium) => {
+        if(ninfa) {
             try {
                 await api.put('/medium/update', {medium_id: ninfa.medium_id, mestre: medium.medium_id}, {headers:{Authorization: token}})
                 console.log(`${ninfa.nome} agora é escrava de ${medium.nome}`)
@@ -158,56 +150,87 @@ export const MediumStore = ({ children }: any) => {
                 console.log('Erro ao adicionar escrava', error);
                 Alert('Erro ao adicionar escrava', 'error');
             }
+        } else {
+            console.log('Nenhuma ninfa a adicionar');
         }
+    }
 
-        const updateMadrinha = async (madrinha: IMedium, medium: IMedium) => {
+    const updateMadrinha = async (medium: IMedium, token: string) => {
+        const madrinha = mediuns.find((item: IMedium) => item.medium_id === medium.madrinha);
+        const padrinho = mediuns.find((item: IMedium) => item.medium_id === medium.padrinho);
+        if (madrinha) {
             try {
-                await api.put('/medium/update', {medium_id: madrinha.medium_id, afilhado: medium.medium_id, mestre: padrinho? padrinho.medium_id : 0}, {headers:{Authorization: token}})
-                // if (padrinho) {
-                //     await api.put('/medium/update', {medium_id: padrinho.medium_id, ninfa: madrinha.medium_id}, {headers:{Authorization: token}})
-                // }
+                await api.put('/medium/update', {medium_id: madrinha.medium_id, afilhado: medium.medium_id, mestre: padrinho? padrinho.medium_id : null}, {headers:{Authorization: token}})
+                if (padrinho) {
+                    await api.put('/medium/update', {medium_id: padrinho.medium_id, ninfa: madrinha.medium_id}, {headers:{Authorization: token}})
+                }
                 console.log(`${madrinha.nome} agora é madrinha de ${medium.nome}`);
             } catch (error) {
                 console.log('Erro ao adicionar madrinha', error);
                 Alert('Erro ao adicionar madrinha', 'error');
             }
+        } else {
+            console.log('Nenhuma madrinha a adicionar');
         }
+    }
 
-        const updatePadrinho = async (padrinho: IMedium, medium: IMedium) => {
+    const updatePadrinho = async (medium: IMedium, token: string) => {
+        const madrinha = mediuns.find((item: IMedium) => item.medium_id === medium.madrinha);
+        const padrinho = mediuns.find((item: IMedium) => item.medium_id === medium.padrinho);
+        if(padrinho) {
             try {
-                await api.put('/medium/update', {medium_id: padrinho.medium_id, afilhado: medium.medium_id, ninfa: madrinha? madrinha.medium_id : 0}, {headers:{Authorization: token}})
-                // if (madrinha) {
-                //     await api.put('/medium/update', {medium_id: madrinha.medium_id, mestre: padrinho.medium_id}, {headers:{Authorization: token}})
-                // }
+                await api.put('/medium/update', {medium_id: padrinho.medium_id, afilhado: medium.medium_id, ninfa: madrinha? madrinha.medium_id : null}, {headers:{Authorization: token}})
+                if (madrinha) {
+                    await api.put('/medium/update', {medium_id: madrinha.medium_id, mestre: padrinho.medium_id}, {headers:{Authorization: token}})
+                }
                 console.log(`${padrinho.nome} agora é padrinho de ${medium.nome}`)
             } catch (error) {
                 console.log('Erro ao adicionar padrinho', error);
                 Alert('Erro ao adicionar padrinho', 'error');
             }
+        } else {
+            console.log('Nenhum padrinho a adicionar');
         }
+    }
 
-        const updateAfilhadoP = async (afilhado: IMedium, medium: IMedium) => {
-            try {
-                await api.put('/medium/update', {medium_id: afilhado.medium_id, padrinho: medium.medium_id}, {headers:{Authorization: token}})
-                console.log(`${afilhado.nome} agora é afilhado de ${medium.nome}`);
-            } catch (error) {
-                console.log('Erro ao adicionar afilhado', error);
-                console.log(token);
-                Alert('Erro ao adicionar afilhado', 'error');
+    const updateAfilhado = async (medium: IMedium, token: string) => {
+        const afilhado = mediuns.find((item: IMedium) => item.medium_id === medium.afilhado);
+        if (afilhado) {
+            if (medium.sex === 'Masculino') {
+                try {
+                    await api.put('/medium/update', {medium_id: afilhado.medium_id, padrinho: medium.medium_id}, {headers:{Authorization: token}})
+                    if (afilhado.madrinha) {
+                        await api.put('/medium/update', {medium_id: medium.medium_id, ninfa: afilhado.madrinha}, {headers:{Authorization: token}})
+                        await api.put('/medium/update', {medium_id: afilhado.madrinha, mestre: medium.medium_id}, {headers:{Authorization: token}})
+                    }
+                    console.log(`${afilhado.nome} agora é afilhado de ${medium.nome}`);
+                } catch (error) {
+                    console.log('Erro ao adicionar afilhado', error);
+                    console.log(token);
+                    Alert('Erro ao adicionar afilhado', 'error');
+                }
             }
-        }
-
-        const updateAfilhadoM = async (afilhado: IMedium, medium: IMedium) => {
-            try {
-                await api.put('/medium/update', {medium_id: afilhado.medium_id, madrinha: medium.medium_id}, {headers:{Authorization: token}})
-                console.log(`${afilhado.nome} agora é afilhado de ${medium.nome}`);
-            } catch (error) {
-                console.log('Erro ao adicionar afilhado', error);
-                Alert('Erro ao adicionar afilhado', 'error');
+            if (medium.sex === 'Feminino') {
+                try {
+                    await api.put('/medium/update', {medium_id: afilhado.medium_id, madrinha: medium.medium_id}, {headers:{Authorization: token}})
+                    if (afilhado.padrinho) {
+                        await api.put('/medium/update', {medium_id: medium.medium_id, mestre: afilhado.padrinho}, {headers:{Authorization: token}})
+                        await api.put('/medium/update', {medium_id: afilhado.padrinho, ninfa: medium.medium_id}, {headers:{Authorization: token}})
+                    }
+                    console.log(`${afilhado.nome} agora é afilhado de ${medium.nome}`);
+                } catch (error) {
+                    console.log('Erro ao adicionar afilhado', error);
+                    Alert('Erro ao adicionar afilhado', 'error');
+                }
             }
+        } else {
+            console.log('Nenhum afilhado a adicionar');
         }
+    }
 
-        const updateMestre = async (mestre: IMedium, medium: IMedium) => {
+    const updateMestre = async (medium: IMedium, token: string) => {
+        const mestre = mediuns.find((item: IMedium) => item.medium_id === medium.mestre);
+        if (mestre) {
             try {
                 await api.put('/medium/update', {medium_id: mestre.medium_id, ninfa: medium.medium_id}, {headers:{Authorization: token}})
                 console.log(`${mestre.nome} agora é mestre de ${medium.nome}`);
@@ -215,27 +238,21 @@ export const MediumStore = ({ children }: any) => {
                 console.log('Erro ao adicionar mestre', error);
                 Alert('Erro ao adicionar mestre', 'error');
             }
+        } else {
+            console.log('Nenhum mestre a adicionar');
         }
+    }
 
-        const promises: Array<Promise<void>> = []
-        
-        if (medium.sex.concat(medium.med) === 'MasculinoDoutrinador') {
-            if(ninfa) {promises.push(updateNinfa(ninfa, medium))}
-            if(madrinha) {promises.push(updateMadrinha(madrinha, medium))}
-            if(padrinho) {promises.push(updatePadrinho(padrinho, medium))}  
-        } else if (medium.sex.concat(medium.med) === 'MasculinoApará') {
-            if(afilhado) {promises.push(updateAfilhadoP(afilhado, medium))}
-        } else if (medium.sex.concat(medium.med) === 'FemininoDoutrinador') {
-            if(afilhado) {promises.push(updateAfilhadoM(afilhado, medium))}
-        } else if (medium.sex.concat(medium.med) === 'FemininoApará') {
-            if(mestre) {promises.push(updateMestre(mestre, medium))}
-        }
-
+    const setComponentes = async (medium: IMedium, token: string) => {
         try {
-            await Promise.all(promises);
+            await updateMestre(medium, token);
+            await updateNinfa(medium, token);
+            await updateMadrinha(medium, token);
+            await updatePadrinho(medium, token);
+            await updateAfilhado(medium, token);
         } catch (error) {
-            console.log('Erro ao remover componentes', error);
-            Alert('Erro ao remover componentes', 'error')
+            console.log('Erro ao adicionar componentes', error);
+            Alert('Erro ao adicionar componentes', 'error')
         }
     }   
 
@@ -306,6 +323,9 @@ export const MediumStore = ({ children }: any) => {
                 try {
                     await api.put('/medium/update', {medium_id: afilhado.medium_id, padrinho: null}, {headers:{Authorization: token}})
                     await api.put('/medium/update', {medium_id: medium.medium_id, ninfa: null}, {headers:{Authorization: token}})
+                    if (afilhado.madrinha) {
+                        await api.put('/medium/update', {medium_id: afilhado.madrinha, mestre: null}, {headers:{Authorization: token}})
+                    }
                     console.log(`${afilhado.nome} não é mais afilhado de ${medium.nome}`);
                 } catch (error) {
                     console.log('Erro ao remover afilhado', error);
@@ -316,6 +336,9 @@ export const MediumStore = ({ children }: any) => {
                 try {
                     await api.put('/medium/update', {medium_id: afilhado.medium_id, madrinha: null}, {headers:{Authorization: token}})
                     await api.put('/medium/update', {medium_id: medium.medium_id, mestre: null}, {headers:{Authorization: token}})
+                    if (afilhado.padrinho) {
+                        await api.put('/medium/update', {medium_id: afilhado.padrinho, ninfa: null}, {headers:{Authorization: token}})
+                    }
                     console.log(`${afilhado.nome} não é mais afilhado de ${medium.nome}`);
                 } catch (error) {
                     console.log('Erro ao remover afilhado', error);
@@ -326,6 +349,19 @@ export const MediumStore = ({ children }: any) => {
             console.log('Nenhum afilhado a remover')
         }
     }
+
+    const removeComponentes = async (medium: IMedium, token: string) => {
+        try {
+            await removeMestre(medium, token);
+            await removeNinfa(medium, token);
+            await removeMadrinha(medium, token);
+            await removePadrinho(medium, token);
+            await removeAfilhado(medium, token);
+        } catch (error) {
+            console.log('Erro ao remover componentes', error);
+            Alert('Erro ao remover componentes', 'error')
+        }
+    }   
 
     const changeMed = async (medium: IMedium, token: string) => {
         const editData = {
@@ -364,11 +400,7 @@ export const MediumStore = ({ children }: any) => {
             comando: ''
         };
         try {
-            removeMestre(medium, token);
-            removeNinfa(medium, token);
-            removeMadrinha(medium, token);
-            removePadrinho(medium, token);
-            removeAfilhado(medium, token);
+            await removeComponentes(medium, token);
             await api.put('/medium/update', editData ,{headers:{Authorization: token}})
             Alert(`Mediunidade alterada para ${editData.med}`, 'success');
         } catch (error) {
@@ -400,7 +432,7 @@ export const MediumStore = ({ children }: any) => {
     }
 
     return (
-        <MediumContext.Provider value={{mediuns, loadMedium, convertMediumToSend, changeMed, setComponentes, removeMestre, removeNinfa, removeMadrinha, removePadrinho, removeAfilhado, uploadImage}} >
+        <MediumContext.Provider value={{mediuns, loadMedium, convertMediumToSend, changeMed, setComponentes, removeComponentes, uploadImage}} >
             { children }
         </MediumContext.Provider>
     )
