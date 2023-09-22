@@ -11,6 +11,15 @@ export function convertDate(date: string) {
     return `${day}/${month}/${year}`; 
 }
 
+export function getCurrentDate() {
+    const now = new Date();
+    const day = String(now.getDate()).padStart(2, '0');
+    const month = String(now.getMonth() + 1).padStart(2, '0');
+    const year = now.getFullYear();
+    const date = `${day}/${month}/${year}`;
+    return date
+}
+
 export function formatPhoneNumber(value: string) {
     if (!value) return ""
     value = value.replace(/\D/g,'');

@@ -15,6 +15,7 @@
     "@types/react-dom": "^18.0.11",
     "axios": "^1.4.0",
     "jwt-decode": "^3.1.2",
+    "pdfmake": "^0.2.7",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-scripts": "5.0.1",
@@ -49,6 +50,7 @@
   },
   "devDependencies": {
     "@types/babel__core": "^7.20.1",
+    "@types/pdfmake": "^0.2.3",
     "@types/styled-components": "^5.1.26",
     "fork-ts-checker-webpack-plugin": "^8.0.0",
     "react-router-dom": "^6.14.2"

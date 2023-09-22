@@ -113,6 +113,6 @@ function App() {
 
 export default App;
 
-//Gerar PDF a partir do site
+//Corrigir problema da fonte nas emissões
 //Fazer validação de turno de trabalho e de legião ao gerar emissão de escrava/padrinho/madrinha/mestre
 //Fazer validação de adjunto de origem ao gerar emissão de escrava/padrinho/madrinha de arcanos

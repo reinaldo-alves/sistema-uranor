@@ -12,12 +12,13 @@ import { ListContext } from "src/contexts/ListContext";
 import PageNotFound from "src/pages/PageNotFound/PageNotFound";
 import Loading from "src/utilities/Loading";
 import { Confirm } from "src/utilities/popups";
+import { generateEmissao } from "src/utilities/createDocs";
 
 function ShowMedium() {
     const [loading, setLoading] = useState(true);
     const [medium, setMedium] = useState({} as IMedium);
     
-    const { token, getUser } = useContext(UserContext);
+    const { token, getUser, user } = useContext(UserContext);
     const { mediuns, loadMedium, changeMed } = useContext(MediumContext);
     const { ministros, cavaleiros, guias, adjuntos, templos, falMiss, getData } = useContext(ListContext);
     const params = useParams();
@@ -113,7 +114,7 @@ function ShowMedium() {
                             <MediumMainInfo>Templo: <span>{templos.filter((item: ITemplo) => item.templo_id === medium.templo)[0].cidade} - {templos.filter((item: ITemplo) => item.templo_id === medium.templo)[0].estado.abrev}</span></MediumMainInfo>
                             <MediumMainInfo>Situação: <span>{setSituation(medium)}</span></MediumMainInfo>
                             <MediumMainInfo>Condição Atual: <span>{medium.condicao}</span></MediumMainInfo>
-                            <MediumButton color="green">Gerar Emissão</MediumButton>
+                            <MediumButton onClick={() => generateEmissao(medium, user)} color="green">Gerar Emissão</MediumButton>
                             <MediumButton onClick={() => navigate(`/mediuns/editar/${medium.medium_id}`)} color="green">Editar</MediumButton>
                             <MediumButton color="green">Gerar Ficha</MediumButton>
                             <MediumButton color="green">Autorização</MediumButton>
