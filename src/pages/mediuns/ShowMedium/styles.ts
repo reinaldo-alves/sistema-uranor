@@ -127,6 +127,21 @@ export const MediumButton = styled.button<{color: string}>`
         background-color: ${(props) => {return props.theme.color.darkerColor}};
         border: solid ${(props) => {return props.theme.color.lighterColor}};
     }
+
+    :disabled {
+        border-color: gray;
+        background-color: gray;
+
+        :hover {
+            cursor: not-allowed;
+            transform: scale(1);
+        }
+
+        :active {
+            border-color: gray;
+            background-color: gray;
+        }
+    }
 `;
 
 export const InfoContainer = styled.div`

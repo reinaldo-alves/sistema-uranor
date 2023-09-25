@@ -13,6 +13,8 @@ import PageNotFound from "src/pages/PageNotFound/PageNotFound";
 import Loading from "src/utilities/Loading";
 import { Confirm } from "src/utilities/popups";
 import { generateEmissao } from "src/utilities/createDocs";
+import { validateEmissao } from "src/utilities/validations";
+import { emissaoText } from "src/reports/emissao";
 
 function ShowMedium() {
     const [loading, setLoading] = useState(true);
@@ -114,7 +116,7 @@ function ShowMedium() {
                             <MediumMainInfo>Templo: <span>{templos.filter((item: ITemplo) => item.templo_id === medium.templo)[0].cidade} - {templos.filter((item: ITemplo) => item.templo_id === medium.templo)[0].estado.abrev}</span></MediumMainInfo>
                             <MediumMainInfo>Situação: <span>{setSituation(medium)}</span></MediumMainInfo>
                             <MediumMainInfo>Condição Atual: <span>{medium.condicao}</span></MediumMainInfo>
-                            <MediumButton onClick={() => generateEmissao(medium, user)} color="green">Gerar Emissão</MediumButton>
+                            <MediumButton disabled={!medium.dtCenturia && !medium.falMiss} onClick={() => validateEmissao(medium, () => generateEmissao(medium, user, emissaoText(medium, mediuns, ministros, cavaleiros, guias, adjuntos, templos, falMiss) as string))} color="green">Gerar Emissão</MediumButton>
                             <MediumButton onClick={() => navigate(`/mediuns/editar/${medium.medium_id}`)} color="green">Editar</MediumButton>
                             <MediumButton color="green">Gerar Ficha</MediumButton>
                             <MediumButton color="green">Autorização</MediumButton>

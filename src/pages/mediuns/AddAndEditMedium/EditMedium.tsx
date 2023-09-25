@@ -677,7 +677,16 @@ function EditMedium() {
                             <InputContainer>
                                 <FieldContainer>
                                     <label>Classificação Atual: </label>
-                                    <select value={medium.classif} onChange={(e) => updateProps('classif', e.target.value)}>
+                                    <select value={medium.classif} onChange={(e) => {
+                                        updateProps('classif', e.target.value)
+                                        if(e.target.value === 'Adjunto Koatay 108 Herdeiro Triada Harpásios 7° Raio Adjuração Arcanos Rama 2000') {
+                                            updateProps('trinoSol', '');
+                                            updateProps('trinoSar', false);
+                                            updateProps('filho', false);
+                                            updateProps('herdeiro', 0);
+                                            setTSol(false);
+                                        }
+                                    }}>
                                         <option value={''}></option>
                                         {listClass.map((item: string, index: number) => (
                                             <option key={index} value={item}>{item}</option>
@@ -861,7 +870,18 @@ function EditMedium() {
                                 </FieldContainer>
                                 <FieldContainer>        
                                     <label>Presidência: </label>
-                                    <select value={medium.presidente} disabled={!medium.classif.includes('Adjunto Koatay 108 Herdeiro Triada Harpásios')} onChange={(e) => updateProps('presidente', e.target.value)}>
+                                    <select value={medium.presidente} disabled={!medium.classif.includes('Adjunto Koatay 108 Herdeiro Triada Harpásios')} onChange={(e) => {
+                                        updateProps('presidente', e.target.value);
+                                        if(e.target.value === 'Presidente') {
+                                            updateProps('recepcao', false);
+                                            updateProps('devas', false);
+                                            updateProps('trinoSol', '');
+                                            updateProps('trinoSar', false);
+                                            updateProps('filho', false);
+                                            updateProps('herdeiro', 0);
+                                            setTSol(false);
+                                        }
+                                    }}>
                                         <option value={''}></option>
                                         <option value={'Presidente'}>Presidente</option>
                                         <option value={'Vice'}>Vice-presidente</option>
