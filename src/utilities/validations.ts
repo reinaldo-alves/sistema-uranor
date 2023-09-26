@@ -108,15 +108,15 @@ export const validateEmissao = (medium: IMedium, action: () => void) => {
         return;
     }
     if (medium.dtCenturia && !medium.turnoTrab) {
-        Alert('Insira o turno de trabalho do médium', 'error');
+        Alert('Informe o turno de trabalho do médium', 'error');
         return;
     }
     if (medium.sex === 'Feminino' && medium.dtCenturia && !medium.estrela) {
-        Alert('Insira a estrela da ninfa', 'error');
+        Alert('Informe a estrela da ninfa', 'error');
         return;
     }
     if (medium.sex === 'Masculino' && medium.dtCenturia && !medium.classif) {
-        Alert('Insira a classificação do mestre', 'error');
+        Alert('Informe a classificação do mestre', 'error');
         return;
     }
     

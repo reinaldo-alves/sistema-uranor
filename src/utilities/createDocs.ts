@@ -39,7 +39,6 @@ export const generateEmissao = (medium: IMedium, user: IUser, text: string) => {
 
     const emissaoBody: Content = [
         {
-            // text: 'eu, jaguar mestre luz filho de devas, da falange de sublimação povo de peguys, comandante do adjunto janatã mestre josé luiz principe maya deste amanhecer, do adjunto adejã, koatay 108 mestre fróes, na regência do ministro yuricy. vindo do 7° raio, na ordem do ministro parlo, na linha do mestre zilcio, 7° raio adjuração arcanos rama 2000, afilhado de koatay 108 minha mae clarividente em cristo jesus. em missão do adjunto uranor, koatay 108 mestre vasconcelos. eu trino sardyos solitário juremá, adjunto areio koatay 108 herdeiro triada harpásios raio adjuração rama 2000 mestre reinaldo junior. herdeiro do adjunto marlano koatay 108 mestre sebastião araujo, meu pai. vice-presidente do amanhecer de são josé do vale do rio preto, rio de janeiro. com os poderes de olorum, na linha deste amanhecer. tenho o meu deus e ministro obatalá, que me rege e me guarda no caminho desta jornada. acabo de receber de deus pai todo poderoso na minha legião, o título de mestre instrutor universal, das três forças ligadas aos poderes deste amanhecer. Subi ao reino de jurema e estou na continuação desta jornada para o terceiro milênio. emite jesus, deixe que as forças se desloquem até o meu plexo. sou um cavaleiro verde, cavaleiro especial, venho na força decrescente do primeiro cavaleiro da lança felunã verde randay // reino central turno dubali. na esperança de alimentar o meu sol interior, na grandeza que me fez cavaleiro do turno ajouros. partirei nos três reinos de minha natureza com - 0 -, do meu terceiro sétimo, no 5° ciclo iniciático seguirei sempre com - 0 - 0 - // em cristo jesus'.toUpperCase(),
             text: text.toUpperCase(),
             fontSize: 14,
             alignment: 'justify',
@@ -149,5 +148,5 @@ export const generateEmissao = (medium: IMedium, user: IUser, text: string) => {
         }
     }
 
-    pdfMake.createPdf(emissaoDefinitions).open({}, window.open(`${medium.medium_id.toString().padStart(5, '0')}_${medium.nome.replace(/ /g, '_')}.pdf`, '_blank'));
+    pdfMake.createPdf(emissaoDefinitions).open({}, window.open(`Emissao_${medium.medium_id.toString().padStart(5, '0')}_${medium.nome.replace(/ /g, '_')}.pdf`, '_blank'));
 }

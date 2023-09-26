@@ -590,6 +590,7 @@ function AddMedium() {
                             <GridContainer>
                                 <label>Ministro: </label>
                                 <AutocompleteInput 
+                                    disabled={newMedium.classif === '7° Raio Autorizado Taumantes Raio Rama Adjuração' || newMedium.classif === '5° Yurê Raio Autorizado Cautanenses Raio Rama Ajanã' || newMedium.classif === ''}
                                     default={defaultMentor}
                                     options={ministros}
                                     equality={(option, value) => option.id === value.id}
@@ -599,9 +600,10 @@ function AddMedium() {
                                     setInputValue={setSearchMin}
                                 />
                                 <label>Data Ministro: </label>
-                                <input type="date" value={newMedium.dtMentor} onChange={(e) => updateProps('dtMentor', e.target.value)} min={newMedium.dtCenturia}  max={now} />
+                                <input type="date" value={newMedium.dtMentor} onChange={(e) => updateProps('dtMentor', e.target.value)} min={newMedium.dtCenturia}  max={now} disabled={newMedium.classif === '7° Raio Autorizado Taumantes Raio Rama Adjuração' || newMedium.classif === '5° Yurê Raio Autorizado Cautanenses Raio Rama Ajanã' || newMedium.classif === ''} />
                                 <label>Cavaleiro: </label>
                                 <AutocompleteInput 
+                                    disabled={newMedium.classif === '7° Raio Autorizado Taumantes Raio Rama Adjuração' || newMedium.classif === '5° Yurê Raio Autorizado Cautanenses Raio Rama Ajanã' || newMedium.classif === ''}
                                     default={defaultCavaleiro}
                                     options={listCav}
                                     equality={(option, value) => option.id === value.id}
@@ -611,9 +613,12 @@ function AddMedium() {
                                     setInputValue={setSearchCav}
                                 />
                                 <label>Cor do Cavaleiro: </label>
-                                <select value={newMedium.cor} onChange={(e) => updateProps('cor', e.target.value)}>
+                                <select value={newMedium.cor} onChange={(e) => updateProps('cor', e.target.value)} disabled={newMedium.classif === '7° Raio Autorizado Taumantes Raio Rama Adjuração' || newMedium.classif === '5° Yurê Raio Autorizado Cautanenses Raio Rama Ajanã' || newMedium.classif === ''} >
                                     {newMedium.med==='Doutrinador'?
-                                        <option value={'Verde'}>Verde</option>
+                                        <>
+                                            <option value={''}></option>
+                                            <option value={'Verde'}>Verde</option>
+                                        </>
                                     : newMedium.med==='Apará'?
                                         <>
                                             <option value={''}></option>
@@ -633,6 +638,7 @@ function AddMedium() {
                                             updateProps('trinoSar', false);
                                             updateProps('filho', false);
                                             updateProps('herdeiro', 0);
+                                            updateProps('turnoTrab', 'Ajouros');
                                             setTSol(false);
                                         }
                                     }}>
@@ -828,6 +834,8 @@ function AddMedium() {
                                             updateProps('trinoSar', false);
                                             updateProps('filho', false);
                                             updateProps('herdeiro', 0);
+                                            updateProps('turnoTrab', 'Ajouros');
+                                            updateProps('falMiss', 0);
                                             setTSol(false);
                                         }
                                     }}>

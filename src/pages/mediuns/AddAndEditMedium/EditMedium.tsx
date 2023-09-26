@@ -75,13 +75,14 @@ function EditMedium() {
         const pad = mediuns.find((item: IMedium) => item.medium_id === foundMedium.padrinho);
         const mad = mediuns.find((item: IMedium) => item.medium_id === foundMedium.madrinha);
         const afi = mediuns.find((item: IMedium) => item.medium_id === foundMedium.afilhado);
+        const her = mediuns.find((item: IMedium) => item.medium_id === foundMedium.herdeiro);
         setMedium(foundMedium);
         setSelected(foundMedium);
         setDropMin(min? min : defaultMentor);
         setDropCav(cav? cav : defaultCavaleiro);
         setDropOldCav(oldCav? oldCav : defaultCavaleiro);
         setDropGuia(guia? guia : defaultMentor);
-        setDropMes(mes? mes : defaultMedium);
+        setDropMes(mes? mes : her? her : defaultMedium);
         setDropNin(nin? nin : defaultMedium);
         setDropPad(pad? pad : defaultMedium);
         setDropMad(mad? mad : defaultMedium);
@@ -641,6 +642,7 @@ function EditMedium() {
                             <GridContainer>
                                 <label>Ministro: </label>
                                 <AutocompleteInput 
+                                    disabled={medium.classif === '7° Raio Autorizado Taumantes Raio Rama Adjuração' || medium.classif === '5° Yurê Raio Autorizado Cautanenses Raio Rama Ajanã' || medium.classif === ''}
                                     default={defaultMentor}
                                     options={ministros}
                                     equality={(option, value) => option.id === value.id}
@@ -650,9 +652,10 @@ function EditMedium() {
                                     setInputValue={setSearchMin}
                                 />
                                 <label>Data Ministro: </label>
-                                <input type="date" value={medium.dtMentor} onChange={(e) => updateProps('dtMentor', e.target.value)} min={medium.dtCenturia}  max={now} />
+                                <input type="date" value={medium.dtMentor} onChange={(e) => updateProps('dtMentor', e.target.value)} min={medium.dtCenturia}  max={now} disabled={medium.classif === '7° Raio Autorizado Taumantes Raio Rama Adjuração' || medium.classif === '5° Yurê Raio Autorizado Cautanenses Raio Rama Ajanã' || medium.classif === ''} />
                                 <label>Cavaleiro: </label>
                                 <AutocompleteInput 
+                                    disabled={medium.classif === '7° Raio Autorizado Taumantes Raio Rama Adjuração' || medium.classif === '5° Yurê Raio Autorizado Cautanenses Raio Rama Ajanã' || medium.classif === ''}
                                     default={defaultCavaleiro}
                                     options={listCav}
                                     equality={(option, value) => option.id === value.id}
@@ -662,9 +665,12 @@ function EditMedium() {
                                     setInputValue={setSearchCav}
                                 />
                                 <label>Cor do Cavaleiro: </label>
-                                <select value={medium.cor} onChange={(e) => updateProps('cor', e.target.value)}>
+                                <select value={medium.cor} onChange={(e) => updateProps('cor', e.target.value)} disabled={medium.classif === '7° Raio Autorizado Taumantes Raio Rama Adjuração' || medium.classif === '5° Yurê Raio Autorizado Cautanenses Raio Rama Ajanã' || medium.classif === ''} >
                                     {medium.med==='Doutrinador'?
-                                        <option value={'Verde'}>Verde</option>
+                                        <>
+                                            <option value={''}></option>
+                                            <option value={'Verde'}>Verde</option>
+                                        </>
                                     : medium.med==='Apará'?
                                         <>
                                             <option value={''}></option>
@@ -684,6 +690,7 @@ function EditMedium() {
                                             updateProps('trinoSar', false);
                                             updateProps('filho', false);
                                             updateProps('herdeiro', 0);
+                                            updateProps('turnoTrab', 'Ajouros');
                                             setTSol(false);
                                         }
                                     }}>
@@ -879,6 +886,8 @@ function EditMedium() {
                                             updateProps('trinoSar', false);
                                             updateProps('filho', false);
                                             updateProps('herdeiro', 0);
+                                            updateProps('turnoTrab', 'Ajouros');
+                                            updateProps('falMiss', 0);
                                             setTSol(false);
                                         }
                                     }}>
