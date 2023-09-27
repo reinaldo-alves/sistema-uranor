@@ -1,5 +1,6 @@
-import { IMedium } from "src/types/types";
+import { IAdjunto, IMedium, ITurno } from "src/types/types";
 import { Alert } from "./popups";
+import { oppositeTurno } from "./functions";
 
 export const validateMedium = (medium: IMedium, action: () => void) => {
     const dtIngresso = new Date(medium.dtIngresso);
@@ -82,7 +83,7 @@ export const validateMedium = (medium: IMedium, action: () => void) => {
 
 }
 
-export const validateEmissao = (medium: IMedium, action: () => void) => {
+export const validateEmissao = (medium: IMedium, mediuns: Array<IMedium>, adjuntos: Array<IAdjunto>, turnoL: ITurno, turnoT: ITurno, action: () => void) => {
     if (!medium.adjOrigem) {
         Alert('Selecione um adjunto de origem', 'error');
         return;
@@ -118,6 +119,71 @@ export const validateEmissao = (medium: IMedium, action: () => void) => {
     if (medium.sex === 'Masculino' && medium.dtCenturia && !medium.classif) {
         Alert('Informe a classificação do mestre', 'error');
         return;
+    }
+    
+    //Retorna objeto médium correspondente ao afilhado do mestre lua ou ninfa sol
+    const afilhado = mediuns.find((item: IMedium) => item.medium_id === medium.afilhado);
+
+    //Retorna objeto médium correspondente ao mestre da ninfa sol ou lua
+    const mestre = mediuns.find((item: IMedium) => item.medium_id === medium.mestre);
+
+    //Retorna true se o afilhado for arcanos ou presidente
+    const afilhadoArcPre = afilhado?.classif === 'Adjunto Koatay 108 Herdeiro Triada Harpásios 7° Raio Adjuração Arcanos Rama 2000' || afilhado?.presidente === 'Presidente';
+    
+    //Retorna true se o mestre for arcanos ou presidente
+    const mestreArcPre = mestre?.classif === 'Adjunto Koatay 108 Herdeiro Triada Harpásios 7° Raio Adjuração Arcanos Rama 2000' || mestre?.presidente === 'Presidente';
+    
+    //Retorna true se o afilhado e o padrinho/madrinha tiver a mesma origem ou se a origem do padrinho/madrinha for Umaryã (raiz)
+    const afilhadoMesmaOrigem = medium.adjOrigem === afilhado?.adjOrigem || medium.adjOrigem === 6;
+    
+    //Retorna true se o mestre e a ninfa tiverem a mesma origem ou se a origem da ninfa for Umaryã (raiz)
+    const mestreMesmaOrigem = medium.adjOrigem === mestre?.adjOrigem || medium.adjOrigem === 6;
+    
+    if (medium.sex.concat(medium.med) === 'MasculinoApará') {
+        if (afilhado && !afilhado.classif) {
+            Alert('Informe a classificação do afilhado', 'error');
+            return;
+        }
+        if (afilhadoArcPre && !afilhadoMesmaOrigem) {
+            Alert('Padrinho de Arcanos/Presidente deve emitir na mesma origem do afilhado', 'error');
+            return;
+        }
+    }
+    if (medium.sex.concat(medium.med) === 'FemininoDoutrinador') {
+        if (afilhado && !afilhado.classif) {
+            Alert('Informe a classificação do afilhado', 'error');
+            return;
+        }
+        if (afilhadoArcPre && !afilhadoMesmaOrigem) {
+            Alert('Madrinha de Arcanos/Presidente deve emitir na mesma origem do afilhado', 'error');
+            return;
+        }
+        if (medium.turnoLeg !== oppositeTurno(turnoL, mestre?.turnoLeg as string)) {
+            Alert('Turno de legião da madrinha deve corresponder ao do padrinho', 'error');
+            return;
+        }
+        if (medium.turnoTrab !== oppositeTurno(turnoT, mestre?.turnoTrab as string)) {
+            Alert('Turno de trabalho da madrinha deve corresponder ao do padrinho', 'error');
+            return;
+        }
+    }
+    if (medium.sex.concat(medium.med) === 'FemininoApará') {
+        if (mestre && !mestre.classif) {
+            Alert('Informe a classificação do mestre', 'error');
+            return;
+        }
+        if (mestreArcPre && !mestreMesmaOrigem) {
+            Alert('Escrava de Arcanos/Presidente deve emitir na mesma origem do mestre', 'error');
+            return;
+        } 
+        if (medium.turnoLeg !== oppositeTurno(turnoL, mestre?.turnoLeg as string)) {
+            Alert('Turno de legião da escrava deve corresponder ao do mestre', 'error');
+            return;
+        }
+        if (medium.turnoTrab !== oppositeTurno(turnoT, mestre?.turnoTrab as string)) {
+            Alert('Turno de trabalho da escrava deve corresponder ao do mestre', 'error');
+            return;
+        }
     }
     
     action();

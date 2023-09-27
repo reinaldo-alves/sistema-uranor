@@ -2,7 +2,7 @@ import pdfMake from 'pdfmake/build/pdfmake'
 import pdfTimes from 'pdfmake/build/vfs_fonts'
 import { timesRegular, timesBold, timesItalic, timesBI } from 'src/assets/encodedFiles/TimesFont';
 import { Content, TDocumentDefinitions } from 'pdfmake/interfaces';
-import { IMedium, IUser } from "src/types/types";
+import { ICanto, IMedium, IUser } from "src/types/types";
 import { assTiaNeiva } from '../assets/encodedFiles/signature';
 import { getCurrentDate } from './functions';
 
@@ -138,7 +138,7 @@ export const generateEmissao = (medium: IMedium, user: IUser, text: string) => {
 
     const emissaoDefinitions: TDocumentDefinitions = {
         info: {
-            title: `${medium.medium_id.toString().padStart(5, '0')}_${medium.nome.replace(/ /g, '_')}`
+            title: `Emissao_${medium.medium_id.toString().padStart(5, '0')}_${medium.nome.replace(/ /g, '_')}`
         },
         pageSize: 'A4',
         content: [emissaoHeader, emissaoTitle, emissaoBody, emissaoInfo],
@@ -149,4 +149,40 @@ export const generateEmissao = (medium: IMedium, user: IUser, text: string) => {
     }
 
     pdfMake.createPdf(emissaoDefinitions).open({}, window.open(`Emissao_${medium.medium_id.toString().padStart(5, '0')}_${medium.nome.replace(/ /g, '_')}.pdf`, '_blank'));
+}
+
+export const generateCanto = (canto: ICanto) => {    
+
+    const cantoTitle: Content = {
+        text: canto.title,
+        fontSize: 16,
+        alignment: 'center',
+        bold: true, 
+        margin: [0, 0, 0, 30]
+    }
+
+    const cantoBody: Content = {
+        text: canto.text,
+        fontSize: 14,
+        alignment: 'justify',
+        margin: [0, 0, 0, 20]
+    }
+
+    const cantoDivider: Content = {
+        text: '_____________________________________________________________________________________',
+        alignment: 'center'
+    };
+
+    const cantoDefinitions: TDocumentDefinitions = {
+        info: {
+            title: canto.title.replace(/ /g, '_')
+        },
+        pageSize: 'A4',
+        content: [cantoTitle, cantoBody, cantoDivider],
+        defaultStyle: {
+            font: 'Times'
+        }
+    }
+
+    pdfMake.createPdf(cantoDefinitions).open({}, window.open(`${canto.title.replace(/ /g, '_')}.pdf`, '_blank'));
 }

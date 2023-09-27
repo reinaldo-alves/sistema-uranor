@@ -3,22 +3,6 @@ import Header from "../../components/header/header";
 import CavEsp from '../../docs/CavaleiroEspecial.pdf'
 import ECavEsp from '../../docs/Escrava.pdf'
 import NCavEsp from '../../docs/NinfaSol.pdf'
-import Gre from '../../docs/Grega.pdf'
-import May from '../../docs/Maya.pdf'
-import Pri from '../../docs/PrincipeMaya.pdf'
-import Jac from '../../docs/Jacana.pdf'
-import Ari from '../../docs/Ariana.pdf'
-import Mad from '../../docs/Madalena.pdf'
-import Fra from '../../docs/Franciscana.pdf'
-import Nar from '../../docs/Narayama.pdf'
-import Roc from '../../docs/Rochana.pdf'
-import Cay from '../../docs/Caycara.pdf'
-import Tup from '../../docs/Tupinamba.pdf'
-import CAg from '../../docs/CiganaAganara.pdf'
-import CTa from '../../docs/CiganaTagana.pdf'
-import Agu from '../../docs/AgulhaIsmenia.pdf'
-import Nia from '../../docs/Niatra.pdf'
-import Apo from '../../docs/Aponara.pdf'
 import Nit from '../../docs/Nityama.pdf'
 import NitC from '../../docs/NityamaChama.pdf'
 import NitT from '../../docs/NityamaTurigano.pdf'
@@ -41,6 +25,7 @@ import ButtonDoc from "src/components/ButtonDoc/ButtonDoc";
 import { CardsCantoContainer, GlobalContainer } from "./styles";
 import SideMenu from "src/components/SideMenu/SideMenu";
 import MainTitle from "src/components/MainTitle/MainTitle";
+import { agulhaIsmeniaCanto, aponaraCanto, arianaCanto, caycaraCanto, ciganaAganaraCanto, ciganaTaganaCanto, franciscanaCanto, gregaCanto, jacanaCanto, madalenaCanto, mayaCanto, narayamaCanto, niatraCanto, principeMayaCanto, rochanaCanto, tupinambaCanto } from "src/reports/cantosFalanges";
 
 function CantosChaves() {
     
@@ -201,14 +186,14 @@ function CantosChaves() {
                         {link: Sam, canto: 'Canto da Samaritana'},
                         {link: SamT, canto: 'Canto do Turigano'}
                     ]} />
-                    <ButtonDoc name={'Grega'} link={Gre} height={'2em'} />
-                    <ButtonDoc name={'Maya'} link={May} height={'2em'} />
+                    <ButtonDoc name={'Grega'} link={gregaCanto} height={'2em'} />
+                    <ButtonDoc name={'Maya'} link={mayaCanto} height={'2em'} />
                     <ButtonMenu active={magActive} click={magClick} name={'Mago'} list={[
                         {link: Mag, canto: 'Canto do Mago'},
                         {link: MagOn, canto: 'Canto para Acender a Chama'},
                         {link: MagOff, canto: 'Canto para Apagar a Chama'}
                     ]} />                        
-                    <ButtonDoc name={'Príncipe Maya'} link={Pri} height={'2em'} />
+                    <ButtonDoc name={'Príncipe Maya'} link={principeMayaCanto} height={'2em'} />
                     <ButtonMenu active={yurActive} click={yurClick} name={'Yuricy'} list={[
                         {link: YurS, canto: 'Canto da Yuricy Sol'},
                         {link: YurL, canto: 'Canto da Yuricy Lua'},
@@ -223,19 +208,19 @@ function CantosChaves() {
                         {link: Mur, canto: 'Canto da Muruaicy'},
                         {link: MurP, canto: 'Chave de Abertura dos Portões'}
                     ]} />
-                    <ButtonDoc name={'Jaçanã'} link={Jac} height={'2em'} />
-                    <ButtonDoc name={'Ariana'} link={Ari} height={'2em'} />
-                    <ButtonDoc name={'Madalena'} link={Mad} height={'2em'} />
-                    <ButtonDoc name={'Franciscana'} link={Fra} height={'2em'} />
-                    <ButtonDoc name={'Narayama'} link={Nar} height={'2em'} />
-                    <ButtonDoc name={'Rochana'} link={Roc} height={'2em'} />
-                    <ButtonDoc name={'Cayçara'} link={Cay} height={'2em'} />
-                    <ButtonDoc name={'Tupinambá'} link={Tup} height={'2em'} />
-                    <ButtonDoc name={'Cigana Aganara'} link={CAg} height={'2em'} />
-                    <ButtonDoc name={'Cigana Tagana'} link={CTa} height={'2em'} />
-                    <ButtonDoc name={'Agulha Ismênia'} link={Agu} height={'2em'} />
-                    <ButtonDoc name={'Niatra'} link={Nia} height={'2em'} />
-                    <ButtonDoc name={'Aponara'} link={Apo} height={'2em'} />
+                    <ButtonDoc name={'Jaçanã'} link={jacanaCanto} height={'2em'} />
+                    <ButtonDoc name={'Ariana'} link={arianaCanto} height={'2em'} />
+                    <ButtonDoc name={'Madalena'} link={madalenaCanto} height={'2em'} />
+                    <ButtonDoc name={'Franciscana'} link={franciscanaCanto} height={'2em'} />
+                    <ButtonDoc name={'Narayama'} link={narayamaCanto} height={'2em'} />
+                    <ButtonDoc name={'Rochana'} link={rochanaCanto} height={'2em'} />
+                    <ButtonDoc name={'Cayçara'} link={caycaraCanto} height={'2em'} />
+                    <ButtonDoc name={'Tupinambá'} link={tupinambaCanto} height={'2em'} />
+                    <ButtonDoc name={'Cigana Aganara'} link={ciganaAganaraCanto} height={'2em'} />
+                    <ButtonDoc name={'Cigana Tagana'} link={ciganaTaganaCanto} height={'2em'} />
+                    <ButtonDoc name={'Agulha Ismênia'} link={agulhaIsmeniaCanto} height={'2em'} />
+                    <ButtonDoc name={'Niatra'} link={niatraCanto} height={'2em'} />
+                    <ButtonDoc name={'Aponara'} link={aponaraCanto} height={'2em'} />
                 </CardsCantoContainer>
                 <MainTitle content="Chaves dos Trabalhos" />
                 <CardsCantoContainer colums={columnChave}>

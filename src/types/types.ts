@@ -3,6 +3,11 @@ export interface ITurno {
     jaguar: Array<string>
 }
 
+export interface ICanto {
+    title: string,
+    text: Array<string>
+}
+
 export interface IAdjunto {
     adjunto_id: number,
     nome: string,

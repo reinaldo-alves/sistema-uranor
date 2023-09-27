@@ -54,6 +54,7 @@ export function setSituation(medium: IMedium) {
     else {return ''}
 }
 
+//Função que retorna o turno (legião ou trabalho) correspondente do sexo oposto
 export const oppositeTurno = (obj: ITurno, turno: string) => {
     if(obj.jaguar.includes(turno)) {
         const index = obj.jaguar.indexOf(turno);

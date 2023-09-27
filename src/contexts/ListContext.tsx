@@ -47,7 +47,7 @@ export const ListStore = ({ children }: any) => {
 
     const classMest = {
         MS: ['Mestre Sol', 'Mestre Luz', 'Mestre Sol Mago', 'Mestre Luz Mago', 'Mestre Sol Príncipe Maya', 'Mestre Luz Príncipe Maya'],
-        ML: ['Mestre Lua', 'Mestre Lua Mago', 'Mestre Lua Príncipe'],
+        ML: ['Mestre Lua', 'Mestre Lua Mago', 'Mestre Lua Príncipe Maya'],
         NS: ['Ninfa Sol', 'Ninfa Sol Nityama', 'Ninfa Sol Grega', 'Ninfa Sol Maya'],
         NL: ['Ninfa Lua', 'Ninfa Lua Nityama', 'Ninfa Lua Grega', 'Ninfa Lua Maya']
     }

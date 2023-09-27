@@ -113,6 +113,6 @@ function App() {
 
 export default App;
 
-//Testar e corrigir emissão de principe lua e trinos sardyos lua
-//Fazer validação de turno de trabalho e de legião ao gerar emissão de escrava/padrinho/madrinha/mestre. O mestre também precisa ter classificação
-//Fazer validação de adjunto de origem ao gerar emissão de escrava/padrinho/madrinha de arcanos
+//Resolver problema ao repetir o canto no mesmo pdf
+//Substituir links dos documentos do ButtonMenu por pdf gerados no sistema
+//Melhorar sistema de redirecionar para tela de login quanto o token vencer.

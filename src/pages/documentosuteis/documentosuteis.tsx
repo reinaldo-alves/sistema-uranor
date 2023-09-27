@@ -7,13 +7,15 @@ import MainTitle from "src/components/MainTitle/MainTitle";
 
 function DocumentosUteis() {
 
+    const defaultCanto = {title: '', text: ['']}
+    
     const docs = [
-        {name: 'Chamada Oficial das Falanges Missionárias', link: ''},
-        {name: 'Prefixos das Falanges Missionárias', link: ''},
-        {name: 'Relação de Turnos de Trabalho', link: ''},
-        {name: 'Calendário de Atividades Doutrinárias', link: ''},
-        {name: 'Escala dos Devas', link: ''},
-        {name: 'Formulário para Ficha Mediúnica', link: ''}
+        {name: 'Chamada Oficial das Falanges Missionárias', link: defaultCanto},
+        {name: 'Prefixos das Falanges Missionárias', link: defaultCanto},
+        {name: 'Relação de Turnos de Trabalho', link: defaultCanto},
+        {name: 'Calendário de Atividades Doutrinárias', link: defaultCanto},
+        {name: 'Escala dos Devas', link: defaultCanto},
+        {name: 'Formulário para Ficha Mediúnica', link: defaultCanto}
     ]
     
     const menuList = [{title: 'Página Inicial', click: '/'}]

@@ -22,7 +22,7 @@ function ShowMedium() {
     
     const { token, getUser, user } = useContext(UserContext);
     const { mediuns, loadMedium, changeMed } = useContext(MediumContext);
-    const { ministros, cavaleiros, guias, adjuntos, templos, falMiss, getData } = useContext(ListContext);
+    const { ministros, cavaleiros, guias, adjuntos, templos, falMiss, getData, turnoL, turnoT } = useContext(ListContext);
     const params = useParams();
     const navigate = useNavigate();
     
@@ -116,7 +116,7 @@ function ShowMedium() {
                             <MediumMainInfo>Templo: <span>{templos.filter((item: ITemplo) => item.templo_id === medium.templo)[0].cidade} - {templos.filter((item: ITemplo) => item.templo_id === medium.templo)[0].estado.abrev}</span></MediumMainInfo>
                             <MediumMainInfo>Situação: <span>{setSituation(medium)}</span></MediumMainInfo>
                             <MediumMainInfo>Condição Atual: <span>{medium.condicao}</span></MediumMainInfo>
-                            <MediumButton disabled={!medium.dtCenturia && !medium.falMiss} onClick={() => validateEmissao(medium, () => generateEmissao(medium, user, emissaoText(medium, mediuns, ministros, cavaleiros, guias, adjuntos, templos, falMiss) as string))} color="green">Gerar Emissão</MediumButton>
+                            <MediumButton disabled={!medium.dtCenturia && !medium.falMiss} onClick={() => validateEmissao(medium, mediuns, adjuntos, turnoL, turnoT, () => generateEmissao(medium, user, emissaoText(medium, mediuns, ministros, cavaleiros, guias, adjuntos, templos, falMiss) as string))} color="green">Gerar Emissão</MediumButton>
                             <MediumButton onClick={() => navigate(`/mediuns/editar/${medium.medium_id}`)} color="green">Editar</MediumButton>
                             <MediumButton color="green">Gerar Ficha</MediumButton>
                             <MediumButton color="green">Autorização</MediumButton>
