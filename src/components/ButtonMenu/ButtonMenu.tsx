@@ -1,16 +1,18 @@
 import { MouseEventHandler } from 'react'
 import { ButtonMenuContainer, CantoButton, Dropdown, DropdownContainer } from './styles'
+import { ICanto } from 'src/types/types'
+import { generateCanto } from 'src/utilities/createDocs'
 
-interface ICanto {
-    link: string,
-    canto: string
+interface ICantoItem {
+    text: string,
+    canto: ICanto
 }
 
 interface IButtonMenu {
     active: boolean,
     click: MouseEventHandler,
     name: string,
-    list: Array<ICanto>,
+    list: Array<ICantoItem>,
     height?: string | undefined
 }
 
@@ -21,10 +23,8 @@ function ButtonMenu(props: IButtonMenu) {
             <DropdownContainer active={props.active}>
                 <Dropdown active={props.active}>
                     <ul>
-                        {props.list.map((item: ICanto, index: number) => (
-                            <li key={index}>
-                                <a href={item.link} target='_blank' rel='noreferrer'>{item.canto}</a>
-                            </li>
+                        {props.list.map((item: ICantoItem, index: number) => (
+                            <li key={index} onClick={() => generateCanto(item.canto)}>{item.text}</li>
                         ))}
                     </ul>
                 </Dropdown>

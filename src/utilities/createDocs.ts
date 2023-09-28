@@ -170,7 +170,50 @@ export const generateCanto = (canto: ICanto) => {
 
     const cantoDivider: Content = {
         text: '_____________________________________________________________________________________',
-        alignment: 'center'
+        alignment: 'center',
+        margin: [0, 0, 0, 30]
+    };
+
+    const cantoTitle2: Content = {
+        text: canto.title,
+        fontSize: 16,
+        alignment: 'center',
+        bold: true, 
+        margin: [0, 0, 0, 30]
+    }
+
+    const cantoBody2: Content = {
+        text: canto.text,
+        fontSize: 14,
+        alignment: 'justify',
+        margin: [0, 0, 0, 20]
+    }
+
+    const cantoDivider2: Content = {
+        text: '_____________________________________________________________________________________',
+        alignment: 'center',
+        margin: [0, 0, 0, 30]
+    };
+
+    const cantoTitle3: Content = {
+        text: canto.title,
+        fontSize: 16,
+        alignment: 'center',
+        bold: true, 
+        margin: [0, 0, 0, 30]
+    }
+
+    const cantoBody3: Content = {
+        text: canto.text,
+        fontSize: 14,
+        alignment: 'justify',
+        margin: [0, 0, 0, 20]
+    }
+
+    const cantoDivider3: Content = {
+        text: '_____________________________________________________________________________________',
+        alignment: 'center',
+        margin: [0, 0, 0, 30]
     };
 
     const cantoDefinitions: TDocumentDefinitions = {
@@ -178,7 +221,7 @@ export const generateCanto = (canto: ICanto) => {
             title: canto.title.replace(/ /g, '_')
         },
         pageSize: 'A4',
-        content: [cantoTitle, cantoBody, cantoDivider],
+        content: canto.repeat === 3 ? [cantoTitle, cantoBody, cantoDivider, cantoTitle2, cantoBody2, cantoDivider2, cantoTitle3, cantoBody3, cantoDivider3] : canto.repeat === 2 ? [cantoTitle, cantoBody, cantoDivider, cantoTitle2, cantoBody2, cantoDivider2] : [cantoTitle, cantoBody, cantoDivider],
         defaultStyle: {
             font: 'Times'
         }

@@ -113,6 +113,5 @@ function App() {
 
 export default App;
 
-//Resolver problema ao repetir o canto no mesmo pdf
-//Substituir links dos documentos do ButtonMenu por pdf gerados no sistema
+//Continuar a escrever chaves a partir dos sextos no randy
 //Melhorar sistema de redirecionar para tela de login quanto o token vencer.

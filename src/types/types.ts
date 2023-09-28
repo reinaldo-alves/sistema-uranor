@@ -5,7 +5,8 @@ export interface ITurno {
 
 export interface ICanto {
     title: string,
-    text: Array<string>
+    text: Array<string>,
+    repeat: number
 }
 
 export interface IAdjunto {

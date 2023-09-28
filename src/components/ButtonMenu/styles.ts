@@ -72,13 +72,10 @@ export const Dropdown = styled.nav<{active: boolean}>`
         margin-bottom: 4px;
         overflow: hidden;
         text-overflow: ellipsis;
+        cursor: pointer;
     }
 
     ul li:hover {
         text-decoration: underline;
-    }
-
-    ul li a {
-        color: ${(props) => {return props.theme.color.lighterColor}};
     }
 `;

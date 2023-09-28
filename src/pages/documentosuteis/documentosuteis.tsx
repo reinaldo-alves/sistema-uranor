@@ -7,7 +7,7 @@ import MainTitle from "src/components/MainTitle/MainTitle";
 
 function DocumentosUteis() {
 
-    const defaultCanto = {title: '', text: ['']}
+    const defaultCanto = {title: '', text: [''], repeat: 1}
     
     const docs = [
         {name: 'Chamada Oficial das Falanges Missionárias', link: defaultCanto},

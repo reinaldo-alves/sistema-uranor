@@ -1,31 +1,13 @@
 import { useEffect, useState } from "react";
 import Header from "../../components/header/header";
-import CavEsp from '../../docs/CavaleiroEspecial.pdf'
-import ECavEsp from '../../docs/Escrava.pdf'
-import NCavEsp from '../../docs/NinfaSol.pdf'
-import Nit from '../../docs/Nityama.pdf'
-import NitC from '../../docs/NityamaChama.pdf'
-import NitT from '../../docs/NityamaTurigano.pdf'
-import Sam from '../../docs/Samaritana.pdf'
-import SamT from '../../docs/SamaritanaTurigano.pdf'
-import Mag from '../../docs/Mago.pdf'
-import MagOn from '../../docs/MagoAcender.pdf'
-import MagOff from '../../docs/MagoApagar.pdf'
-import YurS from '../../docs/YuricySol.pdf'
-import YurL from '../../docs/YuricyLua.pdf'
-import Yur1 from '../../docs/YuricySol1Canto.pdf'
-import YurT from '../../docs/YuricyTurigano.pdf'
-import Dha from '../../docs/DharmoOxinto.pdf'
-import DhaL from '../../docs/DharmoOxintoLeito.pdf'
-import Mur from '../../docs/Muruaicy.pdf'
-import MurP from '../../docs/MuruaicyPortoes.pdf'
 import ButtonMenu from "../../components/ButtonMenu/ButtonMenu";
 import SubMenu from "src/components/SubMenu/SubMenu";
 import ButtonDoc from "src/components/ButtonDoc/ButtonDoc";
 import { CardsCantoContainer, GlobalContainer } from "./styles";
 import SideMenu from "src/components/SideMenu/SideMenu";
 import MainTitle from "src/components/MainTitle/MainTitle";
-import { agulhaIsmeniaCanto, aponaraCanto, arianaCanto, caycaraCanto, ciganaAganaraCanto, ciganaTaganaCanto, franciscanaCanto, gregaCanto, jacanaCanto, madalenaCanto, mayaCanto, narayamaCanto, niatraCanto, principeMayaCanto, rochanaCanto, tupinambaCanto } from "src/reports/cantosFalanges";
+import { agulhaIsmeniaCanto, aponaraCanto, arianaCanto, caycaraCanto, ciganaAganaraCanto, ciganaTaganaCanto, dharmoOxintoCanto, dharmoOxintoLeito, franciscanaCanto, gregaCanto, jacanaCanto, madalenaCanto, magoAcender, magoApagar, magoCanto, mayaCanto, muruaicyCanto, muruaicyPortões, narayamaCanto, niatraCanto, nityamaCanto, nityamaChama, nityamaTurigano, principeMayaCanto, rochanaCanto, samaritanaCanto, samaritanaTurigano, tupinambaCanto, yuricyLuaCanto, yuricySol1Canto, yuricySolCanto, yuricyTurigano } from "src/reports/cantosFalanges";
+import { cavEspecialCanto, ninfaLuaCanto, ninfaSolCanto } from "src/reports/cantosIndividualidade";
 
 function CantosChaves() {
     
@@ -93,72 +75,74 @@ function CantosChaves() {
         };
     }, [])
 
+    const defaultCanto = {title: '', text: [''], repeat: 1}
+
     const individualidade = [
-        {name: 'Canto do Cavaleiro Especial', link: CavEsp, subtitle: '(Doutrinador e Ajanã)'},
-        {name: 'Canto da Escrava do Cavaleiro Especial', link: ECavEsp, subtitle: '(Ninfa Lua)'},
-        {name: 'Canto da Ninfa do Cavaleiro Especial', link: NCavEsp, subtitle: '(Ninfa Sol)'}
+        {name: 'Canto do Cavaleiro Especial', link: cavEspecialCanto, subtitle: '(Doutrinador e Ajanã)'},
+        {name: 'Canto da Escrava do Cavaleiro Especial', link: ninfaLuaCanto, subtitle: '(Ninfa Lua)'},
+        {name: 'Canto da Ninfa do Cavaleiro Especial', link: ninfaSolCanto, subtitle: '(Ninfa Sol)'}
     ]
 
     const chaves = [
         {name:'Abatá', active: abaActive, click: abaClick, list: [
-            {link: '', canto: 'Chave da Ninfa Comandante'}
+            {canto: defaultCanto, text: 'Chave da Ninfa Comandante'}
         ]},
         {name:'Abertura e Encerramento', active: abeActive, click: abeClick, list: [
-            {link: '', canto: 'Chave de Abertura e Encerramento dos Trabalhos'},
-            {link: '', canto: 'Chave de Abertura e Encerramento do Trabalho Oficial'},
-            {link: '', canto: 'Chave de Tapir (Abertura da Corrente Mestra'}
+            {canto: defaultCanto, text: 'Chave de Abertura e Encerramento dos Trabalhos'},
+            {canto: defaultCanto, text: 'Chave de Abertura e Encerramento do Trabalho Oficial'},
+            {canto: defaultCanto, text: 'Chave de Tapir (Abertura da Corrente Mestra'}
         ]},
         {name:'Alabá', active: alaActive, click: alaClick, list: [
-            {link: '', canto: 'Chave do Comandante (Reino Central)'},
-            {link: '', canto: 'Chave do Cavaleiro da Lança Vermelha'},
-            {link: '', canto: 'Chave de Invocação dos Cavaleiros das Lanças'}
+            {canto: defaultCanto, text: 'Chave do Comandante (Reino Central)'},
+            {canto: defaultCanto, text: 'Chave do Cavaleiro da Lança Vermelha'},
+            {canto: defaultCanto, text: 'Chave de Invocação dos Cavaleiros das Lanças'}
         ]},
         {name:'Aramê', active: araActive, click: araClick, list: [
-            {link: '', canto: 'Canto da Yuricy no Aramê'},
-            {link: '', canto: 'Chave do Ajanã'},
-            {link: '', canto: 'Canto da Condessa de Natharry'},
-            {link: '', canto: 'Canto da Promotoria'},
-            {link: '', canto: 'Canto da Defensoria'},
-            {link: '', canto: 'Chave do Cavaleiro da Lança Vermelha'}
+            {canto: defaultCanto, text: 'Canto da Yuricy no Aramê'},
+            {canto: defaultCanto, text: 'Chave do Ajanã'},
+            {canto: defaultCanto, text: 'Canto da Condessa de Natharry'},
+            {canto: defaultCanto, text: 'Canto da Promotoria'},
+            {canto: defaultCanto, text: 'Canto da Defensoria'},
+            {canto: defaultCanto, text: 'Chave do Cavaleiro da Lança Vermelha'}
         ]},
         {name:'Cura', active: curActive, click: curClick, list: [
-            {link: '', canto: 'Chave do Comandante'}
+            {canto: defaultCanto, text: 'Chave do Comandante'}
         ]},
         {name:'Defumação', active: defActive, click: defClick, list: [
-            {link: '', canto: 'Chave do Comandante'}
+            {canto: defaultCanto, text: 'Chave do Comandante'}
         ]},
         {name:'Indução', active: indActive, click: indClick, list: [
-            {link: '', canto: 'Chave do Comandante'}
+            {canto: defaultCanto, text: 'Chave do Comandante'}
         ]},
         {name:'Junção', active: junActive, click: junClick, list: [
-            {link: '', canto: 'Chave do Comandante'}
+            {canto: defaultCanto, text: 'Chave do Comandante'}
         ]},
         {name:'Leito Magnético', active: leiActive, click: leiClick, list: [
-            {link: '', canto: 'Chave das Ninfas Representantes das Falanges Missionárias'},
-            {link: '', canto: 'Chave do Comandante - 1° Cavaleiro da Lança Reino Central'},
-            {link: '', canto: 'Chave do 1° Cavaleiro da Lança Vermelha'},
-            {link: '', canto: 'Chave do 1° Cavaleiro da Lança Lilás'},
-            {link: '', canto: 'Chave do 1° Cavaleiro da Lança Rósea'},
-            {link: '', canto: 'Chave dos Cavaleiros de Oxosse'},
-            {link: '', canto: 'Chave das Ninfas dos Cavaleiros de Oxosse'},
-            {link: '', canto: 'Chave do Ajanã'},
+            {canto: defaultCanto, text: 'Chave das Ninfas Representantes das Falanges Missionárias'},
+            {canto: defaultCanto, text: 'Chave do Comandante - 1° Cavaleiro da Lança Reino Central'},
+            {canto: defaultCanto, text: 'Chave do 1° Cavaleiro da Lança Vermelha'},
+            {canto: defaultCanto, text: 'Chave do 1° Cavaleiro da Lança Lilás'},
+            {canto: defaultCanto, text: 'Chave do 1° Cavaleiro da Lança Rósea'},
+            {canto: defaultCanto, text: 'Chave dos Cavaleiros de Oxosse'},
+            {canto: defaultCanto, text: 'Chave das Ninfas dos Cavaleiros de Oxosse'},
+            {canto: defaultCanto, text: 'Chave do Ajanã'},
         ]},
         {name:'Oráculo', active: oraActive, click: oraClick, list: [
-            {link: '', canto: 'Chave do Comandante'},
-            {link: '', canto: 'Chave do Ajanã'},
-            {link: '', canto: 'Convite do Pai Seta Branca (Ninfa Sol)'}
+            {canto: defaultCanto, text: 'Chave do Comandante'},
+            {canto: defaultCanto, text: 'Chave do Ajanã'},
+            {canto: defaultCanto, text: 'Convite do Pai Seta Branca (Ninfa Sol)'}
         ]},
         {name:'Randy', active: ranActive, click: ranClick, list: [
-            {link: '', canto: 'Chave do Comandante (Reino Central)'},
-            {link: '', canto: 'Chave dos Cavaleiros da Lança'},
-            {link: '', canto: 'Chave dos Sextos'},
-            {link: '', canto: 'Chave do Ajanã'},
-            {link: '', canto: 'Chave da Ninfa Sol'},
-            {link: '', canto: 'Chave da Ninfa Lua'}
+            {canto: defaultCanto, text: 'Chave do Comandante (Reino Central)'},
+            {canto: defaultCanto, text: 'Chave dos Cavaleiros da Lança'},
+            {canto: defaultCanto, text: 'Chave dos Sextos'},
+            {canto: defaultCanto, text: 'Chave do Ajanã'},
+            {canto: defaultCanto, text: 'Chave da Ninfa Sol'},
+            {canto: defaultCanto, text: 'Chave da Ninfa Lua'}
         ]},
         {name:'Sudálio', active: sudActive, click: sudClick, list: [
-            {link: '', canto: 'Chave do Comandante'},
-            {link: '', canto: 'Chave da Ninfa Lua'}
+            {canto: defaultCanto, text: 'Chave do Comandante'},
+            {canto: defaultCanto, text: 'Chave da Ninfa Lua'}
         ]}
     ]
 
@@ -178,35 +162,35 @@ function CantosChaves() {
                 <MainTitle content="Cantos das Falanges Missionárias" />
                 <CardsCantoContainer colums={columnChave}>
                     <ButtonMenu active={nitActive} click={nitClick} name={'Nityama'} list={[
-                        {link: Nit, canto: 'Canto da Nityama'},
-                        {link: NitC, canto: 'Canto para Chama da Vida'},
-                        {link: NitT, canto: 'Canto do Turigano'}
+                        {text: 'Canto da Nityama', canto: nityamaCanto},
+                        {text: 'Canto para Chama da Vida', canto: nityamaChama},
+                        {text: 'Canto do Turigano', canto: nityamaTurigano}
                     ]} />
                     <ButtonMenu active={samActive} click={samClick} name={'Samaritana'} list={[
-                        {link: Sam, canto: 'Canto da Samaritana'},
-                        {link: SamT, canto: 'Canto do Turigano'}
+                        {text: 'Canto da Samaritana', canto: samaritanaCanto},
+                        {text: 'Canto do Turigano', canto: samaritanaTurigano}
                     ]} />
                     <ButtonDoc name={'Grega'} link={gregaCanto} height={'2em'} />
                     <ButtonDoc name={'Maya'} link={mayaCanto} height={'2em'} />
                     <ButtonMenu active={magActive} click={magClick} name={'Mago'} list={[
-                        {link: Mag, canto: 'Canto do Mago'},
-                        {link: MagOn, canto: 'Canto para Acender a Chama'},
-                        {link: MagOff, canto: 'Canto para Apagar a Chama'}
+                        {text: 'Canto do Mago', canto: magoCanto},
+                        {text: 'Canto para Acender a Chama', canto: magoAcender},
+                        {text: 'Canto para Apagar a Chama', canto: magoApagar}
                     ]} />                        
                     <ButtonDoc name={'Príncipe Maya'} link={principeMayaCanto} height={'2em'} />
                     <ButtonMenu active={yurActive} click={yurClick} name={'Yuricy'} list={[
-                        {link: YurS, canto: 'Canto da Yuricy Sol'},
-                        {link: YurL, canto: 'Canto da Yuricy Lua'},
-                        {link: Yur1, canto: 'Canto do Aramê'},
-                        {link: YurT, canto: 'Canto do Turigano'}
+                        {text: 'Canto da Yuricy Sol', canto: yuricySolCanto},
+                        {text: 'Canto da Yuricy Lua', canto: yuricyLuaCanto},
+                        {text: 'Canto do Aramê', canto: yuricySol1Canto},
+                        {text: 'Canto do Turigano', canto: yuricyTurigano}
                     ]} />
                     <ButtonMenu active={dhaActive} click={dhaClick} name={'Dharmo-Oxinto'} list={[
-                        {link: Dha, canto: 'Canto da Dharmo-Oxinto'},
-                        {link: DhaL, canto: 'Canto do Leito/Turigano'}
+                        {text: 'Canto da Dharmo-Oxinto', canto: dharmoOxintoCanto},
+                        {text: 'Canto do Leito/Turigano', canto: dharmoOxintoLeito}
                     ]} />
                     <ButtonMenu active={murActive} click={murClick} name={'Muruaicy'} list={[
-                        {link: Mur, canto: 'Canto da Muruaicy'},
-                        {link: MurP, canto: 'Chave de Abertura dos Portões'}
+                        {text: 'Canto da Muruaicy', canto: muruaicyCanto},
+                        {text: 'Chave de Abertura dos Portões', canto: muruaicyPortões}
                     ]} />
                     <ButtonDoc name={'Jaçanã'} link={jacanaCanto} height={'2em'} />
                     <ButtonDoc name={'Ariana'} link={arianaCanto} height={'2em'} />
