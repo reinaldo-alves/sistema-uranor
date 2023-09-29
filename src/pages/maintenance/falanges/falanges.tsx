@@ -118,11 +118,11 @@ function Falanges() {
                     </InputContainer>
                     <InputContainer>
                         <label>Classificação do Adjunto de Apoio</label>
-                        <input type="text" value={edited.adjMin} onChange={(e) => updateProps('adjMin', e.target.value)} />
+                        <input type="text" disabled={!edited.ninfa} value={edited.adjMin} onChange={(e) => updateProps('adjMin', e.target.value)} />
                     </InputContainer>
                     <InputContainer>
                         <label>Nome do Adjunto de Apoio</label>
-                        <input type="text" value={edited.adjNome} onChange={(e) => updateProps('adjNome', e.target.value)} />
+                        <input type="text" disabled={!edited.ninfa} value={edited.adjNome} onChange={(e) => updateProps('adjNome', e.target.value)} />
                     </InputContainer>
                     <div style={{display: 'flex', gap: '20px'}}>
                         <ModalButton color="red" onClick={() => closeModal()}>Cancelar</ModalButton>

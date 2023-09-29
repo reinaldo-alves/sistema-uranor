@@ -105,7 +105,7 @@ function App() {
             <Route path='/login' element={!login? <Login /> : <Navigate to='/' />} />
           </Routes>
         </BrowserRouter>
-        <Footer>Sistema Uranor - v.0.0.0 - ©2023 Uranor do Amanhecer. Todos os direitos reservados.</Footer>
+        <Footer>Sistema Uranor - v.1.0.0 - ©2023 Uranor do Amanhecer. Todos os direitos reservados.</Footer>
       </Background>
     </ThemeProvider>
   );
@@ -113,5 +113,4 @@ function App() {
 
 export default App;
 
-//Continuar a escrever chaves a partir dos sextos no randy
 //Melhorar sistema de redirecionar para tela de login quanto o token vencer.

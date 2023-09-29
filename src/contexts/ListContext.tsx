@@ -1,9 +1,7 @@
-import { createContext, useState, useContext, useEffect } from "react";
+import { createContext, useState } from "react";
 import api from "src/api";
 import { IAdjunto, ICavaleiro, IEstado, IFalange, IMentor, ITemplo, ITurno } from "src/types/types";
 import { IAdjuntoAPI, ICavaleiroAPI, IFalangeAPI, IGuiaAPI, IMinistroAPI, ITemploAPI } from "src/types/typesAPI";
-import { UserContext } from "./UserContext";
-import { Alert } from "src/utilities/popups";
 
 export const ListContext = createContext({} as any);
 
@@ -14,8 +12,6 @@ export const ListStore = ({ children }: any) => {
     const [falMiss, setFalMiss] = useState([] as Array<IFalange>);
     const [adjuntos, setAdjuntos] = useState([] as Array<IAdjunto>);
     const [templos, setTemplos] = useState([] as Array<ITemplo>);
-
-    const { token } = useContext(UserContext);
 
     const estados = [
         {abrev: 'PE', state: 'Pernambuco'}, {abrev: 'AC', state: 'Acre'},

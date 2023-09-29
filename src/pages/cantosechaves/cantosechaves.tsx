@@ -8,6 +8,7 @@ import SideMenu from "src/components/SideMenu/SideMenu";
 import MainTitle from "src/components/MainTitle/MainTitle";
 import { agulhaIsmeniaCanto, aponaraCanto, arianaCanto, caycaraCanto, ciganaAganaraCanto, ciganaTaganaCanto, dharmoOxintoCanto, dharmoOxintoLeito, franciscanaCanto, gregaCanto, jacanaCanto, madalenaCanto, magoAcender, magoApagar, magoCanto, mayaCanto, muruaicyCanto, muruaicyPortões, narayamaCanto, niatraCanto, nityamaCanto, nityamaChama, nityamaTurigano, principeMayaCanto, rochanaCanto, samaritanaCanto, samaritanaTurigano, tupinambaCanto, yuricyLuaCanto, yuricySol1Canto, yuricySolCanto, yuricyTurigano } from "src/reports/cantosFalanges";
 import { cavEspecialCanto, ninfaLuaCanto, ninfaSolCanto } from "src/reports/cantosIndividualidade";
+import { abataChave, alabaChave, alabaComando, arameAdvogado, arameAjana, arameCondessa, aramePromotor, comandoOficial, comandoTapir, comandoTrabalho, curaComando, defumacaoComando, inducaoComando, juncaoComando, lancaVermelha, leitoAjana, leitoCavaleiro, leitoComando, leitoFalanges, leitoLilas, leitoNinfaLua, leitoRosea, leitoVermelha, oraculoAjana, oraculoComando, oraculoNinfaSol, randyAjana, randyComando, randyLanca, randyNinfaLua, randyNinfaSol, randySexto, sudalioComando, sudalioNinfaLua } from "src/reports/chavesTrabalhos";
 
 function CantosChaves() {
     
@@ -75,8 +76,6 @@ function CantosChaves() {
         };
     }, [])
 
-    const defaultCanto = {title: '', text: [''], repeat: 1}
-
     const individualidade = [
         {name: 'Canto do Cavaleiro Especial', link: cavEspecialCanto, subtitle: '(Doutrinador e Ajanã)'},
         {name: 'Canto da Escrava do Cavaleiro Especial', link: ninfaLuaCanto, subtitle: '(Ninfa Lua)'},
@@ -85,64 +84,64 @@ function CantosChaves() {
 
     const chaves = [
         {name:'Abatá', active: abaActive, click: abaClick, list: [
-            {canto: defaultCanto, text: 'Chave da Ninfa Comandante'}
+            {canto: abataChave, text: 'Chave da Ninfa Comandante'}
         ]},
         {name:'Abertura e Encerramento', active: abeActive, click: abeClick, list: [
-            {canto: defaultCanto, text: 'Chave de Abertura e Encerramento dos Trabalhos'},
-            {canto: defaultCanto, text: 'Chave de Abertura e Encerramento do Trabalho Oficial'},
-            {canto: defaultCanto, text: 'Chave de Tapir (Abertura da Corrente Mestra'}
+            {canto: comandoTrabalho, text: 'Chave de Abertura e Encerramento dos Trabalhos'},
+            {canto: comandoOficial, text: 'Chave de Abertura e Encerramento do Trabalho Oficial'},
+            {canto: comandoTapir, text: 'Chave de Tapir (Abertura da Corrente Mestra'}
         ]},
         {name:'Alabá', active: alaActive, click: alaClick, list: [
-            {canto: defaultCanto, text: 'Chave do Comandante (Reino Central)'},
-            {canto: defaultCanto, text: 'Chave do Cavaleiro da Lança Vermelha'},
-            {canto: defaultCanto, text: 'Chave de Invocação dos Cavaleiros das Lanças'}
+            {canto: alabaComando, text: 'Chave do Comandante (Reino Central)'},
+            {canto: lancaVermelha, text: 'Chave do Cavaleiro da Lança Vermelha'},
+            {canto: alabaChave, text: 'Chave de Invocação dos Cavaleiros das Lanças'}
         ]},
         {name:'Aramê', active: araActive, click: araClick, list: [
-            {canto: defaultCanto, text: 'Canto da Yuricy no Aramê'},
-            {canto: defaultCanto, text: 'Chave do Ajanã'},
-            {canto: defaultCanto, text: 'Canto da Condessa de Natharry'},
-            {canto: defaultCanto, text: 'Canto da Promotoria'},
-            {canto: defaultCanto, text: 'Canto da Defensoria'},
-            {canto: defaultCanto, text: 'Chave do Cavaleiro da Lança Vermelha'}
+            {canto: yuricySol1Canto, text: 'Canto da Yuricy no Aramê'},
+            {canto: arameAjana, text: 'Chave do Ajanã'},
+            {canto: arameCondessa, text: 'Canto da Condessa de Natharry'},
+            {canto: aramePromotor, text: 'Canto da Promotoria'},
+            {canto: arameAdvogado, text: 'Canto da Defensoria'},
+            {canto: lancaVermelha, text: 'Chave do Cavaleiro da Lança Vermelha'}
         ]},
         {name:'Cura', active: curActive, click: curClick, list: [
-            {canto: defaultCanto, text: 'Chave do Comandante'}
+            {canto: curaComando, text: 'Chave do Comandante'}
         ]},
         {name:'Defumação', active: defActive, click: defClick, list: [
-            {canto: defaultCanto, text: 'Chave do Comandante'}
+            {canto: defumacaoComando, text: 'Chave do Comandante'}
         ]},
         {name:'Indução', active: indActive, click: indClick, list: [
-            {canto: defaultCanto, text: 'Chave do Comandante'}
+            {canto: inducaoComando, text: 'Chave do Comandante'}
         ]},
         {name:'Junção', active: junActive, click: junClick, list: [
-            {canto: defaultCanto, text: 'Chave do Comandante'}
+            {canto: juncaoComando, text: 'Chave do Comandante'}
         ]},
         {name:'Leito Magnético', active: leiActive, click: leiClick, list: [
-            {canto: defaultCanto, text: 'Chave das Ninfas Representantes das Falanges Missionárias'},
-            {canto: defaultCanto, text: 'Chave do Comandante - 1° Cavaleiro da Lança Reino Central'},
-            {canto: defaultCanto, text: 'Chave do 1° Cavaleiro da Lança Vermelha'},
-            {canto: defaultCanto, text: 'Chave do 1° Cavaleiro da Lança Lilás'},
-            {canto: defaultCanto, text: 'Chave do 1° Cavaleiro da Lança Rósea'},
-            {canto: defaultCanto, text: 'Chave dos Cavaleiros de Oxosse'},
-            {canto: defaultCanto, text: 'Chave das Ninfas dos Cavaleiros de Oxosse'},
-            {canto: defaultCanto, text: 'Chave do Ajanã'},
+            {canto: leitoFalanges, text: 'Chave das Ninfas Representantes das Falanges Missionárias'},
+            {canto: leitoComando, text: 'Chave do Comandante - 1° Cavaleiro da Lança Reino Central'},
+            {canto: leitoVermelha, text: 'Chave do 1° Cavaleiro da Lança Vermelha'},
+            {canto: leitoLilas, text: 'Chave do 1° Cavaleiro da Lança Lilás'},
+            {canto: leitoRosea, text: 'Chave do 1° Cavaleiro da Lança Rósea'},
+            {canto: leitoCavaleiro, text: 'Chave dos Cavaleiros de Oxosse'},
+            {canto: leitoNinfaLua, text: 'Chave das Ninfas dos Cavaleiros de Oxosse'},
+            {canto: leitoAjana, text: 'Chave do Ajanã'},
         ]},
         {name:'Oráculo', active: oraActive, click: oraClick, list: [
-            {canto: defaultCanto, text: 'Chave do Comandante'},
-            {canto: defaultCanto, text: 'Chave do Ajanã'},
-            {canto: defaultCanto, text: 'Convite do Pai Seta Branca (Ninfa Sol)'}
+            {canto: oraculoComando, text: 'Chave do Comandante'},
+            {canto: oraculoAjana, text: 'Chave do Ajanã'},
+            {canto: oraculoNinfaSol, text: 'Convite do Pai Seta Branca (Ninfa Sol)'}
         ]},
         {name:'Randy', active: ranActive, click: ranClick, list: [
-            {canto: defaultCanto, text: 'Chave do Comandante (Reino Central)'},
-            {canto: defaultCanto, text: 'Chave dos Cavaleiros da Lança'},
-            {canto: defaultCanto, text: 'Chave dos Sextos'},
-            {canto: defaultCanto, text: 'Chave do Ajanã'},
-            {canto: defaultCanto, text: 'Chave da Ninfa Sol'},
-            {canto: defaultCanto, text: 'Chave da Ninfa Lua'}
+            {canto: randyComando, text: 'Chave do Comandante (Reino Central)'},
+            {canto: randyLanca, text: 'Chave dos Cavaleiros da Lança'},
+            {canto: randySexto, text: 'Chave dos Sextos'},
+            {canto: randyAjana, text: 'Chave do Ajanã'},
+            {canto: randyNinfaSol, text: 'Chave da Ninfa Sol'},
+            {canto: randyNinfaLua, text: 'Chave da Ninfa Lua'}
         ]},
         {name:'Sudálio', active: sudActive, click: sudClick, list: [
-            {canto: defaultCanto, text: 'Chave do Comandante'},
-            {canto: defaultCanto, text: 'Chave da Ninfa Lua'}
+            {canto: sudalioComando, text: 'Chave do Comandante'},
+            {canto: sudalioNinfaLua, text: 'Chave da Ninfa Lua'}
         ]}
     ]
 

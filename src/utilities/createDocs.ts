@@ -2,7 +2,7 @@ import pdfMake from 'pdfmake/build/pdfmake'
 import pdfTimes from 'pdfmake/build/vfs_fonts'
 import { timesRegular, timesBold, timesItalic, timesBI } from 'src/assets/encodedFiles/TimesFont';
 import { Content, TDocumentDefinitions } from 'pdfmake/interfaces';
-import { ICanto, IMedium, IUser } from "src/types/types";
+import { ICanto, IFalange, IMedium, IUser } from "src/types/types";
 import { assTiaNeiva } from '../assets/encodedFiles/signature';
 import { getCurrentDate } from './functions';
 
@@ -20,15 +20,36 @@ pdfMake.fonts = {
     }
 }
 
-export const generateEmissao = (medium: IMedium, user: IUser, text: string) => {    
-    const emissaoHeader: Content = {
-        text: ['TEMPLO URANOR DO AMANHECER\n', 'CASTELO DOS DEVAS\n'],
-        fontSize: 16,
-        alignment: 'center',
-        bold: true, 
-        margin: [0, -10, 0, 30]
-    }
+const docHeader: Content = {
+    text: ['TEMPLO URANOR DO AMANHECER\n', 'CASTELO DOS DEVAS\n'],
+    fontSize: 16,
+    alignment: 'center',
+    bold: true, 
+    margin: [0, -10, 0, 30]
+}
 
+const docFooter = (current: number, total: number): Content => {
+    return [
+        {
+            columns: [
+                {
+                    text: 'Sistema Uranor - Castelo dos Devas',
+                    fontSize: 9,
+                    alignment: 'left',
+                    margin: [20, 20, 20, 20]
+                },
+                {
+                  text: `Página ${current} de ${total}`,
+                  fontSize: 9,
+                  alignment: 'right',
+                  margin: [20, 20, 20, 20]
+                }
+            ]
+          },
+    ]
+};
+
+export const generateEmissao = (medium: IMedium, user: IUser, text: string) => {    
     const emissaoTitle: Content = {
         text: `EMISSÃO DO MÉDIUM ${medium.nome.toUpperCase()}`,
         fontSize: 14,
@@ -115,33 +136,14 @@ export const generateEmissao = (medium: IMedium, user: IUser, text: string) => {
         }
     ];
 
-    const emissaoFooter = (currentPage: number, pageCount: number): Content => {
-        return [
-            {
-                columns: [
-                    {
-                        text: 'Sistema Uranor - Castelo dos Devas',
-                        fontSize: 9,
-                        alignment: 'left',
-                        margin: [20, 20, 20, 20]
-                    },
-                    {
-                      text: `Página ${currentPage} de ${pageCount}`,
-                      fontSize: 9,
-                      alignment: 'right',
-                      margin: [20, 20, 20, 20]
-                    }
-                ]
-              },
-        ]
-    };
+    const emissaoFooter = (currentPage: number, pageCount: number): Content => docFooter(currentPage, pageCount)
 
     const emissaoDefinitions: TDocumentDefinitions = {
         info: {
             title: `Emissao_${medium.medium_id.toString().padStart(5, '0')}_${medium.nome.replace(/ /g, '_')}`
         },
         pageSize: 'A4',
-        content: [emissaoHeader, emissaoTitle, emissaoBody, emissaoInfo],
+        content: [docHeader, emissaoTitle, emissaoBody, emissaoInfo],
         footer: emissaoFooter,
         defaultStyle: {
             font: 'Times'
@@ -210,22 +212,195 @@ export const generateCanto = (canto: ICanto) => {
         margin: [0, 0, 0, 20]
     }
 
-    const cantoDivider3: Content = {
-        text: '_____________________________________________________________________________________',
-        alignment: 'center',
-        margin: [0, 0, 0, 30]
-    };
-
     const cantoDefinitions: TDocumentDefinitions = {
         info: {
             title: canto.title.replace(/ /g, '_')
         },
         pageSize: 'A4',
-        content: canto.repeat === 3 ? [cantoTitle, cantoBody, cantoDivider, cantoTitle2, cantoBody2, cantoDivider2, cantoTitle3, cantoBody3, cantoDivider3] : canto.repeat === 2 ? [cantoTitle, cantoBody, cantoDivider, cantoTitle2, cantoBody2, cantoDivider2] : [cantoTitle, cantoBody, cantoDivider],
+        content: canto.repeat === 3 ? [cantoTitle, cantoBody, cantoDivider, cantoTitle2, cantoBody2, cantoDivider2, cantoTitle3, cantoBody3] : canto.repeat === 2 ? [cantoTitle, cantoBody, cantoDivider, cantoTitle2, cantoBody2, cantoDivider2] : [cantoTitle, cantoBody, cantoDivider],
         defaultStyle: {
             font: 'Times'
         }
     }
 
     pdfMake.createPdf(cantoDefinitions).open({}, window.open(`${canto.title.replace(/ /g, '_')}.pdf`, '_blank'));
+}
+
+export const generateChamadaOficial = (falanges: Array<IFalange>) => {    
+    const chamadaTitle: Content = {
+        text: `CHAMADA OFICIAL DAS FALANGES MISSIONÁRIAS`,
+        fontSize: 14,
+        alignment: 'center',
+        bold: true, 
+        margin: [0, 0, 0, 15]
+    }
+
+    const chamadaBody: Array<any> = [
+        [
+            {text: 'N°', style: {bold: true}},
+            {text: 'FALANGE', style: {bold: true}},
+            {text: 'PRIMEIRA (O)', style: {bold: true}},
+            {text: 'ADJUNTO DE APOIO', style: {bold: true}},
+        ]
+    ]
+
+    function fillChamadaTable() {
+        falanges.filter((item: IFalange) => item.falange_id !== 2).forEach((item: IFalange, index) => {
+            const name = item.nome === 'Nityama' ? 'Nityama e Nityama Madruxa' : item.nome;
+            const adj = item.adjMin && item.adjNome ? [`${item.adjMin}\n`, `Mestre ${item.adjNome}`] : '-------';
+            const chamadaRow = [index + 1, name, item.primeira, adj];
+            chamadaBody.push(chamadaRow)
+        })
+    }
+
+    fillChamadaTable();
+
+    const chamadaTable: Content = {
+        style: {
+            alignment: 'center'
+        },
+        table: {
+            headerRows: 1,
+            widths: ['auto', '*', '*',  '*'],
+            body: chamadaBody
+        }
+    }
+
+    const chamadaFooter = (currentPage: number, pageCount: number): Content => docFooter(currentPage, pageCount);
+
+    const emissaoDefinitions: TDocumentDefinitions = {
+        info: {
+            title: chamadaTitle.text.toString().replace(/ /g, '_')
+        },
+        pageSize: 'A4',
+        content: [docHeader, chamadaTitle, chamadaTable],
+        footer: chamadaFooter,
+        defaultStyle: {
+            font: 'Times'
+        }
+    }
+
+    pdfMake.createPdf(emissaoDefinitions).open({}, window.open(`${chamadaTitle.text.toString().replace(/ /g, '_')}.pdf`, '_blank'));
+}
+
+export const generatePrefixos = (falanges: Array<IFalange>) => {    
+    const prefixoTitle: Content = {
+        text: `PREFIXOS DAS FALANGES MISSIONÁRIAS`,
+        fontSize: 16,
+        alignment: 'center',
+        bold: true, 
+        margin: [0, 0, 0, 15]
+    }
+
+    const prefixoBody: Array<any> = [
+        [
+            {text: 'FALANGE', style: {bold: true}},
+            {text: 'PREFIXO SOL', style: {bold: true}},
+            {text: 'PREFIXO LUA', style: {bold: true}},
+        ]
+    ]
+
+    function fillPrefixoTable() {
+        falanges.filter((item: IFalange) => item.ninfa && item.falange_id !== 2).forEach((item: IFalange) => {
+            const name = item.nome === 'Nityama' ? 'Nityama e Nityama Madruxa' : item.nome;
+            const prefSol = item.prefSol ? item.prefSol : '-------';
+            const prefLua = item.prefLua ? item.prefLua : '-------';
+            const prefixoRow = [name, prefSol, prefLua];
+            prefixoBody.push(prefixoRow)
+        })
+    }
+
+    fillPrefixoTable();
+
+    const prefixoTable: Content = {
+        style: {
+            alignment: 'center',
+            fontSize: 14
+        },
+        table: {
+            headerRows: 1,
+            widths: ['*', 120,  120],
+            heights: 25,
+            body: prefixoBody
+        }
+    }
+
+    const prefixoFooter = (currentPage: number, pageCount: number): Content => docFooter(currentPage, pageCount);
+
+    const emissaoDefinitions: TDocumentDefinitions = {
+        info: {
+            title: prefixoTitle.text.toString().replace(/ /g, '_')
+        },
+        pageSize: 'A4',
+        content: [docHeader, prefixoTitle, prefixoTable],
+        footer: prefixoFooter,
+        defaultStyle: {
+            font: 'Times'
+        }
+    }
+
+    pdfMake.createPdf(emissaoDefinitions).open({}, window.open(`${prefixoTitle.text.toString().replace(/ /g, '_')}.pdf`, '_blank'));
+}
+
+export const generateTurnos = () => {    
+    const turnoTitle: Content = {
+        text: `RELAÇÃO DE TURNOS DE TRABALHO`,
+        fontSize: 16,
+        alignment: 'center',
+        bold: true, 
+        margin: [0, 0, 0, 15]
+    }
+
+    const turnoTable: Content = {
+        style: {
+            alignment: 'center',
+            fontSize: 14
+        },
+        table: {
+            headerRows: 1,
+            widths: ['*', '*'],
+            heights: 30,
+            body: [
+                [
+                    {text: 'TURNOS', style: {bold: true}},
+                    {text: 'SETORES', style: {bold: true}}
+                ],
+                ['AMOROS / AMORANAS', 'Indução'],
+                ['AGANAROS / AGANARAS', 'Prisioneiros'],
+                [
+                    {text: 'ADONARES / ADANARES', fillColor: '#dddddd'},
+                    {text: 'Recursos financeiros', fillColor: '#dddddd'}
+                ],
+                ['VALÚRIOS / VALÚRIAS', 'Mesa Evangélica'],
+                ['ADELANOS / ADELANAS', 'Tronos Vermelhos e Amarelos'],
+                ['MATUROS / MATURAMAS', 'Sudálio'],
+                ['SAVANOS / SAVANAS', 'Randy'],
+                ['MURANOS / MURANAS', 'Desenvolvimento dos Médiuns'],
+                ['TAVORES / TAVANAS', 'Estrela, Unificação e Pirâmide'],
+                ['GALEROS / GALANAS', 'Cura e Junção'],
+                [
+                    {text: 'GRAMOUROS / GRAMARAS', fillColor: '#dddddd'},
+                    {text: 'Iniciação Dharman-Oxinto', fillColor: '#dddddd'}
+                ],
+                ['VOUGUES / VOUGANAS', 'Responsáveis pelos pajezinhos e crianças do templo'],
+                ['TANAROS / TANARAS', 'Oráculo de Simiromba e Cruz do Caminho'],
+            ]
+        }
+    }
+
+    const turnoFooter = (currentPage: number, pageCount: number): Content => docFooter(currentPage, pageCount);
+
+    const emissaoDefinitions: TDocumentDefinitions = {
+        info: {
+            title: turnoTitle.text.toString().replace(/ /g, '_')
+        },
+        pageSize: 'A4',
+        content: [docHeader, turnoTitle, turnoTable],
+        footer: turnoFooter,
+        defaultStyle: {
+            font: 'Times'
+        }
+    }
+
+    pdfMake.createPdf(emissaoDefinitions).open({}, window.open(`${turnoTitle.text.toString().replace(/ /g, '_')}.pdf`, '_blank'));
 }
