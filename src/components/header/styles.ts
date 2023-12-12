@@ -7,7 +7,7 @@ export const HeaderContainer = styled.header`
     align-items: center;
     margin: 15px 15px 25px 15px;
 
-    @media (max-width: 675px) {
+    @media (max-width: 720px) {
         justify-content: flex-start;
     }
 `;
@@ -24,7 +24,7 @@ export const LogoImage = styled.img`
     width: auto;
     padding-right: 20px;
 
-    @media (max-width: 675px) {
+    @media (max-width: 720px) {
         height: 40px;
         padding-right: 10px;
     }
@@ -37,7 +37,7 @@ export const HamburgerIcon = styled.img`
     padding-right: 10px;
     cursor: pointer;
 
-    @media (max-width: 675px) {
+    @media (max-width: 720px) {
         display: block;
     }
 `;
@@ -49,7 +49,7 @@ export const TitleContainer = styled.div`
     border-left: solid 2px;
     padding-left: 20px;
 
-    @media (max-width: 675px) {
+    @media (max-width: 720px) {
         font-size: 15px;
         padding-left: 10px;
     }
@@ -62,7 +62,7 @@ export const UserContainer = styled.div`
     justify-content: flex-end;
     align-items: flex-end;
 
-    @media (max-width: 675px) {
+    @media (max-width: 720px) {
         display: none;
     }
 

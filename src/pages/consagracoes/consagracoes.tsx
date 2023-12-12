@@ -5,16 +5,23 @@ import SideMenu from "src/components/SideMenu/SideMenu";
 import MainTitle from "src/components/MainTitle/MainTitle";
 
 function Consagracoes() {
-    const menuList = [{title: 'Página Inicial', click: '/'}]
+    const listSubMenu = [
+        {title: 'Página Inicial', click: '/'},
+        {title: 'Painel', click: '/'},
+        {title: 'Iniciação', click: '/'},
+        {title: 'Elevação', click: '/'},
+        {title: 'Centúria', click: '/'},
+        {title: 'Reclassificação', click: '/'},
+    ]
     
     return (
         <>
             <Header />
-            <SubMenu list={menuList}/>
+            <SubMenu list={listSubMenu}/>
             <MainContainer>
                 <MainTitle content="Módulo em Desenvolvimento" />
             </MainContainer>
-            <SideMenu list={menuList}/>
+            <SideMenu list={listSubMenu}/>
         </>
     )
 }

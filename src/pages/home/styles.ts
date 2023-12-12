@@ -6,7 +6,7 @@ export const HomeContainer = styled.div`
     justify-content: center;
     align-items: center;
 
-    @media (max-width: 675px) {
+    @media (max-width: 720px) {
         height: calc(100vh - 155px);
     }
 `;
@@ -46,7 +46,7 @@ export const CardMenu = styled.div`
     text-align: center;
     min-width: 20vw;
 
-    @media (max-width: 675px) {
+    @media (max-width: 720px) {
         font-size: 20px;
     }
 

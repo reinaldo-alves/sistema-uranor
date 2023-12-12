@@ -28,7 +28,7 @@ export const SideMenuContainer = styled.aside<{openMenu: boolean}>`
     transition: 0.5s;
     z-index: 3;
 
-    @media (max-width: 675px) {
+    @media (max-width: 720px) {
         left: ${({openMenu}) => openMenu? '0' : '-300px'};
     }
 `;

@@ -1,0 +1,10 @@
+VERSÃO 1.0.0
+- Versão de Lançamento
+- Módulo Médium com cadastro, consulta, edição, mudança de mediunidade e geração de emissão
+- Módulo Cantos e Chaves com todos os cantos da individualidade e de falanges, além de chaves de trabalhos mais usadas
+- Módulo Manutenção, com cadastro e edição de templos, adjuntos, ministros, cavaleiros, guias missionárias, falanges missionárias e usuários (incluindo alteração de senha). 
+
+VERSÃO 1.1.0
+- Correção de bug ao atualizar falange de mestrado e falange missionária
+- Correção de emissão de Padrinho de Arcanos e Presidentes (não mostra termo Em Missão Especial)
+- Alterações nos tamanhos do header e do menu secundário

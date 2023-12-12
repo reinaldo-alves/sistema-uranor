@@ -137,7 +137,7 @@ function AddMedium() {
             }
             if(newMedium.sex.concat(newMedium.med) === 'MasculinoApará') {
                 if(newMedium.falMiss === 6) {updateProps('classMest', 'Mestre Lua Mago')}
-                else if(newMedium.falMiss === 7) {updateProps('classMest', 'Mestre Lua Príncipe')}
+                else if(newMedium.falMiss === 7) {updateProps('classMest', 'Mestre Lua Príncipe Maya')}
                 else {updateProps('classMest', 'Mestre Lua')}
             }
             if(newMedium.sex.concat(newMedium.med) === 'FemininoDoutrinador') {
@@ -159,6 +159,12 @@ function AddMedium() {
         if(newMedium.classMest === 'Mestre Sol' || newMedium.classMest === 'Mestre Luz' || newMedium.classMest === 'Mestre Lua') {
             updateProps('falMiss', 0);
         }
+        if((newMedium.classMest === 'Ninfa Sol' || newMedium.classMest === 'Ninfa Lua') && [1, 2, 4, 5].includes(newMedium.falMiss)) {
+            updateProps('falMiss', 0);
+        }
+        if(newMedium.classMest === 'Ninfa Sol Nityama' || newMedium.classMest === 'Ninfa Lua Nityama') {
+            updateProps('falMiss', 1);
+        }
         if(newMedium.classMest === 'Ninfa Sol Grega' || newMedium.classMest === 'Ninfa Lua Grega') {
             updateProps('falMiss', 4);
         }
@@ -168,7 +174,7 @@ function AddMedium() {
         if(newMedium.classMest === 'Mestre Sol Mago' || newMedium.classMest === 'Mestre Luz Mago' || newMedium.classMest === 'Mestre Lua Mago') {
             updateProps('falMiss', 6);
         }
-        if(newMedium.classMest === 'Mestre Sol Príncipe' || newMedium.classMest === 'Mestre Luz Príncipe' || newMedium.classMest === 'Mestre Lua Príncipe') {
+        if(newMedium.classMest === 'Mestre Sol Príncipe Maya' || newMedium.classMest === 'Mestre Luz Príncipe Maya' || newMedium.classMest === 'Mestre Lua Príncipe Maya') {
             updateProps('falMiss', 7);
         }
     }, [newMedium.classMest])
