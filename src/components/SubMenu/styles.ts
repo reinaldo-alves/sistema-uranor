@@ -13,7 +13,7 @@ export const SubMenuContainer = styled.header`
 
 export const SubMenuContent = styled.ul`
     width: 100%;
-    margin: 0 15px 15px 15px;
+    margin: 0 0 15px 15px;
     font-weight: bold;
     color: ${(props) => {return props.theme.color.lighterColor}};
     font-size: 18px;

@@ -30,24 +30,32 @@ import Backup from './pages/maintenance/backup/backup';
 import PrivateRoutes from './utilities/PrivateRoutes';
 import ChangePassword from './pages/maintenance/changePassword/changePassword';
 import EditMedium from './pages/mediuns/AddAndEditMedium/EditMedium';
+import Iniciacao from './pages/consagracoes/iniciacao/iniciacao';
+import Elevacao from './pages/consagracoes/elevacao/elevacao';
+import Centuria from './pages/consagracoes/centuria/centuria';
+import Reclassificacao from './pages/consagracoes/reclassificacao/reclassificacao';
 
 function App() {
   const [mainContainer, setMainContainer] = useState('199')
   
-  useEffect(() => {
-    const handleResize = () => {
-      if (window.innerWidth > 786) {
-        setMainContainer('199');
-      } else if (window.innerWidth > 675) {
-        setMainContainer('194');
-      } else {
-        setMainContainer('138');
-      }
-    };
+  const handleResize = () => {
+    if (window.innerWidth > 825) {
+      setMainContainer('199');
+    } else if (window.innerWidth > 720) {
+      setMainContainer('194');
+    } else {
+      setMainContainer('138');
+    }
+  };
 
-    window.addEventListener('resize', handleResize);
+  useEffect(() => {
+    handleResize();
+    const handleResizeEvent = () => {
+      handleResize();
+    };
+    window.addEventListener('resize', handleResizeEvent);
     return () => {
-      window.removeEventListener('resize', handleResize);
+      window.removeEventListener('resize', handleResizeEvent);
     };
   }, []);
   
@@ -97,6 +105,10 @@ function App() {
               <Route path='/desenvolvimento' element={<Desenvolvimento />} />
               <Route path='/cursos' element={<Cursos />} />
               <Route path='/consagracoes' element={<Consagracoes />} />
+              <Route path='/consagracoes/iniciacao' element={<Iniciacao />} />
+              <Route path='/consagracoes/elevacao' element={<Elevacao />} />
+              <Route path='/consagracoes/centuria' element={<Centuria />} />
+              <Route path='/consagracoes/reclassificacao' element={<Reclassificacao />} />
               <Route path='/relatorios' element={<Relatorios />} /> 
               <Route path='/documentosuteis' element={<DocumentosUteis />} />
               <Route path='/biblioteca' element={<Biblioteca />} />
@@ -105,7 +117,7 @@ function App() {
             <Route path='/login' element={!login? <Login /> : <Navigate to='/' />} />
           </Routes>
         </BrowserRouter>
-        <Footer>Sistema Uranor - v.1.0.0 - ©2023 Uranor do Amanhecer. Todos os direitos reservados.</Footer>
+        <Footer>Sistema Uranor - v.1.1.0 - ©2023 Uranor do Amanhecer. Todos os direitos reservados.</Footer>
       </Background>
     </ThemeProvider>
   );
