@@ -84,8 +84,8 @@ export const juncaoComando = {
 
 export const leitoFalanges = {
     title: 'CHAVE DAS NINFAS REPRESENTANTES DAS FALANGES MISSIONÁRIAS',
-    text: ['SALVE DEUS! MEU MESTRE, 1º CAVALEIRO DA LANÇA REINO CENTRAL, ADJUNTO ....... KOATAY 108, 7º RAIO ADJURAÇÃO ARCANOS RAMA 2000 MESTRE ....... PARTO COM –0– EU, (emissão), SALVE DEUS!\n', '\n', '_________________________________________________________________________\n', '\n', 'SALVE DEUS! MEU MESTRE, 1º CAVALEIRO DA LANÇA REINO CENTRAL, ADJUNTO ....... KOATAY 108, 7º RAIO ADJURAÇÃO ARCANOS RAMA 2000 MESTRE ....... PARTO COM –0– EU, (emissão), SALVE DEUS!'],
-    repeat: 3
+    text: ['SALVE DEUS! MEU MESTRE, 1º CAVALEIRO DA LANÇA REINO CENTRAL, ADJUNTO ....... KOATAY 108, 7º RAIO ADJURAÇÃO ARCANOS RAMA 2000 MESTRE ....... PARTO COM –0– EU, (emissão), SALVE DEUS!'],
+    repeat: 4
 };
 
 export const leitoComando = {
@@ -144,8 +144,8 @@ export const oraculoAjana = {
 
 export const oraculoNinfaSol = {
     title: 'CONVITE DO PAI SETA BRANCA NO ORÁCULO',
-    text: ['JESUS DIVINO E AMADO MESTRE! NESTA BENDITA HORA, REUNIDOS EM TEU SANTO NOME, TE PEDIMOS QUE SE FAÇA PRESENTE O GRANDE SIMIROMBA DE DEUS, SETA BRANCA NOSSO PAI.\n', '\n', '_________________________________________________________________________\n', '\n', 'JESUS DIVINO E AMADO MESTRE! NESTA BENDITA HORA, REUNIDOS EM TEU SANTO NOME, TE PEDIMOS QUE SE FAÇA PRESENTE O GRANDE SIMIROMBA DE DEUS, SETA BRANCA NOSSO PAI.'],
-    repeat: 3
+    text: ['JESUS DIVINO E AMADO MESTRE! NESTA BENDITA HORA, REUNIDOS EM TEU SANTO NOME, TE PEDIMOS QUE SE FAÇA PRESENTE O GRANDE SIMIROMBA DE DEUS, SETA BRANCA NOSSO PAI.'],
+    repeat: 5
 };
 
 export const randyComando = {
@@ -168,20 +168,20 @@ export const randySexto = {
 
 export const randyAjana = {
     title: 'CHAVE DO AJANÃ NO RANDY',
-    text: ['EU, (emissão), JAGUAR LUA AJANÃ, LANÇA LILÁS –0// VERTICAL, OFEREÇO MINHA NINFA ADJURAÇÃO, NA FORÇA DE DEUS PAI TODO-PODEROSO.\n', '\n', '_________________________________________________________________________\n', '\n', 'EU, (emissão), JAGUAR LUA AJANÃ, LANÇA LILÁS –0// VERTICAL, OFEREÇO MINHA NINFA ADJURAÇÃO, NA FORÇA DE DEUS PAI TODO-PODEROSO.'],
-    repeat: 3
+    text: ['EU, (emissão), JAGUAR LUA AJANÃ, LANÇA LILÁS –0// VERTICAL, OFEREÇO MINHA NINFA ADJURAÇÃO, NA FORÇA DE DEUS PAI TODO-PODEROSO.'],
+    repeat: 5
 };
 
 export const randyNinfaSol = {
     title: 'CHAVE DA NINFA SOL NO RANDY',
-    text: ['EU, (emissão), NINFA ADJURAÇÃO, -0//, COM OS PODERES DO GRANDIOSO MESTRE LÁZARO, ME ENTREGO NESTE SANDAY COM TODO AMOR, EM NOME DE SIMIROMBA NOSSO PAI.\n', '\n', '_________________________________________________________________________\n', '\n', 'EU, (emissão), NINFA ADJURAÇÃO, -0//, COM OS PODERES DO GRANDIOSO MESTRE LÁZARO, ME ENTREGO NESTE SANDAY COM TODO AMOR, EM NOME DE SIMIROMBA NOSSO PAI.'],
-    repeat: 3
+    text: ['EU, (emissão), NINFA ADJURAÇÃO, -0//, COM OS PODERES DO GRANDIOSO MESTRE LÁZARO, ME ENTREGO NESTE SANDAY COM TODO AMOR, EM NOME DE SIMIROMBA NOSSO PAI.'],
+    repeat: 5
 };
 
 export const randyNinfaLua = {
     title: 'CHAVE DA NINFA LUA NO RANDY',
-    text: ['EU, (emissão), NINFA AJANÃ, NA LEGIÃO DO GRANDIOSO MESTRE LÁZARO, -0// VERTICAL, SALVE DEUS!\n', '\n', '_________________________________________________________________________\n', '\n', 'EU, (emissão), NINFA AJANÃ, NA LEGIÃO DO GRANDIOSO MESTRE LÁZARO, -0// VERTICAL, SALVE DEUS!'],
-    repeat: 3
+    text: ['EU, (emissão), NINFA AJANÃ, NA LEGIÃO DO GRANDIOSO MESTRE LÁZARO, -0// VERTICAL, SALVE DEUS!'],
+    repeat: 5
 };
 
 export const sudalioComando = {

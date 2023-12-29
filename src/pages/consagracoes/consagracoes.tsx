@@ -5,6 +5,7 @@ import SideMenu from "src/components/SideMenu/SideMenu";
 import MainTitle from "src/components/MainTitle/MainTitle";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
+import { alphabeticOrder, countMedium } from "src/utilities/functions";
 
 function Consagracoes() {
     
@@ -60,40 +61,10 @@ function Consagracoes() {
         {nome: 'Eu vou fazer centúria', med: 'Apará'},
     ]
 
-    // interface ILIST {
-    //     nome: string
-    // }
-
-    // const listMudanca: Array<ILIST> = [];
-    // const listIniciacao: Array<ILIST> = [];
-
     const listMudanca = [
         {nome: 'Eu virei doutrinador', med: 'Doutrinador', colete: 1, termo: true, foto: 'sdgrkngkrndf'},
         {nome: 'Eu virei apará', med: 'Apará', colete: 2, termo: false, foto: ''},
     ]
-
-    function alphabeticOrder(array: Array<any>) {
-        array.sort((minA: any, minB: any) => {
-            if (minA.nome < minB.nome) {
-              return -1;
-            }
-            if (minA.nome > minB.nome) {
-              return 1;
-            }
-            return 0;
-        }); 
-        return array
-    }
-
-    function countMedium(array: Array<any>) {
-        if (array.length === 0) {
-            return 'Nenhum médium';
-        } else if (array.length === 1) {
-            return '1 médium'
-        } else {
-            return `${array.length} médiuns`
-        }
-    }
     
     return (
         <>
@@ -118,8 +89,8 @@ function Consagracoes() {
                                 <Results columns={columnData[0] as string} key={index} onClick={() => {}}>
                                     <ResultsData align="left">{listMudanca.some((el) => el.nome === item.nome)? `${item.nome} *` : item.nome}</ResultsData>
                                     <ResultsData>{columnData[2]? item.med : item.med[0]}</ResultsData>
-                                    <ResultsData>{item.colete ? item.colete : 'Não'}</ResultsData>
-                                    <ResultsData>{item.foto ? 'Sim' : 'Não'}</ResultsData>
+                                    <ResultsData isNegative={!item.colete}>{item.colete ? item.colete : 'Não'}</ResultsData>
+                                    <ResultsData isNegative={!item.foto}>{item.foto ? 'Sim' : 'Não'}</ResultsData>
                                 </Results>
                             ))
                         }
@@ -143,8 +114,8 @@ function Consagracoes() {
                                 <Results columns={columnData[0] as string} key={index} onClick={() => {}}>
                                     <ResultsData align="left">{listMudanca.some((el) => el.nome === item.nome)? `${item.nome} *` : item.nome}</ResultsData>
                                     <ResultsData>{columnData[2]? item.med : item.med[0]}</ResultsData>
-                                    <ResultsData>{item.termo ? 'Sim' : 'Não'}</ResultsData>
-                                    <ResultsData>{item.foto ? 'Sim' : 'Não'}</ResultsData>
+                                    <ResultsData isNegative={!item.termo}>{item.termo ? 'Sim' : 'Não'}</ResultsData>
+                                    <ResultsData isNegative={!item.foto}>{item.foto ? 'Sim' : 'Não'}</ResultsData>
                                 </Results>
                             ))
                         }
@@ -173,7 +144,6 @@ function Consagracoes() {
                 </ConsagracaoCard>
                 <ButtonContainer>
                     <NavigateButton width="230px" onClick={() => {}}>Gerar Relatório</NavigateButton>
-                    <NavigateButton width="230px" onClick={() => {}}>Gerar Autorizações</NavigateButton>
                 </ButtonContainer>
             </MainContainer>
             <SideMenu list={listSubMenu}/>

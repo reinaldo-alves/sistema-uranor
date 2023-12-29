@@ -47,12 +47,12 @@ export const ConsagracaoTitle = styled.div`
     margin-bottom: 5px; 
 `;
 
-export const NavigateButton = styled.button<{width?: string}>`
+export const NavigateButton = styled.button<{width?: string, color?: string}>`
     font-weight: bold;
     border: solid 1px ${(props) => {return props.theme.color.darkerColor}};
     border-radius: 8px;
     width: ${({width}) => width? width : '180px'};
-    background-color: green;
+    background-color: ${({color}) => color? color : 'green'};
     color: ${(props) => {return props.theme.color.lighterColor}};
     text-align: center;
     height: 35px;
@@ -98,9 +98,10 @@ export const ResultsTitle = styled.th<{align?: string}>`
     }
 `;
 
-export const ResultsData = styled.td<{align?: string}>`
+export const ResultsData = styled.td<{align?: string, isNegative?: boolean}>`
     font-size: 18px;
-    color: ${(props) => {return props.theme.color.darkerColor}};
+    color: ${(props) => (props.isNegative? 'white' : props.theme.color.darkerColor)};
+    background-color: ${({isNegative}) => isNegative? 'red' : 'transparent'};
     padding: 8px 4px;
     font-weight: bold;
     overflow: hidden;
@@ -124,8 +125,10 @@ export const MudancaObs = styled.span<{show: number}>`
 
 export const ButtonContainer = styled.div`
     display: flex;
+    flex-wrap: wrap;
     justify-content: center;
-    gap: 20px 100px;
+    gap: 20px;
+    padding: 0 20px;
     margin-bottom: 25px;
 
     @media (max-width: 638px) {

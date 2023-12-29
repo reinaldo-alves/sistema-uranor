@@ -1,10 +1,17 @@
 import SubMenu from "src/components/SubMenu/SubMenu";
 import Header from "../../../components/header/header";
-import { MainContainer } from "./styles";
+import { ButtonReclassDoc, CardsContainer, MainContainer } from "./styles";
 import SideMenu from "src/components/SideMenu/SideMenu";
 import MainTitle from "src/components/MainTitle/MainTitle";
 
 function Reclassificacao() {
+    const docs = [
+        {name: 'Documento para reclassificação', link: () => {}},
+        {name: 'Autorização para consagrar Devas', link: () => {}},
+        {name: 'Autorização para consagrar Trino Solitário', link: () => {}},
+        {name: 'Autorização para consagrar Trino Sardyos', link: () => {}}
+    ]
+    
     const listSubMenu = [
         {title: 'Página Inicial', click: '/'},
         {title: 'Painel', click: '/consagracoes'},
@@ -19,7 +26,12 @@ function Reclassificacao() {
             <Header />
             <SubMenu list={listSubMenu}/>
             <MainContainer>
-                <MainTitle content="Módulo em Desenvolvimento (Reclassificação)" />
+                <MainTitle content="Documentos - Classificações e Consagrações" />
+                <CardsContainer>
+                    {docs.map((item, index) => (
+                        <ButtonReclassDoc key={index} onClick={item.link}>{item.name}</ButtonReclassDoc>
+                    ))}
+                </CardsContainer>
             </MainContainer>
             <SideMenu list={listSubMenu}/>
         </>

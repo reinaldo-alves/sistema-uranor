@@ -8,3 +8,4 @@ VERSÃO 1.1.0
 - Correção de bug ao atualizar falange de mestrado e falange missionária
 - Correção de emissão de Padrinho de Arcanos e Presidentes (não mostra termo Em Missão Especial)
 - Alterações nos tamanhos do header e do menu secundário
+- Correção no layout de algumas chaves de trabalhos

@@ -155,61 +155,31 @@ export const generateEmissao = (medium: IMedium, user: IUser, text: string) => {
 
 export const generateCanto = (canto: ICanto) => {    
 
-    const cantoTitle: Content = {
-        text: canto.title,
-        fontSize: 16,
-        alignment: 'center',
-        bold: true, 
-        margin: [0, 0, 0, 30]
+    const cantoTitle = () => {
+        return {
+            text: canto.title,
+            fontSize: 16,
+            alignment: 'center',
+            bold: true, 
+            margin: [0, 0, 0, 30]
+        } as Content
+    } 
+
+    const cantoBody = () => {
+        return {
+            text: canto.text,
+            fontSize: 14,
+            alignment: 'justify',
+            margin: [0, 0, 0, 20]
+        } as Content
     }
 
-    const cantoBody: Content = {
-        text: canto.text,
-        fontSize: 14,
-        alignment: 'justify',
-        margin: [0, 0, 0, 20]
-    }
-
-    const cantoDivider: Content = {
-        text: '_____________________________________________________________________________________',
-        alignment: 'center',
-        margin: [0, 0, 0, 30]
-    };
-
-    const cantoTitle2: Content = {
-        text: canto.title,
-        fontSize: 16,
-        alignment: 'center',
-        bold: true, 
-        margin: [0, 0, 0, 30]
-    }
-
-    const cantoBody2: Content = {
-        text: canto.text,
-        fontSize: 14,
-        alignment: 'justify',
-        margin: [0, 0, 0, 20]
-    }
-
-    const cantoDivider2: Content = {
-        text: '_____________________________________________________________________________________',
-        alignment: 'center',
-        margin: [0, 0, 0, 30]
-    };
-
-    const cantoTitle3: Content = {
-        text: canto.title,
-        fontSize: 16,
-        alignment: 'center',
-        bold: true, 
-        margin: [0, 0, 0, 30]
-    }
-
-    const cantoBody3: Content = {
-        text: canto.text,
-        fontSize: 14,
-        alignment: 'justify',
-        margin: [0, 0, 0, 20]
+    const divider = () => {
+        return {
+            text: '_____________________________________________________________________________________',
+            alignment: 'center',
+            margin: [0, 0, 0, 30]
+        } as Content
     }
 
     const cantoDefinitions: TDocumentDefinitions = {
@@ -217,7 +187,7 @@ export const generateCanto = (canto: ICanto) => {
             title: canto.title.replace(/ /g, '_')
         },
         pageSize: 'A4',
-        content: canto.repeat === 3 ? [cantoTitle, cantoBody, cantoDivider, cantoTitle2, cantoBody2, cantoDivider2, cantoTitle3, cantoBody3] : canto.repeat === 2 ? [cantoTitle, cantoBody, cantoDivider, cantoTitle2, cantoBody2, cantoDivider2] : [cantoTitle, cantoBody, cantoDivider],
+        content: canto.repeat === 5 ? [cantoTitle(), cantoBody(), divider(), cantoTitle(), cantoBody(), divider(), cantoTitle(), cantoBody(), divider(), cantoTitle(), cantoBody(), divider(), cantoTitle(), cantoBody(), divider()] : canto.repeat === 4 ? [cantoTitle(), cantoBody(), divider(), cantoTitle(), cantoBody(), divider(), cantoTitle(), cantoBody(), divider(), cantoTitle(), cantoBody(), divider()] : canto.repeat === 3 ? [cantoTitle(), cantoBody(), divider(), cantoTitle(), cantoBody(), divider(), cantoTitle(), cantoBody()] : canto.repeat === 2 ? [cantoTitle(), cantoBody(), divider(), cantoTitle(), cantoBody(), divider()] : [cantoTitle(), cantoBody(), divider()],
         defaultStyle: {
             font: 'Times'
         }

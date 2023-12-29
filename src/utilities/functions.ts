@@ -66,3 +66,28 @@ export const oppositeTurno = (obj: ITurno, turno: string) => {
         return ''
     }
 }
+
+//Organiza objetos em ordem alfabética pela propriedade nome
+export function alphabeticOrder(array: Array<any>) {
+    array.sort((minA: any, minB: any) => {
+        if (minA.nome < minB.nome) {
+          return -1;
+        }
+        if (minA.nome > minB.nome) {
+          return 1;
+        }
+        return 0;
+    }); 
+    return array
+}
+
+//Cria texto para número de médiuns em consagrações
+export function countMedium(array: Array<any>) {
+    if (array.length === 0) {
+        return 'Nenhum médium';
+    } else if (array.length === 1) {
+        return '1 médium'
+    } else {
+        return `${array.length} médiuns`
+    }
+}
