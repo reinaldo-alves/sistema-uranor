@@ -40,6 +40,13 @@ export interface ITemploAPI {
     presidente: number
 }
 
+export interface IConsagracaoAPI {
+    consagracao_id: number,
+    medium: number,
+    consagracao: number,
+    termo: number | null
+}
+
 export interface IMediumAPI {
     medium_id: number,
     nome: string,

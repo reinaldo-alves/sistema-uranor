@@ -1,7 +1,7 @@
 import { createContext, useState } from "react";
 import api from "src/api";
-import { IAdjunto, ICavaleiro, IEstado, IFalange, IMentor, ITemplo, ITurno } from "src/types/types";
-import { IAdjuntoAPI, ICavaleiroAPI, IFalangeAPI, IGuiaAPI, IMinistroAPI, ITemploAPI } from "src/types/typesAPI";
+import { IAdjunto, ICavaleiro, IConsagracao, IEstado, IFalange, IMentor, ITemplo, ITurno } from "src/types/types";
+import { IAdjuntoAPI, ICavaleiroAPI, IConsagracaoAPI, IFalangeAPI, IGuiaAPI, IMediumAPI, IMinistroAPI, ITemploAPI } from "src/types/typesAPI";
 
 export const ListContext = createContext({} as any);
 
@@ -12,6 +12,10 @@ export const ListStore = ({ children }: any) => {
     const [falMiss, setFalMiss] = useState([] as Array<IFalange>);
     const [adjuntos, setAdjuntos] = useState([] as Array<IAdjunto>);
     const [templos, setTemplos] = useState([] as Array<ITemplo>);
+    const [listIniciacao, setListIniciacao] = useState([] as Array<IConsagracao>);
+    const [listElevacao, setListElevacao] = useState([] as Array<IConsagracao>);
+    const [listCenturia, setListCenturia] = useState([] as Array<IConsagracao>);
+    const [listMudanca, setListMudanca] = useState([] as Array<IConsagracao>);
 
     const estados = [
         {abrev: 'PE', state: 'Pernambuco'}, {abrev: 'AC', state: 'Acre'},
@@ -154,6 +158,45 @@ export const ListStore = ({ children }: any) => {
         }
     }
 
+    const loadConsagracao = async (token: string) => {
+        const configList = async (array: Array<IConsagracaoAPI>, cons: number) => {
+            const modifiedArray = await Promise.all(array.filter((item: IConsagracaoAPI) => item.consagracao === cons).map(async (item: IConsagracaoAPI) => {
+                try {
+                    const { data } = await api.get(`/medium/get?medium_id=${item.medium}`, {headers:{Authorization: token}});
+                    const mediumCons = data.medium[0] as IMediumAPI;
+                    return {
+                        consagracao_id: item.consagracao_id,
+                        medium: item.medium,
+                        consagracao: item.consagracao,
+                        termo: item.termo === 1 ? true : false,
+                        nome: mediumCons ? mediumCons.nome : '',
+                        med: mediumCons ? mediumCons.med : '',
+                        foto: mediumCons ? mediumCons.foto : '',
+                        colete: mediumCons ? mediumCons.colete : 0
+                    };
+                } catch (error) {
+                    console.error('Erro ao atribuir médium aos dados das consagrações', error);
+                    return null;
+                }  
+            }));
+            return modifiedArray.filter(Boolean) as Array<IConsagracao>
+        }
+        
+        try {
+            const { data } = await api.get('/consagracao/get-consagracoes', {headers:{Authorization: token}})
+            const iniciacao = await configList(data.list, 1);
+            const elevacao = await configList(data.list, 2);
+            const centuria = await configList(data.list, 3);
+            const mudanca = await configList(data.list, 4);
+            setListIniciacao(iniciacao);
+            setListElevacao(elevacao);
+            setListCenturia(centuria);
+            setListMudanca(mudanca);
+        } catch (error) {
+            console.log('Erro ao carregar a lista de médiuns para consagrações', error);
+        }
+    }
+
     const getData = async (token: string) => {
         await loadMinistro(token);
         await loadGuia(token);
@@ -161,10 +204,11 @@ export const ListStore = ({ children }: any) => {
         await loadFalMiss(token);
         await loadAdjunto(token);
         await loadTemplo(token);
+        await loadConsagracao(token);
     };
 
     return (
-        <ListContext.Provider value={{templos, estados, users, adjuntos, coletes, classMest, falMest, falMiss, povos, turnoL, turnoT, ministros, cavaleiros, guias, estrelas, princesas, classificacao, getData, loadMinistro, loadCavaleiro, loadGuia, loadFalMiss, loadAdjunto, loadTemplo}} >
+        <ListContext.Provider value={{templos, estados, users, adjuntos, coletes, classMest, falMest, falMiss, povos, turnoL, turnoT, ministros, cavaleiros, guias, estrelas, princesas, classificacao, listIniciacao, listElevacao, listCenturia, listMudanca, getData, loadMinistro, loadCavaleiro, loadGuia, loadFalMiss, loadAdjunto, loadTemplo, loadConsagracao}} >
             { children }
         </ListContext.Provider>
     )

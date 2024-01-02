@@ -57,6 +57,17 @@ export interface IUser {
     medium_id: number
 }
 
+export interface IConsagracao {
+    consagracao_id: number,
+    medium: number,
+    consagracao: number,
+    termo: boolean,
+    nome: string,
+    med: string,
+    foto: string,
+    colete: number
+}
+
 export interface IMedium {
     medium_id: number,
     nome: string,
