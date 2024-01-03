@@ -232,10 +232,10 @@ export const ModalButton = styled.button<{color: string}>`
     }
 `;
 
-export const InputContainer = styled.div`
+export const InputContainer = styled.div<{box?: boolean}>`
     width: 100%;
     display: flex;
-    flex-direction: column;
+    flex-direction: ${({box}) => box? 'row' : 'column'};
     justify-content: center;
     align-items: center;
 
@@ -244,11 +244,11 @@ export const InputContainer = styled.div`
         font-size: 20px;
         color: ${(props) => {return props.theme.color.darkerColor}};
         width: 100%;
-        margin-bottom: 5px; 
+        margin-bottom: ${({box}) => box? '0' : '5px'}; 
     }
 
     input {
-        width: 100%;
+        width: ${({box}) => box? '35px' : '100%'};
         height: 35px;
         padding: 6px;
         font-size: 18px;

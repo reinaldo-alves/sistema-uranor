@@ -8,9 +8,11 @@ import { useContext, useEffect, useState } from "react";
 import { alphabeticOrder, countMedium } from "src/utilities/functions";
 import { ListContext } from "src/contexts/ListContext";
 import { IConsagracao } from "src/types/types";
+import { UserContext } from "src/contexts/UserContext";
 
 function Consagracoes() {
-    const { listIniciacao, listElevacao, listCenturia, listMudanca } = useContext(ListContext);
+    const { listIniciacao, listElevacao, listCenturia, listMudanca, loadConsagracao } = useContext(ListContext);
+    const { token } = useContext(UserContext);
 
     const [columnData, setColumnData] = useState(['auto 25% 15% 15%', 'auto 25%', true])
   
@@ -23,6 +25,7 @@ function Consagracoes() {
     };
 
     useEffect(() => {
+        loadConsagracao(token);
         handleResize();
         const handleResizeEvent = () => {
             handleResize();

@@ -30,7 +30,7 @@ import Backup from './pages/maintenance/backup/backup';
 import PrivateRoutes from './utilities/PrivateRoutes';
 import ChangePassword from './pages/maintenance/changePassword/changePassword';
 import EditMedium from './pages/mediuns/AddAndEditMedium/EditMedium';
-import Iniciacao from './pages/consagracoes/iniciacao';
+import Iniciacao from './pages/consagracoes/iniciacao/iniciacao';
 import Elevacao from './pages/consagracoes/elevacao/elevacao';
 import Centuria from './pages/consagracoes/centuria/centuria';
 import Reclassificacao from './pages/consagracoes/reclassificacao/reclassificacao';

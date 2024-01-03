@@ -1,23 +1,35 @@
 import SubMenu from "src/components/SubMenu/SubMenu";
-import Header from "../../components/header/header";
+import Header from "../../../components/header/header";
 import SideMenu from "src/components/SideMenu/SideMenu";
 import MainTitle from "src/components/MainTitle/MainTitle";
-import { ButtonContainer, ConsagracaoCard, InputContainer, MainContainer, Modal, ModalButton, ModalMediumContent, ModalSubTitle, ModalTitle, MudancaObs, NavigateButton, PageSubTitle, PhotoContainer, Results, ResultsData, ResultsPanel, ResultsTable, ResultsTitle } from "./styles";
+import { ButtonContainer, ConsagracaoCard, InputContainer, MainContainer, Modal, ModalButton, ModalMediumContent, ModalSubTitle, ModalTitle, MudancaObs, NavigateButton, PageSubTitle, PhotoContainer, Results, ResultsData, ResultsPanel, ResultsTable, ResultsTitle } from "../styles";
 import { alphabeticOrder, countMedium } from "src/utilities/functions";
 import { useContext, useEffect, useState } from "react";
 import { ListContext } from "src/contexts/ListContext";
-import { IConsagracao } from "src/types/types";
+import { IConsagracao, IMedium } from "src/types/types";
+import { Alert, Confirm } from "src/utilities/popups";
+import { MediumContext } from "src/contexts/MediumContext";
+import { UserContext } from "src/contexts/UserContext";
+import api from "src/api";
+import AutocompleteInput from "src/components/AutocompleteInput/AutocompleteInput";
+import { defaultMedium } from "src/utilities/default";
 
 function Iniciacao() {
-    const { listIniciacao, listMudanca, coletes } = useContext(ListContext);
+    const { listIniciacao, listMudanca, coletes, loadConsagracao } = useContext(ListContext);
+    const { uploadImage, mediuns } = useContext(MediumContext);
+    const { token } = useContext(UserContext);
 
     const [columnData, setColumnData] = useState(['auto 25% 15% 15%', 'auto 25%', true])
     const [showModalMedium, setShowModalMedium] = useState(false);
     const [selectModal, setSelectModal] = useState('')
-    const [selected, setSelected] = useState({nome: '', colete: 0, foto: ''});
-    const [colete, setColete] = useState('');
+    const [selected, setSelected] = useState({} as IConsagracao);
+    const [colete, setColete] = useState(0);
     const [photo, setPhoto] = useState<File | null>(null);
     const [preview, setPreview] = useState<string | null>(null);
+    const [updatePhoto, setUpdatePhoto] = useState(true);
+    const [dropMedium, setDropMedium] = useState(defaultMedium);
+    const [searchMedium, setSearchMedium] = useState('');
+    const [checkMudanca, setCheckMudanca] = useState(false);
   
     const handleResize = () => {
         if (window.innerWidth > 638) {
@@ -38,19 +50,99 @@ function Iniciacao() {
     const closeModal = () => {
         setShowModalMedium(false);
         setSelectModal('');
-        setSelected({nome: '', colete: 0, foto: ''});
-        setColete('');
+        setSelected({} as IConsagracao);
+        setColete(0);
         setPreview('');
         setPhoto(null);
+        setUpdatePhoto(false);
+        setDropMedium(defaultMedium);
+        setSearchMedium('');
+        setCheckMudanca(false);
     }
 
     const imageUpdate = (event: React.ChangeEvent<HTMLInputElement>) => {
         if (event.target.files && event.target.files[0]) {
             setPhoto(event.target.files[0]);
+            setUpdatePhoto(true);
         }
     };
 
+    const editPhoto = async (token: string) => {
+        if (updatePhoto) {
+            if (photo) {
+                try {
+                    await Confirm('Tem certeza que quer atualizar a foto deste médium?', 'question', 'Cancelar', 'Confirmar', async () => {
+                        await uploadImage(selected.medium, token, photo)
+                        console.log('foto editada')
+                        Alert('Foto atualizada com sucesso', 'success');
+                        await loadConsagracao(token);
+                        closeModal();
+                    })
+                } catch (error) {
+                    console.log('Não foi possível atualizar a foto do médium', error);
+                    Alert('Não foi possível atualizar a foto do médium', 'error');
+                }
+            }
+        } else {
+            Alert('A foto não foi alterada', 'info')
+        }
+    }
+
+    const editColete = async (token: string) => {
+        const newColete = colete === 0 ? null : colete;
+        const oldColete = selected.colete === 0 ? null : selected.colete;
+        if (newColete !== oldColete) {
+            try {
+                await Confirm('Tem certeza que quer atualizar o colete deste médium?', 'question', 'Cancelar', 'Confirmar', async () => {
+                    await api.put('/medium/update', {medium_id: selected.medium, colete: newColete}, {headers:{Authorization: token}})
+                    Alert('Colete do médium atualizado com sucesso', 'success');
+                    await loadConsagracao(token);
+                    closeModal();
+                })
+            } catch (error) {
+                console.log('Não foi possível atualizar o colete do médium', error);
+                Alert('Não foi possível atualizar o colete do médium', 'error');
+            }
+        } else {
+            Alert('Não foi feita nenhuma alteração no colete do médium', 'info')
+        }
+    }
+
+    const addIniciacao = async (token: string) => {
+        const confirmText = `Adicionar ${dropMedium.nome} ${checkMudanca ? 'nas listas de iniciação e elevação?' : 'na lista de iniciação?'}` 
+        const consNumber = checkMudanca ? 4 : 1;
+        
+        try {
+            await Confirm(confirmText, 'question', 'Cancelar', 'Confirmar', async () => {
+                await api.post('/consagracao/add', {medium: dropMedium.medium_id, consagracao: consNumber, termo: 0}, {headers:{Authorization: token}})
+                Alert('Médium adicionado com sucesso', 'success');
+                await loadConsagracao(token);
+                closeModal();
+            })
+        } catch (error) {
+            console.log('Não foi adicionar o médium da lista de iniciação', error);
+            Alert('Não foi adicionar o médium da lista de iniciação', 'error');
+        }
+    }
+
+    const removeIniciacao = async (token: string) => {
+        const confirmText = `Tem certeza que quer remover este médium ${selected.consagracao === 4 ? 'das listas de iniciação e elevação?' : 'da lista de iniciação?'}` 
+        
+        try {
+            await Confirm(confirmText, 'question', 'Cancelar', 'Confirmar', async () => {
+                await api.delete(`/consagracao/delete?consagracao_id=${selected.consagracao_id}`, {headers:{Authorization: token}})
+                Alert('Médium removido com sucesso', 'success');
+                await loadConsagracao(token);
+                closeModal();
+            })
+        } catch (error) {
+            console.log('Não foi possível excluir médium da lista de iniciação', error);
+            Alert('Não foi possível excluir médium da lista de iniciação', 'error');
+        }
+    }
+
     useEffect(() => {
+        loadConsagracao(token);
         handleResize();
         const handleResizeEvent = () => {
             handleResize();
@@ -89,7 +181,7 @@ function Iniciacao() {
             <Header />
             <SubMenu list={listSubMenu}/>
             <MainContainer>
-                <MainTitle content={`Lista de médiuns para iniciação - ${countMedium([...listIniciacao, ...listMudanca])}`} />
+                <MainTitle content={[...listIniciacao, ...listMudanca].length ? `Lista de médiuns para iniciação - ${countMedium([...listIniciacao, ...listMudanca])}` : 'Nenhum médium para iniciação'} />
                 <ConsagracaoCard hide={![...listIniciacao, ...listMudanca].length}>
                     <ResultsTable show={[...listIniciacao, ...listMudanca].length}>
                         <thead>
@@ -123,7 +215,10 @@ function Iniciacao() {
                 </ButtonContainer>
                 <PageSubTitle>Ações</PageSubTitle>
                 <ButtonContainer>
-                    <NavigateButton width="230px" onClick={() => alert('vai')}>Adicionar Médium</NavigateButton>
+                    <NavigateButton width="230px" onClick={() => {
+                        setSelectModal('adicionar');
+                        setShowModalMedium(true);
+                    }}>Adicionar Médium</NavigateButton>
                     <NavigateButton disabled={![...listIniciacao, ...listMudanca].length} width="230px" color="red" onClick={() => alert('foi')}>Atualizar Iniciação</NavigateButton>
                 </ButtonContainer>
             </MainContainer>
@@ -134,6 +229,7 @@ function Iniciacao() {
                     <NavigateButton width="230px" onClick={() => setSelectModal('colete')}>Atualizar Colete</NavigateButton>
                     <NavigateButton width="230px" onClick={() => setSelectModal('foto')}>Atualizar Foto</NavigateButton>
                     <NavigateButton width="230px" onClick={() => {}}>Gerar Autorização</NavigateButton>
+                    <NavigateButton width="230px" color="red" onClick={() => removeIniciacao(token)}>Remover</NavigateButton>
                     <NavigateButton style={{marginTop: '20px'}} width="230px" color="red" onClick={() => closeModal()}>Fechar</NavigateButton>
                 </ModalMediumContent>
                 <ModalMediumContent vis={selectModal === 'colete'}>
@@ -141,7 +237,7 @@ function Iniciacao() {
                     <ModalTitle>Atualizar Colete</ModalTitle>
                     <InputContainer>
                         <label>Colete n°</label>
-                        <select value={colete} onChange={(e) => setColete(e.target.value)}>
+                        <select value={colete} onChange={(e) => setColete(Number(e.target.value))}>
                             <option value={0}></option>
                             {coletes.map((item: number, index: number) => (
                                 <option key={index} value={item}>{item}</option>
@@ -150,7 +246,7 @@ function Iniciacao() {
                     </InputContainer>
                     <div style={{display: 'flex', gap: '20px'}}>
                         <ModalButton color="red" onClick={() => closeModal()}>Cancelar</ModalButton>
-                        <ModalButton color='green' onClick={() => console.log(colete)}>Salvar</ModalButton>
+                        <ModalButton color='green' onClick={() => editColete(token)}>Salvar</ModalButton>
                     </div>
                 </ModalMediumContent>
                 <ModalMediumContent vis={selectModal === 'foto'}>
@@ -160,12 +256,34 @@ function Iniciacao() {
                         {photo || selected.foto ? '' : 'Clique aqui para adicionar uma foto'}
                         <input type="file" accept="image/*" onChange={imageUpdate} />
                     </PhotoContainer>
+                    <MudancaObs style={{textAlign: 'center'}} show={selected.foto?.length}>Clique sobre a foto para alterar</MudancaObs>
                     <div style={{display: 'flex', gap: '20px'}}>
                         <ModalButton color="red" onClick={() => closeModal()}>Cancelar</ModalButton>
-                        <ModalButton color='green' onClick={() => {
-                            console.log(photo);
-                            console.log(preview);
-                        }}>Salvar</ModalButton>
+                        <ModalButton color='green' onClick={() => editPhoto(token)}>Salvar</ModalButton>
+                    </div>
+                </ModalMediumContent>
+                <ModalMediumContent vis={selectModal === 'adicionar'}>
+                    <ModalSubTitle>{selected.nome}</ModalSubTitle>
+                    <ModalTitle>Adicionar Médium para Iniciação</ModalTitle>
+                    <InputContainer>
+                        <label>Nome do Médium</label>
+                        <AutocompleteInput 
+                            default={defaultMedium}
+                            options={mediuns.filter((item: IMedium) => item.dtEmplac && !item.dtIniciacao)}
+                            equality={(option, value) => option.medium_id === value.medium_id}
+                            value={dropMedium}
+                            setValue={setDropMedium}
+                            inputValue={searchMedium}
+                            setInputValue={setSearchMedium}
+                        />
+                    </InputContainer>
+                    <InputContainer box>
+                        <label>Mudança de mediunidade?</label>
+                        <input type="checkbox" checked={checkMudanca} onChange={(e) => setCheckMudanca(e.target.checked)} />
+                    </InputContainer>
+                    <div style={{display: 'flex', gap: '20px'}}>
+                        <ModalButton color="red" onClick={() => closeModal()}>Cancelar</ModalButton>
+                        <ModalButton color='green' onClick={() => addIniciacao(token)}>Salvar</ModalButton>
                     </div>
                 </ModalMediumContent>
             </Modal>

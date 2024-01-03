@@ -2,6 +2,7 @@ import { createContext, useState } from "react";
 import api from "src/api";
 import { IAdjunto, ICavaleiro, IConsagracao, IEstado, IFalange, IMentor, ITemplo, ITurno } from "src/types/types";
 import { IAdjuntoAPI, ICavaleiroAPI, IConsagracaoAPI, IFalangeAPI, IGuiaAPI, IMediumAPI, IMinistroAPI, ITemploAPI } from "src/types/typesAPI";
+import { Alert } from "src/utilities/popups";
 
 export const ListContext = createContext({} as any);
 
@@ -171,7 +172,7 @@ export const ListStore = ({ children }: any) => {
                         termo: item.termo === 1 ? true : false,
                         nome: mediumCons ? mediumCons.nome : '',
                         med: mediumCons ? mediumCons.med : '',
-                        foto: mediumCons ? mediumCons.foto : '',
+                        foto: mediumCons?.foto ? `http://localhost:4000/upload/medium/${mediumCons.foto}` : '',
                         colete: mediumCons ? mediumCons.colete : 0
                     };
                 } catch (error) {
