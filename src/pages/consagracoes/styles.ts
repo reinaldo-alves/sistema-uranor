@@ -99,6 +99,14 @@ export const ResultsPanel = styled.tr<{columns: string}>`
     grid-template-columns: ${({columns}) => columns? columns : 'auto'};
 `;
 
+export const ResultsUpdate = styled.tr`
+    border-bottom: 1px solid ${(props) => {return props.theme.color.lighterColor}};
+    display: grid;
+    justify-content: space-between;
+    align-items: center;
+    grid-template-columns: 1fr;
+`;
+
 export const Results = styled.tr<{columns: string}>`
     border-bottom: 1px solid ${(props) => {return props.theme.color.lighterColor}};
     display: grid;
@@ -138,6 +146,14 @@ export const ResultsData = styled.td<{align?: string, isNegative?: boolean}>`
     @media (max-width: 786px) {
         font-size: 14px;
     }
+`;
+
+export const CheckboxContainer = styled.td`
+    display: flex;
+    gap: 30px;
+    color: ${(props) => {return props.theme.color.darkerColor}};
+    padding: 8px 4px;
+    justify-content: center;
 `;
 
 export const MudancaObs = styled.span<{show: number}>`
@@ -261,6 +277,35 @@ export const InputContainer = styled.div<{box?: boolean}>`
     select {
         width: 100%;
         height: 35px;
+        padding: 6px;
+        font-size: 18px;
+        font-weight: bold;
+        border-radius: 8px;
+        border: solid 1px ${(props) => {return props.theme.color.darkerColor}};
+        display: block;
+    }
+`;
+
+export const UpdateInputContainer = styled.div<{box?: boolean, hide?: boolean}>`
+    display: ${({hide}) => hide? 'none' : 'flex'};
+    justify-content: center;
+    align-items: center;
+    margin: ${({box}) => box? '0' : '20px 0'};
+    gap: 12px;
+
+    label {
+        font-weight: bold;
+        font-size: ${({box}) => box? '18px' : '20px'};
+        color: ${(props) => props.box ? props.theme.color.darkerColor : props.theme.color.lighterColor};
+
+        @media (max-width: 786px) {
+            font-size: ${({box}) => box? '14px' : '20px'};
+        }
+    }
+
+    input {
+        width: ${({box}) => box? '20px' : '180px'};
+        height: ${({box}) => box? '20px' : '35px'};
         padding: 6px;
         font-size: 18px;
         font-weight: bold;

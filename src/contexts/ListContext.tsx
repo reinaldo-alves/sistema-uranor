@@ -198,6 +198,16 @@ export const ListStore = ({ children }: any) => {
         }
     }
 
+    const searchMediumInCons = (id: number) => {
+        const isIniciacao = listIniciacao.some((item: IConsagracao) => item.medium === id);
+        const isElevacao = listElevacao.some((item: IConsagracao) => item.medium === id);
+        const isCenturia = listCenturia.some((item: IConsagracao) => item.medium === id);
+        const isMudanca = listMudanca.some((item: IConsagracao) => item.medium === id);
+
+        const result = isIniciacao || isElevacao || isCenturia || isMudanca ? false : true;
+        return result
+    }
+
     const getData = async (token: string) => {
         await loadMinistro(token);
         await loadGuia(token);
@@ -209,7 +219,7 @@ export const ListStore = ({ children }: any) => {
     };
 
     return (
-        <ListContext.Provider value={{templos, estados, users, adjuntos, coletes, classMest, falMest, falMiss, povos, turnoL, turnoT, ministros, cavaleiros, guias, estrelas, princesas, classificacao, listIniciacao, listElevacao, listCenturia, listMudanca, getData, loadMinistro, loadCavaleiro, loadGuia, loadFalMiss, loadAdjunto, loadTemplo, loadConsagracao}} >
+        <ListContext.Provider value={{templos, estados, users, adjuntos, coletes, classMest, falMest, falMiss, povos, turnoL, turnoT, ministros, cavaleiros, guias, estrelas, princesas, classificacao, listIniciacao, listElevacao, listCenturia, listMudanca, searchMediumInCons, getData, loadMinistro, loadCavaleiro, loadGuia, loadFalMiss, loadAdjunto, loadTemplo, loadConsagracao}} >
             { children }
         </ListContext.Provider>
     )

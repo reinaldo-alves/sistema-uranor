@@ -69,9 +69,9 @@ function Consagracoes() {
                         </thead>
                         <tbody>
                             {alphabeticOrder([...listIniciacao, ...listMudanca])
-                                .map((item: any, index: number) => (
+                                .map((item: IConsagracao, index: number) => (
                                     <ResultsPanel columns={columnData[0] as string} key={index} onClick={() => {}}>
-                                        <ResultsData align="left">{listMudanca.some((el: IConsagracao) => el.nome === item.nome)? `${item.nome} *` : item.nome}</ResultsData>
+                                        <ResultsData align="left">{listMudanca.some((el: IConsagracao) => el.medium === item.medium)? `${item.nome} *` : item.nome}</ResultsData>
                                         <ResultsData>{columnData[2]? item.med : item.med[0]}</ResultsData>
                                         <ResultsData isNegative={!item.colete}>{item.colete ? item.colete : 'Não'}</ResultsData>
                                         <ResultsData isNegative={!item.foto}>{item.foto ? 'Sim' : 'Não'}</ResultsData>
@@ -98,9 +98,9 @@ function Consagracoes() {
                         </thead>
                         <tbody>
                             {alphabeticOrder([...listElevacao, ...listMudanca])
-                                .map((item: any, index: number) => (
+                                .map((item: IConsagracao, index: number) => (
                                     <ResultsPanel columns={columnData[0] as string} key={index} onClick={() => {}}>
-                                        <ResultsData align="left">{listMudanca.some((el: IConsagracao) => el.nome === item.nome)? `${item.nome} *` : item.nome}</ResultsData>
+                                        <ResultsData align="left">{listMudanca.some((el: IConsagracao) => el.medium === item.medium)? `${item.nome} *` : item.nome}</ResultsData>
                                         <ResultsData>{columnData[2]? item.med : item.med[0]}</ResultsData>
                                         <ResultsData isNegative={!item.termo}>{item.termo ? 'Sim' : 'Não'}</ResultsData>
                                         <ResultsData isNegative={!item.foto}>{item.foto ? 'Sim' : 'Não'}</ResultsData>

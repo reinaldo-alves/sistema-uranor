@@ -34,6 +34,7 @@ import Iniciacao from './pages/consagracoes/iniciacao/iniciacao';
 import Elevacao from './pages/consagracoes/elevacao/elevacao';
 import Centuria from './pages/consagracoes/centuria/centuria';
 import Reclassificacao from './pages/consagracoes/reclassificacao/reclassificacao';
+import UpdateIniciacao from './pages/consagracoes/iniciacao/updateIniciacao';
 
 function App() {
   const [mainContainer, setMainContainer] = useState('199')
@@ -106,6 +107,7 @@ function App() {
               <Route path='/cursos' element={<Cursos />} />
               <Route path='/consagracoes' element={<Consagracoes />} />
               <Route path='/consagracoes/iniciacao' element={<Iniciacao />} />
+              <Route path='/consagracoes/iniciacao/atualizar' element={<UpdateIniciacao />} />
               <Route path='/consagracoes/elevacao' element={<Elevacao />} />
               <Route path='/consagracoes/centuria' element={<Centuria />} />
               <Route path='/consagracoes/reclassificacao' element={<Reclassificacao />} />

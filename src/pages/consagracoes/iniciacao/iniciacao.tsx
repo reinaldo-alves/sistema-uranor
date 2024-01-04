@@ -13,9 +13,10 @@ import { UserContext } from "src/contexts/UserContext";
 import api from "src/api";
 import AutocompleteInput from "src/components/AutocompleteInput/AutocompleteInput";
 import { defaultMedium } from "src/utilities/default";
+import { useNavigate } from "react-router-dom";
 
 function Iniciacao() {
-    const { listIniciacao, listMudanca, coletes, loadConsagracao } = useContext(ListContext);
+    const { listIniciacao, listMudanca, coletes, loadConsagracao, searchMediumInCons } = useContext(ListContext);
     const { uploadImage, mediuns } = useContext(MediumContext);
     const { token } = useContext(UserContext);
 
@@ -31,6 +32,8 @@ function Iniciacao() {
     const [searchMedium, setSearchMedium] = useState('');
     const [checkMudanca, setCheckMudanca] = useState(false);
   
+    const navigate = useNavigate();
+
     const handleResize = () => {
         if (window.innerWidth > 638) {
             setColumnData(['auto 25% 15% 15%', 'auto 25%', true]);
@@ -194,9 +197,9 @@ function Iniciacao() {
                         </thead>
                         <tbody>
                             {alphabeticOrder([...listIniciacao, ...listMudanca])
-                                .map((item: any, index: number) => (
+                                .map((item: IConsagracao, index: number) => (
                                     <Results columns={columnData[0] as string} key={index} onClick={() => handleClickMedium(item)}>
-                                        <ResultsData align="left">{listMudanca.some((el: IConsagracao) => el.nome === item.nome)? `${item.nome} *` : item.nome}</ResultsData>
+                                        <ResultsData align="left">{listMudanca.some((el: IConsagracao) => el.medium === item.medium)? `${item.nome} *` : item.nome}</ResultsData>
                                         <ResultsData>{columnData[2]? item.med : item.med[0]}</ResultsData>
                                         <ResultsData isNegative={!item.colete}>{item.colete ? item.colete : 'Não'}</ResultsData>
                                         <ResultsData isNegative={!item.foto}>{item.foto ? 'Sim' : 'Não'}</ResultsData>
@@ -219,7 +222,7 @@ function Iniciacao() {
                         setSelectModal('adicionar');
                         setShowModalMedium(true);
                     }}>Adicionar Médium</NavigateButton>
-                    <NavigateButton disabled={![...listIniciacao, ...listMudanca].length} width="230px" color="red" onClick={() => alert('foi')}>Atualizar Iniciação</NavigateButton>
+                    <NavigateButton disabled={![...listIniciacao, ...listMudanca].length} width="230px" color="red" onClick={() => navigate('/consagracoes/iniciacao/atualizar')}>Atualizar Iniciação</NavigateButton>
                 </ButtonContainer>
             </MainContainer>
             <SideMenu list={listSubMenu}/>
@@ -269,7 +272,7 @@ function Iniciacao() {
                         <label>Nome do Médium</label>
                         <AutocompleteInput 
                             default={defaultMedium}
-                            options={mediuns.filter((item: IMedium) => item.dtEmplac && !item.dtIniciacao)}
+                            options={mediuns.filter((item: IMedium) => item.dtEmplac && !item.dtIniciacao && searchMediumInCons(item.medium_id))}
                             equality={(option, value) => option.medium_id === value.medium_id}
                             value={dropMedium}
                             setValue={setDropMedium}

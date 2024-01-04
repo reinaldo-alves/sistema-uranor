@@ -11,9 +11,10 @@ export const MainContainer = styled.div`
 export const CardsContainer = styled.div`
     width: 80%;
     max-width: 1450px;
-    display: grid;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
     gap: 20px;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
     margin-bottom: 25px;
 `;
 
@@ -32,7 +33,7 @@ export const ButtonReclassDoc = styled.div`
     background-color: ${(props) => {return props.theme.color.mediumColorTr}};
     height: 3em;
     z-index: 1;
-    width: 100%;
+    width: 300px;
 
     @media (max-width: 1099px) {
         font-size: 20px;
