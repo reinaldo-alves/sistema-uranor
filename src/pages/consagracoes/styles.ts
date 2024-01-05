@@ -156,6 +156,19 @@ export const CheckboxContainer = styled.td`
     justify-content: center;
 `;
 
+export const SelectContainer = styled.td`
+    display: flex;
+    gap: 30px;
+    color: ${(props) => {return props.theme.color.darkerColor}};
+    padding: 8px 4px;
+    justify-content: center;
+
+    @media (max-width: 880px) {
+        flex-direction: column;
+        gap: 15px;
+    }
+`;
+
 export const MudancaObs = styled.span<{show: number}>`
     width: 100%;
     display: ${({show}) => show? 'block' : 'none'};
@@ -164,6 +177,16 @@ export const MudancaObs = styled.span<{show: number}>`
     color: ${(props) => {return props.theme.color.darkerColor}};
     text-align: right;
     margin-top: -10px;
+`;
+
+export const MudancaWarning = styled.span<{show: boolean}>`
+    display: ${({show}) => show? 'block' : 'none'};
+    font-size: 14px;
+    font-weight: bold;
+    color: white;
+    background-color: red;
+    text-align: center;
+    padding: 5px;
 `;
 
 export const ButtonContainer = styled.div<{hide?: boolean}>`
@@ -246,6 +269,21 @@ export const ModalButton = styled.button<{color: string}>`
         background-color: ${(props) => {return props.theme.color.darkerColor}};
         border: solid ${(props) => {return props.theme.color.lighterColor}};
     }
+
+    :disabled {
+        border-color: gray;
+        background-color: gray;
+
+        :hover {
+            cursor: not-allowed;
+            transform: scale(1);
+        }
+
+        :active {
+            border-color: gray;
+            background-color: gray;
+        }
+    }
 `;
 
 export const InputContainer = styled.div<{box?: boolean}>`
@@ -254,12 +292,12 @@ export const InputContainer = styled.div<{box?: boolean}>`
     flex-direction: ${({box}) => box? 'row' : 'column'};
     justify-content: center;
     align-items: center;
+    gap: 30px;
 
     label {
         font-weight: bold;
         font-size: 20px;
         color: ${(props) => {return props.theme.color.darkerColor}};
-        width: 100%;
         margin-bottom: ${({box}) => box? '0' : '5px'}; 
     }
 
@@ -312,6 +350,22 @@ export const UpdateInputContainer = styled.div<{box?: boolean, hide?: boolean}>`
         border-radius: 8px;
         border: solid 1px ${(props) => {return props.theme.color.darkerColor}};
         display: block;
+    }
+
+    select {
+        height: 35px;
+        padding: 6px;
+        font-size: 18px;
+        font-weight: bold;
+        border-radius: 8px;
+        border: solid 1px ${(props) => {return props.theme.color.darkerColor}};
+        display: block;
+
+        @media (max-width: 786px) {
+            height: 30px;
+            padding: 4px;
+            font-size: 14px;
+        }
     }
 `;
 

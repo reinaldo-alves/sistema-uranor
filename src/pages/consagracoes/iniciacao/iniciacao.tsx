@@ -42,7 +42,7 @@ function Iniciacao() {
         }
     };
 
-    const handleClickMedium = (medium: any) => {
+    const handleClickMedium = (medium: IConsagracao) => {
         setShowModalMedium(true);
         setSelectModal('medium');
         setSelected(medium);
@@ -123,8 +123,8 @@ function Iniciacao() {
                 closeModal();
             })
         } catch (error) {
-            console.log('Não foi adicionar o médium da lista de iniciação', error);
-            Alert('Não foi adicionar o médium da lista de iniciação', 'error');
+            console.log('Não foi possível adicionar o médium da lista de iniciação', error);
+            Alert('Não foi possível adicionar o médium da lista de iniciação', 'error');
         }
     }
 
@@ -286,7 +286,7 @@ function Iniciacao() {
                     </InputContainer>
                     <div style={{display: 'flex', gap: '20px'}}>
                         <ModalButton color="red" onClick={() => closeModal()}>Cancelar</ModalButton>
-                        <ModalButton color='green' onClick={() => addIniciacao(token)}>Salvar</ModalButton>
+                        <ModalButton color='green' disabled={dropMedium === defaultMedium} onClick={() => addIniciacao(token)}>Salvar</ModalButton>
                     </div>
                 </ModalMediumContent>
             </Modal>

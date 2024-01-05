@@ -172,6 +172,7 @@ export const ListStore = ({ children }: any) => {
                         termo: item.termo === 1 ? true : false,
                         nome: mediumCons ? mediumCons.nome : '',
                         med: mediumCons ? mediumCons.med : '',
+                        sex: mediumCons ? mediumCons.sex : '',
                         foto: mediumCons?.foto ? `http://localhost:4000/upload/medium/${mediumCons.foto}` : '',
                         colete: mediumCons ? mediumCons.colete : 0
                     };

@@ -12,10 +12,12 @@ import { useNavigate } from "react-router-dom";
 import { Alert, Confirm } from "src/utilities/popups";
 import api from "src/api";
 
-interface IIniciacao {
+interface IElevacao {
     medium: IConsagracao,
-    naoIniciou: boolean,
-    moverElevacao: boolean
+    naoElevou: boolean,
+    moverCenturia: boolean,
+    classMest: string,
+    falMest: string
 }
 
 interface IMudanca {
@@ -26,25 +28,27 @@ interface IMudanca {
     falMest: string
 }
 
-function UpdateIniciacao() {
-    const { listIniciacao, listMudanca, classMest, falMest, loadConsagracao } = useContext(ListContext);
+function UpdateElevacao() {
+    const { listElevacao, listMudanca, classMest, falMest, loadConsagracao } = useContext(ListContext);
     const { token } = useContext(UserContext);
 
     const [loading, setLoading] = useState(true);
-    const [listUpdateIniciacao, setListUpdateIniciacao] = useState([] as Array<IIniciacao>);
+    const [listUpdateElevacao, setListUpdateElevacao] = useState([] as Array<IElevacao>);
     const [listUpdateMudanca, setListUpdateMudanca] = useState([] as Array<IMudanca>);
     const [dateIniciacao, setDateIniciacao] = useState('');
     const [dateElevacao, setDateElevacao] = useState('');
 
     const navigate = useNavigate();
 
-    const generateIniciacaoList = () => {
-        const array = listIniciacao.map((item: IConsagracao) => ({
+    const generateElevacaoList = () => {
+        const array = listElevacao.map((item: IConsagracao) => ({
             medium: item,
-            naoIniciou: false,
-            moverElevacao: true,
+            naoElevou: false,
+            moverCenturia: true,
+            classMest: '',
+            falMest: ''
         }));
-        setListUpdateIniciacao(array);
+        setListUpdateElevacao(array);
     }
 
     const generateMudancaList = () => {
@@ -56,6 +60,19 @@ function UpdateIniciacao() {
             falMest: ''
         }));
         setListUpdateMudanca(array);
+    }
+
+    const updatePropsElevacao = (id: number, property: string, newValue: any) => {
+        const newArray = listUpdateElevacao.map((item: IElevacao) => {
+            if (item.medium.medium === id) {
+                return {
+                    ...item,
+                    [property]: newValue
+                };
+            }
+            return item;
+        });
+        setListUpdateElevacao(newArray);
     }
 
     const updatePropsMudanca = (id: number, property: string, newValue: any) => {
@@ -71,20 +88,7 @@ function UpdateIniciacao() {
         setListUpdateMudanca(newArray);
     }
 
-    const changeNaoIniciou = (id: number, array: Array<IIniciacao>, status: boolean) => {
-        const newArray = array.map((item: IIniciacao) => {
-            if (item.medium.medium === id) {
-                return {
-                    ...item,
-                    naoIniciou: status
-                };
-            }
-            return item;
-        });
-        setListUpdateIniciacao(newArray);
-    }
-
-    const changeNaoIniciouMud = (id: number, status: boolean) => {
+    const changeNaoIniciou = (id: number, status: boolean) => {
         const newArray = listUpdateMudanca.map((item: IMudanca) => {
             if (item.medium.medium === id) {
                 return {
@@ -101,6 +105,21 @@ function UpdateIniciacao() {
     }
 
     const changeNaoElevou = (id: number, status: boolean) => {
+        const newArray = listUpdateElevacao.map((item: IElevacao) => {
+            if (item.medium.medium === id) {
+                return {
+                    ...item,
+                    naoElevou: status,
+                    classMest: '',
+                    falMest: ''
+                };
+            }
+            return item;
+        });
+        setListUpdateElevacao(newArray);
+    }
+
+    const changeNaoElevouMud = (id: number, status: boolean) => {
         const newArray = listUpdateMudanca.map((item: IMudanca) => {
             if (item.medium.medium === id) {
                 return {
@@ -113,19 +132,6 @@ function UpdateIniciacao() {
             return item;
         });
         setListUpdateMudanca(newArray);
-    }
-
-    const changeMoveElevacao = (id: number, array: Array<IIniciacao>, status: boolean) => {
-        const newArray = array.map((item: IIniciacao) => {
-            if (item.medium.medium === id) {
-                return {
-                    ...item,
-                    moverElevacao: status
-                };
-            }
-            return item;
-        });
-        setListUpdateIniciacao(newArray);
     }
 
     const listClassMest = (medium: IConsagracao) => {
@@ -143,14 +149,14 @@ function UpdateIniciacao() {
         }
     };
 
-    const updateIniciacaoData = () => {
-        const addIniciacaoDate = async (token: string) => {
+    const updateElevacaoData = () => {
+        const addElevacaoDate = async (token: string) => {
             try {
-                await Promise.all(listUpdateIniciacao.map(async (item: IIniciacao) => {
-                    if (!item.naoIniciou) {
-                        await api.put('/medium/update', {medium_id: item.medium.medium, dtIniciacao: dateIniciacao}, {headers:{Authorization: token}});
-                        if (item.moverElevacao) {
-                            await api.put('/consagracao/next-cons', {consagracao_id: item.medium.consagracao_id, consagracao: 2}, {headers:{Authorization: token}})
+                await Promise.all(listUpdateElevacao.map(async (item: IElevacao) => {
+                    if (!item.naoElevou) {
+                        await api.put('/medium/update', {medium_id: item.medium.medium, dtElevacao: dateElevacao, classMest: item.classMest, falMest: item.falMest}, {headers:{Authorization: token}});
+                        if (item.moverCenturia) {
+                            await api.put('/consagracao/next-cons', {consagracao_id: item.medium.consagracao_id, consagracao: 3}, {headers:{Authorization: token}})
                         } else {
                             await api.delete(`/consagracao/delete?consagracao_id=${item.medium.consagracao_id}`, {headers:{Authorization: token}})
                         }
@@ -184,20 +190,20 @@ function UpdateIniciacao() {
             }                
         }
 
-        if (listMudanca.length && listIniciacao.length && !dateElevacao && !dateIniciacao) {
+        if (listMudanca.length && listElevacao.length && !dateElevacao && !dateIniciacao) {
             Alert('Insira as datas de iniciação e elevação', 'warning');
-        } else if (listIniciacao.length && !dateIniciacao) {
-            Alert('Insira a data de iniciação', 'warning');
-        } else if (listMudanca.length && !dateElevacao) {
+        } else if (listElevacao.length && !dateElevacao) {
             Alert('Insira a data de elevação', 'warning');
+        } else if (listMudanca.length && !dateIniciacao) {
+            Alert('Insira a data de iniciação', 'warning');
         } else if (dateElevacao <= dateIniciacao) {
             Alert('A data da elevação deve ser após a data de iniciação', 'warning')
-        } else if (!listUpdateIniciacao.some((item: IIniciacao) => item.naoIniciou === false) && !listUpdateMudanca.some((item: IMudanca) => item.naoIniciou === false)) {
-            Alert('Nenhum médium iniciou', 'error');
+        } else if (!listUpdateElevacao.some((item: IElevacao) => item.naoElevou === false) && !listUpdateMudanca.some((item: IMudanca) => item.naoElevou === false)) {
+            Alert('Nenhum médium elevou', 'error');
         } else {
            Confirm('Esta ação pode sobrescrever dados dos médiuns. Continuar?', 'question', 'Cancelar', 'Confirmar', async () => {
                 try {
-                    await Promise.all([addIniciacaoDate(token), addMudancaDate(token)])
+                    await Promise.all([addElevacaoDate(token), addMudancaDate(token)])
                     Alert('Dados atualizados com sucesso', 'success');
                     navigate('/consagracoes');
                 } catch (error) {
@@ -210,7 +216,7 @@ function UpdateIniciacao() {
 
     const loadConsData = async () => {
         await loadConsagracao(token);
-        generateIniciacaoList();
+        generateElevacaoList();
         generateMudancaList();
         setLoading(false);
     }
@@ -233,28 +239,48 @@ function UpdateIniciacao() {
             <Header />
             <SubMenu list={listSubMenu}/>
             <MainContainer>
-                <MainTitle content={'Atualizar médiuns iniciados'} />
+                <MainTitle content={'Atualizar médiuns elevados'} />
                 <UpdateInputContainer>
-                    <label>Data da Iniciação:</label>
-                    <input type="date" value={dateIniciacao} onChange={(e) => setDateIniciacao(e.target.value)} />
+                    <label>Data da Elevação:</label>
+                    <input type="date" value={dateElevacao} onChange={(e) => setDateElevacao(e.target.value)} />
                 </UpdateInputContainer>
-                <ConsagracaoCard style={{maxWidth: '800px'}} hide={!listUpdateIniciacao.length}>
-                    <ResultsTable show={listUpdateIniciacao.length}>
+                <ConsagracaoCard style={{maxWidth: '800px'}} hide={!listUpdateElevacao.length}>
+                    <ResultsTable show={listUpdateElevacao.length}>
                         <tbody>
-                            {alphabeticOrder(listUpdateIniciacao)
-                                .map((item: IIniciacao, index: number) => (
+                            {alphabeticOrder(listUpdateElevacao)
+                                .map((item: IElevacao, index: number) => (
                                     <ResultsUpdate key={index}>
                                         <ResultsData>{`${item.medium.nome} - ${item.medium.med}`}</ResultsData>
                                         <CheckboxContainer>
                                             <UpdateInputContainer box>
-                                                <label>Não iniciou</label>
-                                                <input type="checkbox" checked={item.naoIniciou} onChange={(e) => changeNaoIniciou(item.medium.medium, listUpdateIniciacao, e.target.checked)} />
+                                                <label>Não elevou</label>
+                                                <input type="checkbox" checked={item.naoElevou} onChange={(e) => changeNaoElevou(item.medium.medium, e.target.checked)} />
                                             </UpdateInputContainer>
                                             <UpdateInputContainer box>
-                                                <label>Mover para Elevação?</label>
-                                                <input type="checkbox" checked={item.moverElevacao} onChange={(e) => changeMoveElevacao(item.medium.medium, listUpdateIniciacao, e.target.checked)} />
+                                                <label>Mover para Centúria?</label>
+                                                <input type="checkbox" checked={item.moverCenturia} onChange={(e) => updatePropsElevacao(item.medium.medium, 'moverCenturia', e.target.checked)} />
                                             </UpdateInputContainer>
                                         </CheckboxContainer>
+                                        <SelectContainer>
+                                            <UpdateInputContainer box>
+                                                <label>Classificação</label>
+                                                <select value={item.classMest} disabled={item.naoElevou} onChange={(e) => updatePropsElevacao(item.medium.medium, 'classMest', e.target.value)}>
+                                                    <option value={''}></option>
+                                                    {listClassMest(item.medium).map((item: string, index: number) => (
+                                                        <option key={index} value={item}>{item}</option>
+                                                    ))}
+                                                </select>
+                                            </UpdateInputContainer>
+                                            <UpdateInputContainer box>
+                                                <label>Falange de Mestrado</label>
+                                                <select value={item.falMest} disabled={item.naoElevou} onChange={(e) => updatePropsElevacao(item.medium.medium, 'falMest', e.target.value)}>
+                                                    <option value={''}></option>
+                                                    {falMest.map((item: string, index: number) => (
+                                                        <option key={index} value={item}>{item}</option>
+                                                    ))}
+                                                </select>
+                                            </UpdateInputContainer>
+                                        </SelectContainer>
                                     </ResultsUpdate>
                                 ))
                             }
@@ -263,8 +289,8 @@ function UpdateIniciacao() {
                 </ConsagracaoCard>
                 <PageSubTitle hide={!listUpdateMudanca.length}>Mudança de Mediunidade</PageSubTitle>
                 <UpdateInputContainer hide={!listUpdateMudanca.length}>
-                    <label>Data da Elevação:</label>
-                    <input type="date" value={dateElevacao} onChange={(e) => setDateElevacao(e.target.value)} />
+                    <label>Data da Iniciação:</label>
+                    <input type="date" value={dateIniciacao} onChange={(e) => setDateIniciacao(e.target.value)} />
                 </UpdateInputContainer>
                 <ConsagracaoCard style={{maxWidth: '800px'}} hide={!listUpdateMudanca.length}>
                     <ResultsTable show={listUpdateMudanca.length}>
@@ -276,11 +302,11 @@ function UpdateIniciacao() {
                                         <CheckboxContainer>
                                             <UpdateInputContainer box>
                                                 <label>Não iniciou</label>
-                                                <input type="checkbox" checked={item.naoIniciou} onChange={(e) => changeNaoIniciouMud(item.medium.medium, e.target.checked)} />
+                                                <input type="checkbox" checked={item.naoIniciou} onChange={(e) => changeNaoIniciou(item.medium.medium, e.target.checked)} />
                                             </UpdateInputContainer>
                                             <UpdateInputContainer box>
                                                 <label>Não elevou</label>
-                                                <input type="checkbox" disabled={item.naoIniciou} checked={item.naoElevou} onChange={(e) => changeNaoElevou(item.medium.medium, e.target.checked)} />
+                                                <input type="checkbox" disabled={item.naoIniciou} checked={item.naoElevou} onChange={(e) => changeNaoElevouMud(item.medium.medium, e.target.checked)} />
                                             </UpdateInputContainer>
                                         </CheckboxContainer>
                                         <SelectContainer>
@@ -310,8 +336,8 @@ function UpdateIniciacao() {
                     </ResultsTable>
                 </ConsagracaoCard>
                 <ButtonContainer>
-                    <NavigateButton width="230px" color="red" onClick={() => navigate('/consagracoes/iniciacao')}>Cancelar</NavigateButton>
-                    <NavigateButton disabled={![...listUpdateIniciacao, ...listUpdateMudanca].length} width="230px" onClick={updateIniciacaoData}>Atualizar</NavigateButton>
+                    <NavigateButton width="230px" color="red" onClick={() => navigate('/consagracoes/elevacao')}>Cancelar</NavigateButton>
+                    <NavigateButton disabled={![...listUpdateElevacao, ...listUpdateMudanca].length} width="230px" onClick={updateElevacaoData}>Atualizar</NavigateButton>
                 </ButtonContainer>
             </MainContainer>
             <SideMenu list={listSubMenu}/>
@@ -319,4 +345,4 @@ function UpdateIniciacao() {
     )
 }
 
-export default UpdateIniciacao
+export default UpdateElevacao

@@ -64,6 +64,7 @@ export interface IConsagracao {
     termo: boolean,
     nome: string,
     med: string,
+    sex: string,
     foto: string,
     colete: number
 }
