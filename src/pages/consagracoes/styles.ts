@@ -324,7 +324,7 @@ export const InputContainer = styled.div<{box?: boolean}>`
     }
 `;
 
-export const UpdateInputContainer = styled.div<{box?: boolean, hide?: boolean}>`
+export const UpdateInputContainer = styled.div<{box?: boolean, hide?: boolean, extend?: boolean}>`
     display: ${({hide}) => hide? 'none' : 'flex'};
     justify-content: center;
     align-items: center;
@@ -363,6 +363,7 @@ export const UpdateInputContainer = styled.div<{box?: boolean, hide?: boolean}>`
 
         @media (max-width: 786px) {
             height: 30px;
+            width: ${({extend}) => extend? 'calc(100% - 100px)' : 'auto'};
             padding: 4px;
             font-size: 14px;
         }

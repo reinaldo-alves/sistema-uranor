@@ -36,6 +36,7 @@ import Centuria from './pages/consagracoes/centuria/centuria';
 import Reclassificacao from './pages/consagracoes/reclassificacao/reclassificacao';
 import UpdateIniciacao from './pages/consagracoes/iniciacao/updateIniciacao';
 import UpdateElevacao from './pages/consagracoes/elevacao/updateElevacao';
+import UpdateCenturia from './pages/consagracoes/centuria/updateCenturia';
 
 function App() {
   const [mainContainer, setMainContainer] = useState('199')
@@ -112,6 +113,7 @@ function App() {
               <Route path='/consagracoes/elevacao' element={<Elevacao />} />
               <Route path='/consagracoes/elevacao/atualizar' element={<UpdateElevacao />} />
               <Route path='/consagracoes/centuria' element={<Centuria />} />
+              <Route path='/consagracoes/centuria/atualizar' element={<UpdateCenturia />} />
               <Route path='/consagracoes/reclassificacao' element={<Reclassificacao />} />
               <Route path='/relatorios' element={<Relatorios />} /> 
               <Route path='/documentosuteis' element={<DocumentosUteis />} />

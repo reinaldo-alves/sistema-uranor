@@ -125,9 +125,9 @@ function Consagracoes() {
                         </thead>
                         <tbody>
                             {alphabeticOrder(listCenturia)
-                                .map((item: any, index: number) => (
+                                .map((item: IConsagracao, index: number) => (
                                     <ResultsPanel columns={columnData[1] as string} key={index}>
-                                        <ResultsData align="left">{listMudanca.some((el: IConsagracao) => el.nome === item.nome)? `${item.nome} *` : item.nome}</ResultsData>
+                                        <ResultsData align="left">{item.nome}</ResultsData>
                                         <ResultsData>{columnData[2]? item.med : item.med[0]}</ResultsData>
                                     </ResultsPanel>
                                 ))
