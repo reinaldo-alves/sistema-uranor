@@ -3,7 +3,7 @@ import Header from "../../../components/header/header";
 import SideMenu from "src/components/SideMenu/SideMenu";
 import MainTitle from "src/components/MainTitle/MainTitle";
 import { ButtonContainer, ConsagracaoCard, InputContainer, MainContainer, Modal, ModalButton, ModalMediumContent, ModalSubTitle, ModalTitle, MudancaObs, MudancaWarning, NavigateButton, PageSubTitle, PhotoContainer, Results, ResultsData, ResultsPanel, ResultsTable, ResultsTitle } from "../styles";
-import { alphabeticOrder, countMedium } from "src/utilities/functions";
+import { countMedium } from "src/utilities/functions";
 import { useContext, useEffect, useState } from "react";
 import { ListContext } from "src/contexts/ListContext";
 import { IConsagracao, IMedium } from "src/types/types";
@@ -61,6 +61,19 @@ function Elevacao() {
         setDropMedium(defaultMedium);
         setSearchMedium('');
         setCheckMudanca(false);
+    }
+
+    function alphabeticOrder(array: Array<any>) {
+        array.sort((minA: any, minB: any) => {
+            if (minA.nome < minB.nome) {
+              return -1;
+            }
+            if (minA.nome > minB.nome) {
+              return 1;
+            }
+            return 0;
+        }); 
+        return array
     }
 
     const imageUpdate = (event: React.ChangeEvent<HTMLInputElement>) => {

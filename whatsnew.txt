@@ -10,5 +10,3 @@ VERSÃO 1.1.0
 - Alterações nos tamanhos do header e do menu secundário
 - Correção no layout de algumas chaves de trabalhos
 - Módulo Consagrações com painel geral, iniciação, elevação, centúria e reclassificação
-
-OBS: ver problema de dimensionamento dos selects na página de atualizar centúria.

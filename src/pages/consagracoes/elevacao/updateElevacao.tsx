@@ -3,7 +3,6 @@ import Header from "../../../components/header/header";
 import SideMenu from "src/components/SideMenu/SideMenu";
 import MainTitle from "src/components/MainTitle/MainTitle";
 import { ButtonContainer, CheckboxContainer, ConsagracaoCard, MainContainer, NavigateButton, PageSubTitle, ResultsData, ResultsTable, ResultsUpdate, SelectContainer, UpdateInputContainer } from "../styles";
-import { alphabeticOrder } from "src/utilities/functions";
 import { useContext, useEffect, useState } from "react";
 import { ListContext } from "src/contexts/ListContext";
 import { IConsagracao } from "src/types/types";
@@ -39,6 +38,19 @@ function UpdateElevacao() {
     const [dateElevacao, setDateElevacao] = useState('');
 
     const navigate = useNavigate();
+
+    function alphabeticOrder(array: Array<any>) {
+        array.sort((minA: any, minB: any) => {
+            if (minA.medium.nome < minB.medium.nome) {
+              return -1;
+            }
+            if (minA.medium.nome > minB.medium.nome) {
+              return 1;
+            }
+            return 0;
+        }); 
+        return array
+    }
 
     const generateElevacaoList = () => {
         const array = listElevacao.map((item: IConsagracao) => ({

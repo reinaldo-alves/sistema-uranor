@@ -12,7 +12,7 @@ import { ListContext } from "src/contexts/ListContext";
 import PageNotFound from "src/pages/PageNotFound/PageNotFound";
 import Loading from "src/utilities/Loading";
 import { Confirm } from "src/utilities/popups";
-import { generateEmissao } from "src/utilities/createDocs";
+import { generateAutorizacao, generateEmissao } from "src/utilities/createDocs";
 import { validateEmissao } from "src/utilities/validations";
 import { emissaoText } from "src/reports/emissao";
 
@@ -119,7 +119,7 @@ function ShowMedium() {
                             <MediumButton disabled={!medium.dtCenturia && !medium.falMiss} onClick={() => validateEmissao(medium, mediuns, adjuntos, turnoL, turnoT, () => generateEmissao(medium, user, emissaoText(medium, mediuns, ministros, cavaleiros, guias, adjuntos, templos, falMiss) as string))} color="green">Gerar Emissão</MediumButton>
                             <MediumButton onClick={() => navigate(`/mediuns/editar/${medium.medium_id}`)} color="green">Editar</MediumButton>
                             <MediumButton color="green">Gerar Ficha</MediumButton>
-                            <MediumButton color="green">Autorização</MediumButton>
+                            <MediumButton color="green" onClick={() => generateAutorizacao(medium, 1)}>Autorização</MediumButton>
                             <MediumButton color="green">Linha do Tempo</MediumButton>
                             <MediumButton onClick={confirmChangeMed} color="red">Mudar Med.</MediumButton>
                             <MediumButton color="red">Excluir</MediumButton>

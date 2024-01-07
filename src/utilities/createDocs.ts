@@ -1,23 +1,37 @@
 import pdfMake from 'pdfmake/build/pdfmake'
 import pdfTimes from 'pdfmake/build/vfs_fonts'
 import { timesRegular, timesBold, timesItalic, timesBI } from 'src/assets/encodedFiles/TimesFont';
+import { arialBI, arialBold, arialItalic, arialRegular } from 'src/assets/encodedFiles/ArialFont';
 import { Content, TDocumentDefinitions } from 'pdfmake/interfaces';
 import { ICanto, IFalange, IMedium, IUser } from "src/types/types";
 import { assTiaNeiva } from '../assets/encodedFiles/signature';
-import { getCurrentDate } from './functions';
+import { convertDate, getCurrentDate } from './functions';
+import { jaguarImage } from 'src/assets/encodedFiles/jaguar';
+import { aparaImage } from 'src/assets/encodedFiles/apara';
+import { doutrinadorImage } from 'src/assets/encodedFiles/doutrinador';
 
 pdfMake.vfs = pdfTimes.pdfMake.vfs;
 window.pdfMake.vfs['times.ttf'] = timesRegular;
 window.pdfMake.vfs['timesbd.ttf'] = timesBold;
 window.pdfMake.vfs['timesi.ttf'] = timesItalic;
 window.pdfMake.vfs['timesbi.ttf'] = timesBI;
+window.pdfMake.vfs['arial.ttf'] = arialRegular;
+window.pdfMake.vfs['arialbd.ttf'] = arialBold;
+window.pdfMake.vfs['ariali.ttf'] = arialItalic;
+window.pdfMake.vfs['arialbi.ttf'] = arialBI;
 pdfMake.fonts = {
     Times: {
         normal: 'times.ttf',
         bold: 'timesbd.ttf',
         italics: 'timesi.ttf',
         bolditalics: 'timesbi.ttf'
-    }
+    }, 
+    Arial: {
+        normal: 'arial.ttf',
+        bold: 'arialbd.ttf',
+        italics: 'ariali.ttf',
+        bolditalics: 'arialbi.ttf'
+    }, 
 }
 
 const docHeader: Content = {
@@ -153,8 +167,140 @@ export const generateEmissao = (medium: IMedium, user: IUser, text: string) => {
     pdfMake.createPdf(emissaoDefinitions).open({}, window.open(`Emissao_${medium.medium_id.toString().padStart(5, '0')}_${medium.nome.replace(/ /g, '_')}.pdf`, '_blank'));
 }
 
-export const generateCanto = (canto: ICanto) => {    
+export const generateAutorizacao = (medium: IMedium, cons: number) => {    
+    const autorizacaoTitle: Content = {
+        columns: [
+          {
+            image: jaguarImage,
+            width: 48,
+            margin: [0, 0, 0, 0]
+          },
+          {
+            stack: [
+              { text: 'Doutrina do Amanhecer', margin: [0, 0, 0, 4] },
+              { text: 'Coordenação Parlo', margin: [0, 0, 0, 4] },
+              { text: 'Autorização - Iniciação Dharman-Oxinto', margin: [0, 0, 0, 4] },
+            ],
+            alignment: 'left',
+            bold: true,
+            fontSize: 11,
+            width: '*',
+          }
+        ],
+        columnGap: 13
+      };
+      
+      
 
+    const autorizacaoBody: Content = [
+        {
+			table: {
+				body: [
+					[
+                        {
+                            text: 'Templo:',
+                            fontSize: 11,
+                            bold: true
+                        },
+                        {
+                            text: 'ORATRUZ DO AMANHECER DE TEJIPIÓ - PE',
+                            fontSize: 10,
+                        }
+                    ],
+                    [
+                        {
+                            text: 'Mestre:',
+                            fontSize: 11,
+                            bold: true
+                        },
+                        {
+                            text: medium.nome.toUpperCase(),
+                            fontSize: 10
+                        }
+                    ]
+				]
+			},
+			layout: 'noBorders',
+            margin: [12, 5, 0, 0]
+		},
+        {
+            text: `Concluiu o seu desenvolvimento doutrinário e curso de Iniciação e está apto(a), junto à Coordenação dos Templos, para realizar sua consagração. Data de Nascimento: ${convertDate(medium.dtNasc)}. Colete: ${medium.colete ? medium.colete : ''}.`,
+            fontSize: 10,
+            alignment: 'left',
+            lineHeight: 1.1,
+            margin: [12, 5, 0, 0]
+        }
+    ]
+
+    const autorizacaoInfo: Content = [
+        {
+            columns: [
+                {
+                    table: {
+                        body: [
+                            [
+                                {
+                                    image: medium.med === 'Doutrinador' ? doutrinadorImage : medium.med === 'Apará' ? aparaImage : '',
+                                    width: medium.med === 'Doutrinador' ? 18 : medium.med === 'Apará' ? 25 : '',
+                                    margin: medium.med === 'Doutrinador' ? [0, 22, 10, 0] : medium.med === 'Apará' ? [-2, 22, 6, 0] : ''
+                                },
+                                {
+                                    text: medium.med.toUpperCase(),
+                                    fontSize: 11,
+                                    bold: true, 
+                                    margin: [0, 28, 0, 0]
+                                }
+                            ]
+                        ]
+                    },
+                    layout: 'noBorders',
+                    margin: [12, 5, 0, 0]
+                },
+                [
+                    {
+                        text: `Olinda do Amanhecer, ${getCurrentDate()}.`,
+                        alignment: 'right',
+                        fontSize: 10,
+                        margin: [0, 12, 65, 24]
+                    },
+                    {
+                        text: '_________________________________',
+                        alignment: 'right',
+                        fontSize: 10,
+                        margin: [0, 0, 67, 2]
+                    },
+                    {
+                        text: 'Assinatura e Carimbo do Presidente',
+                        alignment: 'right',
+                        fontSize: 10,
+                        margin: [0, 0, 78, 10]
+                    }
+                ]
+            ]
+        },
+        {
+            text: '____________________________________________________________________________________',
+            alignment: 'center',
+            margin: [-9, 0, -35, 0]
+        }
+    ];
+    
+    const autorizacaoDefinitions: TDocumentDefinitions = {
+        info: {
+            title: `Autorizacao_${cons}_${medium.medium_id.toString().padStart(5, '0')}_${medium.nome.replace(/ /g, '_')}`
+        },
+        pageMargins: [24, 22, 50, 22],
+        pageSize: 'A4',
+        content: [autorizacaoTitle, autorizacaoBody, autorizacaoInfo],
+        defaultStyle: {
+            font: 'Arial'
+        }
+    }
+
+    pdfMake.createPdf(autorizacaoDefinitions).open({}, window.open(`Autorizacao_${cons}_${medium.medium_id.toString().padStart(5, '0')}_${medium.nome.replace(/ /g, '_')}.pdf`, '_blank'));
+}
+
+export const generateCanto = (canto: ICanto) => {    
     const cantoTitle = () => {
         return {
             text: canto.title,

@@ -354,6 +354,7 @@ export const UpdateInputContainer = styled.div<{box?: boolean, hide?: boolean, e
 
     select {
         height: 35px;
+        width: ${({extend}) => extend? '100%' : 'auto'};
         padding: 6px;
         font-size: 18px;
         font-weight: bold;
