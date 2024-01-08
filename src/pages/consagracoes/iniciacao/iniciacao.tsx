@@ -14,9 +14,10 @@ import api from "src/api";
 import AutocompleteInput from "src/components/AutocompleteInput/AutocompleteInput";
 import { defaultMedium } from "src/utilities/default";
 import { useNavigate } from "react-router-dom";
+import { generateAutorizacao } from "src/utilities/createDocs";
 
 function Iniciacao() {
-    const { listIniciacao, listMudanca, coletes, loadConsagracao, searchMediumInCons } = useContext(ListContext);
+    const { templos, adjuntos, ministros, listIniciacao, listMudanca, coletes, loadConsagracao, searchMediumInCons } = useContext(ListContext);
     const { uploadImage, mediuns } = useContext(MediumContext);
     const { token } = useContext(UserContext);
 
@@ -31,6 +32,7 @@ function Iniciacao() {
     const [dropMedium, setDropMedium] = useState(defaultMedium);
     const [searchMedium, setSearchMedium] = useState('');
     const [checkMudanca, setCheckMudanca] = useState(false);
+    const [allMediuns, setAllMediuns] = useState([] as Array<IMedium>);
   
     const navigate = useNavigate();
 
@@ -157,8 +159,22 @@ function Iniciacao() {
         }
     }
 
+    const generateMediumList = () => {
+        const array: Array<IMedium> = [];
+        alphabeticOrder([...listIniciacao, ...listMudanca]).forEach((item: IConsagracao) => {
+            const medium = mediuns.find((m: IMedium) => m.medium_id === item.medium);
+            if (medium) {array.push(medium)}
+        });
+        setAllMediuns(array);
+    }
+
+    const loadConsData = async () => {
+        await loadConsagracao(token);
+        generateMediumList();
+    }
+
     useEffect(() => {
-        loadConsagracao(token);
+        loadConsData();
         handleResize();
         const handleResizeEvent = () => {
             handleResize();
@@ -225,7 +241,7 @@ function Iniciacao() {
                 </ConsagracaoCard>
                 <PageSubTitle hide={![...listIniciacao, ...listMudanca].length}>Documentos</PageSubTitle>
                 <ButtonContainer hide={![...listIniciacao, ...listMudanca].length}>
-                    <NavigateButton width="230px" onClick={() => {}}>Gerar Autorizações</NavigateButton>
+                    <NavigateButton width="230px" onClick={() => generateAutorizacao(allMediuns, templos, adjuntos, ministros, 1)}>Gerar Autorizações</NavigateButton>
                     <NavigateButton width="230px" onClick={() => {}}>Gerar Relatório</NavigateButton>
                     <NavigateButton width="230px" onClick={() => {}}>Gerar Protocolo</NavigateButton>
                 </ButtonContainer>
@@ -244,7 +260,10 @@ function Iniciacao() {
                     <ModalTitle>{selected.nome}</ModalTitle>
                     <NavigateButton width="230px" onClick={() => setSelectModal('colete')}>Atualizar Colete</NavigateButton>
                     <NavigateButton width="230px" onClick={() => setSelectModal('foto')}>Atualizar Foto</NavigateButton>
-                    <NavigateButton width="230px" onClick={() => {}}>Gerar Autorização</NavigateButton>
+                    <NavigateButton width="230px" onClick={() => {
+                        generateAutorizacao(mediuns.filter((item: IMedium) => item.medium_id === selected.medium), templos, adjuntos, ministros, 1);
+                        closeModal();
+                    }}>Gerar Autorização</NavigateButton>
                     <NavigateButton width="230px" color="red" onClick={() => removeIniciacao(token)}>Remover</NavigateButton>
                     <NavigateButton style={{marginTop: '20px'}} width="230px" color="red" onClick={() => closeModal()}>Fechar</NavigateButton>
                 </ModalMediumContent>
@@ -285,7 +304,7 @@ function Iniciacao() {
                         <label>Nome do Médium</label>
                         <AutocompleteInput 
                             default={defaultMedium}
-                            options={mediuns.filter((item: IMedium) => item.dtEmplac && !item.dtIniciacao && searchMediumInCons(item.medium_id))}
+                            options={mediuns.filter((item: IMedium) => item.dtEmplac && !item.dtIniciacao && !searchMediumInCons(item.medium_id))}
                             equality={(option, value) => option.medium_id === value.medium_id}
                             value={dropMedium}
                             setValue={setDropMedium}

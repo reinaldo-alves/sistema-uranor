@@ -14,9 +14,10 @@ import api from "src/api";
 import AutocompleteInput from "src/components/AutocompleteInput/AutocompleteInput";
 import { defaultMedium } from "src/utilities/default";
 import { useNavigate } from "react-router-dom";
+import { generateAutorizacao } from "src/utilities/createDocs";
 
 function Centuria() {
-    const { listCenturia, loadConsagracao, searchMediumInCons } = useContext(ListContext);
+    const { templos, adjuntos, ministros, listCenturia, loadConsagracao, searchMediumInCons } = useContext(ListContext);
     const { mediuns } = useContext(MediumContext);
     const { token } = useContext(UserContext);
 
@@ -26,6 +27,7 @@ function Centuria() {
     const [selected, setSelected] = useState({} as IConsagracao);
     const [dropMedium, setDropMedium] = useState(defaultMedium);
     const [searchMedium, setSearchMedium] = useState('');
+    const [allMediuns, setAllMediuns] = useState([] as Array<IMedium>);
   
     const navigate = useNavigate();
 
@@ -94,8 +96,22 @@ function Centuria() {
         }
     }
 
+    const generateMediumList = () => {
+        const array: Array<IMedium> = [];
+        alphabeticOrder(listCenturia).forEach((item: IConsagracao) => {
+            const medium = mediuns.find((m: IMedium) => m.medium_id === item.medium);
+            if (medium) {array.push(medium)}
+        });
+        setAllMediuns(array);
+    }
+
+    const loadConsData = async () => {
+        await loadConsagracao(token);
+        generateMediumList();
+    }
+
     useEffect(() => {
-        loadConsagracao(token);
+        loadConsData();
         handleResize();
         const handleResizeEvent = () => {
             handleResize();
@@ -143,7 +159,7 @@ function Centuria() {
                 </ConsagracaoCard>
                 <PageSubTitle hide={!listCenturia.length}>Documentos</PageSubTitle>
                 <ButtonContainer hide={!listCenturia.length}>
-                    <NavigateButton width="230px" onClick={() => {}}>Gerar Autorizações</NavigateButton>
+                    <NavigateButton width="230px" onClick={() => generateAutorizacao(allMediuns, templos, adjuntos, ministros, 3)}>Gerar Autorizações</NavigateButton>
                     <NavigateButton width="230px" onClick={() => {}}>Gerar Relatório</NavigateButton>
                     <NavigateButton width="230px" onClick={() => {}}>Gerar Protocolo</NavigateButton>
                 </ButtonContainer>
@@ -160,7 +176,10 @@ function Centuria() {
             <Modal vis={showModalMedium}>
                 <ModalMediumContent vis={selectModal === 'medium'}>
                     <ModalTitle>{selected.nome}</ModalTitle>
-                    <NavigateButton width="230px" onClick={() => {}}>Gerar Autorização</NavigateButton>
+                    <NavigateButton width="230px" onClick={() => {
+                        generateAutorizacao(mediuns.filter((item: IMedium) => item.medium_id === selected.medium), templos, adjuntos, ministros, 3);
+                        closeModal();
+                    }}>Gerar Autorização</NavigateButton>
                     <NavigateButton width="230px" color="red" onClick={() => removeCenturia(token)}>Remover</NavigateButton>
                     <NavigateButton style={{marginTop: '20px'}} width="230px" color="red" onClick={() => closeModal()}>Fechar</NavigateButton>
                 </ModalMediumContent>
@@ -171,7 +190,7 @@ function Centuria() {
                         <label>Nome do Médium</label>
                         <AutocompleteInput 
                             default={defaultMedium}
-                            options={mediuns.filter((item: IMedium) => item.dtElevacao && !item.dtCenturia && searchMediumInCons(item.medium_id))}
+                            options={mediuns.filter((item: IMedium) => item.dtElevacao && !item.dtCenturia && !searchMediumInCons(item.medium_id))}
                             equality={(option, value) => option.medium_id === value.medium_id}
                             value={dropMedium}
                             setValue={setDropMedium}

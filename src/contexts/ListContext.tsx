@@ -200,12 +200,12 @@ export const ListStore = ({ children }: any) => {
     }
 
     const searchMediumInCons = (id: number) => {
-        const isIniciacao = listIniciacao.some((item: IConsagracao) => item.medium === id);
-        const isElevacao = listElevacao.some((item: IConsagracao) => item.medium === id);
-        const isCenturia = listCenturia.some((item: IConsagracao) => item.medium === id);
-        const isMudanca = listMudanca.some((item: IConsagracao) => item.medium === id);
+        const isIniciacao = listIniciacao.find((item: IConsagracao) => item.medium === id);
+        const isElevacao = listElevacao.find((item: IConsagracao) => item.medium === id);
+        const isCenturia = listCenturia.find((item: IConsagracao) => item.medium === id);
+        const isMudanca = listMudanca.find((item: IConsagracao) => item.medium === id);
 
-        const result = isIniciacao || isElevacao || isCenturia || isMudanca ? false : true;
+        const result = isIniciacao ? 1 : isElevacao ? 2 : isCenturia ? 3 : isMudanca ? 4 : 0;
         return result
     }
 

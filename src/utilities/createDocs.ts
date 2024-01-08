@@ -3,7 +3,7 @@ import pdfTimes from 'pdfmake/build/vfs_fonts'
 import { timesRegular, timesBold, timesItalic, timesBI } from 'src/assets/encodedFiles/TimesFont';
 import { arialBI, arialBold, arialItalic, arialRegular } from 'src/assets/encodedFiles/ArialFont';
 import { Content, TDocumentDefinitions } from 'pdfmake/interfaces';
-import { ICanto, IFalange, IMedium, IUser } from "src/types/types";
+import { IAdjunto, ICanto, IFalange, IMedium, IMentor, ITemplo, IUser } from "src/types/types";
 import { assTiaNeiva } from '../assets/encodedFiles/signature';
 import { convertDate, getCurrentDate } from './functions';
 import { jaguarImage } from 'src/assets/encodedFiles/jaguar';
@@ -167,137 +167,309 @@ export const generateEmissao = (medium: IMedium, user: IUser, text: string) => {
     pdfMake.createPdf(emissaoDefinitions).open({}, window.open(`Emissao_${medium.medium_id.toString().padStart(5, '0')}_${medium.nome.replace(/ /g, '_')}.pdf`, '_blank'));
 }
 
-export const generateAutorizacao = (medium: IMedium, cons: number) => {    
-    const autorizacaoTitle: Content = {
-        columns: [
-          {
-            image: jaguarImage,
-            width: 48,
-            margin: [0, 0, 0, 0]
-          },
-          {
-            stack: [
-              { text: 'Doutrina do Amanhecer', margin: [0, 0, 0, 4] },
-              { text: 'Coordenação Parlo', margin: [0, 0, 0, 4] },
-              { text: 'Autorização - Iniciação Dharman-Oxinto', margin: [0, 0, 0, 4] },
-            ],
-            alignment: 'left',
-            bold: true,
-            fontSize: 11,
-            width: '*',
-          }
-        ],
-        columnGap: 13
-      };
-      
-      
+export const generateAutorizacao = (mediuns: Array<IMedium>, templos: Array<ITemplo>, adjuntos: Array<IAdjunto>, ministros: Array<IMentor>, cons: number) => {    
+    const consagracaoMeta = [
+        {title: 'Iniciação Dharman-Oxinto', meta: 'Iniciacao'},
+        {title: 'Elevação de Espadas', meta: 'Elevacao'},
+        {title: 'Centúria', meta: 'Centuria'},
+        {title: '', meta: 'IniciacaoElevacao'},
+    ]
+    
+    const consagracaoText = (medium: IMedium) => {
+        return [
+            `Concluiu o seu desenvolvimento doutrinário e curso de Iniciação e está apto(a), junto à Coordenação dos Templos, para realizar sua consagração. Data de Nascimento: ${convertDate(medium.dtNasc)}. Colete: ${medium.colete ? medium.colete : ''}.`,
+            `Concluiu o curso de Elevação de Espadas e está apto(a), junto à Coordenação dos Templos, para realizar sua consagração. Data de nascimento do Médium: ${convertDate(medium.dtNasc)}.`,
+            `Concluiu o curso de Centúria e está apto(a), junto à Coordenação dos Templos, para realizar sua consagração. Data de nascimento do Médium: ${convertDate(medium.dtNasc)}.`
+        ]
+    };
 
-    const autorizacaoBody: Content = [
-        {
-			table: {
-				body: [
-					[
-                        {
-                            text: 'Templo:',
-                            fontSize: 11,
-                            bold: true
+    const temploMedium = (medium: IMedium) => {return templos.filter((item: ITemplo) => item.templo_id === medium.templo)[0]}
+
+    const ministroTemplo = (medium: IMedium) => {return ministros.filter((min: IMentor) => min.id === adjuntos.filter((ad: IAdjunto) => ad.adjunto_id === temploMedium(medium).presidente)[0].ministro)[0].nome}
+    
+    const autorizacaoTitle = (modifier: number) => {
+        const consName = modifier ? modifier - 1 : cons - 1;
+        
+        return {
+            columns: [
+            {
+                image: jaguarImage,
+                width: 48,
+                margin: [0, 0, 0, 0]
+            },
+            {
+                stack: [
+                    { text: 'Doutrina do Amanhecer', margin: [0, 0, 0, 4] },
+                    { text: 'Coordenação Parlo', margin: [0, 0, 0, 4] },
+                    { text: `Autorização - ${consagracaoMeta[consName].title}`, margin: [0, 0, 0, 4] },
+                ],
+                alignment: 'left',
+                bold: true,
+                fontSize: 11,
+                width: '*',
+            }
+            ],
+            columnGap: 13
+        } as Content
+    };  
+
+    const autorizacaoBody = (medium: IMedium, modifier: number) => {
+        const consText = modifier ? modifier - 1 : cons - 1;
+        
+        return [
+            {
+                table: {
+                    body: [
+                        [
+                            {
+                                text: 'Templo:',
+                                fontSize: 11,
+                                bold: true
+                            },
+                            {
+                                text: `${ministroTemplo(medium)} DO AMANHECER DE ${temploMedium(medium).cidade} - ${temploMedium(medium).estado.abrev}`.toUpperCase(),
+                                fontSize: 10,
+                                margin: [0, 1, 0, 0]
+                            }
+                        ],
+                        [
+                            {
+                                text: 'Mestre:',
+                                fontSize: 11,
+                                bold: true
+                            },
+                            {
+                                text: medium.nome.toUpperCase(),
+                                fontSize: 10,
+                                margin: [0, 1, 0, 0]
+                            }
+                        ]
+                    ]
+                },
+                layout: 'noBorders',
+                margin: [12, 5, 0, 0]
+            },
+            {
+                text: consagracaoText(medium)[consText],
+                fontSize: 10,
+                alignment: 'left',
+                lineHeight: 1.1,
+                margin: cons === 1 ? [12, 5, 0, 0] : [12, 5, 40, 0]
+            }
+        ] as Content
+    }
+
+    const autorizacaoInfo = (medium: IMedium) => {
+        return [
+            {
+                columns: [
+                    {
+                        table: {
+                            body: [
+                                [
+                                    {
+                                        image: medium.med === 'Doutrinador' ? doutrinadorImage : medium.med === 'Apará' ? aparaImage : '',
+                                        width: medium.med === 'Doutrinador' ? 18 : medium.med === 'Apará' ? 25 : '',
+                                        margin: medium.med === 'Doutrinador' ? [0, 22, 10, 0] : medium.med === 'Apará' ? [-2, 22, 6, 0] : ''
+                                    },
+                                    {
+                                        text: medium.med.toUpperCase(),
+                                        fontSize: 11,
+                                        bold: true, 
+                                        margin: [0, 28, 0, 0]
+                                    }
+                                ]
+                            ]
                         },
-                        {
-                            text: 'ORATRUZ DO AMANHECER DE TEJIPIÓ - PE',
-                            fontSize: 10,
-                        }
-                    ],
+                        layout: 'noBorders',
+                        margin: [12, 5, 0, 0]
+                    },
                     [
                         {
-                            text: 'Mestre:',
-                            fontSize: 11,
-                            bold: true
+                            text: `Olinda do Amanhecer, ${getCurrentDate()}.`,
+                            alignment: 'right',
+                            fontSize: 10,
+                            margin: [0, 12, 65, 24]
                         },
                         {
-                            text: medium.nome.toUpperCase(),
-                            fontSize: 10
+                            text: '_________________________________',
+                            alignment: 'right',
+                            fontSize: 10,
+                            margin: [0, 0, 67, 2]
+                        },
+                        {
+                            text: 'Assinatura e Carimbo do Presidente',
+                            alignment: 'right',
+                            fontSize: 10,
+                            margin: [0, 0, 78, 10]
                         }
                     ]
-				]
-			},
-			layout: 'noBorders',
-            margin: [12, 5, 0, 0]
-		},
-        {
-            text: `Concluiu o seu desenvolvimento doutrinário e curso de Iniciação e está apto(a), junto à Coordenação dos Templos, para realizar sua consagração. Data de Nascimento: ${convertDate(medium.dtNasc)}. Colete: ${medium.colete ? medium.colete : ''}.`,
-            fontSize: 10,
-            alignment: 'left',
-            lineHeight: 1.1,
-            margin: [12, 5, 0, 0]
-        }
-    ]
-
-    const autorizacaoInfo: Content = [
-        {
-            columns: [
-                {
-                    table: {
-                        body: [
-                            [
-                                {
-                                    image: medium.med === 'Doutrinador' ? doutrinadorImage : medium.med === 'Apará' ? aparaImage : '',
-                                    width: medium.med === 'Doutrinador' ? 18 : medium.med === 'Apará' ? 25 : '',
-                                    margin: medium.med === 'Doutrinador' ? [0, 22, 10, 0] : medium.med === 'Apará' ? [-2, 22, 6, 0] : ''
-                                },
-                                {
-                                    text: medium.med.toUpperCase(),
-                                    fontSize: 11,
-                                    bold: true, 
-                                    margin: [0, 28, 0, 0]
-                                }
-                            ]
-                        ]
-                    },
-                    layout: 'noBorders',
-                    margin: [12, 5, 0, 0]
-                },
-                [
-                    {
-                        text: `Olinda do Amanhecer, ${getCurrentDate()}.`,
-                        alignment: 'right',
-                        fontSize: 10,
-                        margin: [0, 12, 65, 24]
-                    },
-                    {
-                        text: '_________________________________',
-                        alignment: 'right',
-                        fontSize: 10,
-                        margin: [0, 0, 67, 2]
-                    },
-                    {
-                        text: 'Assinatura e Carimbo do Presidente',
-                        alignment: 'right',
-                        fontSize: 10,
-                        margin: [0, 0, 78, 10]
-                    }
                 ]
-            ]
-        },
-        {
-            text: '____________________________________________________________________________________',
-            alignment: 'center',
-            margin: [-9, 0, -35, 0]
+            },
+            {
+                text: '____________________________________________________________________________________',
+                alignment: 'center',
+                margin: [-9, 0, -35, 24]
+            }
+        ] as Content
+    };
+
+    const contentArray = () => {
+        const array: Array<Content> = [];
+        if (cons === 4) {
+            mediuns.forEach((item: IMedium) => {
+                array.push(autorizacaoTitle(1));
+                array.push(autorizacaoBody(item, 1));
+                array.push(autorizacaoInfo(item));
+                array.push(autorizacaoTitle(2));
+                array.push(autorizacaoBody(item, 2));
+                array.push(autorizacaoInfo(item));
+            });
+        } else {
+            mediuns.forEach((item: IMedium) => {
+                array.push(autorizacaoTitle(0));
+                array.push(autorizacaoBody(item, 0));
+                array.push(autorizacaoInfo(item));
+            });
         }
-    ];
+        return array
+    }
     
     const autorizacaoDefinitions: TDocumentDefinitions = {
         info: {
-            title: `Autorizacao_${cons}_${medium.medium_id.toString().padStart(5, '0')}_${medium.nome.replace(/ /g, '_')}`
+            title: mediuns.length === 1 ? `Autorizacao_${consagracaoMeta[cons - 1].meta}_${mediuns[0].medium_id.toString().padStart(5, '0')}_${mediuns[0].nome.replace(/ /g, '_')}` : `Autorizacoes_${consagracaoMeta[cons - 1].meta}`
         },
-        pageMargins: [24, 22, 50, 22],
+        pageMargins: [24, 22, 50, 120],
         pageSize: 'A4',
-        content: [autorizacaoTitle, autorizacaoBody, autorizacaoInfo],
+        content: contentArray(),
         defaultStyle: {
             font: 'Arial'
         }
     }
 
-    pdfMake.createPdf(autorizacaoDefinitions).open({}, window.open(`Autorizacao_${cons}_${medium.medium_id.toString().padStart(5, '0')}_${medium.nome.replace(/ /g, '_')}.pdf`, '_blank'));
+    pdfMake.createPdf(autorizacaoDefinitions).open({}, window.open(mediuns.length === 1 ? `Autorizacao_${consagracaoMeta[cons - 1].meta}_${mediuns[0].medium_id.toString().padStart(5, '0')}_${mediuns[0].nome.replace(/ /g, '_')}.pdf` : `Autorizacoes_${consagracaoMeta[cons - 1].meta}.pdf`, '_blank'));
+}
+
+export const generateTermo = (mediuns: Array<IMedium>) => {    
+    const termoHeader = () => {
+        return {
+            stack: [
+                { text: 'DOUTRINA DO AMANHECER', fontSize: 16, bold: true, margin: [0, 0, 0, 4] },
+                { text: 'CORDENAÇÃO PARLO', fontSize: 14, margin: [0, 0, 0, 4] },
+                { text: 'CASTELO DOS DEVAS', fontSize: 16, bold: true, margin: [0, 0, 0, 20] },
+                { text: 'COMPROMISSO DE MESTRE', fontSize: 14, bold: true, margin: [0, 0, 0, 4] },
+            ],
+            alignment: 'center',
+        } as Content
+    };
+
+    const termoInfo = (medium: IMedium) => {
+        return [
+            {
+                text: [
+                    { text: 'INICIAÇÃO EM: ', fontSize: 8},
+                    { text: convertDate(medium.dtIniciacao), fontSize: 12},
+                ],
+                bold: true,
+                margin: [0, 0, 0, 20]
+            },
+            {
+                text: [
+                    'CLASSIFICAÇÃO: ',
+                    { text: '                           ', decoration: 'underline'},
+                ],
+                bold: true, 
+                fontSize: 8,
+                margin: [0, 0, 0, 20]
+            },
+            {
+                text: [
+                    'ELEVAÇÃO FEITA EM: ',
+                    { text: '      /        /        ', decoration: 'underline'},
+                ],
+                bold: true, 
+                fontSize: 8,
+                margin: [0, 0, 0, 20]
+            }
+        ] as Content
+    };
+
+    const termoText = () => {
+        return {
+            stack: [
+                { text: 'SALVE DEUS!', margin: [0, 0, 0, 20] },
+                { text: '         QUIS A VONTADE DE DEUS ME COLOCAR DIANTE DE VÓS, POR QUEM JUREI OS MEUS OLHOS E ENTREGUEI A BEM DA VERDADE.', margin: [0, 0, 0, 20] },
+                { text: 'E, AGORA, ASSUMINDO ESTE IMENSO COMPROMISSO, É PELA VONTADE DE DEUS, TAMBÉM, QUE JURAIS, VOS COMPROMETENDO SERVIR COM TODAS AS HONRAS DESTE MESTRADO E SE VOS CONVIER, PENSAI, ASSINAI E ENTREGAI-ME.', margin: [0, 0, 0, 20] },
+            ],
+            fontSize: 8,
+            bold: true,
+            alignment: 'justify'
+        } as Content
+    };
+
+    const termoSignature = (medium: IMedium) => {
+        return [
+            {
+                text: [
+                    { text: 'NOME: ', fontSize: 8},
+                    { text: medium.nome.toUpperCase(), fontSize: 12},
+                ],
+                bold: true,
+                margin: [0, 0, 0, 50]
+            },
+            {
+                text: '                           ',
+                bold: true, 
+                fontSize: 8,
+                decoration: 'underline',
+                alignment: 'center',
+                margin: [0, 0, 0, 5]
+            },
+            {
+                text: 'ASSINATURA',
+                bold: true, 
+                fontSize: 8,
+                alignment: 'center',
+                margin: [0, 0, 0, 25]
+            },
+        ] as Content
+    };
+
+    const termoFooter = () => {
+        return {
+            stack: [
+                { text: '         SE UM DIA, AS VOSSAS FORÇAS VOS FALTAREM, ENTREGAI TAMBÉM HONROSAMENTE ESTE COMPROMISSO.', fontSize: 8, margin: [0, 0, 0, 20] },
+                { text: 'TIA NEIVA', fontSize: 12, alignment: 'right' },
+            ],
+            bold: true,
+        } as Content
+    };
+
+    const contentArray = () => {
+        const array: Array<Content> = [];
+        mediuns.forEach((item: IMedium) => {
+            array.push(termoHeader());
+            array.push(termoInfo(item));
+            array.push(termoText());
+            array.push(termoSignature(item));
+            array.push(termoFooter());
+        });
+        return array
+    }
+    
+    const autorizacaoDefinitions: TDocumentDefinitions = {
+        info: {
+            title: mediuns.length === 1 ? `Termo_${mediuns[0].medium_id.toString().padStart(5, '0')}_${mediuns[0].nome.replace(/ /g, '_')}` : 'Termos_compromisso'
+        },
+        pageMargins: [24, 24, 24, 24],
+        pageSize: 'A5',
+        content: contentArray(),
+        defaultStyle: {
+            font: 'Arial'
+        }
+    }
+
+    pdfMake.createPdf(autorizacaoDefinitions).open({}, window.open(mediuns.length === 1 ? `Termo_${mediuns[0].medium_id.toString().padStart(5, '0')}_${mediuns[0].nome.replace(/ /g, '_')}.pdf` : 'Termos_compromisso.pdf', '_blank'));
 }
 
 export const generateCanto = (canto: ICanto) => {    

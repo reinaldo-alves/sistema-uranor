@@ -158,11 +158,11 @@ export const validateEmissao = (medium: IMedium, mediuns: Array<IMedium>, adjunt
             Alert('Madrinha de Arcanos/Presidente deve emitir na mesma origem do afilhado', 'error');
             return;
         }
-        if (medium.turnoLeg !== oppositeTurno(turnoL, mestre?.turnoLeg as string)) {
+        if (mestre && medium.turnoLeg !== oppositeTurno(turnoL, mestre?.turnoLeg as string)) {
             Alert('Turno de legião da madrinha deve corresponder ao do padrinho', 'error');
             return;
         }
-        if (medium.turnoTrab !== oppositeTurno(turnoT, mestre?.turnoTrab as string)) {
+        if (mestre && medium.turnoTrab !== oppositeTurno(turnoT, mestre?.turnoTrab as string)) {
             Alert('Turno de trabalho da madrinha deve corresponder ao do padrinho', 'error');
             return;
         }
@@ -176,11 +176,11 @@ export const validateEmissao = (medium: IMedium, mediuns: Array<IMedium>, adjunt
             Alert('Escrava de Arcanos/Presidente deve emitir na mesma origem do mestre', 'error');
             return;
         } 
-        if (medium.turnoLeg !== oppositeTurno(turnoL, mestre?.turnoLeg as string)) {
+        if (mestre && medium.turnoLeg !== oppositeTurno(turnoL, mestre?.turnoLeg as string)) {
             Alert('Turno de legião da escrava deve corresponder ao do mestre', 'error');
             return;
         }
-        if (medium.turnoTrab !== oppositeTurno(turnoT, mestre?.turnoTrab as string)) {
+        if (mestre && medium.turnoTrab !== oppositeTurno(turnoT, mestre?.turnoTrab as string)) {
             Alert('Turno de trabalho da escrava deve corresponder ao do mestre', 'error');
             return;
         }

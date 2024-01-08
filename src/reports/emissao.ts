@@ -40,7 +40,7 @@ export const emissaoText = (medium: IMedium, mediuns: Array<IMedium>, ministros:
     const termoFalangeNinfa = medium.falMiss ? `${medium.regente? 'REGENTE ' : ''}${falMissNome} ${medium.janda? 'JANDA ' : ''}MISSIONÁRIA DO ADJUNTO ${medium.adjDevas} KOATAY 108 MESTRE ${adjDevasNome}. ` : '';
     
     //Se a ninfa for Nityama Madruxa, retorna 'Nityama', caso contrário, retorna o nome da falange 
-    const falMissNomeP = medium.falMiss === 2? 'Nityama' : falMiss.find((item: IFalange) => item.falange_id === medium.falMiss)?.nome;
+    const falMissNomeP = medium.falMiss === 2? 'Nityama' : medium.falMiss === 12? 'Ariana' : falMiss.find((item: IFalange) => item.falange_id === medium.falMiss)?.nome;
 
     //Armazena nome da primeira da falange
     const falMissPrimeira = falMiss.find((item: IFalange) => item.falange_id === medium.falMiss)?.primeira;

@@ -22,7 +22,7 @@ function ShowMedium() {
     
     const { token, getUser, user } = useContext(UserContext);
     const { mediuns, loadMedium, changeMed } = useContext(MediumContext);
-    const { ministros, cavaleiros, guias, adjuntos, templos, falMiss, getData, turnoL, turnoT } = useContext(ListContext);
+    const { ministros, cavaleiros, guias, adjuntos, templos, falMiss, getData, turnoL, turnoT, searchMediumInCons } = useContext(ListContext);
     const params = useParams();
     const navigate = useNavigate();
     
@@ -119,7 +119,7 @@ function ShowMedium() {
                             <MediumButton disabled={!medium.dtCenturia && !medium.falMiss} onClick={() => validateEmissao(medium, mediuns, adjuntos, turnoL, turnoT, () => generateEmissao(medium, user, emissaoText(medium, mediuns, ministros, cavaleiros, guias, adjuntos, templos, falMiss) as string))} color="green">Gerar Emissão</MediumButton>
                             <MediumButton onClick={() => navigate(`/mediuns/editar/${medium.medium_id}`)} color="green">Editar</MediumButton>
                             <MediumButton color="green">Gerar Ficha</MediumButton>
-                            <MediumButton color="green" onClick={() => generateAutorizacao(medium, 1)}>Autorização</MediumButton>
+                            <MediumButton color="green" disabled={!searchMediumInCons(medium.medium_id)} onClick={() => generateAutorizacao([medium], templos, adjuntos, ministros, searchMediumInCons(medium.medium_id))}>Autorização</MediumButton>
                             <MediumButton color="green">Linha do Tempo</MediumButton>
                             <MediumButton onClick={confirmChangeMed} color="red">Mudar Med.</MediumButton>
                             <MediumButton color="red">Excluir</MediumButton>
