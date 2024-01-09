@@ -12,7 +12,7 @@ import { MediumContext } from "src/contexts/MediumContext";
 import { UserContext } from "src/contexts/UserContext";
 import api from "src/api";
 import AutocompleteInput from "src/components/AutocompleteInput/AutocompleteInput";
-import { defaultMedium } from "src/utilities/default";
+import { defaultConsagracao, defaultMedium } from "src/utilities/default";
 import { useNavigate } from "react-router-dom";
 import { generateAutorizacao, generateTermo } from "src/utilities/createDocs";
 
@@ -32,7 +32,6 @@ function Elevacao() {
     const [searchMedium, setSearchMedium] = useState('');
     const [checkMudanca, setCheckMudanca] = useState(false);
     const [checkTermo, setCheckTermo] = useState(false);
-    const [allMediuns, setAllMediuns] = useState([] as Array<IMedium>);
   
     const navigate = useNavigate();
 
@@ -155,22 +154,8 @@ function Elevacao() {
         }
     }
 
-    const generateMediumList = () => {
-        const array: Array<IMedium> = [];
-        alphabeticOrder([...listElevacao, ...listMudanca]).forEach((item: IConsagracao) => {
-            const medium = mediuns.find((m: IMedium) => m.medium_id === item.medium);
-            if (medium) {array.push(medium)}
-        });
-        setAllMediuns(array);
-    }
-
-    const loadConsData = async () => {
-        await loadConsagracao(token);
-        generateMediumList();
-    }
-
     useEffect(() => {
-        loadConsData();
+        loadConsagracao(token);
         handleResize();
         const handleResizeEvent = () => {
             handleResize();
@@ -237,8 +222,8 @@ function Elevacao() {
                 </ConsagracaoCard>
                 <PageSubTitle hide={![...listElevacao, ...listMudanca].length}>Documentos</PageSubTitle>
                 <ButtonContainer hide={![...listElevacao, ...listMudanca].length}>
-                    <NavigateButton width="230px" onClick={() => generateAutorizacao(allMediuns, templos, adjuntos, ministros, 2)}>Gerar Autorizações</NavigateButton>
-                    <NavigateButton width="230px" onClick={() => {}}>Gerar Termos</NavigateButton>
+                    <NavigateButton width="230px" onClick={() => generateAutorizacao(alphabeticOrder([...listElevacao, ...listMudanca]), templos, adjuntos, ministros, 2)}>Gerar Autorizações</NavigateButton>
+                    <NavigateButton width="230px" onClick={() => generateTermo(alphabeticOrder([...listElevacao, ...listMudanca]))}>Gerar Termos</NavigateButton>
                     <NavigateButton width="230px" onClick={() => {}}>Gerar Relatório</NavigateButton>
                     <NavigateButton width="230px" onClick={() => {}}>Gerar Protocolo</NavigateButton>
                 </ButtonContainer>
@@ -264,7 +249,13 @@ function Elevacao() {
                         generateAutorizacao(mediuns.filter((item: IMedium) => item.medium_id === selected.medium), templos, adjuntos, ministros, 2);
                         closeModal();
                     }}>Gerar Autorização</NavigateButton>
-                    <NavigateButton width="230px" onClick={() => generateTermo(mediuns.filter((item: IMedium) => item.medium_id === selected.medium))}>Gerar Termo</NavigateButton>
+                    <NavigateButton width="230px" onClick={() => {
+                        if (selected.foto) {
+                            generateTermo(mediuns.filter((item: IMedium) => item.medium_id === selected.medium))
+                        } else {
+                            Alert('Insira a foto do médium antes de gerar o termo de compromisso', 'error')
+                        }
+                    }}>Gerar Termo</NavigateButton>
                     <NavigateButton width="230px" color="red" onClick={() => removeElevacao(token)}>Remover</NavigateButton>
                     <NavigateButton style={{marginTop: '20px'}} width="230px" color="red" onClick={() => closeModal()}>Fechar</NavigateButton>
                 </ModalMediumContent>
@@ -288,7 +279,7 @@ function Elevacao() {
                         <label>Nome do Médium</label>
                         <AutocompleteInput 
                             default={defaultMedium}
-                            options={mediuns.filter((item: IMedium) => item.dtEmplac && !item.dtElevacao && !searchMediumInCons(item.medium_id))}
+                            options={mediuns.filter((item: IMedium) => item.dtEmplac && !item.dtElevacao && searchMediumInCons(item.medium_id) === defaultConsagracao)}
                             equality={(option, value) => option.medium_id === value.medium_id}
                             value={dropMedium}
                             setValue={setDropMedium}

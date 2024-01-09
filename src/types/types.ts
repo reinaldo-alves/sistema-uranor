@@ -66,7 +66,10 @@ export interface IConsagracao {
     med: string,
     sex: string,
     foto: string,
-    colete: number
+    templo: number,
+    colete: number,
+    dtNasc: string,
+    dtIniciacao: string,
 }
 
 export interface IMedium {

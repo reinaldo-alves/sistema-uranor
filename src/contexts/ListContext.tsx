@@ -2,7 +2,7 @@ import { createContext, useState } from "react";
 import api from "src/api";
 import { IAdjunto, ICavaleiro, IConsagracao, IEstado, IFalange, IMentor, ITemplo, ITurno } from "src/types/types";
 import { IAdjuntoAPI, ICavaleiroAPI, IConsagracaoAPI, IFalangeAPI, IGuiaAPI, IMediumAPI, IMinistroAPI, ITemploAPI } from "src/types/typesAPI";
-import { Alert } from "src/utilities/popups";
+import { defaultConsagracao } from "src/utilities/default";
 
 export const ListContext = createContext({} as any);
 
@@ -174,7 +174,10 @@ export const ListStore = ({ children }: any) => {
                         med: mediumCons ? mediumCons.med : '',
                         sex: mediumCons ? mediumCons.sex : '',
                         foto: mediumCons?.foto ? `http://localhost:4000/upload/medium/${mediumCons.foto}` : '',
-                        colete: mediumCons ? mediumCons.colete : 0
+                        templo: mediumCons?.templo ? mediumCons.templo : 0,
+                        colete: mediumCons ? mediumCons.colete : 0,
+                        dtNasc: mediumCons ? mediumCons.dtNasc : '',
+                        dtIniciacao: mediumCons?.dtIniciacao ? mediumCons.dtIniciacao : '',
                     };
                 } catch (error) {
                     console.error('Erro ao atribuir médium aos dados das consagrações', error);
@@ -205,7 +208,7 @@ export const ListStore = ({ children }: any) => {
         const isCenturia = listCenturia.find((item: IConsagracao) => item.medium === id);
         const isMudanca = listMudanca.find((item: IConsagracao) => item.medium === id);
 
-        const result = isIniciacao ? 1 : isElevacao ? 2 : isCenturia ? 3 : isMudanca ? 4 : 0;
+        const result = isIniciacao ? isIniciacao : isElevacao ? isElevacao : isCenturia ? isCenturia : isMudanca ? isMudanca : defaultConsagracao;
         return result
     }
 

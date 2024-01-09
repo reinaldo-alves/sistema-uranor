@@ -3,9 +3,9 @@ import pdfTimes from 'pdfmake/build/vfs_fonts'
 import { timesRegular, timesBold, timesItalic, timesBI } from 'src/assets/encodedFiles/TimesFont';
 import { arialBI, arialBold, arialItalic, arialRegular } from 'src/assets/encodedFiles/ArialFont';
 import { Content, TDocumentDefinitions } from 'pdfmake/interfaces';
-import { IAdjunto, ICanto, IFalange, IMedium, IMentor, ITemplo, IUser } from "src/types/types";
+import { IAdjunto, ICanto, IConsagracao, IFalange, IMedium, IMentor, ITemplo, IUser } from "src/types/types";
 import { assTiaNeiva } from '../assets/encodedFiles/signature';
-import { convertDate, getCurrentDate } from './functions';
+import { convertDate, getCurrentDate, imageToBase64 } from './functions';
 import { jaguarImage } from 'src/assets/encodedFiles/jaguar';
 import { aparaImage } from 'src/assets/encodedFiles/apara';
 import { doutrinadorImage } from 'src/assets/encodedFiles/doutrinador';
@@ -167,7 +167,7 @@ export const generateEmissao = (medium: IMedium, user: IUser, text: string) => {
     pdfMake.createPdf(emissaoDefinitions).open({}, window.open(`Emissao_${medium.medium_id.toString().padStart(5, '0')}_${medium.nome.replace(/ /g, '_')}.pdf`, '_blank'));
 }
 
-export const generateAutorizacao = (mediuns: Array<IMedium>, templos: Array<ITemplo>, adjuntos: Array<IAdjunto>, ministros: Array<IMentor>, cons: number) => {    
+export const generateAutorizacao = (mediuns: Array<IConsagracao>, templos: Array<ITemplo>, adjuntos: Array<IAdjunto>, ministros: Array<IMentor>, cons: number) => {    
     const consagracaoMeta = [
         {title: 'Iniciação Dharman-Oxinto', meta: 'Iniciacao'},
         {title: 'Elevação de Espadas', meta: 'Elevacao'},
@@ -175,7 +175,7 @@ export const generateAutorizacao = (mediuns: Array<IMedium>, templos: Array<ITem
         {title: '', meta: 'IniciacaoElevacao'},
     ]
     
-    const consagracaoText = (medium: IMedium) => {
+    const consagracaoText = (medium: IConsagracao) => {
         return [
             `Concluiu o seu desenvolvimento doutrinário e curso de Iniciação e está apto(a), junto à Coordenação dos Templos, para realizar sua consagração. Data de Nascimento: ${convertDate(medium.dtNasc)}. Colete: ${medium.colete ? medium.colete : ''}.`,
             `Concluiu o curso de Elevação de Espadas e está apto(a), junto à Coordenação dos Templos, para realizar sua consagração. Data de nascimento do Médium: ${convertDate(medium.dtNasc)}.`,
@@ -183,9 +183,9 @@ export const generateAutorizacao = (mediuns: Array<IMedium>, templos: Array<ITem
         ]
     };
 
-    const temploMedium = (medium: IMedium) => {return templos.filter((item: ITemplo) => item.templo_id === medium.templo)[0]}
+    const temploMedium = (medium: IConsagracao) => {return templos.filter((item: ITemplo) => item.templo_id === medium.templo)[0]}
 
-    const ministroTemplo = (medium: IMedium) => {return ministros.filter((min: IMentor) => min.id === adjuntos.filter((ad: IAdjunto) => ad.adjunto_id === temploMedium(medium).presidente)[0].ministro)[0].nome}
+    const ministroTemplo = (medium: IConsagracao) => {return ministros.filter((min: IMentor) => min.id === adjuntos.filter((ad: IAdjunto) => ad.adjunto_id === temploMedium(medium).presidente)[0].ministro)[0].nome}
     
     const autorizacaoTitle = (modifier: number) => {
         const consName = modifier ? modifier - 1 : cons - 1;
@@ -213,7 +213,7 @@ export const generateAutorizacao = (mediuns: Array<IMedium>, templos: Array<ITem
         } as Content
     };  
 
-    const autorizacaoBody = (medium: IMedium, modifier: number) => {
+    const autorizacaoBody = (medium: IConsagracao, modifier: number) => {
         const consText = modifier ? modifier - 1 : cons - 1;
         
         return [
@@ -259,7 +259,7 @@ export const generateAutorizacao = (mediuns: Array<IMedium>, templos: Array<ITem
         ] as Content
     }
 
-    const autorizacaoInfo = (medium: IMedium) => {
+    const autorizacaoInfo = (medium: IConsagracao) => {
         return [
             {
                 columns: [
@@ -317,7 +317,7 @@ export const generateAutorizacao = (mediuns: Array<IMedium>, templos: Array<ITem
     const contentArray = () => {
         const array: Array<Content> = [];
         if (cons === 4) {
-            mediuns.forEach((item: IMedium) => {
+            mediuns.forEach((item: IConsagracao) => {
                 array.push(autorizacaoTitle(1));
                 array.push(autorizacaoBody(item, 1));
                 array.push(autorizacaoInfo(item));
@@ -326,7 +326,7 @@ export const generateAutorizacao = (mediuns: Array<IMedium>, templos: Array<ITem
                 array.push(autorizacaoInfo(item));
             });
         } else {
-            mediuns.forEach((item: IMedium) => {
+            mediuns.forEach((item: IConsagracao) => {
                 array.push(autorizacaoTitle(0));
                 array.push(autorizacaoBody(item, 0));
                 array.push(autorizacaoInfo(item));
@@ -337,7 +337,7 @@ export const generateAutorizacao = (mediuns: Array<IMedium>, templos: Array<ITem
     
     const autorizacaoDefinitions: TDocumentDefinitions = {
         info: {
-            title: mediuns.length === 1 ? `Autorizacao_${consagracaoMeta[cons - 1].meta}_${mediuns[0].medium_id.toString().padStart(5, '0')}_${mediuns[0].nome.replace(/ /g, '_')}` : `Autorizacoes_${consagracaoMeta[cons - 1].meta}`
+            title: mediuns.length === 1 ? `Autorizacao_${consagracaoMeta[cons - 1].meta}_${mediuns[0].medium.toString().padStart(5, '0')}_${mediuns[0].nome.replace(/ /g, '_')}` : `Autorizacoes_${consagracaoMeta[cons - 1].meta}`
         },
         pageMargins: [24, 22, 50, 120],
         pageSize: 'A4',
@@ -347,49 +347,67 @@ export const generateAutorizacao = (mediuns: Array<IMedium>, templos: Array<ITem
         }
     }
 
-    pdfMake.createPdf(autorizacaoDefinitions).open({}, window.open(mediuns.length === 1 ? `Autorizacao_${consagracaoMeta[cons - 1].meta}_${mediuns[0].medium_id.toString().padStart(5, '0')}_${mediuns[0].nome.replace(/ /g, '_')}.pdf` : `Autorizacoes_${consagracaoMeta[cons - 1].meta}.pdf`, '_blank'));
+    pdfMake.createPdf(autorizacaoDefinitions).open({}, window.open(mediuns.length === 1 ? `Autorizacao_${consagracaoMeta[cons - 1].meta}_${mediuns[0].medium.toString().padStart(5, '0')}_${mediuns[0].nome.replace(/ /g, '_')}.pdf` : `Autorizacoes_${consagracaoMeta[cons - 1].meta}.pdf`, '_blank'));
 }
 
-export const generateTermo = (mediuns: Array<IMedium>) => {    
-    const termoHeader = () => {
+export const generateTermo = async (mediuns: Array<IConsagracao>) => {    
+    const termoHeader = async (medium: IConsagracao) => {
+        const base64String = await imageToBase64(medium.foto);
+
         return {
-            stack: [
-                { text: 'DOUTRINA DO AMANHECER', fontSize: 16, bold: true, margin: [0, 0, 0, 4] },
-                { text: 'CORDENAÇÃO PARLO', fontSize: 14, margin: [0, 0, 0, 4] },
-                { text: 'CASTELO DOS DEVAS', fontSize: 16, bold: true, margin: [0, 0, 0, 20] },
-                { text: 'COMPROMISSO DE MESTRE', fontSize: 14, bold: true, margin: [0, 0, 0, 4] },
+            columns: [
+                {
+                    stack: [
+                        { text: 'DOUTRINA DO AMANHECER', fontSize: 16, bold: true, margin: [0, 0, 0, 4] },
+                        { text: 'CORDENAÇÃO PARLO', fontSize: 14, margin: [0, 0, 0, 4] },
+                        { text: 'CASTELO DOS DEVAS', fontSize: 16, bold: true, margin: [0, 0, 0, 20] },
+                        { text: 'COMPROMISSO DE MESTRE', fontSize: 14, bold: true, margin: [0, 0, 0, 23] },
+                    ],
+                    alignment: 'center',
+                    margin: [0, 0, -50, 0],
+                    width: '*'
+                },
+                {
+                    image: base64String,
+                    width: 50,
+                    height: 67,
+                    margin: [0, 48, 0, 0]
+                }
             ],
-            alignment: 'center',
+            columnGap: 0
         } as Content
     };
 
-    const termoInfo = (medium: IMedium) => {
+    const termoInfo = (medium: IConsagracao) => {
         return [
             {
                 text: [
                     { text: 'INICIAÇÃO EM: ', fontSize: 8},
-                    { text: convertDate(medium.dtIniciacao), fontSize: 12},
+                    ' ',
+                    { text: convertDate(medium.dtIniciacao), fontSize: 12 },
                 ],
                 bold: true,
-                margin: [0, 0, 0, 20]
+                margin: [0, 0, 0, 19]
             },
             {
                 text: [
                     'CLASSIFICAÇÃO: ',
-                    { text: '                           ', decoration: 'underline'},
+                    ' ',
+                    { text: '                                                                                                                            ', decoration: 'underline'},
                 ],
                 bold: true, 
                 fontSize: 8,
-                margin: [0, 0, 0, 20]
+                margin: [0, 0, 0, 19]
             },
             {
                 text: [
                     'ELEVAÇÃO FEITA EM: ',
-                    { text: '      /        /        ', decoration: 'underline'},
+                    ' ',
+                    { text: '           /             /             ', decoration: 'underline'},
                 ],
                 bold: true, 
                 fontSize: 8,
-                margin: [0, 0, 0, 20]
+                margin: [0, 0, 0, 19]
             }
         ] as Content
     };
@@ -397,28 +415,33 @@ export const generateTermo = (mediuns: Array<IMedium>) => {
     const termoText = () => {
         return {
             stack: [
-                { text: 'SALVE DEUS!', margin: [0, 0, 0, 20] },
-                { text: '         QUIS A VONTADE DE DEUS ME COLOCAR DIANTE DE VÓS, POR QUEM JUREI OS MEUS OLHOS E ENTREGUEI A BEM DA VERDADE.', margin: [0, 0, 0, 20] },
-                { text: 'E, AGORA, ASSUMINDO ESTE IMENSO COMPROMISSO, É PELA VONTADE DE DEUS, TAMBÉM, QUE JURAIS, VOS COMPROMETENDO SERVIR COM TODAS AS HONRAS DESTE MESTRADO E SE VOS CONVIER, PENSAI, ASSINAI E ENTREGAI-ME.', margin: [0, 0, 0, 20] },
+                { text: 'MEU FILHO', margin: [0, 0, 0, 15] },
+                { text: 'SALVE DEUS!', margin: [0, 0, 0, 14] },
+                { text: 'QUIS A VONTADE DE DEUS ME COLOCAR DIANTE DE VÓS, POR QUEM JUREI', margin: [47, 0, 0, 1] },
+                { text: 'OS MEUS OLHOS E ENTREGUEI A BEM DA VERDADE.', margin: [0, 0, 0, 15] },
+                { text: 'E, AGORA, ASSUMINDO ESTE IMENSO COMPROMISSO, É PELA VONTADE DE', margin: [47, 0, 0, 1] },
+                { text: 'DEUS, TAMBÉM, QUE JURAIS, VOS COMPROMETENDO SERVIR COM TODAS AS HONRAS DESTE MESTRADO E SE VOS CONVIER, PENSAI, ASSINAI E ENTREGAI-ME.', margin: [0, 0, 0, 25] },
             ],
             fontSize: 8,
             bold: true,
-            alignment: 'justify'
+            alignment: 'justify',
+            lineHeight: 1.5,
         } as Content
     };
 
-    const termoSignature = (medium: IMedium) => {
+    const termoSignature = (medium: IConsagracao) => {
         return [
             {
                 text: [
                     { text: 'NOME: ', fontSize: 8},
+                    ' ',
                     { text: medium.nome.toUpperCase(), fontSize: 12},
                 ],
                 bold: true,
-                margin: [0, 0, 0, 50]
+                margin: [0, 0, 0, 40]
             },
             {
-                text: '                           ',
+                text: '                                                                               ',
                 bold: true, 
                 fontSize: 8,
                 decoration: 'underline',
@@ -430,46 +453,66 @@ export const generateTermo = (mediuns: Array<IMedium>) => {
                 bold: true, 
                 fontSize: 8,
                 alignment: 'center',
-                margin: [0, 0, 0, 25]
-            },
+                margin: [0, 0, 0, 29]
+            }
         ] as Content
     };
 
     const termoFooter = () => {
         return {
             stack: [
-                { text: '         SE UM DIA, AS VOSSAS FORÇAS VOS FALTAREM, ENTREGAI TAMBÉM HONROSAMENTE ESTE COMPROMISSO.', fontSize: 8, margin: [0, 0, 0, 20] },
-                { text: 'TIA NEIVA', fontSize: 12, alignment: 'right' },
+                { text: 'SE UM DIA, AS VOSSAS FORÇAS VOS FALTAREM, ENTREGAI TAMBÉM', fontSize: 8, margin: [47, 0, 0, 1] },
+                { text: 'HONROSAMENTE ESTE COMPROMISSO.', fontSize: 8, margin: [0, 0, 0, 7] },
+                { text: 'TIA NEIVA', fontSize: 12, alignment: 'right', margin: [0, 0, -5, 0] },
             ],
             bold: true,
+            lineHeight: 1.5
         } as Content
     };
 
-    const contentArray = () => {
-        const array: Array<Content> = [];
-        mediuns.forEach((item: IMedium) => {
-            array.push(termoHeader());
-            array.push(termoInfo(item));
-            array.push(termoText());
-            array.push(termoSignature(item));
-            array.push(termoFooter());
-        });
-        return array
+    const contentArray = async () => {
+        const arrays: Array<Array<Content>> = await Promise.all(
+            mediuns.filter((m: IConsagracao) => Boolean(m.foto) === true).map(async (item: IConsagracao) => {
+                const array: Array<Content> = [];
+                array.push(await termoHeader(item));
+                array.push(termoInfo(item));
+                array.push(termoText());
+                array.push(termoSignature(item));
+                array.push(termoFooter());
+                return array;
+            })
+        );
+        const finalContentArray: Array<Content> = [];
+        
+        for (let i = 0; i < arrays.length; i += 2) {
+            const el1 = arrays[i] || [];
+            const el2 = arrays[i + 1] || [];
+            const columnPair: Content = {
+                columns: [Array.from(el1), Array.from(el2)],
+                columnGap: 71,
+            };
+            if (i + 2 < arrays.length) {
+                columnPair.pageBreak = 'after'
+            }
+            finalContentArray.push(columnPair);
+        }
+        return finalContentArray;
     }
-    
-    const autorizacaoDefinitions: TDocumentDefinitions = {
+   
+    const termoDefinitions: TDocumentDefinitions = {
         info: {
-            title: mediuns.length === 1 ? `Termo_${mediuns[0].medium_id.toString().padStart(5, '0')}_${mediuns[0].nome.replace(/ /g, '_')}` : 'Termos_compromisso'
+            title: mediuns.length === 1 ? `Termo_${mediuns[0].medium.toString().padStart(5, '0')}_${mediuns[0].nome.replace(/ /g, '_')}` : 'Termos_compromisso'
         },
-        pageMargins: [24, 24, 24, 24],
-        pageSize: 'A5',
-        content: contentArray(),
+        pageMargins: [32, 27, 39, 27],
+        pageSize: 'A4',
+        pageOrientation: 'landscape',
+        content: await contentArray(),
         defaultStyle: {
             font: 'Arial'
         }
     }
 
-    pdfMake.createPdf(autorizacaoDefinitions).open({}, window.open(mediuns.length === 1 ? `Termo_${mediuns[0].medium_id.toString().padStart(5, '0')}_${mediuns[0].nome.replace(/ /g, '_')}.pdf` : 'Termos_compromisso.pdf', '_blank'));
+    pdfMake.createPdf(termoDefinitions).open({}, window.open(mediuns.length === 1 ? `Termo_${mediuns[0].medium.toString().padStart(5, '0')}_${mediuns[0].nome.replace(/ /g, '_')}.pdf` : 'Termos_compromisso.pdf', '_blank'));
 }
 
 export const generateCanto = (canto: ICanto) => {    

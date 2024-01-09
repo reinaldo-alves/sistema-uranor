@@ -15,6 +15,7 @@ import { Confirm } from "src/utilities/popups";
 import { generateAutorizacao, generateEmissao } from "src/utilities/createDocs";
 import { validateEmissao } from "src/utilities/validations";
 import { emissaoText } from "src/reports/emissao";
+import { defaultConsagracao } from "src/utilities/default";
 
 function ShowMedium() {
     const [loading, setLoading] = useState(true);
@@ -119,7 +120,7 @@ function ShowMedium() {
                             <MediumButton disabled={!medium.dtCenturia && !medium.falMiss} onClick={() => validateEmissao(medium, mediuns, adjuntos, turnoL, turnoT, () => generateEmissao(medium, user, emissaoText(medium, mediuns, ministros, cavaleiros, guias, adjuntos, templos, falMiss) as string))} color="green">Gerar Emissão</MediumButton>
                             <MediumButton onClick={() => navigate(`/mediuns/editar/${medium.medium_id}`)} color="green">Editar</MediumButton>
                             <MediumButton color="green">Gerar Ficha</MediumButton>
-                            <MediumButton color="green" disabled={!searchMediumInCons(medium.medium_id)} onClick={() => generateAutorizacao([medium], templos, adjuntos, ministros, searchMediumInCons(medium.medium_id))}>Autorização</MediumButton>
+                            <MediumButton color="green" disabled={searchMediumInCons(medium.medium_id) === defaultConsagracao} onClick={() => generateAutorizacao([searchMediumInCons(medium.medium_id)], templos, adjuntos, ministros, searchMediumInCons(medium.medium_id).consagracao)}>Autorização</MediumButton>
                             <MediumButton color="green">Linha do Tempo</MediumButton>
                             <MediumButton onClick={confirmChangeMed} color="red">Mudar Med.</MediumButton>
                             <MediumButton color="red">Excluir</MediumButton>

@@ -77,3 +77,28 @@ export function countMedium(array: Array<any>) {
         return `${array.length} médiuns`
     }
 }
+
+//Converte uma imagem para base64
+export async function imageToBase64 (url: string) {
+    if (!url) {return ''}
+    try {
+        const response = await fetch(url);
+        const blob = await response.blob();
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                if (typeof reader.result === 'string') {
+                    resolve(reader.result);
+                } else {
+                    reject(console.error('Erro ao converter imagem para base64'))
+                }
+            };
+            reader.onerror = () => {
+                reject(console.error('Erro ao ler arquivo de imagem'))
+            };
+            reader.readAsDataURL(blob);
+        });
+    } catch (error) {
+        console.error('Erro ao carregar imagem', error)
+    }
+}

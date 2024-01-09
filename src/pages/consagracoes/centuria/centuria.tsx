@@ -12,7 +12,7 @@ import { MediumContext } from "src/contexts/MediumContext";
 import { UserContext } from "src/contexts/UserContext";
 import api from "src/api";
 import AutocompleteInput from "src/components/AutocompleteInput/AutocompleteInput";
-import { defaultMedium } from "src/utilities/default";
+import { defaultConsagracao, defaultMedium } from "src/utilities/default";
 import { useNavigate } from "react-router-dom";
 import { generateAutorizacao } from "src/utilities/createDocs";
 
@@ -27,7 +27,6 @@ function Centuria() {
     const [selected, setSelected] = useState({} as IConsagracao);
     const [dropMedium, setDropMedium] = useState(defaultMedium);
     const [searchMedium, setSearchMedium] = useState('');
-    const [allMediuns, setAllMediuns] = useState([] as Array<IMedium>);
   
     const navigate = useNavigate();
 
@@ -96,22 +95,8 @@ function Centuria() {
         }
     }
 
-    const generateMediumList = () => {
-        const array: Array<IMedium> = [];
-        alphabeticOrder(listCenturia).forEach((item: IConsagracao) => {
-            const medium = mediuns.find((m: IMedium) => m.medium_id === item.medium);
-            if (medium) {array.push(medium)}
-        });
-        setAllMediuns(array);
-    }
-
-    const loadConsData = async () => {
-        await loadConsagracao(token);
-        generateMediumList();
-    }
-
     useEffect(() => {
-        loadConsData();
+        loadConsagracao(token);
         handleResize();
         const handleResizeEvent = () => {
             handleResize();
@@ -159,7 +144,7 @@ function Centuria() {
                 </ConsagracaoCard>
                 <PageSubTitle hide={!listCenturia.length}>Documentos</PageSubTitle>
                 <ButtonContainer hide={!listCenturia.length}>
-                    <NavigateButton width="230px" onClick={() => generateAutorizacao(allMediuns, templos, adjuntos, ministros, 3)}>Gerar Autorizações</NavigateButton>
+                    <NavigateButton width="230px" onClick={() => generateAutorizacao(alphabeticOrder(listCenturia), templos, adjuntos, ministros, 3)}>Gerar Autorizações</NavigateButton>
                     <NavigateButton width="230px" onClick={() => {}}>Gerar Relatório</NavigateButton>
                     <NavigateButton width="230px" onClick={() => {}}>Gerar Protocolo</NavigateButton>
                 </ButtonContainer>
@@ -190,7 +175,7 @@ function Centuria() {
                         <label>Nome do Médium</label>
                         <AutocompleteInput 
                             default={defaultMedium}
-                            options={mediuns.filter((item: IMedium) => item.dtElevacao && !item.dtCenturia && !searchMediumInCons(item.medium_id))}
+                            options={mediuns.filter((item: IMedium) => item.dtElevacao && !item.dtCenturia && searchMediumInCons(item.medium_id) === defaultConsagracao)}
                             equality={(option, value) => option.medium_id === value.medium_id}
                             value={dropMedium}
                             setValue={setDropMedium}
