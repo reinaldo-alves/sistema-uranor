@@ -53,7 +53,7 @@ export const ListStore = ({ children }: any) => {
         NL: ['Ninfa Lua', 'Ninfa Lua Nityama', 'Ninfa Lua Grega', 'Ninfa Lua Maya']
     }
     
-    const falMest = ['Anunciação', 'Ascenção', 'Consagração', 'Cruzada', 'Estrela Candente', 'Redenção', 'Ressurreição', 'Sacramento', 'Solar', 'Sublimação', 'Unificação']
+    const falMest = {completo: ['Anunciação', 'Ascenção', 'Consagração', 'Cruzada', 'Estrela Candente', 'Redenção', 'Ressurreição', 'Sacramento', 'Solar', 'Sublimação', 'Unificação'], abrev: ['AN', 'AS', 'CN', 'CD', 'EC', 'RD', 'RS', 'SC', 'SL', 'SB', 'UN']}
 
     const povos = ['Abatã', 'Açanã', 'Açay', 'Amaray', 'Amarê', 'Anaçã', 'Anaçuê', 'Anay', 'Araçê', 'Aramê', 'Aramês', 'Aramôs', 'Arianos', 'Aruã', 'Aruaçã', 'Aruçay', 'Aryatã', 'Camuxy', 'Caporã', 'Carapuana', 'Carybãs', 'Cayrã', 'Cayrus', 'Garacy', 'Guacy', 'Ibaporã', 'Ipuã', 'Ipurã', 'Jaçã', 'Jaçay', 'Jaçuy', 'Jacy', 'Jaguary', 'Janatã', 'Japatã', 'Jaranã', 'Jaruã', 'Joacy', 'Jurupy', 'Juruy', 'Jussay', 'Koaçã', 'Muaçuy', 'Muray', 'Murugy', 'Omayã', 'Peguys', 'Pegy', 'Pery', 'Suadã', 'Tapiris', 'Taporã', 'Tapuã', 'Tapurã', 'Tarymã', 'Tumarê', 'Tupagy', 'Tupinambás', 'Tupuy', 'Uray', 'Uruanã', 'Yaçã', 'Yacy', 'Ymucy', 'Yorimã', 'Ytuporã', 'Yubatã', 'Yucarã', 'Yumary', 'Zanays']
 
@@ -178,6 +178,9 @@ export const ListStore = ({ children }: any) => {
                         colete: mediumCons ? mediumCons.colete : 0,
                         dtNasc: mediumCons ? mediumCons.dtNasc : '',
                         dtIniciacao: mediumCons?.dtIniciacao ? mediumCons.dtIniciacao : '',
+                        classMest: mediumCons?.classMest ? mediumCons.classMest : '',
+                        falMest: mediumCons?.falMest ? mediumCons.falMest : '',
+                        povo: mediumCons?.povo ? mediumCons.povo : ''
                     };
                 } catch (error) {
                     console.error('Erro ao atribuir médium aos dados das consagrações', error);

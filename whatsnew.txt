@@ -10,5 +10,5 @@ VERSÃO 1.1.0
 - Alterações nos tamanhos do header e do menu secundário
 - Correção no layout de algumas chaves de trabalhos
 - Módulo Consagrações com painel geral, iniciação, elevação, centúria e reclassificação
-- Geração de autorizações e termos de compromisso para consagrações modelo Olinda
+- Geração de autorizações, termos de compromisso, relatórios e protocolos para consagrações modelo Olinda
 - Criação de página de gerenciamento de backups

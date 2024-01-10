@@ -1,4 +1,4 @@
-import { IMedium, ITurno } from "src/types/types";
+import { IConsagracao, IMedium, ITurno } from "src/types/types";
 
 export function convertDate(date: string) {
     const dateParts = date.split('-');
@@ -101,4 +101,13 @@ export async function imageToBase64 (url: string) {
     } catch (error) {
         console.error('Erro ao carregar imagem', error)
     }
+}
+
+//Escreve a classificação e falange de mestrado de forma reduzida, para relatório de centúria
+export const reduceClassFalMest = (medium: IConsagracao, falMest: {completo: Array<string>, abrev: Array<string>}) => {
+    const splitClass = medium.classMest.split(' ');
+    const falMestIndex = falMest.completo.findIndex((item: string) => item === medium.falMest)
+    const reducedClass = splitClass.length >= 2 ? `${splitClass[0]} ${splitClass[1]}` : '';
+    const reduced = falMestIndex !== -1 && reducedClass !== '' ? `${reducedClass} ${falMest.abrev[falMestIndex]}`.toUpperCase() : '';
+    return reduced
 }

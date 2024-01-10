@@ -10,6 +10,7 @@ import { UserContext } from "src/contexts/UserContext";
 import { useNavigate } from "react-router-dom";
 import { Alert, Confirm } from "src/utilities/popups";
 import api from "src/api";
+import Loading from "src/utilities/Loading";
 
 interface IIniciacao {
     medium: IConsagracao,
@@ -239,6 +240,10 @@ function UpdateIniciacao() {
         {title: 'Centúria', click: '/consagracoes/centuria'},
         {title: 'Reclassificação', click: '/consagracoes/reclassificacao'},
     ]
+
+    if(loading) {
+        return <Loading />
+    }
    
     return (
         <>
@@ -309,7 +314,7 @@ function UpdateIniciacao() {
                                                 <label>Falange de Mestrado</label>
                                                 <select value={item.falMest} disabled={item.naoElevou} onChange={(e) => updatePropsMudanca(item.medium.medium, 'falMest', e.target.value)}>
                                                     <option value={''}></option>
-                                                    {falMest.map((item: string, index: number) => (
+                                                    {falMest.completo.map((item: string, index: number) => (
                                                         <option key={index} value={item}>{item}</option>
                                                     ))}
                                                 </select>

@@ -5,10 +5,11 @@ import { arialBI, arialBold, arialItalic, arialRegular } from 'src/assets/encode
 import { Content, TDocumentDefinitions } from 'pdfmake/interfaces';
 import { IAdjunto, ICanto, IConsagracao, IFalange, IMedium, IMentor, ITemplo, IUser } from "src/types/types";
 import { assTiaNeiva } from '../assets/encodedFiles/signature';
-import { convertDate, getCurrentDate, imageToBase64 } from './functions';
+import { convertDate, getCurrentDate, imageToBase64, reduceClassFalMest } from './functions';
 import { jaguarImage } from 'src/assets/encodedFiles/jaguar';
 import { aparaImage } from 'src/assets/encodedFiles/apara';
 import { doutrinadorImage } from 'src/assets/encodedFiles/doutrinador';
+import { defaultTemp } from './default';
 
 pdfMake.vfs = pdfTimes.pdfMake.vfs;
 window.pdfMake.vfs['times.ttf'] = timesRegular;
@@ -438,7 +439,7 @@ export const generateTermo = async (mediuns: Array<IConsagracao>) => {
                     { text: medium.nome.toUpperCase(), fontSize: 12},
                 ],
                 bold: true,
-                margin: [0, 0, 0, 40]
+                margin: medium.nome.length > 38 ? [0, 0, 0, 24] : [0, 0, 0, 40]
             },
             {
                 text: '                                                                               ',
@@ -513,6 +514,552 @@ export const generateTermo = async (mediuns: Array<IConsagracao>) => {
     }
 
     pdfMake.createPdf(termoDefinitions).open({}, window.open(mediuns.length === 1 ? `Termo_${mediuns[0].medium.toString().padStart(5, '0')}_${mediuns[0].nome.replace(/ /g, '_')}.pdf` : 'Termos_compromisso.pdf', '_blank'));
+}
+
+export const generateProtocolo = (mediuns: Array<IConsagracao>, title: string, cons: number) => {    
+    const consagracaoMeta = [
+        {title: 'INICIAÇÃO', meta: 'Iniciacao'},
+        {title: 'ELEVAÇÃO', meta: 'Elevacao'},
+        {title: 'CENTÚRIA', meta: 'Centuria'}
+    ]
+       
+    const protocoloTitle = () => {
+        return {
+            columns: [
+            {
+                image: jaguarImage,
+                width: 48,
+                margin: [-1, 10, 0, 0]
+            },
+            {
+                stack: [
+                    { text: 'OLINDA DO AMANHECER', margin: [0, 0, 0, 1] },
+                    { text: 'CASTELO DOS DEVAS', margin: [0, 0, 0, 13] },
+                    { text: title ? title.toUpperCase() : `PROTOCOLO DE ENTREGA DE AUTORIZAÇÕES - ${consagracaoMeta[cons - 1].title}`, margin: [0, 0, 0, 14] },
+                ],
+                alignment: 'left',
+                fontSize: 13.5,
+                width: '*',
+            }
+            ],
+            columnGap: 12
+        } as Content
+    };  
+
+    const protocoloBody = () => {
+        return [
+            {
+                table: {
+                    headerRows: 1,
+                    widths: [30, '*', 24, 200],
+                    heights: [5, ...mediuns.map(() => {return 24})],
+                    body: [
+                        [
+                            {text: 'ID', bold: true, lineHeight: 0.9, margin: [0, -2, 0, 0]},
+                            {text: 'NOME', bold: true, lineHeight: 0.9, margin: [0, -2, 0, 0]},
+                            {text: 'MED.', bold: true, lineHeight: 0.9, margin: [0, -2, 0, 0]},
+                            {text: 'ASSINATURA', bold: true, lineHeight: 0.9, margin: [0, -2, 0, 0]}
+                        ],
+                        ...mediuns.map((item: IConsagracao) => [
+                                {
+                                    text: item.medium.toString().padStart(5, '0'),
+                                    margin: [0, 7, 0, 0]
+                                },
+                                {
+                                    text: item.nome.toUpperCase(),
+                                    alignment: 'left',
+                                    margin: item.nome.length > 38 ? [0, 0, 0, 0] : [0, 7, 0, 0]
+                                },
+                                {
+                                    text: item.med.charAt(0),
+                                    margin: [0, 7, 0, 0]
+                                },
+                                ' '
+                            ])
+                    ],
+                },
+                fontSize: 9.5,
+                alignment: 'center',
+                layout: {
+                    hLineWidth: function() {return 1.4},
+                    vLineWidth: function() {return 1.4}
+                }
+            }
+        ] as Content
+    }
+
+    const protocoloInfo = () => {
+        return [
+            {
+                stack: [
+                    {
+                        columns: [
+                            { text: 'TOTAL DE MESTRES: ', bold: true, width: 'auto' },
+                            { text: mediuns.length, width: 'auto'}
+                        ],
+                        columnGap: 3,
+                        margin: [0, 13, 0, 0]
+                    },
+                    {
+                        columns: [
+                            { text: 'RELATÓRIO EMITIDO EM: ', bold: true, width: 'auto' },
+                            { text: getCurrentDate(), width: 'auto'}
+                        ],
+                        columnGap: 3,
+                        margin: [0, 13, 0, 0]
+                    }
+                ],
+                alignment: 'left',
+                fontSize: 9.5
+            }
+        ] as Content
+    };
+    
+    const protocoloDefinitions: TDocumentDefinitions = {
+        info: {
+            title: `Protocolo_${consagracaoMeta[cons - 1].meta}`
+        },
+        pageMargins: [34, 33, 34, 34],
+        pageSize: 'A4',
+        content: [protocoloTitle(), protocoloBody(), protocoloInfo()],
+        defaultStyle: {
+            font: 'Arial'
+        }
+    }
+
+    pdfMake.createPdf(protocoloDefinitions).open({}, window.open(`Protocolo_${consagracaoMeta[cons - 1].meta}.pdf`, '_blank'));
+}
+
+export const generateConsReport = (mediuns: Array<IConsagracao>, templos: Array<ITemplo>, adjuntos: Array<IAdjunto>, ministros: Array<IMentor>, falMest: {completo: Array<string>, abrev: Array<string>},  title: string, cons: number) => {    
+    interface IProps {
+        templo?: ITemplo,
+        colete?: number,
+        apara: number,
+        doutrinador: number
+    }
+    
+    const consagracaoMeta = [
+        {title: 'INICIAÇÃO', meta: 'Iniciacao'},
+        {title: 'ELEVAÇÃO', meta: 'Elevacao'},
+        {title: 'CENTÚRIA', meta: 'Centuria'}
+    ]
+
+    const temploMedium = (medium: IConsagracao) => {return templos.filter((item: ITemplo) => item.templo_id === medium.templo)[0]}
+
+    const ministroTemplo = (templo: ITemplo) => {return ministros.filter((min: IMentor) => min.id === adjuntos.filter((ad: IAdjunto) => ad.adjunto_id === templo.presidente)[0].ministro)[0].nome};
+    
+    const generateArrayTemplos = () => {
+        const array: Array<IProps> = [];
+        templos.forEach((t: ITemplo) => {
+            let doutrinador = 0;
+            let apara = 0;
+            mediuns.forEach((m: IConsagracao) => {
+                if (m.templo === t.templo_id) {
+                    if (m.med === 'Apará') {
+                        apara = apara + 1;
+                    }
+                    if (m.med === 'Doutrinador') {
+                        doutrinador = doutrinador + 1;
+                    }
+                }
+            })
+            if (doutrinador || apara) {
+                array.push({templo: t, apara: apara, doutrinador: doutrinador})
+            }
+        })
+        return array
+    }
+
+    const generateArrayColetes = () => {
+        const array: Array<IProps> = [];
+        [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].forEach((c: number) => {
+            let doutrinador = 0;
+            let apara = 0;
+            mediuns.forEach((m: IConsagracao) => {
+                if (m.colete === c) {
+                    if (m.med === 'Apará') {
+                        apara = apara + 1;
+                    }
+                    if (m.med === 'Doutrinador') {
+                        doutrinador = doutrinador + 1;
+                    }
+                }
+            })
+            if (doutrinador || apara) {
+                array.push({colete: c, apara: apara, doutrinador: doutrinador})
+            }
+        })
+        return array
+    }
+    
+    const arrayTemplos = generateArrayTemplos();
+    const arrayColetes = generateArrayColetes();
+    
+    const generateSoma = (array: Array<IProps>) => {
+        let somaDoutrinador = 0;
+        let somaApara = 0;
+        array.forEach((item: IProps) => {
+            somaDoutrinador = somaDoutrinador + item.doutrinador;
+            somaApara = somaApara + item.apara;
+        })
+        const somaTotal = somaApara + somaDoutrinador;
+        return {apara: somaApara, doutrinador: somaDoutrinador, total: somaTotal}
+    }
+
+    const somaMediuns = generateSoma(arrayTemplos);
+    const somaColetes = generateSoma(arrayColetes);
+
+    const reportTitle = () => {
+        return {
+            columns: [
+            {
+                image: jaguarImage,
+                width: 48,
+                margin: [-1, 10, 0, 0]
+            },
+            {
+                stack: [
+                    { text: 'OLINDA DO AMANHECER', margin: [0, 0, 0, 1] },
+                    { text: 'CASTELO DOS DEVAS', margin: [0, 0, 0, 13] },
+                    { text: title ? title.toUpperCase() : `RELATÓRIO DE ${consagracaoMeta[cons - 1].title}`, margin: [0, 0, 0, 14] },
+                ],
+                alignment: 'left',
+                fontSize: 13.5,
+                width: '*',
+            }
+            ],
+            columnGap: 12
+        } as Content
+    };  
+
+    const reportBodyIniciacao = () => {
+        return [
+            {
+                table: {
+                    headerRows: 1,
+                    widths: [30, '*', 22, 88, 22, 22, 22],
+                    heights: [5, ...mediuns.map(() => {return 5})],
+                    body: [
+                        [
+                            {text: 'ID', bold: true, lineHeight: 0.9, margin: [0, -1.5, 0, 0]},
+                            {text: 'NOME', bold: true, lineHeight: 0.9, margin: [0, -1.5, 0, 0]},
+                            {text: 'MED.', bold: true, lineHeight: 0.9, margin: [-1, -1.5, -1, 0]},
+                            {text: 'TEMPLO', bold: true, lineHeight: 0.9, margin: [0, -1.5, 0, 0]},
+                            {text: 'COL.', lineHeight: 0.9, bold: true, margin: [-1, -1.5, -1, 0]},
+                            {text: 'FIC.', lineHeight: 0.9, bold: true, margin: [-1, -1.5, -1, 0]},
+                            {text: 'FOTO', lineHeight: 0.9, bold: true, margin: [-3, -1.5, -3, 0]},
+                        ],
+                        ...mediuns.map((item: IConsagracao) => [
+                                {
+                                    text: item.medium.toString().padStart(5, '0'),
+                                    alignment: 'left',
+                                    margin: [-2, -1.5, 0, 0]
+                                },
+                                {
+                                    text: item.nome.toUpperCase(),
+                                    alignment: 'left',
+                                    margin: item.nome.length > 45 ? [-2, 0, 0, 0] : [-2, -1.5, 0, 0]
+                                },
+                                {
+                                    text: item.med.charAt(0),
+                                    margin: [0, -1.5, 0, 0]
+                                },
+                                {
+                                    text: `${temploMedium(item).cidade} - ${temploMedium(item).estado.abrev}`.toUpperCase(),
+                                    margin: [0, -1.5, 0, 0]
+                                },
+                                {
+                                    text: item.colete,
+                                    margin: [0, -1.5, 0, 0]
+                                },
+                                ' ',
+                                ' '
+                            ])
+                    ],
+                },
+                fontSize: 9.5,
+                alignment: 'center',
+                lineHeight: 0.8,
+                layout: {
+                    hLineWidth: function() {return 1.4},
+                    vLineWidth: function() {return 1.4}
+                }
+            }
+        ] as Content
+    }
+
+    const reportBodyElevacao = () => {
+        return [
+            {
+                table: {
+                    headerRows: 1,
+                    widths: [30, '*', 23, 45, 103],
+                    heights: [5, ...mediuns.map(() => {return 5})],
+                    body: [
+                        [
+                            {text: 'ID', bold: true, lineHeight: 0.9, margin: [0, -1.5, 0, 0]},
+                            {text: 'NOME', bold: true, lineHeight: 0.9, margin: [0, -1.5, 0, 0]},
+                            {text: 'MED.', bold: true, lineHeight: 0.9, margin: [-1, -1.5, -1, 0]},
+                            {text: 'TEMPLO', bold: true, lineHeight: 0.9, margin: [0, -1.5, 0, 0]},
+                            {text: 'CLASSIFICAÇÃO', lineHeight: 0.9, bold: true, margin: [0, -1.5, 0, 0]},
+                        ],
+                        ...mediuns.map((item: IConsagracao) => [
+                                {
+                                    text: item.medium.toString().padStart(5, '0'),
+                                    alignment: 'left',
+                                    margin: [-2, 8, 0, 0]
+                                },
+                                {
+                                    text: item.nome.toUpperCase(),
+                                    alignment: 'left',
+                                    margin: item.nome.length > 45 ? [-2, 4, 0, 0] : [-2, 8, 0, 0]
+                                },
+                                {
+                                    text: item.med.charAt(0),
+                                    margin: [0, 8, 0, 0]
+                                },
+                                {
+                                    text: `${temploMedium(item).cidade} - ${temploMedium(item).estado.abrev} (${ministroTemplo(temploMedium(item))})`.toUpperCase(),
+                                    margin: [-3, 0, -3, 0],
+                                    lineHeight: 0.9
+                                },
+                                {
+                                    text: reduceClassFalMest(item, falMest),
+                                    alignment: 'left',
+                                    margin: [-2, 8, 0, 0]
+                                },
+                            ])
+                    ],
+                },
+                fontSize: 9.5,
+                alignment: 'center',
+                lineHeight: 0.8,
+                layout: {
+                    hLineWidth: function() {return 1.4},
+                    vLineWidth: function() {return 1.4}
+                }
+            }
+        ] as Content
+    }
+
+    const reportBodyCenturia = () => {
+        return [
+            {
+                table: {
+                    headerRows: 1,
+                    widths: [30, '*', 24, 100, 70],
+                    heights: [5, ...mediuns.map(() => {return 5})],
+                    body: [
+                        [
+                            {text: 'ID', bold: true, lineHeight: 0.9, margin: [0, -1.5, 0, 0]},
+                            {text: 'NOME', bold: true, lineHeight: 0.9, margin: [0, -1.5, 0, 0]},
+                            {text: 'MED.', bold: true, lineHeight: 0.9, margin: [0, -1.5, 0, 0]},
+                            {text: 'CLASSIFICAÇÃO', lineHeight: 0.9, bold: true, margin: [0, -1.5, 0, 0]},
+                            {text: 'POVO', bold: true, lineHeight: 0.9, margin: [0, -1.5, 0, 0]},
+                        ],
+                        ...mediuns.map((item: IConsagracao) => [
+                                {
+                                    text: item.medium.toString().padStart(5, '0'),
+                                    alignment: 'left',
+                                    margin: [-2, -1.5, 0, 0]
+                                },
+                                {
+                                    text: item.nome.toUpperCase(),
+                                    alignment: 'left',
+                                    margin: [-2, -1.5, 0, 0]
+                                },
+                                {
+                                    text: item.med.charAt(0),
+                                    margin: [0, -1.5, 0, 0]
+                                },
+                                {
+                                    text: reduceClassFalMest(item, falMest),
+                                    alignment: 'left',
+                                    margin: [-2, -1.5, 0, 0]
+                                },
+                                {
+                                    text: item.povo.toUpperCase(),
+                                    margin: [0, -1.5, 0, 0]
+                                },
+                            ])
+                    ],
+                },
+                fontSize: 9.5,
+                alignment: 'center',
+                lineHeight: 0.8,
+                layout: {
+                    hLineWidth: function() {return 1.4},
+                    vLineWidth: function() {return 1.4}
+                }
+            }
+        ] as Content
+    }
+
+    const reportInfo = () => {
+        return [
+            {
+                stack: [
+                    {
+                        columns: [
+                            { text: 'TOTAL DE MESTRES: ', bold: true, width: 'auto' },
+                            { text: mediuns.length, width: 'auto'}
+                        ],
+                        columnGap: 3,
+                        margin: [0, 13, 0, 13]
+                    },
+                    {
+                        table: {
+                            headerRows: 1,
+                            widths: ['*', 43, 43, 43],
+                            heights: [5, ...mediuns.map(() => {return 5})],
+                            body: [
+                                [
+                                    {text: 'NOME', bold: true, lineHeight: 0.9, margin: [0, -1.5, 0, 0]},
+                                    {text: 'A', bold: true, lineHeight: 0.9, margin: [0, -1.5, 0, 0]},
+                                    {text: 'D', bold: true, lineHeight: 0.9, margin: [0, -1.5, 0, 0]},
+                                    {text: 'TOTAL', bold: true, lineHeight: 0.9, margin: [0, -1.5, 0, 0]}
+                                ],
+                                ...arrayTemplos.map((item: IProps) => [
+                                    {
+                                        text: `${item.templo?.cidade} - ${item.templo?.estado.abrev} (${ministroTemplo(item.templo ? item.templo : defaultTemp)})`.toUpperCase(),
+                                        alignment: 'left',
+                                        margin: [-2, -1.5, 0, 0]
+                                    },
+                                    {
+                                        text: item.apara,
+                                        margin: [0, -1.5, 0, 0]
+                                    },
+                                    {
+                                        text: item.doutrinador,
+                                        margin: [0, -1.5, 0, 0]
+                                    },
+                                    {
+                                        text: item.apara + item.doutrinador,
+                                        margin: [0, -1.5, 0, 0]
+                                    },
+                                ]),
+                                [
+                                    {text: 'TOTAL', alignment: 'left', bold: true, lineHeight: 0.9, margin: [-2, -1.5, 0, 0]},
+                                    {text: somaMediuns.apara, lineHeight: 0.9, margin: [0, -1.5, 0, 0]},
+                                    {text: somaMediuns.doutrinador, lineHeight: 0.9, margin: [0, -1.5, 0, 0]},
+                                    {text: somaMediuns.total, lineHeight: 0.9, margin: [0, -1.5, 0, 0]}
+                                ],
+                            ],
+                        },
+                        fontSize: 9.5,
+                        alignment: 'center',
+                        lineHeight: 0.8,
+                        layout: {
+                            hLineWidth: function() {return 1.4},
+                            vLineWidth: function() {return 1.4}
+                        }
+                    }
+                ],
+                alignment: 'left',
+                fontSize: 9.5
+            }
+        ] as Content
+    };
+
+    const reportColete = () => {
+        return [
+            {
+                table: {
+                    headerRows: 1,
+                    widths: [45, 30, 30, 30],
+                    heights: [5, ...mediuns.map(() => {return 5})],
+                    body: [
+                        [
+                            {text: 'COLETE', bold: true, lineHeight: 0.9, margin: [0, -1.5, 0, 0]},
+                            {text: 'A', bold: true, lineHeight: 0.9, margin: [0, -1.5, 0, 0]},
+                            {text: 'D', bold: true, lineHeight: 0.9, margin: [0, -1.5, 0, 0]},
+                            {text: 'TOTAL', bold: true, lineHeight: 0.9, margin: [-2, -1.5, -2, 0]}
+                        ],
+                        ...arrayColetes.map((item: IProps) => [
+                            {
+                                text: item.colete,
+                                margin: [0, -1.5, 0, 0]
+                            },
+                            {
+                                text: item.apara,
+                                margin: [0, -1.5, 0, 0]
+                            },
+                            {
+                                text: item.doutrinador,
+                                margin: [0, -1.5, 0, 0]
+                            },
+                            {
+                                text: item.apara + item.doutrinador,
+                                margin: [0, -1.5, 0, 0]
+                            },
+                        ]),
+                        [
+                            {text: 'TOTAL', bold: true, lineHeight: 0.9, margin: [-2, -1.5, 0, 0]},
+                            {text: somaColetes.apara, lineHeight: 0.9, margin: [0, -1.5, 0, 0]},
+                            {text: somaColetes.doutrinador, lineHeight: 0.9, margin: [0, -1.5, 0, 0]},
+                            {text: somaColetes.total, lineHeight: 0.9, margin: [0, -1.5, 0, 0]}
+                        ],
+                    ],
+                },
+                fontSize: 9.5,
+                alignment: 'center',
+                lineHeight: 0.8,
+                margin: [0, 13, 0, 0],
+                layout: {
+                    hLineWidth: function() {return 1.4},
+                    vLineWidth: function() {return 1.4}
+                }
+            }
+        ] as Content
+    };
+
+    const reportDate = () => {
+        return [
+            {
+                columns: [
+                    { text: 'RELATÓRIO EMITIDO EM: ', bold: true, width: 'auto' },
+                    { text: getCurrentDate(), width: 'auto'}
+                ],
+                columnGap: 3,
+                margin: [0, 13, 0, 0],
+                fontSize: 9.5
+            }
+        ] as Content
+    };
+
+    const contentArray = () => {
+        const array: Array<Content> = [];
+        array.push(reportTitle());
+        if (cons === 1) {
+            array.push(reportBodyIniciacao());
+        }
+        if (cons === 2) {
+            array.push(reportBodyElevacao());
+        }
+        if (cons === 3) {
+            array.push(reportBodyCenturia());
+        }
+        array.push(reportInfo());
+        if (cons === 1) {
+            array.push(reportColete());
+        }
+        array.push(reportDate());
+        return array
+    }
+    
+    const reportDefinitions: TDocumentDefinitions = {
+        info: {
+            title: `Relatorio_${consagracaoMeta[cons - 1].meta}`
+        },
+        pageMargins: [34, 33, 34, 34],
+        pageSize: 'A4',
+        content: contentArray(),
+        defaultStyle: {
+            font: 'Arial'
+        }
+    }
+
+    pdfMake.createPdf(reportDefinitions).open({}, window.open(`Relatorio_${consagracaoMeta[cons - 1].meta}.pdf`, '_blank'));
 }
 
 export const generateCanto = (canto: ICanto) => {    

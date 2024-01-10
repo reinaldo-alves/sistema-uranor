@@ -10,6 +10,7 @@ import { UserContext } from "src/contexts/UserContext";
 import { useNavigate } from "react-router-dom";
 import { Alert, Confirm } from "src/utilities/popups";
 import api from "src/api";
+import Loading from "src/utilities/Loading";
 
 interface ICenturia {
     medium: IConsagracao,
@@ -154,6 +155,10 @@ function UpdateCenturia() {
     useEffect(() => {
         loadConsData();
     }, [loading]);
+
+    if(loading) {
+        return <Loading />
+    }
 
     const listSubMenu = [
         {title: 'Página Inicial', click: '/'},

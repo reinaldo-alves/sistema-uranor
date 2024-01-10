@@ -14,10 +14,10 @@ import api from "src/api";
 import AutocompleteInput from "src/components/AutocompleteInput/AutocompleteInput";
 import { defaultConsagracao, defaultMedium } from "src/utilities/default";
 import { useNavigate } from "react-router-dom";
-import { generateAutorizacao } from "src/utilities/createDocs";
+import { generateAutorizacao, generateConsReport, generateProtocolo } from "src/utilities/createDocs";
 
 function Iniciacao() {
-    const { templos, adjuntos, ministros, listIniciacao, listMudanca, coletes, loadConsagracao, searchMediumInCons } = useContext(ListContext);
+    const { templos, adjuntos, ministros, coletes, falMest, listIniciacao, listMudanca, loadConsagracao, searchMediumInCons } = useContext(ListContext);
     const { uploadImage, mediuns } = useContext(MediumContext);
     const { token } = useContext(UserContext);
 
@@ -32,6 +32,7 @@ function Iniciacao() {
     const [dropMedium, setDropMedium] = useState(defaultMedium);
     const [searchMedium, setSearchMedium] = useState('');
     const [checkMudanca, setCheckMudanca] = useState(false);
+    const [reportTitle, setReportTitle] = useState('');
   
     const navigate = useNavigate();
 
@@ -62,6 +63,7 @@ function Iniciacao() {
         setDropMedium(defaultMedium);
         setSearchMedium('');
         setCheckMudanca(false);
+        setReportTitle('');
     }
 
     function alphabeticOrder(array: Array<any>) {
@@ -227,8 +229,14 @@ function Iniciacao() {
                 <PageSubTitle hide={![...listIniciacao, ...listMudanca].length}>Documentos</PageSubTitle>
                 <ButtonContainer hide={![...listIniciacao, ...listMudanca].length}>
                     <NavigateButton width="230px" onClick={() => generateAutorizacao(alphabeticOrder([...listIniciacao, ...listMudanca]), templos, adjuntos, ministros, 1)}>Gerar Autorizações</NavigateButton>
-                    <NavigateButton width="230px" onClick={() => {}}>Gerar Relatório</NavigateButton>
-                    <NavigateButton width="230px" onClick={() => {}}>Gerar Protocolo</NavigateButton>
+                    <NavigateButton width="230px" onClick={() => {
+                        setSelectModal('Relatório');
+                        setShowModalMedium(true);
+                    }}>Gerar Relatório</NavigateButton>
+                    <NavigateButton width="230px" onClick={() => {
+                        setSelectModal('Protocolo');
+                        setShowModalMedium(true);
+                    }}>Gerar Protocolo</NavigateButton>
                 </ButtonContainer>
                 <PageSubTitle>Ações</PageSubTitle>
                 <ButtonContainer>
@@ -246,7 +254,7 @@ function Iniciacao() {
                     <NavigateButton width="230px" onClick={() => setSelectModal('colete')}>Atualizar Colete</NavigateButton>
                     <NavigateButton width="230px" onClick={() => setSelectModal('foto')}>Atualizar Foto</NavigateButton>
                     <NavigateButton width="230px" onClick={() => {
-                        generateAutorizacao(mediuns.filter((item: IMedium) => item.medium_id === selected.medium), templos, adjuntos, ministros, 1);
+                        generateAutorizacao([selected], templos, adjuntos, ministros, 1);
                         closeModal();
                     }}>Gerar Autorização</NavigateButton>
                     <NavigateButton width="230px" color="red" onClick={() => removeIniciacao(token)}>Remover</NavigateButton>
@@ -304,6 +312,26 @@ function Iniciacao() {
                     <div style={{display: 'flex', gap: '20px'}}>
                         <ModalButton color="red" onClick={() => closeModal()}>Cancelar</ModalButton>
                         <ModalButton color='green' disabled={dropMedium === defaultMedium} onClick={() => addIniciacao(token)}>Salvar</ModalButton>
+                    </div>
+                </ModalMediumContent>
+                <ModalMediumContent vis={selectModal === 'Protocolo' || selectModal === 'Relatório'}>
+                    <ModalSubTitle>{selected.nome}</ModalSubTitle>
+                    <ModalTitle>{`Gerar ${selectModal}`}</ModalTitle>
+                    <InputContainer>
+                        <label>Título</label>
+                        <input type="text" value={reportTitle} onChange={(e) => setReportTitle(e.target.value)} />
+                    </InputContainer>
+                    <div style={{display: 'flex', gap: '20px'}}>
+                        <ModalButton color="red" onClick={() => closeModal()}>Cancelar</ModalButton>
+                        <ModalButton color='green' onClick={() => {
+                            if (selectModal === 'Protocolo') {
+                                generateProtocolo(alphabeticOrder([...listIniciacao, ...listMudanca]), reportTitle, 1)
+                            }
+                            if (selectModal === 'Relatório') {
+                                generateConsReport(alphabeticOrder([...listIniciacao, ...listMudanca]), templos, adjuntos, ministros, falMest, reportTitle, 1)
+                            }
+                            closeModal();
+                        }}>Gerar</ModalButton>
                     </div>
                 </ModalMediumContent>
             </Modal>

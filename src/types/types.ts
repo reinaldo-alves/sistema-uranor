@@ -70,6 +70,9 @@ export interface IConsagracao {
     colete: number,
     dtNasc: string,
     dtIniciacao: string,
+    classMest: string,
+    falMest: string,
+    povo: string
 }
 
 export interface IMedium {

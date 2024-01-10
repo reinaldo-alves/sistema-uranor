@@ -9,6 +9,7 @@ import SubMenu from "src/components/SubMenu/SubMenu";
 import Header from "src/components/header/header";
 import { UserContext } from "src/contexts/UserContext";
 import { setSituation } from "src/utilities/functions";
+import Loading from "src/utilities/Loading";
 
 function SearchMedium() {
     
@@ -16,6 +17,7 @@ function SearchMedium() {
     
     const noMedium = {} as IMedium
     
+    const [loading, setLoading] = useState(true);
     const [searchName, setSearchName] = useState('');
     const [searchTemp, setSearchTemp] = useState('');
     const [selected, setSelected] = useState(noMedium);
@@ -25,10 +27,13 @@ function SearchMedium() {
     const { templos } = useContext(ListContext);
     const { token } = useContext(UserContext);
     const { mediuns, loadMedium } = useContext(MediumContext);
-
+   
     useEffect(() => {
         loadMedium(token);
-    }, [])
+        if (templos.length) {
+            setLoading(false);
+        }
+    }, [templos])
 
     useEffect(() => {
         const handleResize = () => {
@@ -64,6 +69,10 @@ function SearchMedium() {
         {title: 'Médium Menor', click: '/mediuns/menor'}
     ]
 
+    if(loading) {
+        return <Loading />
+    }
+
     return (
         <>
             <Header />
@@ -93,7 +102,7 @@ function SearchMedium() {
                                 .map((item: any, index: number) => (
                                     <Results key={index} onClick={() => setSelected(item)}>
                                         <ResultsTitle>{item.nome}</ResultsTitle>
-                                        <ResultsDetails>{item.med} - {templos.filter((temp: ITemplo) => temp.templo_id === item.templo)[0].cidade} - {templos.filter((temp: ITemplo) => temp.templo_id === item.templo)[0].estado.abrev}</ResultsDetails>
+                                        <ResultsDetails>{item.med} - {templos.filter((temp: ITemplo) => temp.templo_id === item.templo)[0]?.cidade} - {templos.filter((temp: ITemplo) => temp.templo_id === item.templo)[0]?.estado.abrev}</ResultsDetails>
                                     </Results>
                                 ))
                             }

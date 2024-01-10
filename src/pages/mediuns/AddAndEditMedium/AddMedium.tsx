@@ -543,7 +543,7 @@ function AddMedium() {
                         <label>Falange Mestrado: </label>
                         <select value={newMedium.falMest} disabled={!newMedium.dtElevacao} onChange={(e) => updateProps('falMest', e.target.value)}>
                             <option value={''}></option>
-                            {falMest.map((item: string, index: number) => (
+                            {falMest.completo.map((item: string, index: number) => (
                                 <option key={index} value={item}>{item}</option>
                             ))}
                         </select>

@@ -50,6 +50,9 @@ export const defaultConsagracao: IConsagracao = {
     colete: 0,
     dtNasc: '',
     dtIniciacao: '',
+    classMest: '',
+    falMest: '',
+    povo: ''
 }
 
 export const defaultMedium: IMedium = {
