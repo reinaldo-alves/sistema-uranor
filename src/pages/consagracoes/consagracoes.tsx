@@ -9,6 +9,7 @@ import { countMedium } from "src/utilities/functions";
 import { ListContext } from "src/contexts/ListContext";
 import { IConsagracao } from "src/types/types";
 import { UserContext } from "src/contexts/UserContext";
+import { generateReportAllCons } from "src/utilities/createDocs";
 
 function Consagracoes() {
     const { listIniciacao, listElevacao, listCenturia, listMudanca, loadConsagracao } = useContext(ListContext);
@@ -149,7 +150,7 @@ function Consagracoes() {
                     </ResultsTable>
                 </ConsagracaoCard>
                 <ButtonContainer>
-                    <NavigateButton width="230px" onClick={() => {}}>Gerar Relatório</NavigateButton>
+                    <NavigateButton width="230px" onClick={() => generateReportAllCons(listIniciacao, listElevacao, listCenturia, listMudanca)}>Gerar Relatório</NavigateButton>
                 </ButtonContainer>
             </MainContainer>
             <SideMenu list={listSubMenu}/>

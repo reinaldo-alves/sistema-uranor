@@ -3,9 +3,9 @@ import pdfTimes from 'pdfmake/build/vfs_fonts'
 import { timesRegular, timesBold, timesItalic, timesBI } from 'src/assets/encodedFiles/TimesFont';
 import { arialBI, arialBold, arialItalic, arialRegular } from 'src/assets/encodedFiles/ArialFont';
 import { Content, TDocumentDefinitions } from 'pdfmake/interfaces';
-import { IAdjunto, ICanto, IConsagracao, IFalange, IMedium, IMentor, ITemplo, IUser } from "src/types/types";
+import { IAdjunto, ICanto, ICavaleiro, IConsagracao, IFalange, IMedium, IMentor, ITemplo, IUser } from "src/types/types";
 import { assTiaNeiva } from '../assets/encodedFiles/signature';
-import { convertDate, getCurrentDate, imageToBase64, reduceClassFalMest } from './functions';
+import { alphabeticOrder, convertDate, getCurrentDate, imageToBase64, reduceClassFalMest } from './functions';
 import { jaguarImage } from 'src/assets/encodedFiles/jaguar';
 import { aparaImage } from 'src/assets/encodedFiles/apara';
 import { doutrinadorImage } from 'src/assets/encodedFiles/doutrinador';
@@ -51,6 +51,12 @@ const docFooter = (current: number, total: number): Content => {
                     text: 'Sistema Uranor - Castelo dos Devas',
                     fontSize: 9,
                     alignment: 'left',
+                    margin: [20, 20, 20, 20]
+                },
+                {
+                    text: `Gerado em ${getCurrentDate()}`,
+                    fontSize: 9,
+                    alignment: 'center',
                     margin: [20, 20, 20, 20]
                 },
                 {
@@ -514,6 +520,216 @@ export const generateTermo = async (mediuns: Array<IConsagracao>) => {
     }
 
     pdfMake.createPdf(termoDefinitions).open({}, window.open(mediuns.length === 1 ? `Termo_${mediuns[0].medium.toString().padStart(5, '0')}_${mediuns[0].nome.replace(/ /g, '_')}.pdf` : 'Termos_compromisso.pdf', '_blank'));
+}
+
+export const generateReclass = (medium: IMedium, adjuntos: Array<IAdjunto>, ministros: Array<IMentor>, cavaleiros: Array<ICavaleiro>, user: IUser) => {    
+    const reclassHeader: Content = {
+        text: ['DOUTRINA DO AMANHECER\n', 'CASTELO DOS DEVAS\n'],
+        fontSize: 14,
+        alignment: 'center',
+        bold: true, 
+        margin: [0, -10, 0, 30]
+    }
+
+    const reclassNome: Content = {
+        text: [{text: 'NOME: '}, {text: medium.nome.toUpperCase(), bold: true, decoration: 'underline'}],
+        fontSize: 14,
+        margin: [0, 0, 0, 30]
+    }
+
+    const reclassInfo: Content = {
+        columns: [
+            {
+                stack: [
+                    {
+                        columns: [
+                            {text: 'CLASSIFICAÇÃO: ', width: 'auto'},
+                            {text: `${medium.classMest} ${medium.falMest}`.toUpperCase(), bold: true, width: 'auto'}
+                        ],
+                        columnGap: 3,
+                        margin: [0, 0, 0, 0]
+                    },
+                    {
+                        columns: [
+                            {text: 'ADJUNTO DE ORIGEM: ', width: 'auto'},
+                            {text: ministros.filter((min: IMentor) => min.id === adjuntos.filter((ad: IAdjunto) => ad.adjunto_id === medium.adjOrigem)[0].ministro)[0].nome.toUpperCase(), bold: true, width: 'auto'}
+                        ],
+                        columnGap: 3,
+                        margin: [0, 0, 0, 0]
+                    },
+                ],
+                width: '*'
+            },
+            {
+                stack: [
+                    {
+                        columns: [
+                            {text: 'TURNO: ', width: 'auto'},
+                            {text: medium.turnoLeg.toUpperCase(), bold: true, width: 'auto'}
+                        ],
+                        columnGap: 3,
+                        margin: [0, 0, 0, 0]
+                    },
+                    {
+                        columns: [
+                            {text: 'POVO: ', width: 'auto'},
+                            {text: medium.povo.toUpperCase(), bold: true, width: 'auto'}
+                        ],
+                        columnGap: 3,
+                        margin: [0, 0, 0, 0]
+                    },
+                ],
+                width: 120
+            }
+        ],
+        fontSize: 12,
+        margin: [0, 0, 0, 15]
+    }
+
+    const reclassMentor: Content = {
+        columns: [
+            {
+                columns: [
+                    {text: 'MINISTRO: ', width: 'auto'},
+                    {text: ministros.find((min: IMentor) => min.id === medium.ministro)?.nome.toUpperCase() || '', bold: true, width: 'auto'}
+                ],
+                columnGap: 3,
+                margin: [0, 0, 0, 0]
+            },
+            {
+                columns: [
+                    {text: 'CAVALEIRO: ', width: 'auto'},
+                    {text: cavaleiros.find((cav: ICavaleiro) => cav.id === medium.cavaleiro) ? `${cavaleiros.find((cav: ICavaleiro) => cav.id === medium.cavaleiro)?.nome} ${medium.cor}`.toUpperCase() : '', bold: true, width: 'auto'}
+                ],
+                columnGap: 3,
+                margin: [0, 0, 0, 0]
+            },
+        ],
+        fontSize: 14,
+        margin: [0, 0, 0, 30]
+    }
+
+    const reclassAtual: Content = {
+        text: [{text: 'CLASSIFICAÇÃO ATUAL: \n'}, {text: medium.classif.toUpperCase(), bold: true, decoration: 'underline'}],
+        fontSize: 14,
+        margin: [0, 0, 0, 15]
+    }
+
+    const reclassDate: Content = {
+        columns: [
+            {
+                text: [
+                    'ÚLTIMA CLASSIFICAÇÃO EM: ',
+                    {text: convertDate(medium.dtClassif), bold: true, fontSize: 14},
+                ],
+                width: 'auto',
+                alignment: 'center',
+                fontSize: 12,
+                margin: [0, 30, 0, 0]
+            },
+            {
+                text: [
+                    '_____________________________________\n',
+                    {
+                        text: `${user.level === 'Devas Aspirante' ? '' : user.name.toUpperCase()}\n`,
+                        bold: true
+                    },
+                    'FILHO DE DEVAS\n'
+                ],
+                alignment: 'center',
+                width: 'auto',
+                fontSize: 10,
+                margin: [0, 30, 0, 0]
+            }
+        ],
+        columnGap: 150
+    }
+    
+    const reclassDefinitions: TDocumentDefinitions = {
+        info: {
+            title: `Reclassificacao_${medium.medium_id.toString().padStart(5, '0')}_${medium.nome.replace(/ /g, '_')}`
+        },
+        pageSize: 'A4',
+        content: [reclassHeader, reclassNome, reclassInfo, reclassMentor, reclassAtual, reclassDate],
+        defaultStyle: {
+            font: 'Times'
+        }
+    }
+
+    pdfMake.createPdf(reclassDefinitions).open({}, window.open(`Reclassificacao_${medium.medium_id.toString().padStart(5, '0')}_${medium.nome.replace(/ /g, '_')}.pdf`, '_blank'));
+}
+
+export const generateTrinoDevas = (mediuns: Array<IMedium>, cons: string, adjunto: IAdjunto, ministros: Array<IMentor>) => {    
+    const consMeta = cons === 'filho de devas' && !mediuns.some((item: IMedium) => item.sex === 'Masculino') ? 'FILHA DE DEVAS' : cons.toUpperCase();
+    const termoSex = () => {
+        if (mediuns.length === 1) {
+            return mediuns[0].sex === 'Masculino' ? 'o seguinte mestre:' : 'a seguinte ninfa:'
+        } else {
+            if(mediuns.some((item: IMedium) => item.sex === 'Masculino')) {
+                return 'os seguintes mestres:'
+            } else {
+                return 'as seguintes ninfas:'
+            }
+        }
+    }
+    
+    const consHeader: Content = {
+        text: ['DOUTRINA DO AMANHECER\n', 'COORDENAÇÃO PARLO\n', 'TEMPLO URANOR DO AMANHECER\n', 'CASTELO DOS DEVAS\n'],
+        fontSize: 14,
+        alignment: 'center',
+        bold: true, 
+        margin: [0, -10, 0, 30]
+    }
+
+    const consTitle: Content = {
+        text: `AUTORIZAÇÃO - ${consMeta}`,
+        fontSize: 14,
+        alignment: 'center',
+        bold: true, 
+        margin: [0, 0, 0, 30]
+    }
+
+    const consText: Content = {
+        text: `Solicito a consagração de ${consMeta} para ${termoSex()}`,
+        fontSize: 12,
+        margin: [0, 0, 0, 10]
+    }
+
+    const consList: Content = {
+        ul: mediuns.map((item: IMedium) => {
+            return {
+                text: item.nome.toUpperCase(),
+                fontSize: 12, 
+                margin: [0, 0, 0, 5]
+            }
+        }),
+        margin: [0, 0, 0, 30]
+    }
+
+    const consSignature: Content = {
+        text: [
+            '_____________________________________\n',
+            `Adjunto ${ministros.filter((min: IMentor) => min.id === adjunto.ministro)[0].nome}\n`,
+            `Mestre ${adjunto.nome}\n`,
+            `${cons === 'Trino Sardyos' ? '' : 'Presidente'}`
+        ],
+        alignment: 'center',
+        fontSize: 10,
+        margin: [0, 30, 0, 0]
+    }
+    
+    const consDefinitions: TDocumentDefinitions = {
+        info: {
+            title: mediuns.length === 1 ? `${cons.replace(/ /g, '_')}_${mediuns[0].medium_id.toString().padStart(5, '0')}_${mediuns[0].nome.replace(/ /g, '_')}` : `${cons.replace(/ /g, '_')}`
+        },
+        pageSize: 'A4',
+        content: [consHeader, consTitle, consText, consList, consSignature],
+        defaultStyle: {
+            font: 'Times'
+        }
+    }
+
+    pdfMake.createPdf(consDefinitions).open({}, window.open(mediuns.length === 1 ? `${cons.replace(/ /g, '_')}_${mediuns[0].medium_id.toString().padStart(5, '0')}_${mediuns[0].nome.replace(/ /g, '_')}` : `${cons.replace(/ /g, '_')}.pdf`, '_blank'));
 }
 
 export const generateProtocolo = (mediuns: Array<IConsagracao>, title: string, cons: number) => {    
@@ -1110,7 +1326,7 @@ export const generateChamadaOficial = (falanges: Array<IFalange>) => {
         fontSize: 14,
         alignment: 'center',
         bold: true, 
-        margin: [0, 0, 0, 15]
+        margin: [0, 0, 0, 30]
     }
 
     const chamadaBody: Array<any> = [
@@ -1126,7 +1342,12 @@ export const generateChamadaOficial = (falanges: Array<IFalange>) => {
         falanges.filter((item: IFalange) => item.falange_id !== 2).forEach((item: IFalange, index) => {
             const name = item.nome === 'Nityama' ? 'Nityama e Nityama Madruxa' : item.nome;
             const adj = item.adjMin && item.adjNome ? [`${item.adjMin}\n`, `Mestre ${item.adjNome}`] : '-------';
-            const chamadaRow = [index + 1, name, item.primeira, adj];
+            const chamadaRow = [
+                {text: index + 1, margin: item.adjMin && item.adjNome ? [0, 5, 0, 0] : [0, 0, 0, 0]},
+                {text: name, margin: item.adjMin && item.adjNome ? [0, 5, 0, 0] : [0, 0, 0, 0]},
+                {text: item.primeira, margin: item.adjMin && item.adjNome ? [0, 5, 0, 0] : [0, 0, 0, 0]},
+                adj
+            ];
             chamadaBody.push(chamadaRow)
         })
     }
@@ -1167,14 +1388,14 @@ export const generatePrefixos = (falanges: Array<IFalange>) => {
         fontSize: 16,
         alignment: 'center',
         bold: true, 
-        margin: [0, 0, 0, 15]
+        margin: [0, 0, 0, 30]
     }
 
     const prefixoBody: Array<any> = [
         [
-            {text: 'FALANGE', style: {bold: true}},
-            {text: 'PREFIXO SOL', style: {bold: true}},
-            {text: 'PREFIXO LUA', style: {bold: true}},
+            {text: 'FALANGE', margin: [0, 5, 0, 0], bold: true},
+            {text: 'PREFIXO SOL', margin: [0, 5, 0, 0], bold: true},
+            {text: 'PREFIXO LUA', margin: [0, 5, 0, 0], bold: true},
         ]
     ]
 
@@ -1183,7 +1404,11 @@ export const generatePrefixos = (falanges: Array<IFalange>) => {
             const name = item.nome === 'Nityama' ? 'Nityama e Nityama Madruxa' : item.nome;
             const prefSol = item.prefSol ? item.prefSol : '-------';
             const prefLua = item.prefLua ? item.prefLua : '-------';
-            const prefixoRow = [name, prefSol, prefLua];
+            const prefixoRow = [
+                {text: name, margin: [0, 4, 0, 0]},
+                {text: prefSol, margin: [0, 4, 0, 0]},
+                {text: prefLua, margin: [0, 4, 0, 0]},
+            ];
             prefixoBody.push(prefixoRow)
         })
     }
@@ -1226,8 +1451,24 @@ export const generateTurnos = () => {
         fontSize: 16,
         alignment: 'center',
         bold: true, 
-        margin: [0, 0, 0, 15]
+        margin: [0, 0, 0, 30]
     }
+
+    const arrayTurnos = [
+        {turno: 'AMOROS / AMORANAS', setor: 'Indução', restrito: false},
+        {turno: 'AGANAROS / AGANARAS', setor: 'Prisioneiros', restrito: false},
+        {turno: 'ADONARES / ADANARES', setor: 'Recursos financeiros', restrito: true},
+        {turno: 'VALÚRIOS / VALÚRIAS', setor: 'Mesa Evangélica', restrito: false},
+        {turno: 'ADELANOS / ADELANAS', setor: 'Tronos Vermelhos e Amarelos', restrito: false},
+        {turno: 'MATUROS / MATURAMAS', setor: 'Sudálio', restrito: false},
+        {turno: 'SAVANOS / SAVANAS', setor: 'Randy', restrito: false},
+        {turno: 'MURANOS / MURANAS', setor: 'Desenvolvimento dos Médiuns', restrito: false},
+        {turno: 'TAVORES / TAVANAS', setor: 'Estrela, Unificação e Pirâmide', restrito: false},
+        {turno: 'GALEROS / GALANAS', setor: 'Cura e Junção', restrito: false},
+        {turno: 'GRAMOUROS / GRAMARAS', setor: 'Iniciação Dharman-Oxinto', restrito: true},
+        {turno: 'VOUGUES / VOUGANAS', setor: 'Responsáveis pelos pajezinhos e crianças do templo', restrito: false},
+        {turno: 'TANAROS / TANARAS', setor: 'Oráculo de Simiromba e Cruz do Caminho', restrito: false}
+    ]
 
     const turnoTable: Content = {
         style: {
@@ -1240,28 +1481,15 @@ export const generateTurnos = () => {
             heights: 30,
             body: [
                 [
-                    {text: 'TURNOS', style: {bold: true}},
-                    {text: 'SETORES', style: {bold: true}}
+                    {text: 'TURNOS', bold: true, margin: [0, 6, 0, 0]},
+                    {text: 'SETORES', bold: true, margin: [0, 6, 0, 0]}
                 ],
-                ['AMOROS / AMORANAS', 'Indução'],
-                ['AGANAROS / AGANARAS', 'Prisioneiros'],
-                [
-                    {text: 'ADONARES / ADANARES', fillColor: '#dddddd'},
-                    {text: 'Recursos financeiros', fillColor: '#dddddd'}
-                ],
-                ['VALÚRIOS / VALÚRIAS', 'Mesa Evangélica'],
-                ['ADELANOS / ADELANAS', 'Tronos Vermelhos e Amarelos'],
-                ['MATUROS / MATURAMAS', 'Sudálio'],
-                ['SAVANOS / SAVANAS', 'Randy'],
-                ['MURANOS / MURANAS', 'Desenvolvimento dos Médiuns'],
-                ['TAVORES / TAVANAS', 'Estrela, Unificação e Pirâmide'],
-                ['GALEROS / GALANAS', 'Cura e Junção'],
-                [
-                    {text: 'GRAMOUROS / GRAMARAS', fillColor: '#dddddd'},
-                    {text: 'Iniciação Dharman-Oxinto', fillColor: '#dddddd'}
-                ],
-                ['VOUGUES / VOUGANAS', 'Responsáveis pelos pajezinhos e crianças do templo'],
-                ['TANAROS / TANARAS', 'Oráculo de Simiromba e Cruz do Caminho'],
+                ...arrayTurnos.map((item: {turno: string, setor: string, restrito: boolean}) => {
+                    return [
+                        {text: item.turno, margin: [0, 6, 0, 0], fillColor: item.restrito ? '#dddddd' : null},
+                        {text: item.setor, margin: item.setor.length > 40 ? [0, 0, 0, 0] : [0, 6, 0, 0], fillColor: item.restrito ? '#dddddd' : null}
+                    ]
+                })
             ]
         }
     }
@@ -1281,4 +1509,94 @@ export const generateTurnos = () => {
     }
 
     pdfMake.createPdf(emissaoDefinitions).open({}, window.open(`${turnoTitle.text.toString().replace(/ /g, '_')}.pdf`, '_blank'));
+}
+
+export const generateReportAllCons = (listIniciacao: Array<IConsagracao>, listElevacao: Array<IConsagracao>, listCenturia: Array<IConsagracao>, listMudanca: Array<IConsagracao>,) => {    
+    const reportTitle: Content = {
+        text: `LISTA DE MÉDIUNS PARA CONSAGRAÇÕES`,
+        fontSize: 16,
+        alignment: 'center',
+        bold: true, 
+        margin: [0, 0, 0, 10]
+    }
+
+    const reportSubTitle = (text: string) => {
+        return {
+            text: text,
+            fontSize: 15,
+            alignment: 'center',
+            bold: true, 
+            margin: [0, 20, 0, 15]
+        } as Content
+    }
+
+    const reportTable = (array: Array<IConsagracao>) => {
+        return [
+            {
+                style: {
+                    fontSize: 12
+                },
+                table: {
+                    headerRows: 1,
+                    widths: ['*', 100],
+                    body: [
+                        [
+                            {text: 'NOME DO MÉDIUM', bold: true, margin: [0, 0, 0, 0]},
+                            {text: 'MEDIUNIDADE', alignment: 'center', bold: true, margin: [0, 0, 0, 0]}
+                        ],
+                        ...alphabeticOrder(array).map((item: IConsagracao) => {
+                            return [
+                                {text: listMudanca.some((el: IConsagracao) => el.medium === item.medium)? `${item.nome} *`.toUpperCase() : item.nome.toUpperCase(), margin: [0, 0, 0, 0]},
+                                {text: item.med.toUpperCase(), alignment: 'center', margin: [0, 0, 0, 0]}
+                            ]
+                        })
+                    ]
+                },
+            },
+            {
+                columns: [
+                    {text: `Número de médiuns: ${array.length}`, fontSize: 12, bold: true},
+                    {
+                        text: listMudanca.length && array !== listCenturia ? '* Mudança de mediunidade' : '',
+                        fontSize: 10,
+                        alignment: 'right'
+                    }
+                ],
+                margin: [0, 5, 0, 0]
+            }
+        ] as Content
+    }
+
+    const arrayContent = () => {
+        const array: Content = [docHeader, reportTitle];
+        array.push(reportSubTitle([...listIniciacao, ...listMudanca].length ? 'INICIAÇÃO' : 'INICIAÇÃO - NENHUM MÉDIUM'));
+        if ([...listIniciacao, ...listMudanca].length) {
+            array.push(reportTable([...listIniciacao, ...listMudanca]))
+        }
+        array.push(reportSubTitle([...listElevacao, ...listMudanca].length ? 'ELEVAÇÃO' : 'INICIAÇÃO - NENHUM MÉDIUM'));
+        if ([...listElevacao, ...listMudanca].length) {
+            array.push(reportTable([...listElevacao, ...listMudanca]))
+        }
+        array.push(reportSubTitle(listCenturia.length ? 'CENTÚRIA' : 'CENTÚRIA - NENHUM MÉDIUM'));
+        if (listCenturia.length) {
+            array.push(reportTable(listCenturia))
+        }
+        return array
+    }
+
+    const turnoFooter = (currentPage: number, pageCount: number): Content => docFooter(currentPage, pageCount);
+
+    const emissaoDefinitions: TDocumentDefinitions = {
+        info: {
+            title: reportTitle.text.toString().replace(/ /g, '_')
+        },
+        pageSize: 'A4',
+        content: arrayContent(),
+        footer: turnoFooter,
+        defaultStyle: {
+            font: 'Times'
+        }
+    }
+
+    pdfMake.createPdf(emissaoDefinitions).open({}, window.open(`${reportTitle.text.toString().replace(/ /g, '_')}.pdf`, '_blank'));
 }

@@ -111,3 +111,17 @@ export const reduceClassFalMest = (medium: IConsagracao, falMest: {completo: Arr
     const reduced = falMestIndex !== -1 && reducedClass !== '' ? `${reducedClass} ${falMest.abrev[falMestIndex]}`.toUpperCase() : '';
     return reduced
 }
+
+//Coloca um array em ordem alfabética pela propriedade nome dos seus elementos
+export function alphabeticOrder(array: Array<any>) {
+    array.sort((minA: any, minB: any) => {
+        if (minA.nome < minB.nome) {
+          return -1;
+        }
+        if (minA.nome > minB.nome) {
+          return 1;
+        }
+        return 0;
+    }); 
+    return array
+}
