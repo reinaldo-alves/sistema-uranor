@@ -219,6 +219,7 @@ export const Modal = styled.div<{vis: boolean}>`
 export const ModalMediumContent = styled.div<{vis: boolean}>`
     width: 380px;
     max-width: 1400px;
+    max-height: 90vh;
     border-radius: 10px;
     padding: 20px;
     background-color: ${(props) => {return props.theme.color.mediumColorOp}};
@@ -227,6 +228,7 @@ export const ModalMediumContent = styled.div<{vis: boolean}>`
     align-items: center;
     gap: 20px;
     border: solid 1px ${(props) => {return props.theme.color.darkerColor}};
+    overflow-y: auto;
 `;
 
 export const ModalTitle = styled.h1`

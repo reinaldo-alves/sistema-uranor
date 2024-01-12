@@ -659,8 +659,9 @@ export const generateReclass = (medium: IMedium, adjuntos: Array<IAdjunto>, mini
     pdfMake.createPdf(reclassDefinitions).open({}, window.open(`Reclassificacao_${medium.medium_id.toString().padStart(5, '0')}_${medium.nome.replace(/ /g, '_')}.pdf`, '_blank'));
 }
 
-export const generateTrinoDevas = (mediuns: Array<IMedium>, cons: string, adjunto: IAdjunto, ministros: Array<IMentor>) => {    
-    const consMeta = cons === 'filho de devas' && !mediuns.some((item: IMedium) => item.sex === 'Masculino') ? 'FILHA DE DEVAS' : cons.toUpperCase();
+export const generateTrinoDevas = (mediuns: Array<IMedium>, cons: string, adjunto: IMedium, ministros: Array<IMentor>) => {    
+    const consMeta = cons === 'Filho de Devas' && !mediuns.some((item: IMedium) => item.sex === 'Masculino') ? 'FILHA DE DEVAS' : cons.toUpperCase();
+
     const termoSex = () => {
         if (mediuns.length === 1) {
             return mediuns[0].sex === 'Masculino' ? 'o seguinte mestre:' : 'a seguinte ninfa:'
@@ -672,6 +673,8 @@ export const generateTrinoDevas = (mediuns: Array<IMedium>, cons: string, adjunt
             }
         }
     }
+
+    const termoAdjunto = cons !== 'Trino Sardyos' ? ['Adjunto Uranor\n', 'Mestre Vasconcelos\n'] : [`Adjunto ${ministros.filter((min: IMentor) => min.id === adjunto.ministro)[0].nome}\n`, `Mestre ${adjunto.nomeEmissao}\n`]
     
     const consHeader: Content = {
         text: ['DOUTRINA DO AMANHECER\n', 'COORDENAÇÃO PARLO\n', 'TEMPLO URANOR DO AMANHECER\n', 'CASTELO DOS DEVAS\n'],
@@ -703,33 +706,36 @@ export const generateTrinoDevas = (mediuns: Array<IMedium>, cons: string, adjunt
                 margin: [0, 0, 0, 5]
             }
         }),
-        margin: [0, 0, 0, 30]
+        margin: [20, 0, 0, 30]
     }
 
     const consSignature: Content = {
         text: [
             '_____________________________________\n',
-            `Adjunto ${ministros.filter((min: IMentor) => min.id === adjunto.ministro)[0].nome}\n`,
-            `Mestre ${adjunto.nome}\n`,
+            termoAdjunto[0],
+            termoAdjunto[1],
             `${cons === 'Trino Sardyos' ? '' : 'Presidente'}`
         ],
         alignment: 'center',
-        fontSize: 10,
+        fontSize: 12,
         margin: [0, 30, 0, 0]
     }
+
+    const consFooter = (currentPage: number, pageCount: number): Content => docFooter(currentPage, pageCount);
     
     const consDefinitions: TDocumentDefinitions = {
         info: {
-            title: mediuns.length === 1 ? `${cons.replace(/ /g, '_')}_${mediuns[0].medium_id.toString().padStart(5, '0')}_${mediuns[0].nome.replace(/ /g, '_')}` : `${cons.replace(/ /g, '_')}`
+            title: mediuns.length === 1 ? `${cons.replace(/ /g, '_')}_${mediuns[0].medium_id.toString().padStart(5, '0')}_${mediuns[0].nome.replace(/ /g, '_')}` : `Autorizacao_${cons.replace(/ /g, '_')}`
         },
         pageSize: 'A4',
         content: [consHeader, consTitle, consText, consList, consSignature],
+        footer: consFooter,
         defaultStyle: {
             font: 'Times'
         }
     }
 
-    pdfMake.createPdf(consDefinitions).open({}, window.open(mediuns.length === 1 ? `${cons.replace(/ /g, '_')}_${mediuns[0].medium_id.toString().padStart(5, '0')}_${mediuns[0].nome.replace(/ /g, '_')}` : `${cons.replace(/ /g, '_')}.pdf`, '_blank'));
+    pdfMake.createPdf(consDefinitions).open({}, window.open(mediuns.length === 1 ? `${cons.replace(/ /g, '_')}_${mediuns[0].medium_id.toString().padStart(5, '0')}_${mediuns[0].nome.replace(/ /g, '_')}` : `Autorizacao_${cons.replace(/ /g, '_')}.pdf`, '_blank'));
 }
 
 export const generateProtocolo = (mediuns: Array<IConsagracao>, title: string, cons: number) => {    
