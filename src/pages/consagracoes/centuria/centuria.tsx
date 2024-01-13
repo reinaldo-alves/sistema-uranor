@@ -139,7 +139,7 @@ function Centuria() {
                         setShowModalMedium(true);
                     }}>Gerar Relatório</NavigateButton>
                     <NavigateButton width="230px" onClick={() => {
-                        setSelectModal('protocolo');
+                        setSelectModal('Protocolo');
                         setShowModalMedium(true);
                     }}>Gerar Protocolo</NavigateButton>
                 </ButtonContainer>
