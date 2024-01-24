@@ -138,7 +138,7 @@ export const generateEmissao = (medium: IMedium, user: IUser, text: string) => {
                             text: `${user.level === 'Devas Aspirante' ? '' : user.name.toUpperCase()}\n`,
                             bold: true
                         },
-                        'FILHO DE DEVAS\n',
+                        `${user.sex === 'Feminino' && user.level !== 'Devas Aspirante' ? 'FILHA' : 'FILHO'} DE DEVAS\n`,
                         '\n',
                         getCurrentDate()
                     ],
@@ -634,7 +634,7 @@ export const generateReclass = (medium: IMedium, adjuntos: Array<IAdjunto>, mini
                         text: `${user.level === 'Devas Aspirante' ? '' : user.name.toUpperCase()}\n`,
                         bold: true
                     },
-                    'FILHO DE DEVAS\n'
+                    `${user.sex === 'Feminino' && user.level !== 'Devas Aspirante' ? 'FILHA' : 'FILHO'} DE DEVAS\n`,
                 ],
                 alignment: 'center',
                 width: 'auto',

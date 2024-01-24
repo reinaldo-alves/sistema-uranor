@@ -96,6 +96,9 @@ function App() {
                   <Route path='/manutencao/falanges' element={<Falanges />} />
                   <Route path='/manutencao/usuarios' element={<Users />} />
                   <Route path='/manutencao/backup' element={<Backup />} />
+                  <Route path='/consagracoes/iniciacao/atualizar' element={<UpdateIniciacao />} />
+                  <Route path='/consagracoes/elevacao/atualizar' element={<UpdateElevacao />} />
+                  <Route path='/consagracoes/centuria/atualizar' element={<UpdateCenturia />} />
                 </>  
               : ''}
               <Route path='/manutencao/usuarios/alterarsenha' element={<ChangePassword />} />
@@ -109,11 +112,8 @@ function App() {
               <Route path='/cursos' element={<Cursos />} />
               <Route path='/consagracoes' element={<Consagracoes />} />
               <Route path='/consagracoes/iniciacao' element={<Iniciacao />} />
-              <Route path='/consagracoes/iniciacao/atualizar' element={<UpdateIniciacao />} />
               <Route path='/consagracoes/elevacao' element={<Elevacao />} />
-              <Route path='/consagracoes/elevacao/atualizar' element={<UpdateElevacao />} />
               <Route path='/consagracoes/centuria' element={<Centuria />} />
-              <Route path='/consagracoes/centuria/atualizar' element={<UpdateCenturia />} />
               <Route path='/consagracoes/reclassificacao' element={<Reclassificacao />} />
               <Route path='/relatorios' element={<Relatorios />} /> 
               <Route path='/documentosuteis' element={<DocumentosUteis />} />

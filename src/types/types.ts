@@ -54,7 +54,8 @@ export interface IUser {
     name: string,
     password: string,
     level: string,
-    medium_id: number
+    medium_id: number,
+    sex: string
 }
 
 export interface IConsagracao {

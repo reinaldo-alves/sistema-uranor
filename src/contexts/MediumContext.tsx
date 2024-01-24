@@ -363,7 +363,8 @@ export const MediumStore = ({ children }: any) => {
         }
     }   
 
-    const changeMed = async (medium: IMedium, token: string) => {
+    const changeMed = async (medium: IMedium, token: string, dtTest: string) => {
+        const newDtTest = dtTest === '' ? null : dtTest.split('T')[0];
         const editData = {
             medium_id: medium.medium_id,
             med: medium.med === 'Doutrinador' ? 'Apará' : medium.med === 'Apará' ? 'Doutrinador' : '',
@@ -371,7 +372,7 @@ export const MediumStore = ({ children }: any) => {
             dtEmplac: medium.oldDtEmplac.split('T')[0] === '' ? null : medium.oldDtEmplac.split('T')[0],
             dtIniciacao: medium.oldDtIniciacao.split('T')[0] === '' ? null : medium.oldDtIniciacao.split('T')[0],
             dtElevacao: medium.oldDtElevacao.split('T')[0] === '' ? null : medium.oldDtElevacao.split('T')[0],
-            dtTest: medium.oldDtTest.split('T')[0] === '' ? null : medium.oldDtTest.split('T')[0],
+            dtTest: medium.oldDtTest.split('T')[0] === '' ? newDtTest : medium.oldDtTest.split('T')[0],
             classMest: medium.oldClassMest,
             cavaleiro: medium.oldCavaleiro === 0 ? null : medium.oldCavaleiro,
             cor: medium.oldCor,

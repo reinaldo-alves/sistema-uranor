@@ -14,6 +14,7 @@ import axios from "axios";
 import { validateMedium } from "src/utilities/validations";
 import AutocompleteInput from "src/components/AutocompleteInput/AutocompleteInput";
 import { defaultCavaleiro, defaultMedium, defaultMentor } from "src/utilities/default";
+import { useNavigate } from "react-router-dom";
 
 function AddMedium() {
     const { templos, estados, adjuntos, coletes, classMest, falMest, povos, falMiss, turnoL, turnoT, ministros, cavaleiros, guias, estrelas, princesas, classificacao } = useContext(ListContext);
@@ -55,6 +56,8 @@ function AddMedium() {
     const [searchAfi, setSearchAfi] = useState('');
 
     const now = new Date().toISOString().split('T')[0];
+
+    const navigate = useNavigate();
 
     useEffect(() => {
         console.log(newMedium)
@@ -316,6 +319,7 @@ function AddMedium() {
         setSearchAfi('');
         setPhoto(null);
         setPreview(null);
+        navigate('/mediuns/consulta');
     }
 
     const addMedium = async (medium: IMedium, token: string) => {
@@ -329,6 +333,7 @@ function AddMedium() {
             Alert('Médium adicionado com sucesso', 'success');
             resetNewMedium();
             await loadMedium(token);
+            navigate('/mediuns/consulta');
         } catch (error) {
             console.log('Não foi possível adicionar o médium', error);
             Alert('Não foi possível adicionar o médium', 'error');

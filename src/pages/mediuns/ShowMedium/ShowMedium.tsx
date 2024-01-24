@@ -1,6 +1,6 @@
 import { useContext, useEffect, useState } from "react";
 import Header from "src/components/header/header";
-import { Divider, GridContainer, InfoContainer, MainContainer, MainInfoContainer, MediumButton, MediumInfo, MediumMainInfo, MediumText, NameAndId, PersonalCard, PhotoContainer, SectionTitle } from "./styles";
+import { Divider, GridContainer, InfoContainer, InputContainer, MainContainer, MainInfoContainer, MediumButton, MediumInfo, MediumMainInfo, MediumText, Modal, ModalButton, ModalContent, ModalTitle, NameAndId, PersonalCard, PhotoContainer, SectionTitle } from "./styles";
 import SubMenu from "src/components/SubMenu/SubMenu";
 import SideMenu from "src/components/SideMenu/SideMenu";
 import { useNavigate, useParams } from "react-router-dom";
@@ -11,15 +11,18 @@ import { convertDate, setSituation } from "src/utilities/functions";
 import { ListContext } from "src/contexts/ListContext";
 import PageNotFound from "src/pages/PageNotFound/PageNotFound";
 import Loading from "src/utilities/Loading";
-import { Confirm } from "src/utilities/popups";
+import { Alert, Confirm } from "src/utilities/popups";
 import { generateAutorizacao, generateEmissao } from "src/utilities/createDocs";
 import { validateEmissao } from "src/utilities/validations";
 import { emissaoText } from "src/reports/emissao";
 import { defaultConsagracao } from "src/utilities/default";
+import api from "src/api";
 
 function ShowMedium() {
     const [loading, setLoading] = useState(true);
     const [medium, setMedium] = useState({} as IMedium);
+    const [showModal, setShowModal] = useState(false);
+    const [testDate, setTestDate] = useState('');
     
     const { token, getUser, user } = useContext(UserContext);
     const { mediuns, loadMedium, changeMed } = useContext(MediumContext);
@@ -82,12 +85,41 @@ function ShowMedium() {
         return array.join(', ')
     }
 
+    const handleChangeMed = async (dtTest: string) => {
+        await changeMed(medium, token, dtTest);
+        setTestDate('');
+        closeModal();
+        setLoading(true);
+        await getInfo();
+    }
+    
     const confirmChangeMed = async () => {
         await Confirm(`O médium será cadastrado como ${medium.med === 'Doutrinador' ? 'Apará' : medium.med === 'Apará' ? 'Doutrinador' : ''}. Continuar?`, 'warning', 'Não', 'Sim', async () => {
-            await changeMed(medium, token);
-            setLoading(true);
+            setTestDate(medium.oldDtTest);
+            if (medium.oldDtTest) {
+                handleChangeMed('');
+            } else {
+                setShowModal(true)
+            }  
         });
-        await getInfo();
+    }
+
+    const closeModal = () => {
+        setShowModal(false);
+        setTestDate('');
+    }
+
+    const deleteMedium = async () => {
+        await Confirm('ATENÇÃO! Todos os dados do médium serão perdidos e não poderão ser recuperados. Continuar?', 'warning', 'Cancelar', 'Excluir', async () => {
+            try {
+                await api.delete(`/medium/delete?medium_id=${medium.medium_id}`, {headers:{Authorization: token}})
+                navigate('/mediuns/consulta');
+                Alert('Médium excluído com sucesso', 'success');
+            } catch (error) {
+                console.log('Erro ao excluir médium', error);
+                Alert('Erro ao excluir médium', 'error');
+            }
+        });
     }
 
     const listSubMenu = [
@@ -119,11 +151,11 @@ function ShowMedium() {
                             <MediumMainInfo>Condição Atual: <span>{medium.condicao}</span></MediumMainInfo>
                             <MediumButton disabled={!medium.dtCenturia && !medium.falMiss} onClick={() => validateEmissao(medium, mediuns, adjuntos, turnoL, turnoT, () => generateEmissao(medium, user, emissaoText(medium, mediuns, ministros, cavaleiros, guias, adjuntos, templos, falMiss) as string))} color="green">Gerar Emissão</MediumButton>
                             <MediumButton onClick={() => navigate(`/mediuns/editar/${medium.medium_id}`)} color="green">Editar</MediumButton>
-                            <MediumButton color="green">Gerar Ficha</MediumButton>
+                            <MediumButton disabled color="green">Gerar Ficha</MediumButton>
                             <MediumButton color="green" disabled={searchMediumInCons(medium.medium_id) === defaultConsagracao} onClick={() => generateAutorizacao([searchMediumInCons(medium.medium_id)], templos, adjuntos, ministros, searchMediumInCons(medium.medium_id).consagracao)}>Autorização</MediumButton>
-                            <MediumButton color="green">Linha do Tempo</MediumButton>
+                            <MediumButton disabled color="green">Linha do Tempo</MediumButton>
                             <MediumButton onClick={confirmChangeMed} color="red">Mudar Med.</MediumButton>
-                            <MediumButton color="red">Excluir</MediumButton>
+                            <MediumButton style={{display: `${user.level === 'Administrador' ? 'block' : 'none'}`}} onClick={deleteMedium} color="red">Excluir</MediumButton>
                         </MainInfoContainer>
                     </PersonalCard>
                     <div>
@@ -196,6 +228,7 @@ function ShowMedium() {
                                 <>
                                     <Divider></Divider>
                                     <InfoContainer>
+                                        <MediumInfo>Data Teste: <span>{convertDate(medium.dtTest)}</span></MediumInfo>
                                         <MediumInfo>Princesa: <span>{medium.princesa}</span></MediumInfo>
                                         <MediumInfo>Nome na Emissão: <span>{medium.nomeEmissao}</span></MediumInfo>
                                     </InfoContainer>
@@ -204,6 +237,7 @@ function ShowMedium() {
                                 <>
                                     <Divider></Divider>
                                     <InfoContainer>
+                                        <MediumInfo>Data Teste: <span>{convertDate(medium.dtTest)}</span></MediumInfo>
                                         <MediumInfo>Preto Velho: <span>{medium.pretovelho}</span></MediumInfo>
                                         <MediumInfo>Caboclo: <span>{medium.caboclo}</span></MediumInfo>
                                         <MediumInfo>Médico: <span>{medium.medico}</span></MediumInfo>
@@ -279,6 +313,19 @@ function ShowMedium() {
                 </GridContainer>
             </MainContainer>
             <SideMenu list={listSubMenu} />
+            <Modal vis={showModal}>
+                <ModalContent>
+                    <ModalTitle>Mudança de Mediunidade</ModalTitle>
+                    <InputContainer>
+                        <label>{`Data do teste como ${medium.med === 'Doutrinador' ? 'Apará' : medium.med === 'Apará' ? 'Doutrinador' : ''}`}</label>
+                        <input type="date" value={testDate} onChange={(e) => setTestDate(e.target.value)} />
+                    </InputContainer>
+                    <div style={{display: 'flex', gap: '20px'}}>
+                        <ModalButton color="red" onClick={closeModal}>Cancelar</ModalButton>
+                        <ModalButton color='green' onClick={() => handleChangeMed(testDate)}>Salvar</ModalButton>
+                    </div>
+                </ModalContent>
+            </Modal>
         </>
         
     )

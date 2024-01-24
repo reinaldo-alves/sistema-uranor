@@ -19,7 +19,7 @@ import { generateAutorizacao, generateConsReport, generateProtocolo } from "src/
 function Iniciacao() {
     const { templos, adjuntos, ministros, coletes, falMest, listIniciacao, listMudanca, loadConsagracao, searchMediumInCons } = useContext(ListContext);
     const { uploadImage, mediuns } = useContext(MediumContext);
-    const { token } = useContext(UserContext);
+    const { token, user } = useContext(UserContext);
 
     const [columnData, setColumnData] = useState(['auto 25% 15% 15%', 'auto 25%', true])
     const [showModalMedium, setShowModalMedium] = useState(false);
@@ -231,7 +231,7 @@ function Iniciacao() {
                         setSelectModal('adicionar');
                         setShowModalMedium(true);
                     }}>Adicionar Médium</NavigateButton>
-                    <NavigateButton disabled={![...listIniciacao, ...listMudanca].length} width="230px" color="red" onClick={() => navigate('/consagracoes/iniciacao/atualizar')}>Atualizar Iniciação</NavigateButton>
+                    <NavigateButton style={{display: `${user.level === 'Administrador' ? 'block' : 'none'}`}} disabled={![...listIniciacao, ...listMudanca].length} width="230px" color="red" onClick={() => navigate('/consagracoes/iniciacao/atualizar')}>Atualizar Iniciação</NavigateButton>
                 </ButtonContainer>
             </MainContainer>
             <SideMenu list={listSubMenu}/>

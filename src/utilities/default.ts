@@ -23,7 +23,8 @@ export const defaultUser: IUser = {
     name: '',
     password: '',
     level: '',
-    medium_id: 0
+    medium_id: 0,
+    sex: ''
 }
 
 export const defaultMentor: IMentor = {

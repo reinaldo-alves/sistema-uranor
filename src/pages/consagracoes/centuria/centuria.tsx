@@ -19,7 +19,7 @@ import { generateAutorizacao, generateConsReport, generateProtocolo } from "src/
 function Centuria() {
     const { templos, adjuntos, ministros, falMest, listCenturia, loadConsagracao, searchMediumInCons } = useContext(ListContext);
     const { mediuns } = useContext(MediumContext);
-    const { token } = useContext(UserContext);
+    const { user, token } = useContext(UserContext);
 
     const [columnData, setColumnData] = useState(['auto 25% 15% 15%', 'auto 25%', true])
     const [showModalMedium, setShowModalMedium] = useState(false);
@@ -149,7 +149,7 @@ function Centuria() {
                         setSelectModal('adicionar');
                         setShowModalMedium(true);
                     }}>Adicionar Médium</NavigateButton>
-                    <NavigateButton disabled={!listCenturia.length} width="230px" color="red" onClick={() => navigate('/consagracoes/centuria/atualizar')}>Atualizar Centúria</NavigateButton>
+                    <NavigateButton style={{display: `${user.level === 'Administrador' ? 'block' : 'none'}`}} disabled={!listCenturia.length} width="230px" color="red" onClick={() => navigate('/consagracoes/centuria/atualizar')}>Atualizar Centúria</NavigateButton>
                 </ButtonContainer>
             </MainContainer>
             <SideMenu list={listSubMenu}/>

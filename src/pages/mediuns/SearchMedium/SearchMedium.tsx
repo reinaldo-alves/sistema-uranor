@@ -53,14 +53,16 @@ function SearchMedium() {
     }, [])
     
     mediuns.sort((pessoaA: IMedium, pessoaB: IMedium) => {
-        if (pessoaA.nome < pessoaB.nome) {
+        const nomeA = pessoaA.nome.toLowerCase();
+        const nomeB = pessoaB.nome.toLowerCase();
+        if (nomeA < nomeB) {
           return -1;
         }
-        if (pessoaA.nome > pessoaB.nome) {
+        if (nomeA > nomeB) {
           return 1;
         }
         return 0;
-      });      
+    });      
 
     const listSubMenu = [
         {title: 'Página Inicial', click: '/'},

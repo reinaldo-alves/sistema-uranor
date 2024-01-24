@@ -19,7 +19,7 @@ import { generateAutorizacao, generateConsReport, generateProtocolo, generateTer
 function Elevacao() {
     const { templos, adjuntos, ministros, falMest, listElevacao, listMudanca, loadConsagracao, searchMediumInCons } = useContext(ListContext);
     const { uploadImage, mediuns } = useContext(MediumContext);
-    const { token } = useContext(UserContext);
+    const { user, token } = useContext(UserContext);
 
     const [columnData, setColumnData] = useState(['auto 25% 15% 15%', 'auto 25%', true])
     const [showModalMedium, setShowModalMedium] = useState(false);
@@ -228,7 +228,7 @@ function Elevacao() {
                         setSelectModal('adicionar');
                         setShowModalMedium(true);
                     }}>Adicionar Médium</NavigateButton>
-                    <NavigateButton disabled={![...listElevacao, ...listMudanca].length} width="230px" color="red" onClick={() => navigate('/consagracoes/elevacao/atualizar')}>Atualizar Elevação</NavigateButton>
+                    <NavigateButton style={{display: `${user.level === 'Administrador' ? 'block' : 'none'}`}} disabled={![...listElevacao, ...listMudanca].length} width="230px" color="red" onClick={() => navigate('/consagracoes/elevacao/atualizar')}>Atualizar Elevação</NavigateButton>
                 </ButtonContainer>
             </MainContainer>
             <SideMenu list={listSubMenu}/>

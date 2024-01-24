@@ -10,7 +10,9 @@ import { UserContext } from "src/contexts/UserContext";
 import api from "src/api";
 import { useNavigate } from "react-router-dom";
 import { Alert } from "src/utilities/popups";
-import { defaultUser } from "src/utilities/default";
+import { defaultMedium, defaultUser } from "src/utilities/default";
+import AutocompleteInput from "src/components/AutocompleteInput/AutocompleteInput";
+import { alphabeticOrder } from "src/utilities/functions";
 
 function Users() {
     const [searchName, setSearchName] = useState('');
@@ -21,6 +23,8 @@ function Users() {
     const [showModal, setShowModal] = useState(false);
     const [password1, setPassword1] = useState('');
     const [password2, setPassword2] = useState('');
+    const [dropMedium, setDropMedium] = useState(defaultMedium);
+    const [searchMedium, setSearchMedium] = useState('');
     
     const { users, token, loadUser, setUserChangePassword } = useContext(UserContext);
     const { mediuns } = useContext(MediumContext);
@@ -30,6 +34,11 @@ function Users() {
     useEffect(() => {
         loadUser(token)
     },[])
+
+    useEffect(() => {
+        const mediumObject = mediuns.find((item: IMedium) => item.medium_id === dropMedium.medium_id);
+        updateProps('medium_id', mediumObject? mediumObject.medium_id : 0);
+    }, [dropMedium])
     
     const listSubMenu = [
         {title: 'Página Inicial', click: '/'},
@@ -49,6 +58,8 @@ function Users() {
         setEdit(false);
         setEdited(defaultUser);
         setSelected(defaultUser);
+        setDropMedium(defaultMedium);
+        setSearchMedium('');
         setShowModal(true);
     }
 
@@ -56,6 +67,8 @@ function Users() {
         setEdit(true);
         setEdited(user);
         setSelected(user);
+        setDropMedium(mediuns.find((item: IMedium) => item.medium_id === user.medium_id));
+        setSearchMedium(mediuns.find((item: IMedium) => item.medium_id === user.medium_id)?.nome || '');
         setShowModal(true);
     }
 
@@ -66,8 +79,13 @@ function Users() {
     }
 
     const addUser = async (name: string, password: string, level: string, medium: number, token: string) => {
-        const newUser = {name: name, password: password, level: level, medium_id: medium};
         try {
+            console.log(medium, mediuns)
+            const mediumObject = await mediuns.find((item: IMedium) => item.medium_id === Number(medium));
+            console.log(mediumObject);
+            const userSex = mediumObject ? mediumObject.sex : '';
+            console.log(userSex);
+            const newUser = {name: name, password: password, level: level, medium_id: medium, sex: userSex};
             await api.post('/user/create', newUser, {headers:{Authorization: token}})
             Alert('Usuário adicionado com sucesso', 'success');
             await loadUser(token);
@@ -183,12 +201,15 @@ function Users() {
                     </InputContainer>
                     <InputContainer>
                         <label>Médium</label>
-                        <select value={edited.medium_id} onChange={(e) => updateProps('medium_id', e.target.value)}>
-                            <option value=''></option>
-                            {mediuns.map((item: IMedium, index: number) => (
-                                <option key={index} value={item.medium_id}>{item.nome}</option>
-                            ))}
-                        </select>
+                        <AutocompleteInput 
+                            default={defaultMedium}
+                            options={alphabeticOrder(mediuns.filter((item: IMedium) => Boolean(item.dtElevacao) === true))}
+                            equality={(option, value) => option?.medium_id === value?.medium_id}
+                            value={dropMedium}
+                            setValue={setDropMedium}
+                            inputValue={searchMedium}
+                            setInputValue={setSearchMedium}
+                        />
                     </InputContainer>
                     <InputContainer>
                         <label>Nível</label>

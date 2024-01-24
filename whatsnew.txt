@@ -15,3 +15,7 @@ VERSÃO 1.1.0
 - Criação de página de gerenciamento de backups
 - Alterações no layout da Chamada Oficial das Falanges Missionárias, da Lista de Prefixos das Falanges Missionárias e da Lista de Turnos de Trabalho.
 - Geração de documento para reclassificação e Autorizações para consagrar Trino Solitário/Trino Sardyos/Devas
+- Permitir colocar Filha de Devas nas emissões geradas por ninfas
+- Atualização de consagrações apenas para administradores
+
+OBS: no modal criar usuário, colocar como disabled os médiuns já adicionados
