@@ -25,7 +25,7 @@ function ShowMedium() {
     const [testDate, setTestDate] = useState('');
     
     const { token, getUser, user } = useContext(UserContext);
-    const { mediuns, loadMedium, changeMed } = useContext(MediumContext);
+    const { mediuns, loadMedium, changeMed, removeComponentes } = useContext(MediumContext);
     const { ministros, cavaleiros, guias, adjuntos, templos, falMiss, getData, turnoL, turnoT, searchMediumInCons } = useContext(ListContext);
     const params = useParams();
     const navigate = useNavigate();
@@ -112,6 +112,7 @@ function ShowMedium() {
     const deleteMedium = async () => {
         await Confirm('ATENÇÃO! Todos os dados do médium serão perdidos e não poderão ser recuperados. Continuar?', 'warning', 'Cancelar', 'Excluir', async () => {
             try {
+                await removeComponentes(medium, token)
                 await api.delete(`/medium/delete?medium_id=${medium.medium_id}`, {headers:{Authorization: token}})
                 navigate('/mediuns/consulta');
                 Alert('Médium excluído com sucesso', 'success');

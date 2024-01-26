@@ -90,13 +90,9 @@ function Cavaleiros() {
     }
     
     cavaleiros.sort((cavA: ICavaleiro, cavB: ICavaleiro) => {
-        if (cavA.nome < cavB.nome) {
-          return -1;
-        }
-        if (cavA.nome > cavB.nome) {
-          return 1;
-        }
-        return 0;
+        const nomeA = cavA.nome.toLowerCase();
+        const nomeB = cavB.nome.toLowerCase();
+        return nomeA.localeCompare(nomeB, 'pt-BR');
     });      
 
     return (

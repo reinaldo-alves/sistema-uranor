@@ -80,11 +80,8 @@ function Users() {
 
     const addUser = async (name: string, password: string, level: string, medium: number, token: string) => {
         try {
-            console.log(medium, mediuns)
             const mediumObject = await mediuns.find((item: IMedium) => item.medium_id === Number(medium));
-            console.log(mediumObject);
             const userSex = mediumObject ? mediumObject.sex : '';
-            console.log(userSex);
             const newUser = {name: name, password: password, level: level, medium_id: medium, sex: userSex};
             await api.post('/user/create', newUser, {headers:{Authorization: token}})
             Alert('Usuário adicionado com sucesso', 'success');
@@ -134,13 +131,9 @@ function Users() {
     }
     
     users.sort((userA: IUser, userB: IUser) => {
-        if (userA.name < userB.name) {
-          return -1;
-        }
-        if (userA.name > userB.name) {
-          return 1;
-        }
-        return 0;
+        const nomeA = userA.name.toLowerCase();
+        const nomeB = userB.name.toLowerCase();
+        return nomeA.localeCompare(nomeB, 'pt-BR');
       });      
 
     return (
@@ -202,7 +195,9 @@ function Users() {
                     <InputContainer>
                         <label>Médium</label>
                         <AutocompleteInput 
+                            label={(option) => option.nome}
                             default={defaultMedium}
+                            disabledOptions={(option) => option? users.some((item: IUser) => item?.medium_id === option?.medium_id) : false}
                             options={alphabeticOrder(mediuns.filter((item: IMedium) => Boolean(item.dtElevacao) === true))}
                             equality={(option, value) => option?.medium_id === value?.medium_id}
                             value={dropMedium}

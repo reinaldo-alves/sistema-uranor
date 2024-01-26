@@ -55,13 +55,7 @@ function SearchMedium() {
     mediuns.sort((pessoaA: IMedium, pessoaB: IMedium) => {
         const nomeA = pessoaA.nome.toLowerCase();
         const nomeB = pessoaB.nome.toLowerCase();
-        if (nomeA < nomeB) {
-          return -1;
-        }
-        if (nomeA > nomeB) {
-          return 1;
-        }
-        return 0;
+        return nomeA.localeCompare(nomeB, 'pt-BR');
     });      
 
     const listSubMenu = [

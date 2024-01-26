@@ -273,6 +273,7 @@ function Elevacao() {
                     <InputContainer>
                         <label>Nome do Médium</label>
                         <AutocompleteInput 
+                            label={(option) => option.nome}
                             default={defaultMedium}
                             options={mediuns.filter((item: IMedium) => item.dtEmplac && !item.dtElevacao && searchMediumInCons(item.medium_id) === defaultConsagracao)}
                             equality={(option, value) => option.medium_id === value.medium_id}

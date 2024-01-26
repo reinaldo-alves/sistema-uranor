@@ -42,13 +42,9 @@ function UpdateElevacao() {
 
     function alphabeticOrder(array: Array<any>) {
         array.sort((minA: any, minB: any) => {
-            if (minA.medium.nome < minB.medium.nome) {
-              return -1;
-            }
-            if (minA.medium.nome > minB.medium.nome) {
-              return 1;
-            }
-            return 0;
+            const nomeA = minA.medium.nome.toLowerCase();
+            const nomeB = minB.medium.nome.toLowerCase();
+            return nomeA.localeCompare(nomeB, 'pt-BR');
         }); 
         return array
     }

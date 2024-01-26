@@ -19,13 +19,9 @@ function Consagracoes() {
 
     function alphabeticOrder(array: Array<any>) {
         array.sort((minA: any, minB: any) => {
-            if (minA.nome < minB.nome) {
-              return -1;
-            }
-            if (minA.nome > minB.nome) {
-              return 1;
-            }
-            return 0;
+            const nomeA = minA.nome.toLowerCase();
+            const nomeB = minB.nome.toLowerCase();
+            return nomeA.localeCompare(nomeB, 'pt-BR');
         }); 
         return array
     }

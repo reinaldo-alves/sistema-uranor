@@ -169,6 +169,7 @@ function Centuria() {
                     <InputContainer>
                         <label>Nome do Médium</label>
                         <AutocompleteInput 
+                            label={(option) => option.nome}
                             default={defaultMedium}
                             options={mediuns.filter((item: IMedium) => item.dtElevacao && !item.dtCenturia && searchMediumInCons(item.medium_id) === defaultConsagracao)}
                             equality={(option, value) => option.medium_id === value.medium_id}

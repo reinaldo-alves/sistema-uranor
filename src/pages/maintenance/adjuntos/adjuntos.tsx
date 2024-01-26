@@ -1,4 +1,4 @@
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect } from "react";
 import { InfoCard, InputContainer, MainContainer, InfoContent, Results, ResultsCard, ResultsDetails, ResultsTable, ResultsTitle, SearchButton, SearchCard, SearchContainer, Modal, ModalContent, ModalTitle, ModalButton } from "./styles";
 import { ListContext } from "src/contexts/ListContext";
 import SideMenu from "src/components/SideMenu/SideMenu";
@@ -9,7 +9,9 @@ import MainTitle from "src/components/MainTitle/MainTitle";
 import { UserContext } from "src/contexts/UserContext";
 import api from "src/api";
 import { Alert } from "src/utilities/popups";
-import { defaultAdj } from "src/utilities/default";
+import { defaultAdj, defaultMentor } from "src/utilities/default";
+import AutocompleteInput from "src/components/AutocompleteInput/AutocompleteInput";
+import { alphabeticOrder } from "src/utilities/functions";
 
 function Adjuntos() {
     const [searchMin, setSearchMin] = useState('');
@@ -18,6 +20,8 @@ function Adjuntos() {
     const [selected, setSelected] = useState(defaultAdj);
     const [edited, setEdited] = useState(defaultAdj);
     const [showModal, setShowModal] = useState(false);
+    const [dropMinistro, setDropMinistro] = useState(defaultMentor);
+    const [searchMinistro, setSearchMinistro] = useState('');
     
     const { token } = useContext(UserContext);
     const { adjuntos, ministros, loadAdjunto } = useContext(ListContext);
@@ -34,10 +38,17 @@ function Adjuntos() {
         }));
     };
 
+    useEffect(() => {
+        const ministroObject = ministros.find((item: IMentor) => item?.id === dropMinistro?.id);
+        updateProps('ministro', ministroObject? ministroObject.id : 0);
+    }, [dropMinistro])
+
     const modalAddAdj = () => {
         setEdit(false);
         setEdited(defaultAdj);
         setSelected(defaultAdj);
+        setDropMinistro(defaultMentor);
+        setSearchMinistro('');
         setShowModal(true);
     }
 
@@ -45,6 +56,8 @@ function Adjuntos() {
         setEdit(true);
         setEdited(adj);
         setSelected(adj);
+        setDropMinistro(ministros.find((item: IMentor) => item.id === adj.ministro));
+        setSearchMinistro(ministros.find((item: IMentor) => item.id === adj.ministro)?.nome || '');
         setShowModal(true);
     }
 
@@ -92,13 +105,9 @@ function Adjuntos() {
     }
     
     adjuntos.sort((adjA: IAdjunto, adjB: IAdjunto) => {
-        if (adjA.ministro < adjB.ministro) {
-          return -1;
-        }
-        if (adjA.ministro > adjB.ministro) {
-          return 1;
-        }
-        return 0;
+        const nomeA = ministros.filter((min: IMentor) => min.id === adjA.ministro)[0].nome.toLowerCase();
+        const nomeB = ministros.filter((min: IMentor) => min.id === adjB.ministro)[0].nome.toLowerCase();
+        return nomeA.localeCompare(nomeB, 'pt-BR');
       });  
 
     return (
@@ -150,12 +159,16 @@ function Adjuntos() {
                     <ModalTitle>{edit? 'Editar Adjunto' : 'Novo Adjunto'}</ModalTitle>
                     <InputContainer>
                         <label>Ministro</label>
-                        <select value={edited.ministro} onChange={(e) => updateProps('ministro', e.target.value)}>
-                            <option value={0}></option>
-                            {ministros.map((item: IMentor, index: number) => (
-                                <option key={index} value={item.id}>{item.nome}</option>
-                            ))}
-                        </select>
+                        <AutocompleteInput 
+                            label={(option) => option.nome}
+                            default={defaultMentor}
+                            options={alphabeticOrder(ministros)}
+                            equality={(option, value) => option?.id === value?.id}
+                            value={dropMinistro}
+                            setValue={setDropMinistro}
+                            inputValue={searchMinistro}
+                            setInputValue={setSearchMinistro}
+                        />
                     </InputContainer>
                     <InputContainer>
                         <label>Nome do Adjunto</label>

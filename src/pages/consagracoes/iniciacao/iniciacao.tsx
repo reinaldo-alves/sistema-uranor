@@ -283,6 +283,7 @@ function Iniciacao() {
                     <InputContainer>
                         <label>Nome do Médium</label>
                         <AutocompleteInput 
+                            label={(option) => option.nome}
                             default={defaultMedium}
                             options={mediuns.filter((item: IMedium) => item.dtEmplac && !item.dtIniciacao && searchMediumInCons(item.medium_id) === defaultConsagracao)}
                             equality={(option, value) => option.medium_id === value.medium_id}

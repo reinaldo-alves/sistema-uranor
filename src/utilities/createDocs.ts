@@ -9,7 +9,7 @@ import { alphabeticOrder, convertDate, getCurrentDate, imageToBase64, reduceClas
 import { jaguarImage } from 'src/assets/encodedFiles/jaguar';
 import { aparaImage } from 'src/assets/encodedFiles/apara';
 import { doutrinadorImage } from 'src/assets/encodedFiles/doutrinador';
-import { defaultTemp } from './default';
+import { defaultMedium, defaultTemp } from './default';
 
 pdfMake.vfs = pdfTimes.pdfMake.vfs;
 window.pdfMake.vfs['times.ttf'] = timesRegular;
@@ -1605,4 +1605,294 @@ export const generateReportAllCons = (listIniciacao: Array<IConsagracao>, listEl
     }
 
     pdfMake.createPdf(emissaoDefinitions).open({}, window.open(`${reportTitle.text.toString().replace(/ /g, '_')}.pdf`, '_blank'));
+}
+
+export const generateFicha = async (medium: IMedium) => {    
+    const fichaHeader = async () => {
+        const base64String = await imageToBase64(medium.foto);
+
+        return [
+            {                
+                columns: [
+                    {
+                        stack: [
+                            { text: 'TEMPLO URANOR DO AMANHECER DE JABOATÃO - PE', alignment: 'center', bold: true, margin: [0, 0, -85, 3] },
+                            { text: 'CASTELO DOS DEVAS - FICHA MEDIÚNICA', alignment: 'center', margin: [0, 0, -85, 15] },
+                            {
+                                text: [
+                                    'NOME: ',
+                                    '___________________________________________________________________________',
+                                ],
+                                margin: [0, 0, 0, 6]
+                            },
+                            {
+                                text: [
+                                    'MINISTRO DE ORIGEM: ',
+                                    '__________________________',
+                                    '  ',
+                                    'SEXO: ',
+                                    '__________________________'
+                                ],
+                                margin: [0, 0, 0, 6]
+                            },
+                            {
+                                text: [
+                                    'DATA DE NASCIMENTO: ',
+                                    '____/____/______',
+                                    '  ',
+                                    'MEDIUNIDADE: ',
+                                    '___________________________'
+                                ],
+                                margin: [0, 0, 0, 6]
+                            },
+                            {
+                                text: [
+                                    'NATURAL DE: ',
+                                    '_________________________________________________________',
+                                    '  ',
+                                    'UF: ',
+                                    '_______'
+                                ],
+                                margin: [0, 0, 0, 6]
+                            }
+                        ],
+                        fontSize: 11,
+                        width: '*'
+                    },
+                    {
+                        table: {
+                            body: [
+                                [{
+                                    stack: [
+                                        'FOTO',
+                                        '3X4'
+                                    ],
+                                    alignment: 'center',
+                                    width: 80,
+                                    height: 107,
+                                    margin: [24, 40, 25, 40]
+                                }]
+                            ]
+                        },
+                        width: 85,
+                        margin: [5, -5, 0, 0]
+                    }
+                ],
+                columnGap: 0
+            },
+            {
+                text: [
+                    'MÃE: ',
+                    '___________________________________________',
+                    '  ',
+                    'PAI: ',
+                    '____________________________________________'
+                ],
+                fontSize: 11,
+                margin: [0, 0, 0, 6]
+            },
+            {
+                text: [
+                    'RG: ',
+                    '_____________',
+                    '  ',
+                    'ÓRGÃO/UF: ',
+                    '________',
+                    '  ',
+                    'CPF: ',
+                    '____________________',
+                    '  ',
+                    'PROFISSÃO: ',
+                    '______________________'
+                ],
+                fontSize: 11,
+                margin: [0, 0, 0, 6]
+            },
+            {
+                text: [
+                    'ESTADO CIVIL: ',
+                    '____________________',
+                    '  ',
+                    'CÔNJUGE: ',
+                    '____________________________________________________'
+                ],
+                fontSize: 11,
+                margin: [0, 0, 0, 6]
+            },
+            {
+                text: [
+                    'ENDEREÇO: ',
+                    '____________________________________________________________________________',
+                    '  ',
+                    'N°: ',
+                    '______'
+                ],
+                fontSize: 11,
+                margin: [0, 0, 0, 6]
+            },
+            {
+                text: [
+                    'COMPLEMENTO: ',
+                    '____________________',
+                    '  ',
+                    'BAIRRO: ',
+                    '____________________________',
+                    '  ',
+                    'TEL: ',
+                    '(___)______________',
+                ],
+                fontSize: 11,
+                margin: [0, 0, 0, 6]
+            },
+            {
+                text: [
+                    'CIDADE: ',
+                    '________________________________________',
+                    '  ',
+                    'UF: ',
+                    '____',
+                    '  ',
+                    'CEP: ',
+                    '___________',
+                    '  ',
+                    'CEL: ',
+                    '(___)______________'
+                ],
+                fontSize: 11,
+                margin: [0, 0, 0, 12]
+            },
+            {
+                columns: [
+                    {
+                        stack: [
+                            {
+                                text: [
+                                    'DATA DE INGRESSO: ',
+                                    '____/____/______',
+                                ],
+                                margin: [0, 0, 0, 6]
+                            },
+                            {
+                                text: [
+                                    'DATA DE EMPLACAMENTO: ',
+                                    '____/____/______',
+                                ],
+                                margin: [0, 0, 0, 6]
+                            },
+                            {
+                                text: [
+                                    'DATA DE INICIAÇÃO: ',
+                                    '____/____/______',
+                                ],
+                                margin: [0, 0, 0, 6]
+                            },
+                            {
+                                text: [
+                                    'DATA DE ELEVAÇÃO: ',
+                                    '____/____/______',
+                                ],
+                                margin: [0, 0, 0, 6]
+                            },
+                            {
+                                text: [
+                                    'DATA DE CENTÚRIA: ',
+                                    '____/____/______',
+                                ],
+                                margin: [0, 0, 0, 6]
+                            },
+                        ],
+                        fontSize: 11
+                    },
+                    {
+                        stack: [
+                            {
+                                text: [
+                                    'PRINCESA: ',
+                                    '______________________________________',
+                                ],
+                                margin: [0, 0, 0, 6]
+                            },
+                            {
+                                text: [
+                                    'PRETO VELHO: ',
+                                    '__________________________________',
+                                ],
+                                margin: [0, 0, 0, 6]
+                            },
+                            {
+                                text: [
+                                    'CABOCLO: ',
+                                    '______________________________________',
+                                ],
+                                margin: [0, 0, 0, 6]
+                            },
+                            {
+                                text: [
+                                    'MÉDICO: ',
+                                    '________________________________________',
+                                ],
+                                margin: [0, 0, 0, 6]
+                            },
+                        ],
+                        fontSize: 11
+                    }
+                ]
+            },
+            {
+                text: '________________________________________________________________',
+                fontSize: 9,
+                alignment: 'center',
+                margin: [0, 25, 0, 3]
+            },
+            {
+                text: 'ASSINATURA',
+                fontSize: 9,
+                alignment: 'center'
+            }
+        ] as Content
+    };
+
+    const contentTable = async () => {
+        return {
+            table: {
+                widths: ['*'],
+                body: [
+                    [{
+                        stack: await fichaHeader()
+                    }]
+                ]
+            },
+            layout: {
+                paddingLeft: function() { return 15; },
+                paddingRight: function() { return 15; },
+                paddingTop: function() { return 10; },
+                paddingBottom: function() { return 10; }
+            },
+            margin: [0, 0, 0, 30],
+            style: {
+                alignment: 'justify'
+            }
+        } as Content
+    }
+
+    const contentArray = async () => {
+        const array = [] as Array<Content>;
+        array.push(await contentTable());
+        array.push(await contentTable());
+        return array
+    }
+   
+    const termoDefinitions: TDocumentDefinitions = {
+        info: {
+            title: medium === defaultMedium ? 'Ficha_mediunica' : `Termo_${medium.medium_id.toString().padStart(5, '0')}_${medium.nome.replace(/ /g, '_')}`
+        },
+        pageMargins: [10, 10, 10, 10],
+        pageSize: 'A4',
+        content: await contentArray(),
+        defaultStyle: {
+            font: 'Times'
+        }
+    }
+
+    pdfMake.createPdf(termoDefinitions).open({}, window.open(medium === defaultMedium ? 'Ficha_mediunica.pdf' : `Termo_${medium.medium_id.toString().padStart(5, '0')}_${medium.nome.replace(/ /g, '_')}.pdf`, '_blank'));
 }

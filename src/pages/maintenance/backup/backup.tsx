@@ -72,6 +72,7 @@ function Backup() {
                     <h2>Observações</h2>
                     <p>Os arquivos de backup ficam armazenados na pasta do Sistema Uranor. Para encontrá-los, acesse /backend/public/backup</p>
                     <p>Ao transferir o backup para outro computador, copie também a pasta de fotos, que fica em /backend/public/upload/medium. Cole no mesmo lugar no computador de destino</p>
+                    <p>Antes de restaurar um backup externo, recomenda-se criar um backup da base de dados atual do sistema</p>
                 </ObsContainer>
             </MainContainer>
             <SideMenu list={listSubMenu}/>

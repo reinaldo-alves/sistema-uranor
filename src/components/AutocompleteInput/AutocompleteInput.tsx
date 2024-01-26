@@ -2,6 +2,7 @@ import Autocomplete from '@mui/material/Autocomplete';
 
 interface IProps {
     default: any,
+    label: (option: any) => string,
     disabled?: boolean,
     disabledOptions?: (option: any) => boolean,
     options: Array<any>,
@@ -28,7 +29,7 @@ function AutocompleteInput(props: IProps) {
             onInputChange={(event, newInputValue) => {
                 props.setInputValue(newInputValue);
             }}
-            getOptionLabel={(option) => option.nome}
+            getOptionLabel={props.label}
             isOptionEqualToValue={props.equality}
             fullWidth={true}
             loading={props.options.length === 0}

@@ -18,19 +18,19 @@ export const CardsContainer = styled.div`
     margin-bottom: 25px;
 `;
 
-export const ButtonUtilDoc = styled.div`
-    border: solid 1px ${(props) => {return props.theme.color.darkerColor}};
+export const ButtonUtilDoc = styled.div<{disabled?: boolean}>`
+    border: solid 1px ${(props) => props.disabled ? props.theme.color.lighterColor : props.theme.color.darkerColor};
     border-radius: 8px;
     padding: 10px;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    color: ${(props) => {return props.theme.color.darkerColor}};
+    color: ${(props) => props.disabled ? props.theme.color.lighterColor : props.theme.color.darkerColor};
     font-weight: bold;
     font-size: 25px;
     text-align: center;
-    background-color: ${(props) => {return props.theme.color.mediumColorTr}};
+    background-color: ${(props) => props.disabled ? 'rgba(200, 200, 200, 0.9)' : props.theme.color.mediumColorTr};
     height: 3em;
     z-index: 1;
     width: 100%;
@@ -40,9 +40,9 @@ export const ButtonUtilDoc = styled.div`
     }
 
     :hover {
-        transform: scale(1.05);
-        cursor: pointer;
-        background-color: ${(props) => {return props.theme.color.mediumColorOp}};
+        transform: ${({ disabled }) => disabled ? 'scale(1)' : 'scale(1.05)'};
+        cursor: ${({ disabled }) => disabled ? 'not-allowed' : 'pointer'};
+        background-color: ${(props) => props.disabled ? 'rgba(200, 200, 200, 0.9)' : props.theme.color.mediumColorOp};
     }
 
     :active {

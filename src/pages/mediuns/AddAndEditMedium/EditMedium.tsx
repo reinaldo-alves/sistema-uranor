@@ -648,6 +648,7 @@ function EditMedium() {
                             <GridContainer>
                                 <label>Ministro: </label>
                                 <AutocompleteInput 
+                                    label={(option) => option.nome}
                                     disabled={medium.classif === '7° Raio Autorizado Taumantes Raio Rama Adjuração' || medium.classif === '5° Yurê Raio Autorizado Cautanenses Raio Rama Ajanã' || medium.classif === ''}
                                     default={defaultMentor}
                                     options={ministros}
@@ -661,6 +662,7 @@ function EditMedium() {
                                 <input type="date" value={medium.dtMentor} onChange={(e) => updateProps('dtMentor', e.target.value)} min={medium.dtCenturia}  max={now} disabled={medium.classif === '7° Raio Autorizado Taumantes Raio Rama Adjuração' || medium.classif === '5° Yurê Raio Autorizado Cautanenses Raio Rama Ajanã' || medium.classif === ''} />
                                 <label>Cavaleiro: </label>
                                 <AutocompleteInput 
+                                    label={(option) => option.nome}
                                     disabled={medium.classif === '7° Raio Autorizado Taumantes Raio Rama Adjuração' || medium.classif === '5° Yurê Raio Autorizado Cautanenses Raio Rama Ajanã' || medium.classif === ''}
                                     default={defaultCavaleiro}
                                     options={listCav}
@@ -725,6 +727,7 @@ function EditMedium() {
                                 </select>
                                 <label>Guia Missionária: </label>
                                 <AutocompleteInput 
+                                    label={(option) => option.nome}
                                     default={defaultMentor}
                                     options={guias}
                                     equality={(option, value) => option.id === value.id}
@@ -786,6 +789,7 @@ function EditMedium() {
                         <GridContainer>
                             <label>Escrava: </label>
                             <AutocompleteInput 
+                                label={(option) => option.nome}
                                 default={defaultMedium}
                                 options={mediuns.filter((item: IMedium) => item.dtCenturia && item.med === 'Apará' && item.sex === 'Feminino')}
                                 disabledOptions={(option: IMedium) => option.mestre !== 0 && option.medium_id !== selected.ninfa}
@@ -797,6 +801,7 @@ function EditMedium() {
                             />
                             <label>Madrinha: </label>
                             <AutocompleteInput 
+                                label={(option) => option.nome}
                                 default={defaultMedium}
                                 options={mediuns.filter((item: IMedium) => item.dtCenturia && item.med === 'Doutrinador' && item.sex === 'Feminino')}
                                 disabledOptions={(option: IMedium) => option.afilhado !== 0 && option.medium_id !== selected.madrinha}
@@ -808,6 +813,7 @@ function EditMedium() {
                             />
                             <label>Padrinho: </label>
                             <AutocompleteInput 
+                                label={(option) => option.nome}
                                 default={defaultMedium}
                                 options={mediuns.filter((item: IMedium) => item.dtCenturia && item.med === 'Apará' && item.sex === 'Masculino')}
                                 disabledOptions={(option: IMedium) => option.afilhado !== 0 && option.medium_id !== selected.padrinho}
@@ -822,6 +828,7 @@ function EditMedium() {
                         <GridContainer>
                             <label>Afilhado: </label>
                             <AutocompleteInput 
+                                label={(option) => option.nome}
                                 default={defaultMedium}
                                 options={mediuns.filter((item: IMedium) => item.dtCenturia && item.med === 'Doutrinador' && item.sex === 'Masculino')}
                                 disabledOptions={(option: IMedium) => option.padrinho !== 0  && option.medium_id !== selected.afilhado}
@@ -838,6 +845,7 @@ function EditMedium() {
                         <GridContainer>
                             <label>Afilhado: </label>
                             <AutocompleteInput 
+                                label={(option) => option.nome}
                                 default={defaultMedium}
                                 options={mediuns.filter((item: IMedium) => item.dtCenturia && item.med === 'Doutrinador' && item.sex === 'Masculino')}
                                 disabledOptions={(option: IMedium) => option.madrinha !== 0  && option.medium_id !== selected.afilhado}
@@ -854,6 +862,7 @@ function EditMedium() {
                         <GridContainer>
                             <label>Mestre: </label>
                             <AutocompleteInput 
+                                label={(option) => option.nome}
                                 default={defaultMedium}
                                 options={mediuns.filter((item: IMedium) => item.dtCenturia && item.med === 'Doutrinador' && item.sex === 'Masculino')}
                                 disabledOptions={(option: IMedium) => option.ninfa !== 0  && option.medium_id !== selected.mestre}
@@ -954,6 +963,7 @@ function EditMedium() {
                                         <FieldContainer>
                                             <label>Herdeiro de: </label>
                                             <AutocompleteInput 
+                                                label={(option) => option.nome}
                                                 default={defaultMedium}
                                                 options={mediuns.filter((item: IMedium) => item.classif === 'Adjunto Koatay 108 Herdeiro Triada Harpásios 7° Raio Adjuração Arcanos Rama 2000')}
                                                 disabled={!medium.trinoSar}
@@ -1003,6 +1013,7 @@ function EditMedium() {
                                 <FieldContainer>
                                     <label>Herdeiro de: </label>
                                     <AutocompleteInput 
+                                        label={(option) => option.nome}
                                         default={defaultMedium}
                                         options={mediuns.filter((item: IMedium) => item.classif === 'Adjunto Koatay 108 Herdeiro Triada Harpásios 7° Raio Adjuração Arcanos Rama 2000')}
                                         disabled={!medium.trinoSar}
@@ -1077,6 +1088,7 @@ function EditMedium() {
                                 </select>
                                 <label>Cavaleiro: </label>
                                 <AutocompleteInput 
+                                    label={(option) => option.nome}
                                     disabled={!medium.dtCenturia}
                                     default={defaultCavaleiro}
                                     options={oldListCav}

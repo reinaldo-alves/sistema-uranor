@@ -31,7 +31,6 @@ export const UserStore = ({ children }: any) => {
     const getUser = async (token: string) => {
         try {
             const { data } = await api.get('/user/get', {headers: {Authorization: token}})
-            console.log(data.user)
             setUser(data.user);
             setLogin(true);
             setLoading(false);

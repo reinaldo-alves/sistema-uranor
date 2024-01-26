@@ -70,13 +70,9 @@ function Guias() {
     }
     
     guias.sort((guiaA: IMentor, guiaB: IMentor) => {
-        if (guiaA.nome < guiaB.nome) {
-          return -1;
-        }
-        if (guiaA.nome > guiaB.nome) {
-          return 1;
-        }
-        return 0;
+        const nomeA = guiaA.nome.toLowerCase();
+        const nomeB = guiaB.nome.toLowerCase();
+        return nomeA.localeCompare(nomeB, 'pt-BR');
       });      
 
     return (

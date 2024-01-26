@@ -1,4 +1,4 @@
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect } from "react";
 import { InfoCard, InputContainer, MainContainer, InfoContent, Results, ResultsCard, ResultsDetails, ResultsTable, ResultsTitle, SearchButton, SearchCard, SearchContainer, Modal, ModalContent, ModalTitle, ModalButton } from "./styles";
 import { ListContext } from "src/contexts/ListContext";
 import SideMenu from "src/components/SideMenu/SideMenu";
@@ -9,7 +9,9 @@ import MainTitle from "src/components/MainTitle/MainTitle";
 import { UserContext } from "src/contexts/UserContext";
 import api from "src/api";
 import { Alert } from "src/utilities/popups";
-import { defaultTemp } from "src/utilities/default";
+import { defaultAdj, defaultTemp } from "src/utilities/default";
+import AutocompleteInput from "src/components/AutocompleteInput/AutocompleteInput";
+import { alphabeticOrder } from "src/utilities/functions";
 
 function Templos() {
     const [searchName, setSearchName] = useState('');
@@ -19,6 +21,8 @@ function Templos() {
     const [selected, setSelected] = useState(defaultTemp);
     const [edited, setEdited] = useState(defaultTemp);
     const [showModal, setShowModal] = useState(false);
+    const [dropPres, setDropPres] = useState(defaultAdj);
+    const [searchPres, setSearchPres] = useState('');
     
     const { token } = useContext(UserContext);
     const { ministros, adjuntos, templos, estados, loadTemplo } = useContext(ListContext);
@@ -35,10 +39,17 @@ function Templos() {
         }));
     };
 
+    useEffect(() => {
+        const presObject = adjuntos.find((item: IAdjunto) => item?.adjunto_id === dropPres?.adjunto_id);
+        updateProps('presidente', presObject? presObject.adjunto_id : 0);
+    }, [dropPres])
+
     const modalAddTemp = () => {
         setEdit(false);
         setEdited(defaultTemp);
         setSelected(defaultTemp);
+        setDropPres(defaultAdj);
+        setSearchPres('');
         setShowModal(true);
     }
 
@@ -46,6 +57,8 @@ function Templos() {
         setEdit(true);
         setEdited(temp);
         setSelected(temp);
+        setDropPres(adjuntos.find((item: IAdjunto) => item.adjunto_id === temp.presidente));
+        setSearchPres(`Adj. ${ministros.filter((min: IMentor) => min.id === adjuntos.filter((ad: IAdjunto) => ad.adjunto_id === temp.presidente)[0].ministro)[0].nome} - Mestre ${adjuntos.find((item: IAdjunto) => item.adjunto_id === temp.presidente)?.nome}` || '');
         setShowModal(true);
     }
 
@@ -95,13 +108,9 @@ function Templos() {
     }
     
     templos.sort((temA: ITemplo, temB: ITemplo) => {
-        if (temA.cidade < temB.cidade) {
-          return -1;
-        }
-        if (temA.cidade > temB.cidade) {
-          return 1;
-        }
-        return 0;
+        const nomeA = temA.cidade.toLowerCase();
+        const nomeB = temB.cidade.toLowerCase();
+        return nomeA.localeCompare(nomeB, 'pt-BR');
       });    
 
     return (
@@ -176,15 +185,16 @@ function Templos() {
                     </InputContainer>
                     <InputContainer>
                         <label>Presidente</label>
-                        <select value={edited.presidente} onChange={(e) => updateProps('presidente', e.target.value)}>
-                            <option value=''></option>
-                            {adjuntos
-                                .filter((item: IAdjunto) => item.esperanca === false)
-                                .map((item: IAdjunto, index: number) => (
-                                    <option key={index} value={item.adjunto_id}>Adj. {ministros.filter((min: IMentor) => min.id === item.ministro)[0].nome} - Mestre {item.nome}</option>
-                                ))
-                            }
-                        </select>
+                        <AutocompleteInput 
+                            label={(option) => option === defaultAdj ? '' : `Adj. ${ministros.filter((min: IMentor) => min.id === option.ministro)[0].nome} - Mestre ${option.nome}` }
+                            default={defaultAdj}
+                            options={alphabeticOrder(adjuntos.filter((item: IAdjunto) => item.esperanca === false))}
+                            equality={(option, value) => option?.adjunto_id === value?.adjunto_id}
+                            value={dropPres}
+                            setValue={setDropPres}
+                            inputValue={searchPres}
+                            setInputValue={setSearchPres}
+                        />
                     </InputContainer>
                     <div style={{display: 'flex', gap: '20px'}}>
                         <ModalButton color="red" onClick={() => closeModal()}>Cancelar</ModalButton>

@@ -70,13 +70,9 @@ function Ministros() {
     }
     
     ministros.sort((minA: IMentor, minB: IMentor) => {
-        if (minA.nome < minB.nome) {
-          return -1;
-        }
-        if (minA.nome > minB.nome) {
-          return 1;
-        }
-        return 0;
+        const nomeA = minA.nome.toLowerCase();
+        const nomeB = minB.nome.toLowerCase();
+        return nomeA.localeCompare(nomeB, 'pt-BR');
       });      
 
     return (
