@@ -8,12 +8,12 @@ import Header from "src/components/header/header";
 import { UserContext } from "src/contexts/UserContext";
 import api from "src/api";
 import { MediumContext } from "src/contexts/MediumContext";
-import { formatCep, formatCpf, formatPhoneNumber } from "src/utilities/functions";
+import { alphabeticOrder, formatCep, formatCpf, formatPhoneNumber } from "src/utilities/functions";
 import { Alert } from "src/utilities/popups";
 import axios from "axios";
 import { validateMedium } from "src/utilities/validations";
 import AutocompleteInput from "src/components/AutocompleteInput/AutocompleteInput";
-import { defaultCavaleiro, defaultMedium, defaultMentor } from "src/utilities/default";
+import { defaultAdj, defaultCavaleiro, defaultMedium, defaultMentor } from "src/utilities/default";
 import { useNavigate } from "react-router-dom";
 
 function AddMedium() {
@@ -36,6 +36,7 @@ function AddMedium() {
     const [tSol, setTSol] = useState(false);
     const [photo, setPhoto] = useState<File | null>(null);
     const [preview, setPreview] = useState<string | null>(null);
+    const [dropPres, setDropPres] = useState(defaultAdj);
     const [dropMin, setDropMin] = useState(defaultMentor);
     const [dropCav, setDropCav] = useState(defaultCavaleiro);
     const [dropOldCav, setDropOldCav] = useState(defaultCavaleiro);
@@ -45,6 +46,7 @@ function AddMedium() {
     const [dropPad, setDropPad] = useState(defaultMedium);
     const [dropMad, setDropMad] = useState(defaultMedium);
     const [dropAfi, setDropAfi] = useState(defaultMedium);
+    const [searchPres, setSearchPres] = useState('');
     const [searchMin, setSearchMin] = useState('');
     const [searchCav, setSearchCav] = useState('');
     const [searchOldCav, setSearchOldCav] = useState('');
@@ -200,6 +202,14 @@ function AddMedium() {
         }
     }, [photo]);
 
+    useEffect(() => {
+        if(dropPres) {
+            updateProps('adjOrigem', dropPres.adjunto_id)
+        } else {
+            updateProps('adjOrigem', 0)
+        }
+    }, [dropPres])
+    
     useEffect(() => {
         if(dropMin) {
             updateProps('ministro', dropMin.id)
@@ -518,12 +528,22 @@ function AddMedium() {
                     <SectionTitle>Dados Mediúnicos</SectionTitle>
                     <GridContainer>
                         <label>Adjunto Origem.: </label>
-                        <select value={newMedium.adjOrigem} onChange={(e) => updateProps('adjOrigem', e.target.value)}>
+                        <AutocompleteInput 
+                            label={(option) => option === defaultAdj ? '' : `Adj. ${ministros.filter((min: IMentor) => min.id === option.ministro)[0].nome} - Mestre ${option.nome}` }
+                            default={defaultAdj}
+                            options={alphabeticOrder(adjuntos)}
+                            equality={(option, value) => option?.adjunto_id === value?.adjunto_id}
+                            value={dropPres}
+                            setValue={setDropPres}
+                            inputValue={searchPres}
+                            setInputValue={setSearchPres}
+                        />
+                        {/* <select value={newMedium.adjOrigem} onChange={(e) => updateProps('adjOrigem', e.target.value)}>
                             <option value={0}></option>
                             {adjuntos.map((item: IAdjunto, index: number) => (
                                 <option key={index} value={item.adjunto_id}>Adj. {ministros.find((min: IMentor) => min.id === item.ministro).nome} - Mestre {item.nome}</option>
                             ))}
-                        </select>
+                        </select> */}
                         <label>Templo Origem: </label>
                         <select value={newMedium.temploOrigem} onChange={(e) => updateProps('temploOrigem', e.target.value)}>
                             <option value={0}></option>

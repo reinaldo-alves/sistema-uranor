@@ -19,4 +19,5 @@ VERSÃO 1.1.0
 - Permitir colocar Filha de Devas nas emissões geradas por ninfas
 - Atualização de consagrações apenas para administradores
 - Correção na ordem alfabética das listas, levando em consideração a acentuação
-- Substituição de elemento select por autocomplete input em cadastros no menu manutenção
+- Substituição de elemento select por autocomplete input em cadastros no menu manutenção e na seleção de adjunto de origem na página de cadastro de médium
+- Adição do botão Reclassificação na página de exibição de médium

@@ -6,7 +6,6 @@ import MainTitle from "src/components/MainTitle/MainTitle";
 import { generateChamadaOficial, generateFicha, generatePrefixos, generateTurnos } from "src/utilities/createDocs";
 import { useContext } from "react";
 import { ListContext } from "src/contexts/ListContext";
-import { defaultMedium } from "src/utilities/default";
 
 function DocumentosUteis() {
 
@@ -20,7 +19,7 @@ function DocumentosUteis() {
         {name: 'Relação de Turnos de Trabalho', link: () => generateTurnos()},
         {name: 'Calendário de Atividades Doutrinárias', link: nullFunction},
         {name: 'Escala dos Devas', link: nullFunction},
-        {name: 'Formulário para Ficha Mediúnica', link: () => generateFicha(defaultMedium)}
+        {name: 'Formulário para Ficha Mediúnica', link: () => generateFicha()}
     ]
     
     const menuList = [{title: 'Página Inicial', click: '/'}]

@@ -171,7 +171,7 @@ function Centuria() {
                         <AutocompleteInput 
                             label={(option) => option.nome}
                             default={defaultMedium}
-                            options={mediuns.filter((item: IMedium) => item.dtElevacao && !item.dtCenturia && searchMediumInCons(item.medium_id) === defaultConsagracao)}
+                            options={mediuns.filter((item: IMedium) => item.dtElevacao && !item.dtCenturia && item.condicao === 'Ativo' && searchMediumInCons(item.medium_id) === defaultConsagracao)}
                             equality={(option, value) => option.medium_id === value.medium_id}
                             value={dropMedium}
                             setValue={setDropMedium}

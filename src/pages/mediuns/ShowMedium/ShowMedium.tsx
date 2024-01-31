@@ -12,7 +12,7 @@ import { ListContext } from "src/contexts/ListContext";
 import PageNotFound from "src/pages/PageNotFound/PageNotFound";
 import Loading from "src/utilities/Loading";
 import { Alert, Confirm } from "src/utilities/popups";
-import { generateAutorizacao, generateEmissao } from "src/utilities/createDocs";
+import { generateAutorizacao, generateEmissao, generateReclass } from "src/utilities/createDocs";
 import { validateEmissao } from "src/utilities/validations";
 import { emissaoText } from "src/reports/emissao";
 import { defaultConsagracao } from "src/utilities/default";
@@ -154,6 +154,7 @@ function ShowMedium() {
                             <MediumButton onClick={() => navigate(`/mediuns/editar/${medium.medium_id}`)} color="green">Editar</MediumButton>
                             <MediumButton disabled color="green">Gerar Ficha</MediumButton>
                             <MediumButton color="green" disabled={searchMediumInCons(medium.medium_id) === defaultConsagracao} onClick={() => generateAutorizacao([searchMediumInCons(medium.medium_id)], templos, adjuntos, ministros, searchMediumInCons(medium.medium_id).consagracao)}>Autorização</MediumButton>
+                            <MediumButton color="green" disabled={!medium.dtCenturia || medium.sex !== 'Masculino'} onClick={() => generateReclass(medium, adjuntos, ministros, cavaleiros, user)}>Reclassificação</MediumButton>
                             <MediumButton disabled color="green">Linha do Tempo</MediumButton>
                             <MediumButton onClick={confirmChangeMed} color="red">Mudar Med.</MediumButton>
                             <MediumButton style={{display: `${user.level === 'Administrador' ? 'block' : 'none'}`}} onClick={deleteMedium} color="red">Excluir</MediumButton>

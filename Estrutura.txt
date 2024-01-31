@@ -1,14 +1,6 @@
 MÉDIUM
-- Cadastrar
-- Consultar
 - Médium menor
-- Gerar Emissão
 - Gerar Ficha
-
-CANTOS E CHAVES
-- Cantos da Individualidade
-- Cantos das Falanges Missionárias
-- Chaves dos Trabalhos
 
 DESENVOLVIMENTO
 - Cadastrar médium
@@ -25,20 +17,6 @@ CURSOS
 - Cadastro de instrutores
 - Frequência
 
-CONSAGRAÇÕES
-- Autorizações
-- Termo de Compromisso
-- Autorização trino solitário
-- Autorização trino sardyos
-- Autorização Devas
-- Atualizar datas de consagrações
-- Lista de médiuns para consagrações (previsão)
-- Lista de médiuns para iniciação/elevação/centúria
-- Inserir fotos e coletes iniciação
-- Lista coletes
-- Atualizar classificação de mestrado elevação
-- Documento reclassificação
-
 RELATÓRIOS
 - Relatório Personalizado
 - Relatório médium menor
@@ -54,7 +32,7 @@ RELATÓRIOS
 
 DOCUMENTOS ÚTEIS
 - Calendário de atividades doutrinárias
-- Ficha mediúnica em branco
+- Escala dos Devas
 
 BIBLIOTECA
 - Livro de Leis
@@ -64,12 +42,6 @@ BIBLIOTECA
 - Cartas
 - Instruções Práticas
 - Contagem Trino Araken
-
-MANUTENÇÃO
-- Cadastro de Usuários
-- Exportar Banco de dados
-- Importar Backup
-- Cadastro de Templos, Adjuntos, Ministros, Cavaleiros e Guias Missionárias
 
 OUTROS
 - Emissão de crachá

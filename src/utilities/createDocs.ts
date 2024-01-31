@@ -9,7 +9,7 @@ import { alphabeticOrder, convertDate, getCurrentDate, imageToBase64, reduceClas
 import { jaguarImage } from 'src/assets/encodedFiles/jaguar';
 import { aparaImage } from 'src/assets/encodedFiles/apara';
 import { doutrinadorImage } from 'src/assets/encodedFiles/doutrinador';
-import { defaultMedium, defaultTemp } from './default';
+import { defaultTemp } from './default';
 
 pdfMake.vfs = pdfTimes.pdfMake.vfs;
 window.pdfMake.vfs['times.ttf'] = timesRegular;
@@ -1607,10 +1607,8 @@ export const generateReportAllCons = (listIniciacao: Array<IConsagracao>, listEl
     pdfMake.createPdf(emissaoDefinitions).open({}, window.open(`${reportTitle.text.toString().replace(/ /g, '_')}.pdf`, '_blank'));
 }
 
-export const generateFicha = async (medium: IMedium) => {    
-    const fichaHeader = async () => {
-        const base64String = await imageToBase64(medium.foto);
-
+export const generateFicha = async () => {    
+    const fichaFrente = async () => {
         return [
             {                
                 columns: [
@@ -1694,16 +1692,13 @@ export const generateFicha = async (medium: IMedium) => {
             {
                 text: [
                     'RG: ',
-                    '_____________',
-                    '  ',
-                    'ÓRGÃO/UF: ',
-                    '________',
-                    '  ',
-                    'CPF: ',
                     '____________________',
                     '  ',
+                    'CPF: ',
+                    '___________________________',
+                    '  ',
                     'PROFISSÃO: ',
-                    '______________________'
+                    '_____________________________'
                 ],
                 fontSize: 11,
                 margin: [0, 0, 0, 6]
@@ -1759,7 +1754,7 @@ export const generateFicha = async (medium: IMedium) => {
                     '(___)______________'
                 ],
                 fontSize: 11,
-                margin: [0, 0, 0, 12]
+                margin: [0, 0, 0, 17]
             },
             {
                 columns: [
@@ -1842,7 +1837,7 @@ export const generateFicha = async (medium: IMedium) => {
                 text: '________________________________________________________________',
                 fontSize: 9,
                 alignment: 'center',
-                margin: [0, 25, 0, 3]
+                margin: [0, 20, 0, 3]
             },
             {
                 text: 'ASSINATURA',
@@ -1852,13 +1847,206 @@ export const generateFicha = async (medium: IMedium) => {
         ] as Content
     };
 
-    const contentTable = async () => {
+    const fichaVerso = async () => {
+        return [
+            {
+                text: [
+                    'CLASSIFICAÇÃO: ',
+                    '_________________________',
+                    '  ',
+                    'FALANGE DE MESTRADO: ',
+                    '_______________________________'
+                ],
+                fontSize: 11,
+                margin: [0, 0, 0, 6]
+            },
+            {
+                text: [
+                    'POVO: ',
+                    '________________________',
+                    '  ',
+                    'TURNO: ',
+                    '________________________',
+                    '  ',
+                    'ESTRELA: ',
+                    '________________________'
+                ],
+                fontSize: 11,
+                margin: [0, 0, 0, 6]
+            },
+            {
+                text: [
+                    'CAVALEIRO/GUIA: ',
+                    '________________________________________',
+                    '  ',
+                    'MINISTRO: ',
+                    '_____________________________'
+                ],
+                fontSize: 11,
+                margin: [0, 0, 0, 6]
+            },
+            {
+                text: [
+                    'FALANGE MISSIONÁRIA: ',
+                    '________________________________________',
+                    '  ',
+                    'ADJUNTO DEVAS: ',
+                    '________________'
+                ],
+                fontSize: 11,
+                margin: [0, 0, 0, 6]
+            },
+            {
+                text: [
+                    'TURNO DE TRABALHO: ',
+                    '__________________________',
+                    '  ',
+                    'DATA MINISTRO/CAVALEIRO/GUIA: ',
+                    '____/____/______'
+                ],
+                fontSize: 11,
+                margin: [0, 0, 0, 17]
+            },
+            {
+                text: 'CLASSIFICAÇÕES',
+                fontSize: 11,
+                margin: [0, 0, 0, 8]
+            },
+            {
+                columns: [
+                    {
+                        stack: [
+                            {
+                                text: [
+                                    'DATA: ',
+                                    '____/____/______',
+                                ],
+                                margin: [0, 0, 0, 6]
+                            },
+                            {
+                                text: [
+                                    'DATA: ',
+                                    '____/____/______',
+                                ],
+                                margin: [0, 0, 0, 6]
+                            },
+                            {
+                                text: [
+                                    'DATA: ',
+                                    '____/____/______',
+                                ],
+                                margin: [0, 0, 0, 6]
+                            },
+                            {
+                                text: [
+                                    'DATA: ',
+                                    '____/____/______',
+                                ],
+                                margin: [0, 0, 0, 6]
+                            },
+                            {
+                                text: [
+                                    'DATA: ',
+                                    '____/____/______',
+                                ],
+                                margin: [0, 0, 0, 6]
+                            },
+                        ],
+                        fontSize: 11,
+                        width: 'auto'
+                    },
+                    {
+                        stack: [
+                            {
+                                text: [
+                                    'CLASSIFICAÇÃO: ',
+                                    '_______________________________________________________',
+                                ],
+                                margin: [0, 0, 0, 6]
+                            },
+                            {
+                                text: [
+                                    'CLASSIFICAÇÃO: ',
+                                    '_______________________________________________________',
+                                ],
+                                margin: [0, 0, 0, 6]
+                            },
+                            {
+                                text: [
+                                    'CLASSIFICAÇÃO: ',
+                                    '_______________________________________________________',
+                                ],
+                                margin: [0, 0, 0, 6]
+                            },
+                            {
+                                text: [
+                                    'CLASSIFICAÇÃO: ',
+                                    '_______________________________________________________',
+                                ],
+                                margin: [0, 0, 0, 6]
+                            },
+                            {
+                                text: [
+                                    'CLASSIFICAÇÃO: ',
+                                    '_______________________________________________________',
+                                ],
+                                margin: [0, 0, 0, 6]
+                            },
+                        ],
+                        fontSize: 11,
+                        width: '*'
+                    }
+                ],
+                columnGap: 30
+            },
+            {
+                text: 'OBSERVAÇÕES',
+                fontSize: 11,
+                margin: [0, 17, 0, 8]
+            },
+            {
+                stack: [
+                    {
+                        text: '___________________________________________________________________________________________________',
+                        margin: [0, 0, 0, 5]
+                    },
+                    {
+                        text: '___________________________________________________________________________________________________',
+                        margin: [0, 0, 0, 5]
+                    },
+                    {
+                        text: '___________________________________________________________________________________________________',
+                        margin: [0, 0, 0, 5]
+                    },
+                    {
+                        text: '___________________________________________________________________________________________________',
+                        margin: [0, 0, 0, 5]
+                    },
+                    {
+                        text: '___________________________________________________________________________________________________',
+                        margin: [0, 0, 0, 5]
+                    },
+                    {
+                        text: '___________________________________________________________________________________________________',
+                        margin: [0, 0, 0, 5]
+                    },
+                    {
+                        text: '___________________________________________________________________________________________________',
+                        margin: [0, 0, 0, 5]
+                    }
+                ],
+                fontSize: 11
+            }
+        ] as Content
+    };
+
+    const contentTable = async (f: () => Promise<Content>) => {
         return {
             table: {
                 widths: ['*'],
                 body: [
                     [{
-                        stack: await fichaHeader()
+                        stack: await f()
                     }]
                 ]
             },
@@ -1877,14 +2065,16 @@ export const generateFicha = async (medium: IMedium) => {
 
     const contentArray = async () => {
         const array = [] as Array<Content>;
-        array.push(await contentTable());
-        array.push(await contentTable());
+        array.push(await contentTable(fichaFrente));
+        array.push(await contentTable(fichaFrente));
+        array.push(await contentTable(fichaVerso));
+        array.push(await contentTable(fichaVerso));
         return array
     }
    
     const termoDefinitions: TDocumentDefinitions = {
         info: {
-            title: medium === defaultMedium ? 'Ficha_mediunica' : `Termo_${medium.medium_id.toString().padStart(5, '0')}_${medium.nome.replace(/ /g, '_')}`
+            title: 'Ficha_mediunica'
         },
         pageMargins: [10, 10, 10, 10],
         pageSize: 'A4',
@@ -1894,5 +2084,5 @@ export const generateFicha = async (medium: IMedium) => {
         }
     }
 
-    pdfMake.createPdf(termoDefinitions).open({}, window.open(medium === defaultMedium ? 'Ficha_mediunica.pdf' : `Termo_${medium.medium_id.toString().padStart(5, '0')}_${medium.nome.replace(/ /g, '_')}.pdf`, '_blank'));
+    pdfMake.createPdf(termoDefinitions).open({}, window.open('Ficha_mediunica.pdf', '_blank'));
 }
