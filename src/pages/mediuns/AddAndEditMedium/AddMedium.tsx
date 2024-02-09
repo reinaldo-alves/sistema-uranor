@@ -1157,7 +1157,7 @@ function AddMedium() {
                 </PersonalCard>
                 <PersonalCard>
                     <SectionTitle>Observações</SectionTitle>
-                    <Observations rows={5} maxLength={250} value={newMedium.observ} onChange={(e) => updateProps('observ', e.target.value)}/>
+                    <Observations rows={5} value={newMedium.observ} onChange={(e) => updateProps('observ', e.target.value)}/>
                 </PersonalCard>
                 <div style={{width: '90%', maxWidth: '1200px', display: 'flex', justifyContent: 'space-around'}}>
                     <MediumButton color="red" onClick={() => resetNewMedium()}>Cancelar</MediumButton>

@@ -37,6 +37,7 @@ import Reclassificacao from './pages/consagracoes/reclassificacao/reclassificaca
 import UpdateIniciacao from './pages/consagracoes/iniciacao/updateIniciacao';
 import UpdateElevacao from './pages/consagracoes/elevacao/updateElevacao';
 import UpdateCenturia from './pages/consagracoes/centuria/updateCenturia';
+import TimeLine from './pages/mediuns/TimeLine/TimeLine';
 
 function App() {
   const [mainContainer, setMainContainer] = useState('199')
@@ -105,6 +106,7 @@ function App() {
               <Route path='/mediuns/consulta' element={<SearchMedium />} />
               <Route path='/mediuns/consulta/:id' element={<ShowMedium />} />
               <Route path='/mediuns/editar/:id' element={<EditMedium />} />
+              <Route path='/mediuns/historico/:id' element={<TimeLine />} />
               <Route path='/mediuns/cadastro' element={<AddMedium />} />
               <Route path='/mediuns/menor' element={<YoungMedium />} />
               <Route path='/cantosechaves' element={<CantosChaves />} />
@@ -123,12 +125,10 @@ function App() {
             <Route path='/login' element={!login? <Login /> : <Navigate to='/' />} />
           </Routes>
         </BrowserRouter>
-        <Footer>Sistema Uranor - v.1.1.0 - ©2023 Uranor do Amanhecer. Todos os direitos reservados.</Footer>
+        <Footer>Sistema Uranor - v.1.2.0 - ©2023 Uranor do Amanhecer. Todos os direitos reservados.</Footer>
       </Background>
     </ThemeProvider>
   );
 }
 
 export default App;
-
-//Melhorar sistema de redirecionar para tela de login quanto o token vencer.

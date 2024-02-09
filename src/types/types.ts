@@ -76,6 +76,13 @@ export interface IConsagracao {
     povo: string
 }
 
+export interface IEvento {
+    data: string,
+    mensagem: string, 
+    observ: string,
+    tipo: string,
+}
+
 export interface IMedium {
     medium_id: number,
     nome: string,

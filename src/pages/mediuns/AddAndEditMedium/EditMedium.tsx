@@ -777,6 +777,8 @@ function EditMedium() {
                         <>
                             <Divider></Divider>
                             <GridContainer>
+                                <label>Data Teste: </label>
+                                <input type="date" value={medium.dtTest} onChange={(e) => updateProps('dtTest', e.target.value)} min={medium.dtNasc}  max={now}/>
                                 <label>Princesa: </label>
                                 <select value={medium.princesa} onChange={(e) => updateProps('princesa', e.target.value)}>
                                     <option value={''}></option>
@@ -792,6 +794,8 @@ function EditMedium() {
                         <>
                             <Divider></Divider>
                             <GridContainer>
+                                <label>Data Teste: </label>
+                                <input type="date" value={medium.dtTest} onChange={(e) => updateProps('dtTest', e.target.value)} min={medium.dtNasc}  max={now}/>
                                 <label>Preto Velho: </label>
                                 <input type="text" value={medium.pretovelho} onChange={(e) => updateProps('pretovelho', e.target.value)}/>
                                 <label>Caboclo: </label>
@@ -1205,7 +1209,7 @@ function EditMedium() {
                 </PersonalCard>
                 <PersonalCard>
                     <SectionTitle>Observações</SectionTitle>
-                    <Observations rows={5} maxLength={250} value={medium.observ} onChange={(e) => updateProps('observ', e.target.value)}/>
+                    <Observations rows={5} value={medium.observ} onChange={(e) => updateProps('observ', e.target.value)}/>
                 </PersonalCard>
                 <div style={{width: '90%', maxWidth: '1200px', display: 'flex', justifyContent: 'space-around'}}>
                     <MediumButton color="red" onClick={() => navigate(`/mediuns/consulta/${params.id}`)}>Cancelar</MediumButton>

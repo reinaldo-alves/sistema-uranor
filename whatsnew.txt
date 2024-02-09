@@ -21,3 +21,12 @@ VERSÃO 1.1.0
 - Correção na ordem alfabética das listas, levando em consideração a acentuação
 - Substituição de elemento select por autocomplete input em cadastros no menu manutenção e na seleção de adjunto de origem na página de cadastro de médium
 - Adição do botão Reclassificação na página de exibição de médium
+
+VERSÃO 1.2.0
+
+
+
+// Só edita datas os usuários administradores
+// Eventos da linha do tempo estáticos são adicionados somente quando não há um do mesmo tipo no banco de dados. Isso permite adicionar observações a eles
+// Adicionar mecanismo para adicionar observações aos Eventos
+// Pensar em manter os eventos sobre componentes

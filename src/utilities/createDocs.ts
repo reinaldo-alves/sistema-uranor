@@ -2086,3 +2086,481 @@ export const generateFicha = async () => {
 
     pdfMake.createPdf(termoDefinitions).open({}, window.open('Ficha_mediunica.pdf', '_blank'));
 }
+
+export const generateFichaMedium = async (medium: IMedium) => {    
+    const fichaFrente = async () => {
+        return [
+            {                
+                columns: [
+                    {
+                        stack: [
+                            { text: 'TEMPLO URANOR DO AMANHECER DE JABOATÃO - PE', alignment: 'center', bold: true, margin: [0, 0, -85, 3] },
+                            { text: 'CASTELO DOS DEVAS - FICHA MEDIÚNICA', alignment: 'center', margin: [0, 0, -85, 15] },
+                            {
+                                text: [
+                                    'NOME: ',
+                                    medium.nome,
+                                ],
+                                margin: [0, 0, 0, 6]
+                            },
+                            {
+                                text: [
+                                    'MINISTRO DE ORIGEM: ',
+                                    '__________________________',
+                                    '  ',
+                                    'SEXO: ',
+                                    medium.sex
+                                ],
+                                margin: [0, 0, 0, 6]
+                            },
+                            {
+                                text: [
+                                    'DATA DE NASCIMENTO: ',
+                                    convertDate(medium.dtNasc),
+                                    '  ',
+                                    'MEDIUNIDADE: ',
+                                    medium.med
+                                ],
+                                margin: [0, 0, 0, 6]
+                            },
+                            {
+                                text: [
+                                    'NATURAL DE: ',
+                                    medium.natur,
+                                    '  ',
+                                    'UF: ',
+                                    medium.naturUF
+                                ],
+                                margin: [0, 0, 0, 6]
+                            }
+                        ],
+                        fontSize: 11,
+                        width: '*'
+                    },
+                    {
+                        table: {
+                            body: [
+                                [{
+                                    stack: [
+                                        'FOTO',
+                                        '3X4'
+                                    ],
+                                    alignment: 'center',
+                                    width: 80,
+                                    height: 107,
+                                    margin: [24, 40, 25, 40]
+                                }]
+                            ]
+                        },
+                        width: 85,
+                        margin: [5, -5, 0, 0]
+                    }
+                ],
+                columnGap: 0
+            },
+            {
+                text: [
+                    'MÃE: ',
+                    medium.mae,
+                    '  ',
+                    'PAI: ',
+                    medium.pai
+                ],
+                fontSize: 11,
+                margin: [0, 0, 0, 6]
+            },
+            {
+                text: [
+                    'RG: ',
+                    medium.rg,
+                    '  ',
+                    'CPF: ',
+                    medium.cpf,
+                    '  ',
+                    'PROFISSÃO: ',
+                    medium.profissao
+                ],
+                fontSize: 11,
+                margin: [0, 0, 0, 6]
+            },
+            {
+                text: [
+                    'ESTADO CIVIL: ',
+                    medium.estCivil,
+                    '  ',
+                    'CÔNJUGE: ',
+                    medium.conjuge
+                ],
+                fontSize: 11,
+                margin: [0, 0, 0, 6]
+            },
+            {
+                text: [
+                    'ENDEREÇO: ',
+                    medium.endereco,
+                    '  ',
+                    'N°: ',
+                    medium.endNumero
+                ],
+                fontSize: 11,
+                margin: [0, 0, 0, 6]
+            },
+            {
+                text: [
+                    'COMPLEMENTO: ',
+                    medium.endCompl,
+                    '  ',
+                    'BAIRRO: ',
+                    medium.endBairro,
+                    '  ',
+                    'TEL: ',
+                    medium.telefone1,
+                ],
+                fontSize: 11,
+                margin: [0, 0, 0, 6]
+            },
+            {
+                text: [
+                    'CIDADE: ',
+                    medium.endCidade,
+                    '  ',
+                    'UF: ',
+                    medium.endUF,
+                    '  ',
+                    'CEP: ',
+                    medium.cep,
+                    '  ',
+                    'CEL: ',
+                    medium.telefone2
+                ],
+                fontSize: 11,
+                margin: [0, 0, 0, 17]
+            },
+            {
+                columns: [
+                    {
+                        stack: [
+                            {
+                                text: [
+                                    'DATA DE INGRESSO: ',
+                                    convertDate(medium.dtIngresso),
+                                ],
+                                margin: [0, 0, 0, 6]
+                            },
+                            {
+                                text: [
+                                    'DATA DE EMPLACAMENTO: ',
+                                    convertDate(medium.dtEmplac),
+                                ],
+                                margin: [0, 0, 0, 6]
+                            },
+                            {
+                                text: [
+                                    'DATA DE INICIAÇÃO: ',
+                                    convertDate(medium.dtIniciacao),
+                                ],
+                                margin: [0, 0, 0, 6]
+                            },
+                            {
+                                text: [
+                                    'DATA DE ELEVAÇÃO: ',
+                                    convertDate(medium.dtElevacao),
+                                ],
+                                margin: [0, 0, 0, 6]
+                            },
+                            {
+                                text: [
+                                    'DATA DE CENTÚRIA: ',
+                                    convertDate(medium.dtCenturia),
+                                ],
+                                margin: [0, 0, 0, 6]
+                            },
+                        ],
+                        fontSize: 11
+                    },
+                    {
+                        stack: [
+                            {
+                                text: [
+                                    'PRINCESA: ',
+                                    medium.princesa,
+                                ],
+                                margin: [0, 0, 0, 6]
+                            },
+                            {
+                                text: [
+                                    'PRETO VELHO: ',
+                                    medium.pretovelho,
+                                ],
+                                margin: [0, 0, 0, 6]
+                            },
+                            {
+                                text: [
+                                    'CABOCLO: ',
+                                    medium.caboclo,
+                                ],
+                                margin: [0, 0, 0, 6]
+                            },
+                            {
+                                text: [
+                                    'MÉDICO: ',
+                                    medium.medico,
+                                ],
+                                margin: [0, 0, 0, 6]
+                            },
+                        ],
+                        fontSize: 11
+                    }
+                ]
+            },
+            {
+                text: '________________________________________________________________',
+                fontSize: 9,
+                alignment: 'center',
+                margin: [0, 20, 0, 3]
+            },
+            {
+                text: 'ASSINATURA',
+                fontSize: 9,
+                alignment: 'center'
+            }
+        ] as Content
+    };
+
+    const fichaVerso = async () => {
+        return [
+            {
+                text: [
+                    'CLASSIFICAÇÃO: ',
+                    medium.classMest,
+                    '  ',
+                    'FALANGE DE MESTRADO: ',
+                    medium.falMest
+                ],
+                fontSize: 11,
+                margin: [0, 0, 0, 6]
+            },
+            {
+                text: [
+                    'POVO: ',
+                    medium.povo,
+                    '  ',
+                    'TURNO: ',
+                    medium.turnoLeg,
+                    '  ',
+                    'ESTRELA: ',
+                    medium.estrela
+                ],
+                fontSize: 11,
+                margin: [0, 0, 0, 6]
+            },
+            {
+                text: [
+                    'CAVALEIRO/GUIA: ',
+                    '________________________________________',
+                    '  ',
+                    'MINISTRO: ',
+                    '_____________________________'
+                ],
+                fontSize: 11,
+                margin: [0, 0, 0, 6]
+            },
+            {
+                text: [
+                    'FALANGE MISSIONÁRIA: ',
+                    '________________________________________',
+                    '  ',
+                    'ADJUNTO DEVAS: ',
+                    medium.adjDevas
+                ],
+                fontSize: 11,
+                margin: [0, 0, 0, 6]
+            },
+            {
+                text: [
+                    'TURNO DE TRABALHO: ',
+                    medium.turnoTrab,
+                    '  ',
+                    'DATA MINISTRO/CAVALEIRO/GUIA: ',
+                    convertDate(medium.dtMentor)
+                ],
+                fontSize: 11,
+                margin: [0, 0, 0, 17]
+            },
+            {
+                text: 'CLASSIFICAÇÕES',
+                fontSize: 11,
+                margin: [0, 0, 0, 8]
+            },
+            {
+                columns: [
+                    {
+                        stack: [
+                            {
+                                text: [
+                                    'DATA: ',
+                                    '____/____/______',
+                                ],
+                                margin: [0, 0, 0, 6]
+                            },
+                            {
+                                text: [
+                                    'DATA: ',
+                                    '____/____/______',
+                                ],
+                                margin: [0, 0, 0, 6]
+                            },
+                            {
+                                text: [
+                                    'DATA: ',
+                                    '____/____/______',
+                                ],
+                                margin: [0, 0, 0, 6]
+                            },
+                            {
+                                text: [
+                                    'DATA: ',
+                                    '____/____/______',
+                                ],
+                                margin: [0, 0, 0, 6]
+                            },
+                            {
+                                text: [
+                                    'DATA: ',
+                                    '____/____/______',
+                                ],
+                                margin: [0, 0, 0, 6]
+                            },
+                        ],
+                        fontSize: 11,
+                        width: 'auto'
+                    },
+                    {
+                        stack: [
+                            {
+                                text: [
+                                    'CLASSIFICAÇÃO: ',
+                                    '_______________________________________________________',
+                                ],
+                                margin: [0, 0, 0, 6]
+                            },
+                            {
+                                text: [
+                                    'CLASSIFICAÇÃO: ',
+                                    '_______________________________________________________',
+                                ],
+                                margin: [0, 0, 0, 6]
+                            },
+                            {
+                                text: [
+                                    'CLASSIFICAÇÃO: ',
+                                    '_______________________________________________________',
+                                ],
+                                margin: [0, 0, 0, 6]
+                            },
+                            {
+                                text: [
+                                    'CLASSIFICAÇÃO: ',
+                                    '_______________________________________________________',
+                                ],
+                                margin: [0, 0, 0, 6]
+                            },
+                            {
+                                text: [
+                                    'CLASSIFICAÇÃO: ',
+                                    '_______________________________________________________',
+                                ],
+                                margin: [0, 0, 0, 6]
+                            },
+                        ],
+                        fontSize: 11,
+                        width: '*'
+                    }
+                ],
+                columnGap: 30
+            },
+            {
+                text: 'OBSERVAÇÕES',
+                fontSize: 11,
+                margin: [0, 17, 0, 8]
+            },
+            {
+                stack: [
+                    {
+                        text: '___________________________________________________________________________________________________',
+                        margin: [0, 0, 0, 5]
+                    },
+                    {
+                        text: '___________________________________________________________________________________________________',
+                        margin: [0, 0, 0, 5]
+                    },
+                    {
+                        text: '___________________________________________________________________________________________________',
+                        margin: [0, 0, 0, 5]
+                    },
+                    {
+                        text: '___________________________________________________________________________________________________',
+                        margin: [0, 0, 0, 5]
+                    },
+                    {
+                        text: '___________________________________________________________________________________________________',
+                        margin: [0, 0, 0, 5]
+                    },
+                    {
+                        text: '___________________________________________________________________________________________________',
+                        margin: [0, 0, 0, 5]
+                    },
+                    {
+                        text: '___________________________________________________________________________________________________',
+                        margin: [0, 0, 0, 5]
+                    }
+                ],
+                fontSize: 11
+            }
+        ] as Content
+    };
+
+    const contentTable = async (f: () => Promise<Content>) => {
+        return {
+            table: {
+                widths: ['*'],
+                body: [
+                    [{
+                        stack: await f()
+                    }]
+                ]
+            },
+            layout: {
+                paddingLeft: function() { return 15; },
+                paddingRight: function() { return 15; },
+                paddingTop: function() { return 10; },
+                paddingBottom: function() { return 10; }
+            },
+            margin: [0, 0, 0, 30],
+            style: {
+                alignment: 'justify'
+            }
+        } as Content
+    }
+
+    const contentArray = async () => {
+        const array = [] as Array<Content>;
+        array.push(await contentTable(fichaFrente));
+        array.push(await contentTable(fichaVerso));
+        return array
+    }
+   
+    const termoDefinitions: TDocumentDefinitions = {
+        info: {
+            title: `Ficha_${medium.medium_id.toString().padStart(5, '0')}_${medium.nome.replace(/ /g, '_')}`
+        },
+        pageMargins: [10, 10, 10, 10],
+        pageSize: 'A4',
+        content: await contentArray(),
+        defaultStyle: {
+            font: 'Times'
+        }
+    }
+
+    pdfMake.createPdf(termoDefinitions).open({}, window.open(`Ficha_${medium.medium_id.toString().padStart(5, '0')}_${medium.nome.replace(/ /g, '_')}.pdf`, '_blank'));
+}

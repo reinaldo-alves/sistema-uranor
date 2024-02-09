@@ -112,7 +112,7 @@ export const MediumStore = ({ children }: any) => {
             dtElevacao: medium.dtElevacao === '' ? null : medium.dtElevacao,
             dtCenturia: medium.dtCenturia === '' ? null : medium.dtCenturia,
             dtSetimo: medium.dtSetimo === '' ? null : medium.dtSetimo,
-            dtTest: medium.dtIngresso === medium.oldDtTest ? null : medium.dtIngresso,
+            dtTest: medium.dtTest === '' ? medium.dtIngresso === medium.oldDtTest ? null : medium.dtIngresso : medium.dtTest,
             dtMentor: medium.dtMentor === '' ? null : medium.dtMentor,
             dtClassif: medium.dtClassif === '' ? null : medium.dtClassif,
             dtTrinoSol: medium.dtTrinoSol === '' ? null : medium.dtTrinoSol,
