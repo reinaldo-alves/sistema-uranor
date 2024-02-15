@@ -63,6 +63,11 @@ function EditMedium() {
     const [searchPad, setSearchPad] = useState('');
     const [searchMad, setSearchMad] = useState('');
     const [searchAfi, setSearchAfi] = useState('');
+    const [showModal, setShowModal] = useState(false);
+    const [dataDevas, setDataDevas] = useState('');
+    const [dataJanda, setDataJanda] = useState('');
+    const [dataTransf, setDataTransf] = useState('');
+    const [dataCondicao, setDataCondicao] = useState('');
 
     const now = new Date().toISOString().split('T')[0];
 
@@ -445,6 +450,22 @@ function EditMedium() {
         }
     }
 
+    const handleEditMedium = (newMedium: IMedium, oldMedium: IMedium, token: string) => {
+        if ((newMedium.devas && !oldMedium.devas) || (newMedium.janda && !oldMedium.janda) || (newMedium.condicao !== oldMedium.condicao && newMedium.condicao !== 'Afastado') || (newMedium.templo !== oldMedium.templo)) {
+            console.log('entra')
+        } else {
+            console.log('não entra')
+        }
+    }
+
+    const closeModal = () => {
+        setDataDevas('');
+        setDataJanda('');
+        setDataTransf('');
+        setDataCondicao('');
+        setShowModal(false);
+    }
+
     if(loading) {
         return <Loading />
     }
@@ -593,7 +614,7 @@ function EditMedium() {
                             setInputValue={setSearchPres}
                         />
                         <label>Templo Origem: </label>
-                        <select value={medium.temploOrigem} onChange={(e) => updateProps('temploOrigem', e.target.value)}>
+                        <select value={medium.temploOrigem} disabled={user.level !== 'Administrador' && Boolean(medium.temploOrigem)} onChange={(e) => updateProps('temploOrigem', e.target.value)}>
                             <option value={0}></option>
                             {templos.map((item: ITemplo, index: number) => (
                                 <option key={index} value={item.templo_id}>{item.cidade} - {item.estado.abrev}</option>

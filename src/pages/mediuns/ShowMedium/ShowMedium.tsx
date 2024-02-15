@@ -18,6 +18,7 @@ import { emissaoText } from "src/reports/emissao";
 import { defaultConsagracao } from "src/utilities/default";
 import api from "src/api";
 import { Modal, ModalButton, ModalContent, ModalTitle } from "src/components/Modal/modal";
+import { IEventoAPI } from "src/types/typesAPI";
 
 function ShowMedium() {
     const [loading, setLoading] = useState(true);
@@ -110,10 +111,23 @@ function ShowMedium() {
         setTestDate('');
     }
 
+    const deleteMediumEvents = async (medium: IMedium, token: string) => {
+        try {
+            const { data } = await api.get(`/evento/get?medium=${medium?.medium_id}`, {headers:{Authorization: token}})
+            data.evento.forEach(async (item: IEventoAPI) => {
+                await api.delete(`/evento/delete?evento_id=${item.evento_id}`, {headers:{Authorization: token}})
+            })
+            console.log('Eventos excluído da linha do tempo com sucesso');
+        } catch (error) {
+            console.error('Erro ao excluir eventos da linha do tempo do médium', error);
+        }
+    }
+
     const deleteMedium = async () => {
         await Confirm('ATENÇÃO! Todos os dados do médium serão perdidos e não poderão ser recuperados. Continuar?', 'warning', 'Cancelar', 'Excluir', async () => {
             try {
-                await removeComponentes(medium, token)
+                await removeComponentes(medium, token);
+                await deleteMediumEvents(medium, token);
                 await api.delete(`/medium/delete?medium_id=${medium.medium_id}`, {headers:{Authorization: token}})
                 navigate('/mediuns/consulta');
                 Alert('Médium excluído com sucesso', 'success');

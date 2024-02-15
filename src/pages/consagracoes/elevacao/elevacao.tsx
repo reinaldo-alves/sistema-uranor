@@ -213,7 +213,13 @@ function Elevacao() {
                 <PageSubTitle hide={![...listElevacao, ...listMudanca].length}>Documentos</PageSubTitle>
                 <ButtonContainer hide={![...listElevacao, ...listMudanca].length}>
                     <NavigateButton width="230px" onClick={() => generateAutorizacao(alphabeticOrder([...listElevacao, ...listMudanca]), templos, adjuntos, ministros, 2)}>Gerar Autorizações</NavigateButton>
-                    <NavigateButton width="230px" onClick={() => generateTermo(alphabeticOrder([...listElevacao, ...listMudanca]))}>Gerar Termos</NavigateButton>
+                    <NavigateButton width="230px" onClick={() => {
+                        if([...listElevacao, ...listMudanca].some((item: IConsagracao) => Boolean(item.foto) === false)) {
+                            Alert('Insira a foto de todos os médium antes de gerar os termos de compromisso', 'error')
+                        } else {
+                            generateTermo(alphabeticOrder([...listElevacao, ...listMudanca]))
+                        }
+                    }}>Gerar Termos</NavigateButton>
                     <NavigateButton width="230px" onClick={() => {
                         setSelectModal('Relatório');
                         setShowModalMedium(true);
@@ -247,7 +253,8 @@ function Elevacao() {
                     }}>Gerar Autorização</NavigateButton>
                     <NavigateButton width="230px" onClick={() => {
                         if (selected.foto) {
-                            generateTermo(mediuns.filter((item: IMedium) => item.medium_id === selected.medium))
+                            generateTermo([selected]);
+                            closeModal();
                         } else {
                             Alert('Insira a foto do médium antes de gerar o termo de compromisso', 'error')
                         }

@@ -24,11 +24,10 @@ VERSÃO 1.1.0
 
 VERSÃO 1.2.0
 
-- Criação da página linha do tempo para os médiuns
+- Criação da página linha do tempo para os médiuns, com cadastro e exclusão de eventos
 - Alteração de datas mediúnicas permitidas apenas para usuários administradores
 
 
-// Eventos da linha do tempo estáticos são adicionados somente quando não há um do mesmo tipo no banco de dados. Isso permite adicionar observações a eles
-// Adicionar mecanismo para adicionar observações aos Eventos
-// Ao excluir médium, excluir também todas os eventos da linha do tempo
-// Em elevação, validar para não gerar termos quando algum dos médiuns não tiver foto
+// Ao editar médium, adicionar eventos correspondentes. Lógica iniciada em EditMedium, concluir lógica e aplicar em AddMedium.
+// Caso ja tenha datas de teste como doutrinador e apará, solicitar data na mudança de mediunidade para registrar evento
+// Verificar se já existe um registro para a classificação, perguntando se quer substituir. Isso antes de adicionar novo evento de classificação.

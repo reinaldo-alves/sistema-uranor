@@ -47,6 +47,15 @@ export interface IConsagracaoAPI {
     termo: number | null
 }
 
+export interface IEventoAPI {
+    evento_id: number,
+    medium: number,
+    data: Date,
+    mensagem: string | null, 
+    tipo: string | null,
+    observ: string | null,
+}
+
 export interface IMediumAPI {
     medium_id: number,
     nome: string,
