@@ -1,5 +1,5 @@
 import { useState, useContext, useEffect } from "react";
-import { InfoCard, InputContainer, MainContainer, InfoContent, Results, ResultsCard, ResultsDetails, ResultsTable, ResultsTitle, SearchButton, SearchCard, SearchContainer, Modal, ModalContent, ModalTitle, ModalButton } from "./styles";
+import { InfoCard, InputContainer, MainContainer, InfoContent, Results, ResultsCard, ResultsDetails, ResultsTable, ResultsTitle, SearchButton, SearchCard, SearchContainer } from "./styles";
 import SideMenu from "src/components/SideMenu/SideMenu";
 import Header from "src/components/header/header";
 import SubMenu from "src/components/SubMenu/SubMenu";
@@ -13,6 +13,7 @@ import { Alert } from "src/utilities/popups";
 import { defaultMedium, defaultUser } from "src/utilities/default";
 import AutocompleteInput from "src/components/AutocompleteInput/AutocompleteInput";
 import { alphabeticOrder } from "src/utilities/functions";
+import { Modal, ModalButton, ModalContent, ModalTitle } from "src/components/Modal/modal";
 
 function Users() {
     const [searchName, setSearchName] = useState('');
@@ -36,7 +37,7 @@ function Users() {
     },[])
 
     useEffect(() => {
-        const mediumObject = mediuns.find((item: IMedium) => item.medium_id === dropMedium.medium_id);
+        const mediumObject = mediuns.find((item: IMedium) => item?.medium_id === dropMedium?.medium_id);
         updateProps('medium_id', mediumObject? mediumObject.medium_id : 0);
     }, [dropMedium])
     

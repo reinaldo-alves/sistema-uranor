@@ -27,12 +27,13 @@ export const ResultsCard = styled.div<{show: boolean}>`
     background-color: ${(props) => {return props.theme.color.mediumColorTr}};
     display: ${({ show }) => show ? 'flex' : 'none'};
     align-items: flex-start;
-    gap: 20px;
+    gap: 10px;
     border: solid 1px ${(props) => {return props.theme.color.darkerColor}};
     margin-bottom: 20px;
 
     @media (max-width: 786px) {
         flex-direction: column;
+        gap: 20px;
     }
 `;
 
@@ -50,18 +51,19 @@ export const YearTitle = styled.span`
 export const ResultsTable = styled.div`
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 20px;
+    border-left: 1px solid ${(props) => {return props.theme.color.lighterColor}};
+    padding-left: 10px;
+
+    @media (max-width: 786px) {
+        border: none;
+        padding: 0;
+    }
 `;
 
 export const Results = styled.div`
     display: flex;
     flex-direction: column;
-    gap: 5px;
-
-    :hover {
-        text-decoration: underline;
-        cursor: pointer;
-    }
 `;
 
 export const ResultsTitle = styled.span`
@@ -69,6 +71,11 @@ export const ResultsTitle = styled.span`
     color: ${(props) => {return props.theme.color.darkerColor}};
     font-weight: bold;
     text-align: left;
+
+    :hover {
+        text-decoration: underline;
+        cursor: pointer;
+    }
 `;
 
 export const ResultsDetails = styled.span`
@@ -76,6 +83,7 @@ export const ResultsDetails = styled.span`
     color: ${(props) => {return props.theme.color.darkerColor}};
     font-weight: bold;
     text-align: left;
+    padding-left: 10px;
 `;
 
 export const MediumButton = styled.button`
@@ -111,4 +119,64 @@ export const ButtonContainer = styled.div`
         flex-direction: column;
         gap: 15px;
     }
+`;
+
+export const EditObs = styled.span`
+    text-align: center;
+    font-size: 16px;
+    font-weight: bold;
+    color: ${(props) => {return props.theme.color.lighterColor}};
+    margin-bottom: 30px;
+    padding: 0 20px;
+`;
+
+export const InputContainer = styled.div`
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    label {
+        font-weight: bold;
+        font-size: 20px;
+        color: ${(props) => {return props.theme.color.darkerColor}};
+        width: 100%;
+        margin-bottom: 5px; 
+    }
+
+    input {
+        width: 100%;
+        height: 35px;
+        padding: 6px;
+        font-size: 18px;
+        font-weight: bold;
+        border-radius: 8px;
+        border: solid 1px ${(props) => {return props.theme.color.darkerColor}};
+        display: block;
+    }
+
+    select {
+        width: 100%;
+        height: 35px;
+        padding: 6px;
+        font-size: 18px;
+        font-weight: bold;
+        border-radius: 8px;
+        border: solid 1px ${(props) => {return props.theme.color.darkerColor}};
+        display: block;
+    }
+
+    textarea {
+        width: 100%;
+        height: 100px;
+        padding: 6px;
+        font-size: 18px;
+        font-weight: bold;
+        border-radius: 8px;
+        border: solid 1px ${(props) => {return props.theme.color.darkerColor}};
+        display: block;
+        resize: none;
+    }
+
 `;

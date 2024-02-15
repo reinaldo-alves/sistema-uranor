@@ -1,4 +1,4 @@
-import { IAdjunto, ICavaleiro, IConsagracao, IMedium, IMentor, ITemplo, IUser } from "src/types/types"
+import { IAdjunto, ICavaleiro, IConsagracao, IEvento, IMedium, IMentor, ITemplo, IUser } from "src/types/types"
 
 export const defaultAdj: IAdjunto = {
     adjunto_id: 0,
@@ -54,6 +54,15 @@ export const defaultConsagracao: IConsagracao = {
     classMest: '',
     falMest: '',
     povo: ''
+}
+
+export const defaultEvento: IEvento = {
+    evento_id: 0,
+    medium: 0,
+    data: '',
+    mensagem: '', 
+    tipo: '',
+    observ: '',
 }
 
 export const defaultMedium: IMedium = {

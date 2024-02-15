@@ -1,10 +1,10 @@
 import Header from "src/components/header/header";
-import { ButtonContainer, MainContainer, MediumButton, Results, ResultsCard, ResultsDetails, ResultsTable, ResultsTitle, TitleContainer, YearTitle } from "./styles";
+import { ButtonContainer, EditObs, InputContainer, MainContainer, MediumButton, Results, ResultsCard, ResultsDetails, ResultsTable, ResultsTitle, TitleContainer, YearTitle } from "./styles";
 import SubMenu from "src/components/SubMenu/SubMenu";
 import SideMenu from "src/components/SideMenu/SideMenu";
 import { useNavigate, useParams } from "react-router-dom";
 import { useContext, useEffect, useState } from "react";
-import { defaultMedium } from "src/utilities/default";
+import { defaultEvento, defaultMedium } from "src/utilities/default";
 import { MediumContext } from "src/contexts/MediumContext";
 import { IEvento, IMedium } from "src/types/types";
 import { UserContext } from "src/contexts/UserContext";
@@ -12,16 +12,27 @@ import { ListContext } from "src/contexts/ListContext";
 import Loading from "src/utilities/Loading";
 import PageNotFound from "src/pages/PageNotFound/PageNotFound";
 import { convertDate } from "src/utilities/functions";
+import { Modal, ModalButton, ModalContent, ModalTitle } from "src/components/Modal/modal";
 
 function TimeLine() {
     const [medium, setMedium] = useState(defaultMedium);
     const [loading, setLoading] = useState(true);
+    const [showModal, setShowModal] = useState(false);
+    const [edit, setEdit] = useState(false);
+    const [selected, setSelected] = useState(defaultEvento);
+    const [edited, setEdited] = useState(defaultEvento);
 
     const { token, getUser } = useContext(UserContext);
     const { mediuns, loadMedium } = useContext(MediumContext);
     const { getData } = useContext(ListContext);
     const navigate = useNavigate();
     const params = useParams();
+
+    interface ITipo {
+        event: string,
+        prior: number,
+        unique: boolean
+    }
 
     const getInfo = async () => {
         await getUser(token);
@@ -48,6 +59,33 @@ function TimeLine() {
     
     if(!medium) {
         return <PageNotFound />
+    }
+
+    const updateProps = (property: string, newValue: any) => {
+        setEdited((prevData: any) => ({
+        ...prevData,
+        [property]: newValue
+        }));
+    };
+
+    const modalAddEvento = () => {
+        setEdit(false);
+        setEdited(defaultEvento);
+        setSelected(defaultEvento);
+        setShowModal(true);
+    }
+
+    const modalEditEvento = (evento: IEvento) => {
+        setEdit(true);
+        setEdited(evento);
+        setSelected(evento);
+        setShowModal(true);
+    }
+
+    const closeModal = () => {
+        setShowModal(false);
+        setEdited(defaultEvento);
+        setSelected(defaultEvento);
     }
 
     const eventTypes = [
@@ -83,23 +121,23 @@ function TimeLine() {
     
     const initialData = [] as Array<IEvento>;
 
-    if(medium.dtIngresso) {initialData.push({data: medium.dtIngresso, mensagem: 'Ingresso na doutrina', observ: '', tipo: 'Ingresso'})}
-    if(medium.dtTest) {initialData.push({data: medium.dtTest, mensagem: `Teste mediúnico - ${medium.med}`, observ: '', tipo: `Teste ${medium.med}`})}
-    if(medium.dtEmplac) {initialData.push({data: medium.dtEmplac, mensagem: `Emplacamento como ${medium.med}`, observ: '', tipo: `Emplacamento ${medium.med}`})}
-    if(medium.dtIniciacao) {initialData.push({data: medium.dtIniciacao, mensagem: `Iniciação como ${medium.med}`, observ: '', tipo: `Iniciação ${medium.med}`})}
-    if(medium.dtElevacao) {initialData.push({data: medium.dtElevacao, mensagem: `Elevação como ${medium.med}`, observ: '', tipo: `Elevação ${medium.med}`})}
-    if(medium.dtCenturia) {initialData.push({data: medium.dtCenturia, mensagem: 'Centúria', observ: '', tipo: 'Centúria'})}
-    if(medium.dtSetimo) {initialData.push({data: medium.dtSetimo, mensagem: 'Curso de 7° Raio concluído', observ: '', tipo: 'Curso de Sétimo'})}
-    if(medium.oldDtTest) {initialData.push({data: medium.oldDtTest, mensagem: `Teste mediúnico - ${medium.med === 'Apará' ? 'Doutrinador' : medium.med === 'Doutrinador' ? 'Apará' : ''}`, observ: '', tipo: `Teste ${medium.med === 'Apará' ? 'Doutrinador' : medium.med === 'Doutrinador' ? 'Apará' : ''}`})}
-    if(medium.oldDtEmplac) {initialData.push({data: medium.oldDtEmplac, mensagem: `Emplacamento como ${medium.med === 'Apará' ? 'Doutrinador' : medium.med === 'Doutrinador' ? 'Apará' : ''}`, observ: '', tipo: `Emplacamento ${medium.med === 'Apará' ? 'Doutrinador' : medium.med === 'Doutrinador' ? 'Apará' : ''}`})}
-    if(medium.oldDtIniciacao) {initialData.push({data: medium.oldDtIniciacao, mensagem: `Iniciação como ${medium.med === 'Apará' ? 'Doutrinador' : medium.med === 'Doutrinador' ? 'Apará' : ''}`, observ: '', tipo: `Iniciação ${medium.med === 'Apará' ? 'Doutrinador' : medium.med === 'Doutrinador' ? 'Apará' : ''}`})}
-    if(medium.oldDtElevacao) {initialData.push({data: medium.oldDtElevacao, mensagem: `Elevação como ${medium.med === 'Apará' ? 'Doutrinador' : medium.med === 'Doutrinador' ? 'Apará' : ''}`, observ: '', tipo: `Elevação ${medium.med === 'Apará' ? 'Doutrinador' : medium.med === 'Doutrinador' ? 'Apará' : ''}`})}
-    if(medium.dtMentor) {initialData.push({data: medium.dtMentor, mensagem: `Recebeu mentores como ${medium.med}`, observ: '', tipo: `Mentores ${medium.med}`})}
-    if(medium.dtClassif) {initialData.push({data: medium.dtClassif, mensagem: `Recebeu classificação de ${medium.classif}`, observ: '', tipo: 'Classificações'})}
-    if(medium.oldDtMentor) {initialData.push({data: medium.oldDtMentor, mensagem: `Recebeu mentores como ${medium.med === 'Apará' ? 'Doutrinador' : medium.med === 'Doutrinador' ? 'Apará' : ''}`, observ: '', tipo: `Mentores ${medium.med === 'Apará' ? 'Doutrinador' : medium.med === 'Doutrinador' ? 'Apará' : ''}`})}
-    if(medium.oldDtClassif) {initialData.push({data: medium.oldDtClassif, mensagem: `Recebeu classificação de ${medium.oldClassif}`, observ: '', tipo: 'Classificações'})}
-    if(medium.dtTrinoSol) {initialData.push({data: medium.dtTrinoSol, mensagem: `Consagração de Trino Solitário ${medium.trinoSol}`, observ: '', tipo: 'Trino Solitário'})}
-    if(medium.dtTrinoSar) {initialData.push({data: medium.dtTrinoSar, mensagem: 'Consagração de Trino Sardyos', observ: '', tipo: 'Trino Sardyos'})}
+    if(medium.dtIngresso) {initialData.push({evento_id: 0, medium: medium.medium_id, data: medium.dtIngresso, mensagem: 'Ingresso na doutrina', observ: 'erewre', tipo: 'Ingresso'})}
+    if(medium.dtTest) {initialData.push({evento_id: 0, medium: medium.medium_id, data: medium.dtTest, mensagem: `Teste mediúnico - ${medium.med}`, observ: 'edfedxer', tipo: `Teste ${medium.med}`})}
+    if(medium.dtEmplac) {initialData.push({evento_id: 0, medium: medium.medium_id, data: medium.dtEmplac, mensagem: `Emplacamento como ${medium.med}`, observ: 'ercxrecxre', tipo: `Emplacamento ${medium.med}`})}
+    if(medium.dtIniciacao) {initialData.push({evento_id: 0, medium: medium.medium_id, data: medium.dtIniciacao, mensagem: `Iniciação como ${medium.med}`, observ: 'xwrerexcrex', tipo: `Iniciação ${medium.med}`})}
+    if(medium.dtElevacao) {initialData.push({evento_id: 0, medium: medium.medium_id, data: medium.dtElevacao, mensagem: `Elevação como ${medium.med}`, observ: 'xqerrexfre', tipo: `Elevação ${medium.med}`})}
+    if(medium.dtCenturia) {initialData.push({evento_id: 0, medium: medium.medium_id, data: medium.dtCenturia, mensagem: 'Centúria', observ: 'xerxcrexcre', tipo: 'Centúria'})}
+    if(medium.dtSetimo) {initialData.push({evento_id: 0, medium: medium.medium_id, data: medium.dtSetimo, mensagem: 'Curso de 7° Raio concluído', observ: '', tipo: 'Curso de Sétimo'})}
+    if(medium.oldDtTest) {initialData.push({evento_id: 0, medium: medium.medium_id, data: medium.oldDtTest, mensagem: `Teste mediúnico - ${medium.med === 'Apará' ? 'Doutrinador' : medium.med === 'Doutrinador' ? 'Apará' : ''}`, observ: '', tipo: `Teste ${medium.med === 'Apará' ? 'Doutrinador' : medium.med === 'Doutrinador' ? 'Apará' : ''}`})}
+    if(medium.oldDtEmplac) {initialData.push({evento_id: 0, medium: medium.medium_id, data: medium.oldDtEmplac, mensagem: `Emplacamento como ${medium.med === 'Apará' ? 'Doutrinador' : medium.med === 'Doutrinador' ? 'Apará' : ''}`, observ: '', tipo: `Emplacamento ${medium.med === 'Apará' ? 'Doutrinador' : medium.med === 'Doutrinador' ? 'Apará' : ''}`})}
+    if(medium.oldDtIniciacao) {initialData.push({evento_id: 0, medium: medium.medium_id, data: medium.oldDtIniciacao, mensagem: `Iniciação como ${medium.med === 'Apará' ? 'Doutrinador' : medium.med === 'Doutrinador' ? 'Apará' : ''}`, observ: '', tipo: `Iniciação ${medium.med === 'Apará' ? 'Doutrinador' : medium.med === 'Doutrinador' ? 'Apará' : ''}`})}
+    if(medium.oldDtElevacao) {initialData.push({evento_id: 0, medium: medium.medium_id, data: medium.oldDtElevacao, mensagem: `Elevação como ${medium.med === 'Apará' ? 'Doutrinador' : medium.med === 'Doutrinador' ? 'Apará' : ''}`, observ: '', tipo: `Elevação ${medium.med === 'Apará' ? 'Doutrinador' : medium.med === 'Doutrinador' ? 'Apará' : ''}`})}
+    if(medium.dtMentor) {initialData.push({evento_id: 0, medium: medium.medium_id, data: medium.dtMentor, mensagem: `Recebeu mentores como ${medium.med}`, observ: '', tipo: `Mentores ${medium.med}`})}
+    if(medium.dtClassif) {initialData.push({evento_id: 0, medium: medium.medium_id, data: medium.dtClassif, mensagem: `Recebeu classificação de ${medium.classif}`, observ: '', tipo: 'Classificações'})}
+    if(medium.oldDtMentor) {initialData.push({evento_id: 0, medium: medium.medium_id, data: medium.oldDtMentor, mensagem: `Recebeu mentores como ${medium.med === 'Apará' ? 'Doutrinador' : medium.med === 'Doutrinador' ? 'Apará' : ''}`, observ: '', tipo: `Mentores ${medium.med === 'Apará' ? 'Doutrinador' : medium.med === 'Doutrinador' ? 'Apará' : ''}`})}
+    if(medium.oldDtClassif) {initialData.push({evento_id: 0, medium: medium.medium_id, data: medium.oldDtClassif, mensagem: `Recebeu classificação de ${medium.oldClassif}`, observ: '', tipo: 'Classificações'})}
+    if(medium.dtTrinoSol) {initialData.push({evento_id: 0, medium: medium.medium_id, data: medium.dtTrinoSol, mensagem: `Consagração de Trino Solitário ${medium.trinoSol}`, observ: '', tipo: 'Trino Solitário'})}
+    if(medium.dtTrinoSar) {initialData.push({evento_id: 0, medium: medium.medium_id, data: medium.dtTrinoSar, mensagem: 'Consagração de Trino Sardyos', observ: '', tipo: 'Trino Sardyos'})}
     
     const listSubMenu = [
         {title: 'Página Inicial', click: '/'},
@@ -131,7 +169,7 @@ function TimeLine() {
                         .filter((item: IEvento) => new Date(item.data).getFullYear() === i)
                         .map((item: IEvento, index: number) => (
                             <Results key={index}>
-                                <ResultsTitle>{convertDate(item.data)} - {item.mensagem}</ResultsTitle>
+                                <ResultsTitle onClick={() => modalEditEvento(item)}>{convertDate(item.data)} - {item.mensagem}</ResultsTitle>
                                 <ResultsDetails>{item.observ}</ResultsDetails>
                             </Results>
                         ))
@@ -152,11 +190,42 @@ function TimeLine() {
                 </TitleContainer>
                 <ButtonContainer>
                     <MediumButton onClick={() => navigate(`/mediuns/consulta/${params.id}`)}>{'< Voltar'}</MediumButton>
-                    <MediumButton onClick={() => {}}>Adicionar Registro</MediumButton>
+                    <MediumButton onClick={() => modalAddEvento()}>Adicionar Registro</MediumButton>
                 </ButtonContainer>
+                <EditObs>Clique sobre um evento para editar ou adicionar observações</EditObs>
                 {arrayCards}
             </MainContainer>
             <SideMenu list={listSubMenu} />
+            <Modal vis={showModal}>
+                <ModalContent>
+                    <ModalTitle>{edit? 'Editar Evento' : 'Adicionar Evento'}</ModalTitle>
+                    <InputContainer>
+                        <label>Data</label>
+                        <input type="date" value={edited.data} onChange={(e) => updateProps('data', e.target.value)} />
+                    </InputContainer>
+                    <InputContainer>
+                        <label>Tipo</label>
+                        <select value={edited.tipo} onChange={(e) => updateProps('tipo', e.target.value)}>
+                            <option value=''></option>
+                            {eventTypes.map((item: ITipo, index: number) => (
+                                <option key={index} value={item.event}>{item.event}</option>
+                            ))}
+                        </select>
+                    </InputContainer>
+                    <InputContainer>
+                        <label>Descrição</label>
+                        <textarea value={edited.mensagem} onChange={(e) => updateProps('mensagem', e.target.value)} />
+                    </InputContainer>
+                    <InputContainer>
+                        <label>Observações</label>
+                        <textarea value={edited.observ} onChange={(e) => updateProps('observ', e.target.value)} />
+                    </InputContainer>
+                    <div style={{display: 'flex', gap: '20px'}}>
+                        <ModalButton color="red" onClick={() => closeModal()}>Cancelar</ModalButton>
+                        <ModalButton color='green' onClick={edit? () => {} : () => {}}>Salvar</ModalButton>
+                    </div>
+                </ModalContent>
+            </Modal>
         </>
     )
 }

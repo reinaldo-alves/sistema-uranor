@@ -1,13 +1,14 @@
 import { useContext, useState } from "react";
 import SubMenu from "src/components/SubMenu/SubMenu";
 import Header from "src/components/header/header";
-import { MainContainer, Modal, ModalButton, ModalContent, ModalTitle, PasswordForm } from "./styles";
+import { MainContainer, PasswordForm } from "./styles";
 import SideMenu from "src/components/SideMenu/SideMenu";
 import { useNavigate } from "react-router-dom";
 import MainTitle from "src/components/MainTitle/MainTitle";
 import { UserContext } from "src/contexts/UserContext";
 import api from "src/api";
 import { Alert } from "src/utilities/popups";
+import { Modal, ModalButton, ModalContent, ModalInputContainer, ModalTitle } from "src/components/Modal/modal";
 
 function ChangePassword() {
     const { user, userChangePassword, loadUser, token } = useContext(UserContext)
@@ -88,7 +89,9 @@ function ChangePassword() {
                 <ModalContent>
                     <ModalTitle>Confirme com sua senha atual</ModalTitle>
                     <ModalTitle>{`Usuário: ${user.name}`}</ModalTitle>
-                    <input type="password" value={currentPassword} onChange={(e) => setCurrentPassword(e.target.value)} />
+                    <ModalInputContainer>
+                        <input type="password" value={currentPassword} onChange={(e) => setCurrentPassword(e.target.value)} />
+                    </ModalInputContainer>
                     <div style={{display: 'flex', gap: '20px'}}>
                         <ModalButton color="red" onClick={closeModal}>Cancelar</ModalButton>
                         <ModalButton color='green' onClick={handleChangePassword}>Confirmar</ModalButton>

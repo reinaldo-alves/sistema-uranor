@@ -2,7 +2,7 @@ import SubMenu from "src/components/SubMenu/SubMenu";
 import Header from "../../../components/header/header";
 import SideMenu from "src/components/SideMenu/SideMenu";
 import MainTitle from "src/components/MainTitle/MainTitle";
-import { ButtonContainer, ConsagracaoCard, InputContainer, MainContainer, Modal, ModalButton, ModalMediumContent, ModalSubTitle, ModalTitle, NavigateButton, PageSubTitle, Results, ResultsData, ResultsPanel, ResultsTable, ResultsTitle } from "../styles";
+import { ButtonContainer, ConsagracaoCard, InputContainer, MainContainer, ModalMediumContent, NavigateButton, PageSubTitle, Results, ResultsData, ResultsPanel, ResultsTable, ResultsTitle } from "../styles";
 import { alphabeticOrder, countMedium } from "src/utilities/functions";
 import { useContext, useEffect, useState } from "react";
 import { ListContext } from "src/contexts/ListContext";
@@ -15,6 +15,7 @@ import AutocompleteInput from "src/components/AutocompleteInput/AutocompleteInpu
 import { defaultConsagracao, defaultMedium } from "src/utilities/default";
 import { useNavigate } from "react-router-dom";
 import { generateAutorizacao, generateConsReport, generateProtocolo } from "src/utilities/createDocs";
+import { Modal, ModalButton, ModalContent, ModalSubTitle, ModalTitle } from "src/components/Modal/modal";
 
 function Centuria() {
     const { templos, adjuntos, ministros, falMest, listCenturia, loadConsagracao, searchMediumInCons } = useContext(ListContext);
@@ -171,7 +172,7 @@ function Centuria() {
                         <AutocompleteInput 
                             label={(option) => option.nome}
                             default={defaultMedium}
-                            options={mediuns.filter((item: IMedium) => item.dtElevacao && !item.dtCenturia && item.condicao === 'Ativo' && searchMediumInCons(item.medium_id) === defaultConsagracao)}
+                            options={mediuns.filter((item: IMedium) => item.medium_id && item.dtElevacao && !item.dtCenturia && item.condicao === 'Ativo' && searchMediumInCons(item.medium_id) === defaultConsagracao)}
                             equality={(option, value) => option.medium_id === value.medium_id}
                             value={dropMedium}
                             setValue={setDropMedium}

@@ -1,5 +1,5 @@
 import { useState, useContext } from "react";
-import { InfoCard, InputContainer, MainContainer, InfoContent, Results, ResultsCard, ResultsTable, ResultsTitle, SearchButton, SearchCard, SearchContainer, Modal, ModalContent, ModalTitle, ModalButton } from "./styles";
+import { InfoCard, InputContainer, MainContainer, InfoContent, Results, ResultsCard, ResultsTable, ResultsTitle, SearchButton, SearchCard, SearchContainer } from "./styles";
 import { ListContext } from "src/contexts/ListContext";
 import SideMenu from "src/components/SideMenu/SideMenu";
 import Header from "src/components/header/header";
@@ -9,6 +9,7 @@ import MainTitle from "src/components/MainTitle/MainTitle";
 import api from "src/api";
 import { UserContext } from "src/contexts/UserContext";
 import { Alert } from "src/utilities/popups";
+import { Modal, ModalButton, ModalContent, ModalTitle } from "src/components/Modal/modal";
 
 function Ministros() {
     const [search, setSearch] = useState('');

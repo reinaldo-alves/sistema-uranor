@@ -2,7 +2,7 @@ import SubMenu from "src/components/SubMenu/SubMenu";
 import Header from "../../../components/header/header";
 import SideMenu from "src/components/SideMenu/SideMenu";
 import MainTitle from "src/components/MainTitle/MainTitle";
-import { ButtonContainer, ConsagracaoCard, InputContainer, MainContainer, Modal, ModalButton, ModalMediumContent, ModalSubTitle, ModalTitle, MudancaObs, MudancaWarning, NavigateButton, PageSubTitle, PhotoContainer, Results, ResultsData, ResultsPanel, ResultsTable, ResultsTitle } from "../styles";
+import { ButtonContainer, ConsagracaoCard, InputContainer, MainContainer, ModalMediumContent, MudancaObs, MudancaWarning, NavigateButton, PageSubTitle, PhotoContainer, Results, ResultsData, ResultsPanel, ResultsTable, ResultsTitle } from "../styles";
 import { alphabeticOrder, countMedium } from "src/utilities/functions";
 import { useContext, useEffect, useState } from "react";
 import { ListContext } from "src/contexts/ListContext";
@@ -15,6 +15,7 @@ import AutocompleteInput from "src/components/AutocompleteInput/AutocompleteInpu
 import { defaultConsagracao, defaultMedium } from "src/utilities/default";
 import { useNavigate } from "react-router-dom";
 import { generateAutorizacao, generateConsReport, generateProtocolo, generateTermo } from "src/utilities/createDocs";
+import { Modal, ModalButton, ModalSubTitle, ModalTitle } from "src/components/Modal/modal";
 
 function Elevacao() {
     const { templos, adjuntos, ministros, falMest, listElevacao, listMudanca, loadConsagracao, searchMediumInCons } = useContext(ListContext);
@@ -275,7 +276,7 @@ function Elevacao() {
                         <AutocompleteInput 
                             label={(option) => option.nome}
                             default={defaultMedium}
-                            options={mediuns.filter((item: IMedium) => item.dtEmplac && !item.dtElevacao && item.condicao === 'Ativo' && searchMediumInCons(item.medium_id) === defaultConsagracao)}
+                            options={mediuns.filter((item: IMedium) => item.medium_id && item.dtEmplac && !item.dtElevacao && item.condicao === 'Ativo' && searchMediumInCons(item.medium_id) === defaultConsagracao)}
                             equality={(option, value) => option.medium_id === value.medium_id}
                             value={dropMedium}
                             setValue={setDropMedium}
@@ -283,14 +284,14 @@ function Elevacao() {
                             setInputValue={setSearchMedium}
                         />
                     </InputContainer>
-                    <MudancaWarning show={Boolean(dropMedium.dtEmplac) && !dropMedium.dtIniciacao}>O médium selecionado não é iniciado</MudancaWarning>
+                    <MudancaWarning show={Boolean(dropMedium?.dtEmplac) && !dropMedium?.dtIniciacao}>O médium selecionado não é iniciado</MudancaWarning>
                     <InputContainer box>
                         <label>Mudança de mediunidade?</label>
                         <input type="checkbox" checked={checkMudanca} onChange={(e) => setCheckMudanca(e.target.checked)} />
                     </InputContainer>
                     <div style={{display: 'flex', gap: '20px'}}>
                         <ModalButton color="red" onClick={() => closeModal()}>Cancelar</ModalButton>
-                        <ModalButton color='green' disabled={dropMedium === defaultMedium || (Boolean(dropMedium.dtEmplac) && !dropMedium.dtIniciacao && !checkMudanca)} onClick={() => addElevacao(token)}>Salvar</ModalButton>
+                        <ModalButton color='green' disabled={dropMedium === defaultMedium || (Boolean(dropMedium?.dtEmplac) && !dropMedium?.dtIniciacao && !checkMudanca)} onClick={() => addElevacao(token)}>Salvar</ModalButton>
                     </div>
                 </ModalMediumContent>
                 <ModalMediumContent vis={selectModal === 'Protocolo' || selectModal === 'Relatório'}>

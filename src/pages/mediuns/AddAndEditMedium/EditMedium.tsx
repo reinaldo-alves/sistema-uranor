@@ -20,7 +20,7 @@ import { defaultAdj, defaultCavaleiro, defaultMedium, defaultMentor } from "src/
 
 function EditMedium() {
     const { templos, estados, adjuntos, coletes, classMest, falMest, povos, falMiss, turnoL, turnoT, ministros, cavaleiros, guias, estrelas, princesas, classificacao, getData } = useContext(ListContext);
-    const { token, getUser } = useContext(UserContext);
+    const { user, token, getUser } = useContext(UserContext);
     const { mediuns, loadMedium, convertMediumToSend, setComponentes, removeComponentes, uploadImage } = useContext(MediumContext);
     const params = useParams();
     const navigate = useNavigate();
@@ -565,17 +565,17 @@ function EditMedium() {
                     <SectionTitle>Datas Mediúnicas</SectionTitle>
                     <GridDatesContainer>
                         <label>Data Ingresso: </label>
-                        <input type="date" value={medium.dtIngresso} onChange={(e) => updateProps('dtIngresso', e.target.value)} min={medium.dtNasc}  max={now} />
+                        <input type="date" value={medium.dtIngresso} onChange={(e) => updateProps('dtIngresso', e.target.value)} min={medium.dtNasc}  max={now} disabled={user.level !== 'Administrador'}/>
                         <label>Data Emplacamento: </label>
-                        <input type="date" value={medium.dtEmplac} onChange={(e) => updateProps('dtEmplac', e.target.value)} min={medium.dtIngresso} max={now} disabled={!medium.dtIngresso} />
+                        <input type="date" value={medium.dtEmplac} onChange={(e) => updateProps('dtEmplac', e.target.value)} min={medium.dtIngresso} max={now} disabled={!medium.dtIngresso || user.level !== 'Administrador'} />
                         <label>Data Iniciação: </label>
-                        <input type="date" value={medium.dtIniciacao} onChange={(e) => updateProps('dtIniciacao', e.target.value)} min={medium.dtEmplac} max={now} disabled={!medium.dtEmplac} />
+                        <input type="date" value={medium.dtIniciacao} onChange={(e) => updateProps('dtIniciacao', e.target.value)} min={medium.dtEmplac} max={now} disabled={!medium.dtEmplac || user.level !== 'Administrador'} />
                         <label>Data Elevação: </label>
-                        <input type="date" value={medium.dtElevacao} onChange={(e) => updateProps('dtElevacao', e.target.value)} min={medium.dtIniciacao} max={now} disabled={!medium.dtIniciacao} />
+                        <input type="date" value={medium.dtElevacao} onChange={(e) => updateProps('dtElevacao', e.target.value)} min={medium.dtIniciacao} max={now} disabled={!medium.dtIniciacao || user.level !== 'Administrador'} />
                         <label>Data Centúria: </label>
-                        <input type="date" value={medium.dtCenturia} onChange={(e) => updateProps('dtCenturia', e.target.value)} min={medium.dtElevacao} max={now} disabled={!medium.dtElevacao && !medium.oldDtElevacao} />
+                        <input type="date" value={medium.dtCenturia} onChange={(e) => updateProps('dtCenturia', e.target.value)} min={medium.dtElevacao} max={now} disabled={(!medium.dtElevacao && !medium.oldDtElevacao) || user.level !== 'Administrador'} />
                         <label>Data Sétimo: </label>
-                        <input type="date" value={medium.dtSetimo} onChange={(e) => updateProps('dtSetimo', e.target.value)} min={medium.dtCenturia} max={now} disabled={!medium.dtCenturia} />
+                        <input type="date" value={medium.dtSetimo} onChange={(e) => updateProps('dtSetimo', e.target.value)} min={medium.dtCenturia} max={now} disabled={!medium.dtCenturia || user.level !== 'Administrador'} />
                     </GridDatesContainer>
                 </PersonalCard>
                 <PersonalCard>

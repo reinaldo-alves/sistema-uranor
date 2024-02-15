@@ -1,6 +1,6 @@
 import { useContext, useEffect, useState } from "react";
 import Header from "src/components/header/header";
-import { Divider, GridContainer, InfoContainer, InputContainer, MainContainer, MainInfoContainer, MediumButton, MediumInfo, MediumMainInfo, MediumText, Modal, ModalButton, ModalContent, ModalTitle, NameAndId, PersonalCard, PhotoContainer, SectionTitle } from "./styles";
+import { Divider, GridContainer, InfoContainer, InputContainer, MainContainer, MainInfoContainer, MediumButton, MediumInfo, MediumMainInfo, MediumText, NameAndId, PersonalCard, PhotoContainer, SectionTitle } from "./styles";
 import SubMenu from "src/components/SubMenu/SubMenu";
 import SideMenu from "src/components/SideMenu/SideMenu";
 import { useNavigate, useParams } from "react-router-dom";
@@ -17,6 +17,7 @@ import { validateEmissao } from "src/utilities/validations";
 import { emissaoText } from "src/reports/emissao";
 import { defaultConsagracao } from "src/utilities/default";
 import api from "src/api";
+import { Modal, ModalButton, ModalContent, ModalTitle } from "src/components/Modal/modal";
 
 function ShowMedium() {
     const [loading, setLoading] = useState(true);

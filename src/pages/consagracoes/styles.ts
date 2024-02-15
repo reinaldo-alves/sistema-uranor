@@ -202,20 +202,6 @@ export const ButtonContainer = styled.div<{hide?: boolean}>`
     }
 `;
 
-export const Modal = styled.div<{vis: boolean}>`
-    width: 100vw;
-    height: 100vh;
-    background-color: ${(props) => {return props.theme.color.mediumColorTr}};
-    position: fixed;
-    visibility: ${({vis}) => vis? 'visible' : 'hidden'};
-    top: 0;
-    left: 0;
-    z-index: 5;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-`;
-
 export const ModalMediumContent = styled.div<{vis: boolean}>`
     width: 380px;
     max-width: 1400px;
@@ -231,61 +217,11 @@ export const ModalMediumContent = styled.div<{vis: boolean}>`
     overflow-y: auto;
 `;
 
-export const ModalTitle = styled.h1`
-    color: ${(props) => {return props.theme.color.darkerColor}};
-    margin-bottom: 20px;
-    text-align: center;
-`;
-
-export const ModalSubTitle = styled.h2`
-    color: ${(props) => {return props.theme.color.darkerColor}};
-    text-align: center;
-`;
-
 export const PageSubTitle = styled.h2<{hide?: boolean}>`
     color: ${(props) => {return props.theme.color.lighterColor}};
     text-align: center;
     margin: 20px;
     display: ${({hide}) => hide? 'none' : 'block'};
-`;
-
-export const ModalButton = styled.button<{color: string}>`
-    font-weight: bold;
-    border: solid 1px ${(props) => {return props.theme.color.darkerColor}};
-    border-radius: 8px;
-    width: 150px;
-    background-color: ${({color}) => color? color : 'green'};
-    color: ${(props) => {return props.theme.color.lighterColor}};
-    text-align: center;
-    height: 35px;
-    font-size: 20px;
-    align-self: flex-end;
-
-    :hover {
-        cursor: pointer;
-        transform: scale(1.02);
-    }
-
-    :active {
-        color: white;
-        background-color: ${(props) => {return props.theme.color.darkerColor}};
-        border: solid ${(props) => {return props.theme.color.lighterColor}};
-    }
-
-    :disabled {
-        border-color: gray;
-        background-color: gray;
-
-        :hover {
-            cursor: not-allowed;
-            transform: scale(1);
-        }
-
-        :active {
-            border-color: gray;
-            background-color: gray;
-        }
-    }
 `;
 
 export const InputContainer = styled.div<{box?: boolean}>`

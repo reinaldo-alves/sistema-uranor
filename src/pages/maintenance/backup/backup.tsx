@@ -1,5 +1,5 @@
 import Header from "src/components/header/header";
-import { CardsContainer, InputContainer, MainContainer, Modal, ModalBackupContent, ModalButton, ModalTitle, ObsContainer, PageButton } from "./styles";
+import { CardsContainer, InputContainer, MainContainer, ObsContainer, PageButton } from "./styles";
 import SubMenu from "src/components/SubMenu/SubMenu";
 import SideMenu from "src/components/SideMenu/SideMenu";
 import MainTitle from "src/components/MainTitle/MainTitle";
@@ -7,6 +7,7 @@ import api from "src/api";
 import { useContext, useState } from "react";
 import { UserContext } from "src/contexts/UserContext";
 import { Alert, Confirm } from "src/utilities/popups";
+import { Modal, ModalButton, ModalContent, ModalTitle } from "src/components/Modal/modal";
 
 function Backup() {
     const { token, logOut } = useContext(UserContext);
@@ -77,7 +78,7 @@ function Backup() {
             </MainContainer>
             <SideMenu list={listSubMenu}/>
             <Modal vis={showModal}>
-                <ModalBackupContent>
+                <ModalContent>
                     <ModalTitle>Restaurar Backup</ModalTitle>
                     <InputContainer>
                         <label className="custom-file-label">{file ? file.name : 'Selecione um arquivo .sql'}</label>
@@ -89,7 +90,7 @@ function Backup() {
                             Confirm('Essa ação pode resultar na perda ou sobrescrita de dados existentes. Continuar?', 'warning', 'Cancelar', 'Continuar', () => restoreBackup());
                         }}>Restaurar</ModalButton>
                     </div>
-                </ModalBackupContent>
+                </ModalContent>
             </Modal>
         </>
     )

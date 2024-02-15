@@ -77,10 +77,12 @@ export interface IConsagracao {
 }
 
 export interface IEvento {
+    evento_id: number,
+    medium: number,
     data: string,
     mensagem: string, 
-    observ: string,
     tipo: string,
+    observ: string,
 }
 
 export interface IMedium {

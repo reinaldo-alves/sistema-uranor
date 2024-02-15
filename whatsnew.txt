@@ -24,9 +24,11 @@ VERSÃO 1.1.0
 
 VERSÃO 1.2.0
 
+- Criação da página linha do tempo para os médiuns
+- Alteração de datas mediúnicas permitidas apenas para usuários administradores
 
 
-// Só edita datas os usuários administradores
 // Eventos da linha do tempo estáticos são adicionados somente quando não há um do mesmo tipo no banco de dados. Isso permite adicionar observações a eles
 // Adicionar mecanismo para adicionar observações aos Eventos
-// Pensar em manter os eventos sobre componentes
+// Ao excluir médium, excluir também todas os eventos da linha do tempo
+// Em elevação, validar para não gerar termos quando algum dos médiuns não tiver foto
