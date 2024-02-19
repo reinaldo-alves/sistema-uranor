@@ -15,6 +15,7 @@ import { validateMedium } from "src/utilities/validations";
 import AutocompleteInput from "src/components/AutocompleteInput/AutocompleteInput";
 import { defaultAdj, defaultCavaleiro, defaultMedium, defaultMentor } from "src/utilities/default";
 import { useNavigate } from "react-router-dom";
+import { Modal, ModalButton, ModalContent, ModalInputContainer, ModalTitle } from "src/components/Modal/modal";
 
 function AddMedium() {
     const { templos, estados, adjuntos, coletes, classMest, falMest, povos, falMiss, turnoL, turnoT, ministros, cavaleiros, guias, estrelas, princesas, classificacao } = useContext(ListContext);
@@ -56,6 +57,9 @@ function AddMedium() {
     const [searchPad, setSearchPad] = useState('');
     const [searchMad, setSearchMad] = useState('');
     const [searchAfi, setSearchAfi] = useState('');
+    const [showModal, setShowModal] = useState(false);
+    const [dataDevas, setDataDevas] = useState('');
+    const [dataJanda, setDataJanda] = useState('');
 
     const now = new Date().toISOString().split('T')[0];
 
@@ -332,6 +336,54 @@ function AddMedium() {
         navigate('/mediuns/consulta');
     }
 
+    const generateEvents = async (newMedium: IMedium, id: number, token: string) => {
+        try {
+            if (dataDevas) {
+                const newEvento = {
+                    medium: id,
+                    data: dataDevas,
+                    mensagem: `Consagração de ${newMedium.sex === 'Masculino' ? 'Filho' : newMedium.sex === 'Feminino' ? 'Filha' : ''} de Devas`,
+                    tipo: 'Outras Consagrações',
+                    observ: ''
+                };
+                await api.post('/evento/create', newEvento, {headers:{Authorization: token}});
+            }
+            if (dataJanda) {
+                const newEvento = {
+                    medium: id,
+                    data: dataJanda,
+                    mensagem: 'Consagração de Janda',
+                    tipo: 'Outras Consagrações',
+                    observ: ''
+                };
+                await api.post('/evento/create', newEvento, {headers:{Authorization: token}});
+            }
+            if (newMedium.classif && newMedium.dtClassif) {
+                const newEvento = {
+                    medium: id,
+                    data: newMedium.dtClassif,
+                    mensagem: `Classificação de ${newMedium.classif}`,
+                    tipo: 'Classificações',
+                    observ: ''
+                };
+                await api.post('/evento/create', newEvento, {headers:{Authorization: token}});
+            }
+            if (newMedium.oldClassif && newMedium.oldDtClassif) {
+                const newEvento = {
+                    medium: id,
+                    data: newMedium.oldDtClassif,
+                    mensagem: `Classificação de ${newMedium.oldClassif}`,
+                    tipo: 'Classificações',
+                    observ: ''
+                };
+                await api.post('/evento/create', newEvento, {headers:{Authorization: token}});
+            }
+        } catch (error) {
+            console.error('Erro ao adicionar eventos na linha do tempo', error);
+        }
+        closeModal();
+    }
+
     const addMedium = async (medium: IMedium, token: string) => {
         const mediumObj = convertMediumToSend(medium)
         const {medium_id, ...newMediumObj} = mediumObj;
@@ -340,6 +392,7 @@ function AddMedium() {
             const { medium_id } = response.data;
             await uploadImage(medium_id, token, photo);
             await setComponentes({...medium, medium_id}, token);
+            await generateEvents(medium, medium_id, token);
             Alert('Médium adicionado com sucesso', 'success');
             resetNewMedium();
             await loadMedium(token);
@@ -348,6 +401,20 @@ function AddMedium() {
             console.log('Não foi possível adicionar o médium', error);
             Alert('Não foi possível adicionar o médium', 'error');
         }
+    }
+
+    const handleAddMedium = async (newMedium: IMedium, token: string) => {
+        if (newMedium.devas || newMedium.janda) {
+            setShowModal(true);
+        } else {
+            await addMedium(newMedium, token);
+        }
+    }
+
+    const closeModal = () => {
+        setDataDevas('');
+        setDataJanda('');
+        setShowModal(false);
     }
 
     return (
@@ -538,12 +605,6 @@ function AddMedium() {
                             inputValue={searchPres}
                             setInputValue={setSearchPres}
                         />
-                        {/* <select value={newMedium.adjOrigem} onChange={(e) => updateProps('adjOrigem', e.target.value)}>
-                            <option value={0}></option>
-                            {adjuntos.map((item: IAdjunto, index: number) => (
-                                <option key={index} value={item.adjunto_id}>Adj. {ministros.find((min: IMentor) => min.id === item.ministro).nome} - Mestre {item.nome}</option>
-                            ))}
-                        </select> */}
                         <label>Templo Origem: </label>
                         <select value={newMedium.temploOrigem} onChange={(e) => updateProps('temploOrigem', e.target.value)}>
                             <option value={0}></option>
@@ -1161,10 +1222,31 @@ function AddMedium() {
                 </PersonalCard>
                 <div style={{width: '90%', maxWidth: '1200px', display: 'flex', justifyContent: 'space-around'}}>
                     <MediumButton color="red" onClick={() => resetNewMedium()}>Cancelar</MediumButton>
-                    <MediumButton color="green" onClick={() => validateMedium(newMedium, async () => await addMedium(newMedium, token))}>Cadastrar</MediumButton>
+                    <MediumButton color="green" onClick={() => validateMedium(newMedium, async () => await handleAddMedium(newMedium, token))}>Cadastrar</MediumButton>
                 </div>
             </MainContainer>
             <SideMenu list={listSubMenu} />
+            <Modal vis={showModal}>
+                <ModalContent>
+                    <ModalTitle>Datas</ModalTitle>
+                    {newMedium.devas ?
+                        <ModalInputContainer>
+                            <label>Data da consagração de Devas</label>
+                            <input type="date" value={dataDevas} onChange={(e) => setDataDevas(e.target.value)} />
+                        </ModalInputContainer>
+                    : ''}
+                    {newMedium.janda ?
+                        <ModalInputContainer>
+                            <label>Data da consagração de Janda</label>
+                            <input type="date" value={dataJanda} onChange={(e) => setDataJanda(e.target.value)} />
+                        </ModalInputContainer>
+                    : ''}
+                    <div style={{display: 'flex', gap: '20px'}}>
+                        <ModalButton color="red" onClick={closeModal}>Cancelar</ModalButton>
+                        <ModalButton color='green' onClick={() => addMedium(newMedium, token)}>Salvar</ModalButton>
+                    </div>
+                </ModalContent>
+            </Modal>
         </>
         
     )

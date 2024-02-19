@@ -25,9 +25,9 @@ VERSÃO 1.1.0
 VERSÃO 1.2.0
 
 - Criação da página linha do tempo para os médiuns, com cadastro e exclusão de eventos
+- Criação de eventos de consagração de Devas e Janda ao adicionar médium
+- Criação de eventos na linha do tempo ao editar adjunto de origem, classificações, turno de legião, templo e condição, além de eventos de consagração de Devas e Janda
+- Criação de evento na linha do tempo ao mudar mediunidade
 - Alteração de datas mediúnicas permitidas apenas para usuários administradores
-
-
-// Ao editar médium, adicionar eventos correspondentes. Lógica iniciada em EditMedium, concluir lógica e aplicar em AddMedium.
-// Caso ja tenha datas de teste como doutrinador e apará, solicitar data na mudança de mediunidade para registrar evento
-// Verificar se já existe um registro para a classificação, perguntando se quer substituir. Isso antes de adicionar novo evento de classificação.
+- Correção de erro ao exibir médium que exibia templo atual do médium no lugar do templo de origem do médium, e que não exibia a função de janda na seção Cargos e Funções
+- Atualização automática de dados de usuário no header quando os mesmos são alterados.

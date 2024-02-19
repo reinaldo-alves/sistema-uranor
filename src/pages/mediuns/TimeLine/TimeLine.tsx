@@ -87,19 +87,19 @@ function TimeLine() {
                 evento.push({evento_id: 0, medium: medium?.medium_id, data: medium?.dtMentor, mensagem: medium?.sex === 'Masculino' ? `Recebeu ministro ${ministros.find((m: IMentor) => m.id === medium?.ministro)?.nome} e cavaleiro ${cavaleiros.find((c: ICavaleiro) => c.id === medium?.cavaleiro)?.nome} ${medium?.cor}` : medium?.sex === 'Feminino' ? `Recebeu guia missionária ${guias.find((g: IMentor) => g.id === medium?.guia)?.nome} ${medium?.cor}` : '', observ: '', tipo: `Mentores ${medium?.med}`})
             }
             if(medium?.dtClassif && !evento.some((item: IEvento) => item.tipo === 'Classificações' && item.mensagem.split('de ')[1] === medium?.classif)) {
-                evento.push({evento_id: 0, medium: medium?.medium_id, data: medium?.dtClassif, mensagem: `Recebeu classificação de ${medium?.classif}`, observ: '', tipo: 'Classificações'})
+                evento.push({evento_id: 0, medium: medium?.medium_id, data: medium?.dtClassif, mensagem: `Classificação de ${medium?.classif}`, observ: '', tipo: 'Classificações'})
             }
             if(medium?.oldDtMentor && !evento.some((item: IEvento) => item.tipo === `Mentores ${medium?.med === 'Apará' ? 'Doutrinador' : medium?.med === 'Doutrinador' ? 'Apará' : ''}`)) {
                 evento.push({evento_id: 0, medium: medium?.medium_id, data: medium?.dtMentor, mensagem: medium?.sex === 'Masculino' ? `Recebeu ministro ${ministros.find((m: IMentor) => m.id === medium?.ministro)?.nome} e cavaleiro ${cavaleiros.find((c: ICavaleiro) => c.id === medium?.oldCavaleiro)?.nome} ${medium?.oldCor}` : '', observ: '', tipo: `Mentores ${medium?.med === 'Apará' ? 'Doutrinador' : medium?.med === 'Doutrinador' ? 'Apará' : ''}`})
             }
             if(medium?.oldDtClassif && !evento.some((item: IEvento) => item.tipo === 'Classificações' && item.mensagem.split('de ')[1] === medium?.oldClassif)) {
-                evento.push({evento_id: 0, medium: medium?.medium_id, data: medium?.oldDtClassif, mensagem: `Recebeu classificação de ${medium?.oldClassif}`, observ: '', tipo: 'Classificações'})
+                evento.push({evento_id: 0, medium: medium?.medium_id, data: medium?.oldDtClassif, mensagem: `Classificação de ${medium?.oldClassif}`, observ: '', tipo: 'Classificações'})
             }
             if(medium?.dtTrinoSol && !evento.some((item: IEvento) => item.tipo === 'Trino Solitário')) {
                 evento.push({evento_id: 0, medium: medium?.medium_id, data: medium?.dtTrinoSol, mensagem: `Consagração de Trino Solitário ${medium?.trinoSol}`, observ: '', tipo: 'Trino Solitário'})
             }
             if(medium?.dtTrinoSar && !evento.some((item: IEvento) => item.tipo === 'Trino Sardyos')) {
-                evento.push({evento_id: 0, medium: medium?.medium_id, data: medium?.dtTrinoSar, mensagem: 'Consagração de Trino Sardyos', observ: '', tipo: 'Trino Sardyos'})
+                evento.push({evento_id: 0, medium: medium?.medium_id, data: medium?.dtTrinoSar, mensagem: `Consagração de Trino Sardyos - Herdeiro do Adj. ${ministros.find((m: IMentor) => m.id === mediuns.find((item: IMedium) => item.medium_id === medium.herdeiro)?.ministro)?.nome} Mestre ${mediuns.find((item: IMedium) => item.medium_id === medium.herdeiro)?.nomeEmissao}`, observ: '', tipo: 'Trino Sardyos'})
             }
             setEventos(evento);
         } catch (error) {
@@ -112,7 +112,7 @@ function TimeLine() {
             Alert('Informe uma data válida', 'warning');
         } else if (!evento.tipo) {
             Alert('Informe um tipo para o evento', 'warning');
-        } else if (evento.tipo === 'Classificações' && !evento.mensagem.includes('Recebeu classificação de')) {
+        } else if (evento.tipo === 'Classificações' && !evento.mensagem.includes('Classificação de')) {
             Alert('Informe a classificação', 'warning');
         } else if (!evento.mensagem) {
             Alert('Insira uma descrição para o evento', 'warning');
@@ -323,23 +323,23 @@ function TimeLine() {
                     <ModalTitle>{edit? 'Editar Evento' : 'Adicionar Evento'}</ModalTitle>
                     <InputContainer>
                         <label>Data</label>
-                        <input type="date" value={edited.data} onChange={(e) => updateProps('data', e.target.value)} />
+                        <input type="date" value={edited.data} disabled={edit && !selected.evento_id} onChange={(e) => updateProps('data', e.target.value)} />
                     </InputContainer>
                     <InputContainer>
                         <label>Tipo</label>
-                        <select value={edited.tipo} onChange={(e) => updateProps('tipo', e.target.value)}>
+                        <select value={edited.tipo} disabled={edit && !selected.evento_id} onChange={(e) => updateProps('tipo', e.target.value)}>
                             <option value=''></option>
                             {eventTypes.map((item: ITipo, index: number) => (
-                                <option key={index} value={item.event} disabled={item.auto} style={{ display: item.auto? 'none' : 'block' }}>{item.event}</option>
+                                <option key={index} value={item.event} style={{ display: item.auto? 'none' : 'block' }}>{item.event}</option>
                             ))}
                         </select>
                     </InputContainer>
                     {edited.tipo === 'Classificações' ? 
                         <InputContainer>
                             <label>Classificação</label>
-                            <select value={dropClassif} onChange={(e) => {
+                            <select value={dropClassif} disabled={edit && !selected.evento_id} onChange={(e) => {
                                 setDropClassif(e.target.value);
-                                updateProps('mensagem', `Recebeu classificação de ${e.target.value}`);
+                                updateProps('mensagem', `Classificação de ${e.target.value}`);
                             }}>
                                 <option value=''></option>
                                 {[...classificacao.sol, ...classificacao.lua].map((item: string, index: number) => (
@@ -350,7 +350,7 @@ function TimeLine() {
                     :
                         <InputContainer>
                             <label>Descrição</label>
-                            <textarea value={edited.mensagem} onChange={(e) => updateProps('mensagem', e.target.value)} />
+                            <textarea value={edited.mensagem} disabled={edit && !selected.evento_id} onChange={(e) => updateProps('mensagem', e.target.value)} />
                         </InputContainer>
                     }
                     <InputContainer>

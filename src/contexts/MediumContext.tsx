@@ -400,9 +400,19 @@ export const MediumStore = ({ children }: any) => {
             presidente: '',
             comando: ''
         };
+        const newEvento = {
+            medium: medium.medium_id,
+            data: dtTest,
+            mensagem: `Mudança de Mediunidade: de ${medium.med} para ${editData.med}`,
+            tipo: 'Mudança de Mediunidade',
+            observ: ''
+        };
         try {
             await removeComponentes(medium, token);
-            await api.put('/medium/update', editData ,{headers:{Authorization: token}})
+            await api.put('/medium/update', editData ,{headers:{Authorization: token}});
+            if (dtTest) {
+                await api.post('/evento/create', newEvento, {headers:{Authorization: token}});
+            }
             Alert(`Mediunidade alterada para ${editData.med}`, 'success');
         } catch (error) {
             console.log('Erro ao mudar mediunidade', error);

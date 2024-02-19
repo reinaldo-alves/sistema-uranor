@@ -552,7 +552,7 @@ export const generateReclass = (medium: IMedium, adjuntos: Array<IAdjunto>, mini
                     {
                         columns: [
                             {text: 'ADJUNTO DE ORIGEM: ', width: 'auto'},
-                            {text: ministros.filter((min: IMentor) => min.id === adjuntos.filter((ad: IAdjunto) => ad.adjunto_id === medium.adjOrigem)[0].ministro)[0].nome.toUpperCase(), bold: true, width: 'auto'}
+                            {text: ministros.filter((min: IMentor) => min.id === adjuntos.filter((ad: IAdjunto) => ad.adjunto_id === medium.adjOrigem)[0]?.ministro)[0]?.nome.toUpperCase(), bold: true, width: 'auto'}
                         ],
                         columnGap: 3,
                         margin: [0, 0, 0, 0]

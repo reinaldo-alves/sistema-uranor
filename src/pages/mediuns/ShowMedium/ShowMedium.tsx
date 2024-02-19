@@ -82,6 +82,7 @@ function ShowMedium() {
         if (medium.recepcao){array.push('Recepcionista')};
         if (medium.devas){array.push(medium.sex === 'Feminino'? 'Filha de Devas' : 'Filho de Devas')};
         if (medium.regente){array.push('Regente')};
+        if (medium.janda){array.push('Janda')};
         if (medium.trinoSol){array.push(medium.dtTrinoSol ? `Trino Solitário ${medium.trinoSol}  em ${convertDate(medium.dtTrinoSol)}` : `Trino Solitário ${medium.trinoSol}`)};
         if (medium.trinoSar){array.push('Trino Sardyos')};
         return array.join(', ')
@@ -96,14 +97,7 @@ function ShowMedium() {
     }
     
     const confirmChangeMed = async () => {
-        await Confirm(`O médium será cadastrado como ${medium.med === 'Doutrinador' ? 'Apará' : medium.med === 'Apará' ? 'Doutrinador' : ''}. Continuar?`, 'warning', 'Não', 'Sim', async () => {
-            setTestDate(medium.oldDtTest);
-            if (medium.oldDtTest) {
-                handleChangeMed('');
-            } else {
-                setShowModal(true)
-            }  
-        });
+        await Confirm(`O médium será cadastrado como ${medium.med === 'Doutrinador' ? 'Apará' : medium.med === 'Apará' ? 'Doutrinador' : ''}. Continuar?`, 'warning', 'Não', 'Sim', () => setShowModal(true));
     }
 
     const closeModal = () => {
@@ -210,7 +204,7 @@ function ShowMedium() {
                             <SectionTitle>Dados Mediúnicos</SectionTitle>
                             <InfoContainer>
                                 <MediumInfo>Adjunto de Origem: <span>{medium.adjOrigem ? ministros.filter((item: IMentor) => item.id === adjuntos.filter((ad: IAdjunto) => ad.adjunto_id === medium.adjOrigem)[0].ministro)[0]? ministros.filter((item: IMentor) => item.id === adjuntos.filter((ad: IAdjunto) => ad.adjunto_id === medium.adjOrigem)[0].ministro)[0].nome : '' : ''} {medium.adjOrigem ? '- Mestre' : ''} {adjuntos.filter((item: IAdjunto) => item.adjunto_id === medium.adjOrigem)[0]? adjuntos.filter((item: IAdjunto) => item.adjunto_id === medium.adjOrigem)[0].nome : ''}</span></MediumInfo>
-                                <MediumInfo>Templo de Origem: <span>{medium.temploOrigem ? `${templos.filter((item: ITemplo) => item.templo_id === medium.templo)[0].cidade} - ${templos.filter((item: ITemplo) => item.templo_id === medium.templo)[0].estado.abrev}` : ''}</span></MediumInfo>
+                                <MediumInfo>Templo de Origem: <span>{medium.temploOrigem ? `${templos.filter((item: ITemplo) => item.templo_id === medium.temploOrigem)[0].cidade} - ${templos.filter((item: ITemplo) => item.templo_id === medium.temploOrigem)[0].estado.abrev}` : ''}</span></MediumInfo>
                                 <MediumInfo>Colete n°: <span>{medium.colete ? medium.colete : ''}</span></MediumInfo>
                                 <MediumInfo>Classificação: <span>{medium.classMest}</span></MediumInfo>
                                 <MediumInfo>Falange de Mestrado: <span>{medium.falMest}</span></MediumInfo>
@@ -334,7 +328,7 @@ function ShowMedium() {
                 <ModalContent>
                     <ModalTitle>Mudança de Mediunidade</ModalTitle>
                     <InputContainer>
-                        <label>{`Data do teste como ${medium.med === 'Doutrinador' ? 'Apará' : medium.med === 'Apará' ? 'Doutrinador' : ''}`}</label>
+                        <label>{medium.oldDtTest ? 'Data da mudança de mediunidade' : `Data do teste como ${medium.med === 'Doutrinador' ? 'Apará' : medium.med === 'Apará' ? 'Doutrinador' : ''}`}</label>
                         <input type="date" value={testDate} onChange={(e) => setTestDate(e.target.value)} />
                     </InputContainer>
                     <div style={{display: 'flex', gap: '20px'}}>

@@ -27,7 +27,7 @@ function Users() {
     const [dropMedium, setDropMedium] = useState(defaultMedium);
     const [searchMedium, setSearchMedium] = useState('');
     
-    const { users, token, loadUser, setUserChangePassword } = useContext(UserContext);
+    const { users, token, loadUser, setUserChangePassword, getUser } = useContext(UserContext);
     const { mediuns } = useContext(MediumContext);
 
     const navigate = useNavigate();
@@ -119,6 +119,7 @@ function Users() {
                 await api.put('/user/update', {user_id: oldUser.user_id, ...changedFields}, {headers:{Authorization: token}})
                 Alert('Usuário editado com sucesso', 'success');
                 await loadUser(token);
+                await getUser(token);
                 setEdited(defaultUser);
                 setSelected(defaultUser);
                 closeModal();
