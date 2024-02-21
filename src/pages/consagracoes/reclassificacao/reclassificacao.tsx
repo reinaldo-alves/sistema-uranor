@@ -1,8 +1,7 @@
 import SubMenu from "src/components/SubMenu/SubMenu";
 import Header from "../../../components/header/header";
-import { ButtonReclassDoc, CardsContainer, InputContainer, MainContainer, ModalMediumContent, NavigateButton } from "../styles";
+import { ButtonReclassDoc, CardsContainer, InputContainer, ModalMediumContent, NavigateButton } from "../styles";
 import SideMenu from "src/components/SideMenu/SideMenu";
-import MainTitle from "src/components/MainTitle/MainTitle";
 import AutocompleteInput from "src/components/AutocompleteInput/AutocompleteInput";
 import { defaultMedium } from "src/utilities/default";
 import { useContext, useState } from "react";
@@ -13,6 +12,7 @@ import { generateReclass, generateTrinoDevas } from "src/utilities/createDocs";
 import { alphabeticOrder } from "src/utilities/functions";
 import { UserContext } from "src/contexts/UserContext";
 import { Modal, ModalButton, ModalTitle } from "src/components/Modal/modal";
+import MainContainer from "src/components/MainContainer/MainContainer";
 
 function Reclassificacao() {
     const { adjuntos, ministros, cavaleiros } = useContext(ListContext);
@@ -83,8 +83,7 @@ function Reclassificacao() {
         <>
             <Header />
             <SubMenu list={listSubMenu}/>
-            <MainContainer>
-                <MainTitle content="Documentos - Classificações e Consagrações" />
+            <MainContainer title="Documentos - Classificações e Consagrações">
                 <CardsContainer>
                     {docs.map((item, index) => (
                         <ButtonReclassDoc key={index} onClick={() => setShowModal(item.link)}>{item.name}</ButtonReclassDoc>
@@ -106,6 +105,10 @@ function Reclassificacao() {
                             setValue={(newValue: IMedium) => handleDropMedium(0, newValue)}
                             inputValue={searchMedium[0]}
                             setInputValue={(newValue: string) => handleSearchMedium(0, newValue)}
+                            onKeyUp={() => {
+                                generateReclass(dropMedium[0], adjuntos, ministros, cavaleiros, user);
+                                closeModal();
+                            }}
                         />
                     </InputContainer>
                     <div style={{display: 'flex', gap: '20px'}}>
@@ -132,6 +135,10 @@ function Reclassificacao() {
                                 setValue={(newValue: IMedium) => handleDropMedium(index, newValue)}
                                 inputValue={searchMedium[index]}
                                 setInputValue={(newValue: string) => handleSearchMedium(index, newValue)}
+                                onKeyUp={() => {
+                                    generateTrinoDevas(dropMedium, showModal, adjuntoPai, ministros);
+                                    closeModal();
+                                }}
                             />
                         ))} 
                     </InputContainer>
@@ -148,6 +155,10 @@ function Reclassificacao() {
                                 setValue={setAdjuntoPai}
                                 inputValue={searchPai}
                                 setInputValue={setSearchPai}
+                                onKeyUp={() => {
+                                    generateTrinoDevas(dropMedium, showModal, adjuntoPai, ministros);
+                                    closeModal();
+                                }}
                             />
                         </InputContainer>
                     : ''}

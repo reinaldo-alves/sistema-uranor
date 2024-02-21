@@ -1,9 +1,9 @@
 import SubMenu from "src/components/SubMenu/SubMenu";
 import Header from "../../components/header/header";
-import { CardsContainer, PageButton, MainContainer } from "./styles";
+import { CardsContainer, PageButton } from "./styles";
 import SideMenu from "src/components/SideMenu/SideMenu";
 import { useNavigate } from "react-router-dom";
-import MainTitle from "src/components/MainTitle/MainTitle";
+import MainContainer from "src/components/MainContainer/MainContainer";
 
 function Maintenance() {
     const navigate = useNavigate();
@@ -25,8 +25,7 @@ function Maintenance() {
         <>
             <Header />
             <SubMenu list={menuList}/>
-            <MainContainer>
-                <MainTitle content="Sistema Uranor - Manutenção" />
+            <MainContainer title="Sistema Uranor - Manutenção">
                 <CardsContainer>
                     {docs.map((item, index) => (
                         <PageButton key={index} height='3em' onClick={() => navigate(item.link)}>{item.name}</PageButton>

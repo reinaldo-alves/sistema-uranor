@@ -1,13 +1,13 @@
 import { useContext, useEffect, useState } from "react";
 import Header from "src/components/header/header";
-import { Divider, GridContainer, InfoContainer, InputContainer, MainContainer, MainInfoContainer, MediumButton, MediumInfo, MediumMainInfo, MediumText, NameAndId, PersonalCard, PhotoContainer, SectionTitle } from "./styles";
+import { Divider, GridContainer, InfoContainer, InputContainer, MainInfoContainer, MediumButton, MediumInfo, MediumMainInfo, MediumText, NameAndId, PersonalCard, PhotoContainer, SectionTitle } from "./styles";
 import SubMenu from "src/components/SubMenu/SubMenu";
 import SideMenu from "src/components/SideMenu/SideMenu";
 import { useNavigate, useParams } from "react-router-dom";
 import { MediumContext } from "src/contexts/MediumContext";
 import { IAdjunto, ICavaleiro, IFalange, IMedium, IMentor, ITemplo } from "src/types/types";
 import { UserContext } from "src/contexts/UserContext";
-import { convertDate, setSituation } from "src/utilities/functions";
+import { convertDate, handleEnterPress, setSituation } from "src/utilities/functions";
 import { ListContext } from "src/contexts/ListContext";
 import PageNotFound from "src/pages/PageNotFound/PageNotFound";
 import Loading from "src/utilities/Loading";
@@ -19,6 +19,7 @@ import { defaultConsagracao } from "src/utilities/default";
 import api from "src/api";
 import { Modal, ModalButton, ModalContent, ModalTitle } from "src/components/Modal/modal";
 import { IEventoAPI } from "src/types/typesAPI";
+import MainContainer from "src/components/MainContainer/MainContainer";
 
 function ShowMedium() {
     const [loading, setLoading] = useState(true);
@@ -185,7 +186,7 @@ function ShowMedium() {
                                 <MediumInfo>Endereço: <span>{fullAddress}</span></MediumInfo>
                                 <MediumInfo>Telefone 1: <span>{medium.telefone1}</span></MediumInfo>
                                 <MediumInfo>Telefone 2: <span>{medium.telefone2}</span></MediumInfo>
-                                <MediumInfo>Email: <span>{medium.email}</span></MediumInfo>
+                                <MediumInfo>E-mail: <span>{medium.email}</span></MediumInfo>
                                 <MediumInfo>Profissão: <span>{medium.profissao}</span></MediumInfo>
                             </InfoContainer>
                         </PersonalCard>
@@ -329,11 +330,11 @@ function ShowMedium() {
                     <ModalTitle>Mudança de Mediunidade</ModalTitle>
                     <InputContainer>
                         <label>{medium.oldDtTest ? 'Data da mudança de mediunidade' : `Data do teste como ${medium.med === 'Doutrinador' ? 'Apará' : medium.med === 'Apará' ? 'Doutrinador' : ''}`}</label>
-                        <input type="date" value={testDate} onChange={(e) => setTestDate(e.target.value)} />
+                        <input type="date" value={testDate} onKeyUp={(e) => handleEnterPress(e, async () => await handleChangeMed(testDate))} onChange={(e) => setTestDate(e.target.value)} />
                     </InputContainer>
                     <div style={{display: 'flex', gap: '20px'}}>
                         <ModalButton color="red" onClick={closeModal}>Cancelar</ModalButton>
-                        <ModalButton color='green' onClick={() => handleChangeMed(testDate)}>Salvar</ModalButton>
+                        <ModalButton color='green' onClick={async () => await handleChangeMed(testDate)}>Salvar</ModalButton>
                     </div>
                 </ModalContent>
             </Modal>

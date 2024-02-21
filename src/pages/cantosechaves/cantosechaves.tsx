@@ -3,9 +3,8 @@ import Header from "../../components/header/header";
 import ButtonMenu from "../../components/ButtonMenu/ButtonMenu";
 import SubMenu from "src/components/SubMenu/SubMenu";
 import ButtonDoc from "src/components/ButtonDoc/ButtonDoc";
-import { CardsCantoContainer, GlobalContainer } from "./styles";
+import { CardsCantoContainer, GlobalContainer, MainTitle } from "./styles";
 import SideMenu from "src/components/SideMenu/SideMenu";
-import MainTitle from "src/components/MainTitle/MainTitle";
 import { agulhaIsmeniaCanto, aponaraCanto, arianaCanto, caycaraCanto, ciganaAganaraCanto, ciganaTaganaCanto, dharmoOxintoCanto, dharmoOxintoLeito, franciscanaCanto, gregaCanto, jacanaCanto, madalenaCanto, magoAcender, magoApagar, magoCanto, mayaCanto, muruaicyCanto, muruaicyPortões, narayamaCanto, niatraCanto, nityamaCanto, nityamaChama, nityamaTurigano, principeMayaCanto, rochanaCanto, samaritanaCanto, samaritanaTurigano, tupinambaCanto, yuricyLuaCanto, yuricySol1Canto, yuricySolCanto, yuricyTurigano } from "src/reports/cantosFalanges";
 import { cavEspecialCanto, ninfaLuaCanto, ninfaSolCanto } from "src/reports/cantosIndividualidade";
 import { abataChave, alabaChave, alabaComando, arameAdvogado, arameAjana, arameCondessa, aramePromotor, comandoOficial, comandoTapir, comandoTrabalho, curaComando, defumacaoComando, inducaoComando, juncaoComando, lancaVermelha, leitoAjana, leitoCavaleiro, leitoComando, leitoFalanges, leitoLilas, leitoNinfaLua, leitoRosea, leitoVermelha, oraculoAjana, oraculoComando, oraculoNinfaSol, randyAjana, randyComando, randyLanca, randyNinfaLua, randyNinfaSol, randySexto, sudalioComando, sudalioNinfaLua } from "src/reports/chavesTrabalhos";
@@ -152,13 +151,13 @@ function CantosChaves() {
             <Header />
             <SubMenu list={menuList}/>
             <GlobalContainer>
-                <MainTitle content="Cantos da Individualidade" />
+                <MainTitle>Cantos da Individualidade</MainTitle>
                 <CardsCantoContainer colums={columnIndiv}>
                     {individualidade.map((item, index) => (
                         <ButtonDoc key={index} name={item.name} link={item.link} subtitle={item.subtitle} height={'4em'} />
                     ))}
                 </CardsCantoContainer>
-                <MainTitle content="Cantos das Falanges Missionárias" />
+                <MainTitle>Cantos das Falanges Missionárias</MainTitle>
                 <CardsCantoContainer colums={columnChave}>
                     <ButtonMenu active={nitActive} click={nitClick} name={'Nityama'} list={[
                         {text: 'Canto da Nityama', canto: nityamaCanto},
@@ -205,7 +204,7 @@ function CantosChaves() {
                     <ButtonDoc name={'Niatra'} link={niatraCanto} height={'2em'} />
                     <ButtonDoc name={'Aponara'} link={aponaraCanto} height={'2em'} />
                 </CardsCantoContainer>
-                <MainTitle content="Chaves dos Trabalhos" />
+                <MainTitle>Chaves dos Trabalhos</MainTitle>
                 <CardsCantoContainer colums={columnChave}>
                     {chaves.map((item, index) => (
                         <ButtonMenu

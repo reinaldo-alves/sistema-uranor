@@ -121,3 +121,10 @@ export function alphabeticOrder(array: Array<any>) {
     }); 
     return array
 }
+
+//Executa uma função ao pressionar enter com input focado
+export function handleEnterPress(e: React.KeyboardEvent, func: () => void) {
+    if (e.key === 'Enter') {
+        func();
+    } 
+}

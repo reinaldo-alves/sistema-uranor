@@ -1,15 +1,16 @@
 import { useState, useContext } from "react";
-import { InfoCard, InputContainer, MainContainer, InfoContent, Results, ResultsCard, ResultsTable, ResultsTitle, SearchCard, SearchContainer } from "./styles";
+import { InfoCard, InputContainer, InfoContent, Results, ResultsCard, ResultsTable, ResultsTitle, SearchCard, SearchContainer } from "./styles";
 import { ListContext } from "src/contexts/ListContext";
 import SideMenu from "src/components/SideMenu/SideMenu";
 import Header from "src/components/header/header";
 import SubMenu from "src/components/SubMenu/SubMenu";
 import { IFalange } from "src/types/types";
-import MainTitle from "src/components/MainTitle/MainTitle";
+import MainContainer from "src/components/MainContainer/MainContainer";
 import { UserContext } from "src/contexts/UserContext";
 import api from "src/api";
 import { Alert } from "src/utilities/popups";
-import { Modal, ModalButton, ModalContent, ModalTitle } from "src/components/Modal/modal";
+import { Modal, ModalButton, ModalContent, ModalSubTitle, ModalTitle } from "src/components/Modal/modal";
+import { handleEnterPress } from "src/utilities/functions";
 
 function Falanges() {   
     const [search, setSearch] = useState('');
@@ -78,8 +79,7 @@ function Falanges() {
         <>
             <Header />
             <SubMenu list={listSubMenu}/>
-            <MainContainer>
-                <MainTitle content="Falanges Missionárias - Manutenção" />
+            <MainContainer title="Falanges Missionárias - Manutenção">
                 <SearchCard>
                     <SearchContainer>
                         <InputContainer>
@@ -109,21 +109,18 @@ function Falanges() {
             <Modal vis={showModal}>
                 <ModalContent>
                     <ModalTitle>Editar Falange Missionária</ModalTitle>
-                    <InputContainer>
-                        <label>Nome da Falange</label>
-                        <input type="text" value={edited.nome} onChange={(e) => updateProps('nome', e.target.value)} />
-                    </InputContainer>
+                    <ModalSubTitle>{edited.nome}</ModalSubTitle>
                     <InputContainer>
                         <label>Nome da Primeira</label>
-                        <input type="text" value={edited.primeira} onChange={(e) => updateProps('primeira', e.target.value)} />
+                        <input type="text" value={edited.primeira} onKeyUp={(e) => handleEnterPress(e, async () => await editFal(edited, selected, token))} onChange={(e) => updateProps('primeira', e.target.value)} />
                     </InputContainer>
                     <InputContainer>
                         <label>Classificação do Adjunto de Apoio</label>
-                        <input type="text" disabled={!edited.ninfa} value={edited.adjMin} onChange={(e) => updateProps('adjMin', e.target.value)} />
+                        <input type="text" disabled={!edited.ninfa} value={edited.adjMin} onKeyUp={(e) => handleEnterPress(e, async () => await editFal(edited, selected, token))} onChange={(e) => updateProps('adjMin', e.target.value)} />
                     </InputContainer>
                     <InputContainer>
                         <label>Nome do Adjunto de Apoio</label>
-                        <input type="text" disabled={!edited.ninfa} value={edited.adjNome} onChange={(e) => updateProps('adjNome', e.target.value)} />
+                        <input type="text" disabled={!edited.ninfa} value={edited.adjNome} onKeyUp={(e) => handleEnterPress(e, async () => await editFal(edited, selected, token))} onChange={(e) => updateProps('adjNome', e.target.value)} />
                     </InputContainer>
                     <div style={{display: 'flex', gap: '20px'}}>
                         <ModalButton color="red" onClick={() => closeModal()}>Cancelar</ModalButton>

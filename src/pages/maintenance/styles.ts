@@ -1,13 +1,5 @@
 import styled from "styled-components";
 
-export const MainContainer = styled.div`
-    min-height: ${(props) => {return props.theme.height.mainContent}};
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-`;
-
 export const PageButton = styled.div<{height: string}>`
     border: solid 1px ${(props) => {return props.theme.color.darkerColor}};
     border-radius: 8px;

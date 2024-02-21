@@ -4,6 +4,7 @@ import { LoginCard, LoginCardContainer, LoginError, LoginForm, LoginHeader, Titl
 import { UserContext } from 'src/contexts/UserContext'
 import { useNavigate } from 'react-router-dom'
 import { Alert } from 'src/utilities/popups'
+import { handleEnterPress } from 'src/utilities/functions'
 
 function Login() {
     const { handleLogin, login, errorMessage, setErrorMessage } = useContext(UserContext)
@@ -50,9 +51,9 @@ function Login() {
                     <h2>Login</h2>
                     <LoginForm>
                         <label>Usuário:</label>
-                        <input type="text" name="user" value={name} onChange={(e) => setName(e.target.value)} />
+                        <input type="text" name="user" value={name} onKeyUp={(e) => handleEnterPress(e, () => loginButtonFunc())} onChange={(e) => setName(e.target.value)} />
                         <label>Senha:</label>
-                        <input type="password" name="password" value={password} onChange={(e) => setPassword(e.target.value)} />
+                        <input type="password" name="password" value={password} onKeyUp={(e) => handleEnterPress(e, () => loginButtonFunc())} onChange={(e) => setPassword(e.target.value)} />
                         <button id='button-login' onClick={loginButtonFunc}>Entrar</button>
                     </LoginForm>
                     <LoginError>{errorMessage}</LoginError>

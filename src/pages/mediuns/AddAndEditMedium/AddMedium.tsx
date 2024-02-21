@@ -1,14 +1,14 @@
 import { useContext, useState, useEffect } from "react";
 import { ListContext } from "src/contexts/ListContext";
-import { Divider, FieldContainer, FieldContainerBox, GridContainer, GridDatesContainer, InputContainer, MainContainer, MainContent, MainInfoContainer, MediumButton, Observations, PersonalCard, PhotoContainer, SectionTitle } from "./styles";
-import { IAdjunto, ICavaleiro, IEstado, IFalange, IMedium, IMentor, ITemplo } from "src/types/types";
+import { Divider, FieldContainer, FieldContainerBox, GridContainer, GridDatesContainer, InputContainer, MainContent, MainInfoContainer, MediumButton, Observations, PersonalCard, PhotoContainer, SectionTitle } from "./styles";
+import { ICavaleiro, IEstado, IFalange, IMedium, IMentor, ITemplo } from "src/types/types";
 import SideMenu from "src/components/SideMenu/SideMenu";
 import SubMenu from "src/components/SubMenu/SubMenu";
 import Header from "src/components/header/header";
 import { UserContext } from "src/contexts/UserContext";
 import api from "src/api";
 import { MediumContext } from "src/contexts/MediumContext";
-import { alphabeticOrder, formatCep, formatCpf, formatPhoneNumber } from "src/utilities/functions";
+import { alphabeticOrder, formatCep, formatCpf, formatPhoneNumber, handleEnterPress } from "src/utilities/functions";
 import { Alert } from "src/utilities/popups";
 import axios from "axios";
 import { validateMedium } from "src/utilities/validations";
@@ -16,6 +16,7 @@ import AutocompleteInput from "src/components/AutocompleteInput/AutocompleteInpu
 import { defaultAdj, defaultCavaleiro, defaultMedium, defaultMentor } from "src/utilities/default";
 import { useNavigate } from "react-router-dom";
 import { Modal, ModalButton, ModalContent, ModalInputContainer, ModalTitle } from "src/components/Modal/modal";
+import MainContainer from "src/components/MainContainer/MainContainer";
 
 function AddMedium() {
     const { templos, estados, adjuntos, coletes, classMest, falMest, povos, falMiss, turnoL, turnoT, ministros, cavaleiros, guias, estrelas, princesas, classificacao } = useContext(ListContext);
@@ -1232,18 +1233,18 @@ function AddMedium() {
                     {newMedium.devas ?
                         <ModalInputContainer>
                             <label>Data da consagração de Devas</label>
-                            <input type="date" value={dataDevas} onChange={(e) => setDataDevas(e.target.value)} />
+                            <input type="date" value={dataDevas} onKeyUp={(e) => handleEnterPress(e, async () => await addMedium(newMedium, token))} onChange={(e) => setDataDevas(e.target.value)} />
                         </ModalInputContainer>
                     : ''}
                     {newMedium.janda ?
                         <ModalInputContainer>
                             <label>Data da consagração de Janda</label>
-                            <input type="date" value={dataJanda} onChange={(e) => setDataJanda(e.target.value)} />
+                            <input type="date" value={dataJanda} onKeyUp={(e) => handleEnterPress(e, async () => await addMedium(newMedium, token))} onChange={(e) => setDataJanda(e.target.value)} />
                         </ModalInputContainer>
                     : ''}
                     <div style={{display: 'flex', gap: '20px'}}>
                         <ModalButton color="red" onClick={closeModal}>Cancelar</ModalButton>
-                        <ModalButton color='green' onClick={() => addMedium(newMedium, token)}>Salvar</ModalButton>
+                        <ModalButton color='green' onClick={async () => await addMedium(newMedium, token)}>Salvar</ModalButton>
                     </div>
                 </ModalContent>
             </Modal>

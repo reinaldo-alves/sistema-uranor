@@ -1,14 +1,15 @@
 import { useContext, useState } from "react";
 import SubMenu from "src/components/SubMenu/SubMenu";
 import Header from "src/components/header/header";
-import { MainContainer, PasswordForm } from "./styles";
+import { PasswordForm } from "./styles";
 import SideMenu from "src/components/SideMenu/SideMenu";
 import { useNavigate } from "react-router-dom";
-import MainTitle from "src/components/MainTitle/MainTitle";
+import MainContainer from "src/components/MainContainer/MainContainer";
 import { UserContext } from "src/contexts/UserContext";
 import api from "src/api";
 import { Alert } from "src/utilities/popups";
 import { Modal, ModalButton, ModalContent, ModalInputContainer, ModalTitle } from "src/components/Modal/modal";
+import { handleEnterPress } from "src/utilities/functions";
 
 function ChangePassword() {
     const { user, userChangePassword, loadUser, token } = useContext(UserContext)
@@ -74,13 +75,12 @@ function ChangePassword() {
         <>
             <Header />
             <SubMenu list={menuList}/>
-            <MainContainer>
-                <MainTitle content={`Alterar Senha - Usuário: ${userChangePassword.name}`} />
+            <MainContainer title={`Alterar Senha - Usuário: ${userChangePassword.name}`}>
                 <PasswordForm>
                     <label>Nova senha:</label>
-                    <input type="password" value={password1} onChange={(e) => setPassword1(e.target.value)} />
+                    <input type="password" value={password1} onKeyUp={(e) => handleEnterPress(e, () => validateChangePassword())} onChange={(e) => setPassword1(e.target.value)} />
                     <label>Confirme a nova senha:</label>
-                    <input type="password" value={password2} onChange={(e) => setPassword2(e.target.value)} />
+                    <input type="password" value={password2} onKeyUp={(e) => handleEnterPress(e, () => validateChangePassword())} onChange={(e) => setPassword2(e.target.value)} />
                     <button id='button-login' onClick={validateChangePassword}>Alterar</button>   
                 </PasswordForm>
             </MainContainer>
@@ -90,7 +90,7 @@ function ChangePassword() {
                     <ModalTitle>Confirme com sua senha atual</ModalTitle>
                     <ModalTitle>{`Usuário: ${user.name}`}</ModalTitle>
                     <ModalInputContainer>
-                        <input type="password" value={currentPassword} onChange={(e) => setCurrentPassword(e.target.value)} />
+                        <input type="password" value={currentPassword} onKeyUp={(e) => handleEnterPress(e, () => handleChangePassword())} onChange={(e) => setCurrentPassword(e.target.value)} />
                     </ModalInputContainer>
                     <div style={{display: 'flex', gap: '20px'}}>
                         <ModalButton color="red" onClick={closeModal}>Cancelar</ModalButton>

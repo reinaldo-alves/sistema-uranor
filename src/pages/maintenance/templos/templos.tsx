@@ -1,17 +1,17 @@
 import { useState, useContext, useEffect } from "react";
-import { InfoCard, InputContainer, MainContainer, InfoContent, Results, ResultsCard, ResultsDetails, ResultsTable, ResultsTitle, SearchButton, SearchCard, SearchContainer } from "./styles";
+import { InfoCard, InputContainer, InfoContent, Results, ResultsCard, ResultsDetails, ResultsTable, ResultsTitle, SearchButton, SearchCard, SearchContainer } from "./styles";
 import { ListContext } from "src/contexts/ListContext";
 import SideMenu from "src/components/SideMenu/SideMenu";
 import Header from "src/components/header/header";
 import SubMenu from "src/components/SubMenu/SubMenu";
 import { IAdjunto, IEstado, IMentor, ITemplo } from "src/types/types";
-import MainTitle from "src/components/MainTitle/MainTitle";
+import MainContainer from "src/components/MainContainer/MainContainer";
 import { UserContext } from "src/contexts/UserContext";
 import api from "src/api";
 import { Alert } from "src/utilities/popups";
 import { defaultAdj, defaultTemp } from "src/utilities/default";
 import AutocompleteInput from "src/components/AutocompleteInput/AutocompleteInput";
-import { alphabeticOrder } from "src/utilities/functions";
+import { alphabeticOrder, handleEnterPress } from "src/utilities/functions";
 import { Modal, ModalButton, ModalContent, ModalTitle } from "src/components/Modal/modal";
 
 function Templos() {
@@ -118,8 +118,7 @@ function Templos() {
         <>
             <Header />
             <SubMenu list={listSubMenu}/>
-            <MainContainer>
-                <MainTitle content="Templos - Manutenção" />
+            <MainContainer title="Templos - Manutenção" >
                 <SearchCard>
                     <SearchContainer>
                         <InputContainer>
@@ -173,7 +172,7 @@ function Templos() {
                     <ModalTitle>{edit? 'Editar Templo' : 'Novo Templo'}</ModalTitle>
                     <InputContainer>
                         <label>Nome do Templo (Cidade)</label>
-                        <input type="text" value={edited.cidade} onChange={(e) => updateProps('cidade', e.target.value)} />
+                        <input type="text" value={edited.cidade} onKeyUp={edit? (e) => handleEnterPress(e, async () => await editTemp(edited, selected, token)) : (e) => handleEnterPress(e, async () => await addTemp(edited, token))} onChange={(e) => updateProps('cidade', e.target.value)} />
                     </InputContainer>
                     <InputContainer>
                         <label>Estado</label>
@@ -195,6 +194,7 @@ function Templos() {
                             setValue={setDropPres}
                             inputValue={searchPres}
                             setInputValue={setSearchPres}
+                            onKeyUp={edit? async () => await editTemp(edited, selected, token) : async () => await addTemp(edited, token)}
                         />
                     </InputContainer>
                     <div style={{display: 'flex', gap: '20px'}}>

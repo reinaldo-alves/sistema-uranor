@@ -30,6 +30,19 @@ RELATÓRIOS
 - Relatório por período (datas ingresso, inciação, elevação, centúria)
 - Relatório desenvolvimento (testes, desistentes)
 
+------------------------------------------------------------------------------------------------------------
+- Tipos: lista de médiuns, contato
+- Obs: Em todos os relatórios, opção de filtrar por tipo, templo e por condição.
+- Relatórios por situação (em desenvolvimento, emplacado, iniciado, elevado, centurião, 7° Raio).
+- Relatórios por classificações.
+- Relatório por cargo ou função (Comandante, Janatã, Lança Vermelha, Devas, Janda, Regente, Recepcionista, Aganaros).
+- Relatório por falange missionária
+- Relatório por condição atual (Ativo, Não ativos, Afastado, Entregou as Armas, Desencarnado)
+- Relatório médium menor
+
+- Relatório personalizado: todas as propriedades para combinar.
+------------------------------------------------------------------------------------------------------------
+
 DOCUMENTOS ÚTEIS
 - Calendário de atividades doutrinárias
 - Escala dos Devas

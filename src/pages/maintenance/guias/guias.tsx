@@ -1,15 +1,16 @@
 import { useState, useContext } from "react";
-import { InfoCard, InputContainer, MainContainer, InfoContent, Results, ResultsCard, ResultsTable, ResultsTitle, SearchButton, SearchCard, SearchContainer } from "./styles";
+import { InfoCard, InputContainer, InfoContent, Results, ResultsCard, ResultsTable, ResultsTitle, SearchButton, SearchCard, SearchContainer } from "./styles";
 import { ListContext } from "src/contexts/ListContext";
 import SideMenu from "src/components/SideMenu/SideMenu";
 import Header from "src/components/header/header";
 import SubMenu from "src/components/SubMenu/SubMenu";
 import { IMentor } from "src/types/types";
-import MainTitle from "src/components/MainTitle/MainTitle";
+import MainContainer from "src/components/MainContainer/MainContainer";
 import { UserContext } from "src/contexts/UserContext";
 import api from "src/api";
 import { Alert } from "src/utilities/popups";
 import { Modal, ModalButton, ModalContent, ModalTitle } from "src/components/Modal/modal";
+import { handleEnterPress } from "src/utilities/functions";
 
 function Guias() {
     const [search, setSearch] = useState('');
@@ -80,8 +81,7 @@ function Guias() {
         <>
             <Header />
             <SubMenu list={listSubMenu}/>
-            <MainContainer>
-                <MainTitle content="Guias Missionárias - Manutenção" />
+            <MainContainer title="Guias Missionárias - Manutenção">
                 <SearchCard>
                     <SearchContainer>
                         <InputContainer>
@@ -114,7 +114,7 @@ function Guias() {
                     <ModalTitle>{edit ? 'Editar Guia Missionária' : 'Nova Guia Missionária'}</ModalTitle>
                     <InputContainer>
                         <label>Nome da Guia Missionária</label>
-                        <input type="text" value={guia} onChange={(e) => setGuia(e.target.value)} />
+                        <input type="text" value={guia} onKeyUp={edit? (e) => handleEnterPress(e, async () => await editGuia(id, guia, token)) : (e) => handleEnterPress(e, async () => await addGuia(guia, token))} onChange={(e) => setGuia(e.target.value)} />
                     </InputContainer>
                     <div style={{display: 'flex', gap: '20px'}}>
                         <ModalButton color="red" onClick={() => closeModal()}>Cancelar</ModalButton>

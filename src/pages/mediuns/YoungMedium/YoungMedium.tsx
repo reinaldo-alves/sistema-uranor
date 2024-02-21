@@ -1,8 +1,7 @@
 import Header from "src/components/header/header";
-import { MainContainer } from "./styles";
 import SubMenu from "src/components/SubMenu/SubMenu";
 import SideMenu from "src/components/SideMenu/SideMenu";
-import MainTitle from "src/components/MainTitle/MainTitle";
+import MainContainer from "src/components/MainContainer/MainContainer";
 
 function YoungMedium() {
     const listSubMenu = [
@@ -16,8 +15,8 @@ function YoungMedium() {
         <>
             <Header />
             <SubMenu list={listSubMenu}/>
-            <MainContainer>
-                <MainTitle content="Módulo em Desenvolvimento" /> 
+            <MainContainer title="Módulo em Desenvolvimento" >
+                <p></p>
             </MainContainer>
             <SideMenu list={listSubMenu} />
         </>

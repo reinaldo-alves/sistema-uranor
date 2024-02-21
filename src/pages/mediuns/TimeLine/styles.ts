@@ -1,24 +1,5 @@
 import styled from "styled-components";
 
-export const MainContainer = styled.div`
-    height: 100%;
-    min-height: ${(props) => {return props.theme.height.mainContent}};
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-`;
-
-export const TitleContainer = styled.div`
-    padding: 32px;
-    text-align: center;
-    color: ${(props) => {return props.theme.color.lighterColor}};
-
-    h1 {
-        padding-bottom: 10px;
-    }
-`;
-
 export const ResultsCard = styled.div<{show: boolean}>`
     width: 90%;
     max-width: 1400px;

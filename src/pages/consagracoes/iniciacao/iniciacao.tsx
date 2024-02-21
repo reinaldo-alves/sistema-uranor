@@ -1,9 +1,8 @@
 import SubMenu from "src/components/SubMenu/SubMenu";
 import Header from "../../../components/header/header";
 import SideMenu from "src/components/SideMenu/SideMenu";
-import MainTitle from "src/components/MainTitle/MainTitle";
-import { ButtonContainer, ConsagracaoCard, InputContainer, MainContainer, ModalMediumContent, MudancaObs, NavigateButton, PageSubTitle, PhotoContainer, Results, ResultsData, ResultsPanel, ResultsTable, ResultsTitle } from "../styles";
-import { alphabeticOrder, countMedium } from "src/utilities/functions";
+import { ButtonContainer, ConsagracaoCard, InputContainer, ModalMediumContent, MudancaObs, NavigateButton, PageSubTitle, PhotoContainer, Results, ResultsData, ResultsPanel, ResultsTable, ResultsTitle } from "../styles";
+import { alphabeticOrder, countMedium, handleEnterPress } from "src/utilities/functions";
 import { useContext, useEffect, useState } from "react";
 import { ListContext } from "src/contexts/ListContext";
 import { IConsagracao, IMedium } from "src/types/types";
@@ -16,6 +15,7 @@ import { defaultConsagracao, defaultMedium } from "src/utilities/default";
 import { useNavigate } from "react-router-dom";
 import { generateAutorizacao, generateConsReport, generateProtocolo } from "src/utilities/createDocs";
 import { Modal, ModalButton, ModalSubTitle, ModalTitle } from "src/components/Modal/modal";
+import MainContainer from "src/components/MainContainer/MainContainer";
 
 function Iniciacao() {
     const { templos, adjuntos, ministros, coletes, falMest, listIniciacao, listMudanca, loadConsagracao, searchMediumInCons } = useContext(ListContext);
@@ -187,8 +187,7 @@ function Iniciacao() {
         <>
             <Header />
             <SubMenu list={listSubMenu}/>
-            <MainContainer>
-                <MainTitle content={[...listIniciacao, ...listMudanca].length ? `Lista de médiuns para iniciação - ${countMedium([...listIniciacao, ...listMudanca])}` : 'Nenhum médium para iniciação'} />
+            <MainContainer title={[...listIniciacao, ...listMudanca].length ? `Lista de médiuns para iniciação - ${countMedium([...listIniciacao, ...listMudanca])}` : 'Nenhum médium para iniciação'}>
                 <ConsagracaoCard hide={![...listIniciacao, ...listMudanca].length}>
                     <ResultsTable show={[...listIniciacao, ...listMudanca].length}>
                         <thead>
@@ -292,6 +291,7 @@ function Iniciacao() {
                             setValue={setDropMedium}
                             inputValue={searchMedium}
                             setInputValue={setSearchMedium}
+                            onKeyUp={() => addIniciacao(token)}
                         />
                     </InputContainer>
                     <InputContainer box>
@@ -308,7 +308,15 @@ function Iniciacao() {
                     <ModalTitle>{`Gerar ${selectModal}`}</ModalTitle>
                     <InputContainer>
                         <label>Título</label>
-                        <input type="text" value={reportTitle} onChange={(e) => setReportTitle(e.target.value)} />
+                        <input type="text" value={reportTitle} onKeyUp={(e) => handleEnterPress(e, () => {
+                            if (selectModal === 'Protocolo') {
+                                generateProtocolo(alphabeticOrder([...listIniciacao, ...listMudanca]), reportTitle, 1)
+                            }
+                            if (selectModal === 'Relatório') {
+                                generateConsReport(alphabeticOrder([...listIniciacao, ...listMudanca]), templos, adjuntos, ministros, falMest, reportTitle, 1)
+                            }
+                            closeModal();
+                        })} onChange={(e) => setReportTitle(e.target.value)} />
                     </InputContainer>
                     <div style={{display: 'flex', gap: '20px'}}>
                         <ModalButton color="red" onClick={() => closeModal()}>Cancelar</ModalButton>

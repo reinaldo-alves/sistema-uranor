@@ -1,5 +1,11 @@
 import styled from "styled-components";
 
+export const MainTitle = styled.h1`
+    color: ${(props) => {return props.theme.color.lighterColor}};
+    margin: 32px;
+    text-align: center;
+`;
+
 export const GlobalContainer = styled.div`
     min-height: ${(props) => {return props.theme.height.mainContent}};
     width: 100%;

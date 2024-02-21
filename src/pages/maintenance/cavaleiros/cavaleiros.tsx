@@ -1,16 +1,17 @@
 import { useState, useContext } from "react";
-import { InfoCard, InputContainer, MainContainer, InfoContent, Results, ResultsCard, ResultsTable, ResultsTitle, SearchButton, SearchCard, SearchContainer, ResultsDetails } from "./styles";
+import { InfoCard, InputContainer, InfoContent, Results, ResultsCard, ResultsTable, ResultsTitle, SearchButton, SearchCard, SearchContainer, ResultsDetails } from "./styles";
 import { ListContext } from "src/contexts/ListContext";
 import SideMenu from "src/components/SideMenu/SideMenu";
 import Header from "src/components/header/header";
 import SubMenu from "src/components/SubMenu/SubMenu";
 import { ICavaleiro } from "src/types/types";
-import MainTitle from "src/components/MainTitle/MainTitle";
+import MainContainer from "src/components/MainContainer/MainContainer";
 import { UserContext } from "src/contexts/UserContext";
 import api from "src/api";
 import { Alert } from "src/utilities/popups";
 import { defaultCavaleiro } from "src/utilities/default";
 import { Modal, ModalButton, ModalContent, ModalTitle } from "src/components/Modal/modal";
+import { handleEnterPress } from "src/utilities/functions";
 
 function Cavaleiros() {
     const [search, setSearch] = useState('');
@@ -100,8 +101,7 @@ function Cavaleiros() {
         <>
             <Header />
             <SubMenu list={listSubMenu}/>
-            <MainContainer>
-                <MainTitle content="Cavaleiros - Manutenção" />
+            <MainContainer title="Cavaleiros - Manutenção" >
                 <SearchCard>
                     <SearchContainer>
                         <InputContainer>
@@ -135,7 +135,7 @@ function Cavaleiros() {
                     <ModalTitle>{edit? 'Editar Cavaleiro' : 'Novo Cavaleiro'}</ModalTitle>
                     <InputContainer>
                         <label>Nome do Cavaleiro</label>
-                        <input type="text" value={edited.nome} onChange={(e) => updateProps('nome', e.target.value)} />
+                        <input type="text" value={edited.nome} onKeyUp={edit? (e) => handleEnterPress(e, async () => await editCav(edited, selected, token)) : (e) => handleEnterPress(e, async () => await addCav(edited, token))} onChange={(e) => updateProps('nome', e.target.value)} />
                     </InputContainer>
                     <InputContainer>
                         <label>Mediunidade</label>

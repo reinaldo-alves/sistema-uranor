@@ -1,8 +1,8 @@
 import Header from "src/components/header/header";
-import { CardsContainer, InputContainer, MainContainer, ObsContainer, PageButton } from "./styles";
+import { CardsContainer, InputContainer, ObsContainer, PageButton } from "./styles";
 import SubMenu from "src/components/SubMenu/SubMenu";
 import SideMenu from "src/components/SideMenu/SideMenu";
-import MainTitle from "src/components/MainTitle/MainTitle";
+import MainContainer from "src/components/MainContainer/MainContainer";
 import api from "src/api";
 import { useContext, useState } from "react";
 import { UserContext } from "src/contexts/UserContext";
@@ -62,8 +62,7 @@ function Backup() {
         <>
             <Header />
             <SubMenu list={listSubMenu}/>
-            <MainContainer>
-                <MainTitle content="Gerenciar Backups" />
+            <MainContainer title="Gerenciar Backups" >
                 <CardsContainer>
                     {docs.map((item, index) => (
                         <PageButton key={index} height='3em' onClick={item.link}>{item.name}</PageButton>

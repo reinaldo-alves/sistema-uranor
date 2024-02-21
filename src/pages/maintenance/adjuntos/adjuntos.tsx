@@ -1,17 +1,17 @@
 import { useState, useContext, useEffect } from "react";
-import { InfoCard, InputContainer, MainContainer, InfoContent, Results, ResultsCard, ResultsDetails, ResultsTable, ResultsTitle, SearchButton, SearchCard, SearchContainer } from "./styles";
+import { InfoCard, InputContainer, InfoContent, Results, ResultsCard, ResultsDetails, ResultsTable, ResultsTitle, SearchButton, SearchCard, SearchContainer } from "./styles";
 import { ListContext } from "src/contexts/ListContext";
 import SideMenu from "src/components/SideMenu/SideMenu";
 import Header from "src/components/header/header";
 import SubMenu from "src/components/SubMenu/SubMenu";
 import { IAdjunto, IMentor } from "src/types/types";
-import MainTitle from "src/components/MainTitle/MainTitle";
+import MainContainer from "src/components/MainContainer/MainContainer";
 import { UserContext } from "src/contexts/UserContext";
 import api from "src/api";
 import { Alert } from "src/utilities/popups";
 import { defaultAdj, defaultMentor } from "src/utilities/default";
 import AutocompleteInput from "src/components/AutocompleteInput/AutocompleteInput";
-import { alphabeticOrder } from "src/utilities/functions";
+import { alphabeticOrder, handleEnterPress } from "src/utilities/functions";
 import { Modal, ModalButton, ModalContent, ModalTitle } from "src/components/Modal/modal";
 
 function Adjuntos() {
@@ -115,8 +115,7 @@ function Adjuntos() {
         <>
             <Header />
             <SubMenu list={listSubMenu}/>
-            <MainContainer>
-                <MainTitle content="Adjuntos - Manutenção" />
+            <MainContainer title="Adjuntos - Manutenção" >
                 <SearchCard>
                     <SearchContainer>
                         <InputContainer>
@@ -173,7 +172,7 @@ function Adjuntos() {
                     </InputContainer>
                     <InputContainer>
                         <label>Nome do Adjunto</label>
-                        <input type="text" value={edited.nome} onChange={(e) => updateProps('nome', e.target.value)} />
+                        <input type="text" value={edited.nome} onKeyUp={edit? (e) => handleEnterPress(e, async () => await editAdj(edited, selected, token)) : (e) => handleEnterPress(e, async () => await addAdj(edited, token))} onChange={(e) => updateProps('nome', e.target.value)} />
                     </InputContainer>
                     <InputContainer>
                         <label>Classificação</label>

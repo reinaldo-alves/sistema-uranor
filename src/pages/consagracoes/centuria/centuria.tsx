@@ -1,9 +1,8 @@
 import SubMenu from "src/components/SubMenu/SubMenu";
 import Header from "../../../components/header/header";
 import SideMenu from "src/components/SideMenu/SideMenu";
-import MainTitle from "src/components/MainTitle/MainTitle";
-import { ButtonContainer, ConsagracaoCard, InputContainer, MainContainer, ModalMediumContent, NavigateButton, PageSubTitle, Results, ResultsData, ResultsPanel, ResultsTable, ResultsTitle } from "../styles";
-import { alphabeticOrder, countMedium } from "src/utilities/functions";
+import { ButtonContainer, ConsagracaoCard, InputContainer, ModalMediumContent, NavigateButton, PageSubTitle, Results, ResultsData, ResultsPanel, ResultsTable, ResultsTitle } from "../styles";
+import { alphabeticOrder, countMedium, handleEnterPress } from "src/utilities/functions";
 import { useContext, useEffect, useState } from "react";
 import { ListContext } from "src/contexts/ListContext";
 import { IConsagracao, IMedium } from "src/types/types";
@@ -15,7 +14,8 @@ import AutocompleteInput from "src/components/AutocompleteInput/AutocompleteInpu
 import { defaultConsagracao, defaultMedium } from "src/utilities/default";
 import { useNavigate } from "react-router-dom";
 import { generateAutorizacao, generateConsReport, generateProtocolo } from "src/utilities/createDocs";
-import { Modal, ModalButton, ModalContent, ModalSubTitle, ModalTitle } from "src/components/Modal/modal";
+import { Modal, ModalButton, ModalSubTitle, ModalTitle } from "src/components/Modal/modal";
+import MainContainer from "src/components/MainContainer/MainContainer";
 
 function Centuria() {
     const { templos, adjuntos, ministros, falMest, listCenturia, loadConsagracao, searchMediumInCons } = useContext(ListContext);
@@ -110,8 +110,7 @@ function Centuria() {
         <>
             <Header />
             <SubMenu list={listSubMenu}/>
-            <MainContainer>
-                <MainTitle content={listCenturia.length ? `Lista de médiuns para centúria - ${countMedium(listCenturia)}` : 'Nenhum médium para centúria'} />
+            <MainContainer title={listCenturia.length ? `Lista de médiuns para centúria - ${countMedium(listCenturia)}` : 'Nenhum médium para centúria'}>
                 <ConsagracaoCard hide={!listCenturia.length}>
                     <ResultsTable show={listCenturia.length}>
                         <thead>
@@ -178,6 +177,7 @@ function Centuria() {
                             setValue={setDropMedium}
                             inputValue={searchMedium}
                             setInputValue={setSearchMedium}
+                            onKeyUp={() => addCenturia(token)}
                         />
                     </InputContainer>
                     <div style={{display: 'flex', gap: '20px'}}>
@@ -190,7 +190,15 @@ function Centuria() {
                     <ModalTitle>{`Gerar ${selectModal}`}</ModalTitle>
                     <InputContainer>
                         <label>Título</label>
-                        <input type="text" value={reportTitle} onChange={(e) => setReportTitle(e.target.value)} />
+                        <input type="text" value={reportTitle} onKeyUp={(e) => handleEnterPress(e, () => {
+                            if (selectModal === 'Protocolo') {
+                                generateProtocolo(alphabeticOrder(listCenturia), reportTitle, 3);
+                            }
+                            if (selectModal === 'Relatório') {
+                                generateConsReport(alphabeticOrder(listCenturia), templos, adjuntos, ministros, falMest, reportTitle, 3);
+                            }
+                            closeModal();
+                        })} onChange={(e) => setReportTitle(e.target.value)} />
                     </InputContainer>
                     <div style={{display: 'flex', gap: '20px'}}>
                         <ModalButton color="red" onClick={() => closeModal()}>Cancelar</ModalButton>

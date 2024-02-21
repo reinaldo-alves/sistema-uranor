@@ -30,4 +30,8 @@ VERSÃO 1.2.0
 - Criação de evento na linha do tempo ao mudar mediunidade
 - Alteração de datas mediúnicas permitidas apenas para usuários administradores
 - Correção de erro ao exibir médium que exibia templo atual do médium no lugar do templo de origem do médium, e que não exibia a função de janda na seção Cargos e Funções
-- Atualização automática de dados de usuário no header quando os mesmos são alterados.
+- Atualização automática de dados de usuário no header quando os mesmos são alterados
+- Implementação de mecanismo para executar funções dos botões ao pressionar enter em inputs dos modais e das páginas de login e alteração de senha
+- Alteração no layout do relatório de médiuns para consagrações.
+
+// Terminar de criar o componente GridButton e usar em relatórios, em documentos úteis, em manutenção, em backup, em reclassificação.

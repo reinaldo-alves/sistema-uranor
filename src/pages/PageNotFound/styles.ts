@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-export const MainContainer = styled.div`
+export const NotFoundContainer = styled.div`
     height: ${(props) => {return props.theme.height.mainContent}};
     width: 100%;
     display: flex;

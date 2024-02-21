@@ -1,5 +1,5 @@
 import Header from "src/components/header/header";
-import { ButtonContainer, EditObs, InputContainer, MainContainer, MediumButton, Results, ResultsCard, ResultsDetails, ResultsTable, ResultsTitle, TitleContainer, YearTitle } from "./styles";
+import { ButtonContainer, EditObs, InputContainer, MediumButton, Results, ResultsCard, ResultsDetails, ResultsTable, ResultsTitle, YearTitle } from "./styles";
 import SubMenu from "src/components/SubMenu/SubMenu";
 import SideMenu from "src/components/SideMenu/SideMenu";
 import { useNavigate, useParams } from "react-router-dom";
@@ -11,11 +11,13 @@ import { UserContext } from "src/contexts/UserContext";
 import { ListContext } from "src/contexts/ListContext";
 import Loading from "src/utilities/Loading";
 import PageNotFound from "src/pages/PageNotFound/PageNotFound";
-import { convertDate } from "src/utilities/functions";
+import { convertDate, handleEnterPress } from "src/utilities/functions";
 import { Modal, ModalButton, ModalContent, ModalTitle } from "src/components/Modal/modal";
 import api from "src/api";
 import { IEventoAPI } from "src/types/typesAPI";
 import { Alert, Confirm } from "src/utilities/popups";
+import MainTitle from "src/components/MainContainer/MainContainer";
+import MainContainer from "src/components/MainContainer/MainContainer";
 
 function TimeLine() {
     const [medium, setMedium] = useState(defaultMedium);
@@ -305,11 +307,7 @@ function TimeLine() {
         <>
             <Header />
             <SubMenu list={listSubMenu}/>
-            <MainContainer>
-                <TitleContainer>
-                    <h1>Linha do Tempo</h1>
-                    <h2>{medium.nome} - ID {medium.medium_id.toString().padStart(5, '0')}</h2> 
-                </TitleContainer>
+            <MainContainer title='Linha do Tempo' subtitle={`${medium.nome} - ID ${medium.medium_id.toString().padStart(5, '0')}`}>
                 <ButtonContainer>
                     <MediumButton onClick={() => navigate(`/mediuns/consulta/${params.id}`)}>{'< Voltar'}</MediumButton>
                     <MediumButton onClick={() => modalAddEvento()}>Adicionar Evento</MediumButton>
@@ -323,7 +321,7 @@ function TimeLine() {
                     <ModalTitle>{edit? 'Editar Evento' : 'Adicionar Evento'}</ModalTitle>
                     <InputContainer>
                         <label>Data</label>
-                        <input type="date" value={edited.data} disabled={edit && !selected.evento_id} onChange={(e) => updateProps('data', e.target.value)} />
+                        <input type="date" value={edited.data} disabled={edit && !selected.evento_id} onKeyUp={edit && selected.evento_id? (e) => handleEnterPress(e, async () => async () => await editEvento(edited, selected, token)) : (e) => handleEnterPress(e, async () => await addEvento(edited, token))} onChange={(e) => updateProps('data', e.target.value)} />
                     </InputContainer>
                     <InputContainer>
                         <label>Tipo</label>
@@ -350,19 +348,19 @@ function TimeLine() {
                     :
                         <InputContainer>
                             <label>Descrição</label>
-                            <textarea value={edited.mensagem} disabled={edit && !selected.evento_id} onChange={(e) => updateProps('mensagem', e.target.value)} />
+                            <textarea value={edited.mensagem} disabled={edit && !selected.evento_id} onKeyUp={edit && selected.evento_id? (e) => handleEnterPress(e, async () => async () => await editEvento(edited, selected, token)) : (e) => handleEnterPress(e, async () => await addEvento(edited, token))} onChange={(e) => updateProps('mensagem', e.target.value)} />
                         </InputContainer>
                     }
                     <InputContainer>
                         <label>Observações</label>
-                        <textarea value={edited.observ} onChange={(e) => updateProps('observ', e.target.value)} />
+                        <textarea value={edited.observ} onKeyUp={edit && selected.evento_id? (e) => handleEnterPress(e, async () => async () => await editEvento(edited, selected, token)) : (e) => handleEnterPress(e, async () => await addEvento(edited, token))} onChange={(e) => updateProps('observ', e.target.value)} />
                     </InputContainer>
                     {edit && user.level === 'Administrador' && selected.evento_id ?
                         <ModalButton color="red" style={{alignSelf: 'center', width: '220px', minHeight: '35px'}} onClick={() => deleteEvento()}>{!eventTypes.find((item: ITipo) => item.event === selected.tipo)?.auto ? 'Excluir Evento' : 'Excluir Observações'}</ModalButton>
                     : ''}
                     <div style={{display: 'flex', gap: '20px'}}>
                         <ModalButton color="red" onClick={() => closeModal()}>Cancelar</ModalButton>
-                        <ModalButton color='green' onClick={edit && selected.evento_id? () => editEvento(edited, selected, token) : () => addEvento(edited, token)}>Salvar</ModalButton>
+                        <ModalButton color='green' onClick={edit && selected.evento_id? async () => await editEvento(edited, selected, token) : async () => await addEvento(edited, token)}>Salvar</ModalButton>
                     </div>
                 </ModalContent>
             </Modal>

@@ -1,6 +1,6 @@
 import { useContext, useState, useEffect } from "react";
 import { ListContext } from "src/contexts/ListContext";
-import { Divider, FieldContainer, FieldContainerBox, GridContainer, GridDatesContainer, InputContainer, MainContainer, MainContent, MainInfoContainer, MediumButton, Observations, PersonalCard, PhotoContainer, PhotoPosition, SectionTitle } from "./styles";
+import { Divider, FieldContainer, FieldContainerBox, GridContainer, GridDatesContainer, InputContainer, MainContent, MainInfoContainer, MediumButton, Observations, PersonalCard, PhotoContainer, PhotoPosition, SectionTitle } from "./styles";
 import { IAdjunto, ICavaleiro, IEstado, IEvento, IFalange, IMedium, IMentor, ITemplo } from "src/types/types";
 import SideMenu from "src/components/SideMenu/SideMenu";
 import SubMenu from "src/components/SubMenu/SubMenu";
@@ -8,7 +8,7 @@ import Header from "src/components/header/header";
 import { UserContext } from "src/contexts/UserContext";
 import api from "src/api";
 import { MediumContext } from "src/contexts/MediumContext";
-import { alphabeticOrder, formatCep, formatCpf, formatPhoneNumber } from "src/utilities/functions";
+import { alphabeticOrder, formatCep, formatCpf, formatPhoneNumber, handleEnterPress } from "src/utilities/functions";
 import { Alert, Confirm } from "src/utilities/popups";
 import axios from "axios";
 import { validateMedium } from "src/utilities/validations";
@@ -19,6 +19,7 @@ import AutocompleteInput from "src/components/AutocompleteInput/AutocompleteInpu
 import { defaultAdj, defaultCavaleiro, defaultMedium, defaultMentor } from "src/utilities/default";
 import { Modal, ModalButton, ModalContent, ModalInputContainer, ModalTitle } from "src/components/Modal/modal";
 import { IEventoAPI } from "src/types/typesAPI";
+import MainContainer from "src/components/MainContainer/MainContainer";
 
 function EditMedium() {
     const { templos, estados, adjuntos, coletes, classMest, falMest, povos, falMiss, turnoL, turnoT, ministros, cavaleiros, guias, estrelas, princesas, classificacao, getData } = useContext(ListContext);
@@ -1354,30 +1355,30 @@ function EditMedium() {
                     {medium.devas && !selected.devas ?
                         <ModalInputContainer>
                             <label>Data da consagração de Devas</label>
-                            <input type="date" value={dataDevas} onChange={(e) => setDataDevas(e.target.value)} />
+                            <input type="date" value={dataDevas} onKeyUp={(e) => handleEnterPress(e, async () => await editMedium(medium, selected, token))} onChange={(e) => setDataDevas(e.target.value)} />
                         </ModalInputContainer>
                     : ''}
                     {medium.janda && !selected.janda ?
                         <ModalInputContainer>
                             <label>Data da consagração de Janda</label>
-                            <input type="date" value={dataJanda} onChange={(e) => setDataJanda(e.target.value)} />
+                            <input type="date" value={dataJanda} onKeyUp={(e) => handleEnterPress(e, async () => await editMedium(medium, selected, token))} onChange={(e) => setDataJanda(e.target.value)} />
                         </ModalInputContainer>
                     : ''}
                     {medium.condicao !== selected.condicao && medium.condicao !== 'Afastado' ?
                         <ModalInputContainer>
                             <label>Data de {medium.condicao === 'Ativo' ? 'retorno à doutrina' : medium.condicao === 'Entregou as Armas' ? 'entrega das armas' : medium.condicao === 'Desencarnado' ? 'desencarne' : ''}</label>
-                            <input type="date" value={dataCondicao} onChange={(e) => setDataCondicao(e.target.value)} />
+                            <input type="date" value={dataCondicao} onKeyUp={(e) => handleEnterPress(e, async () => await editMedium(medium, selected, token))} onChange={(e) => setDataCondicao(e.target.value)} />
                         </ModalInputContainer>
                     : ''}
                     {medium.templo !== selected.templo ?
                         <ModalInputContainer>
                             <label>Data de transferência de templo</label>
-                            <input type="date" value={dataTransf} onChange={(e) => setDataTransf(e.target.value)} />
+                            <input type="date" value={dataTransf} onKeyUp={(e) => handleEnterPress(e, async () => await editMedium(medium, selected, token))} onChange={(e) => setDataTransf(e.target.value)} />
                         </ModalInputContainer>
                     : ''}
                     <div style={{display: 'flex', gap: '20px'}}>
                         <ModalButton color="red" onClick={closeModal}>Cancelar</ModalButton>
-                        <ModalButton color='green' onClick={() => editMedium(medium, selected, token)}>Salvar</ModalButton>
+                        <ModalButton color='green' onClick={async () => await editMedium(medium, selected, token)}>Salvar</ModalButton>
                     </div>
                 </ModalContent>
             </Modal>

@@ -1,8 +1,7 @@
 import SubMenu from "src/components/SubMenu/SubMenu";
 import Header from "../../components/header/header";
-import { MainContainer } from "./styles";
 import SideMenu from "src/components/SideMenu/SideMenu";
-import MainTitle from "src/components/MainTitle/MainTitle";
+import MainContainer from "src/components/MainContainer/MainContainer";
 
 function Relatorios() {
     const menuList = [{title: 'Página Inicial', click: '/'}]
@@ -11,8 +10,8 @@ function Relatorios() {
         <>
             <Header />
             <SubMenu list={menuList}/>
-            <MainContainer>
-                <MainTitle content="Módulo em Desenvolvimento" />
+            <MainContainer title="Módulo em Desenvolvimento" >
+                <p></p>
             </MainContainer>
             <SideMenu list={menuList}/>
         </>

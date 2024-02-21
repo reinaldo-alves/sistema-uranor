@@ -1,8 +1,8 @@
 import SubMenu from "src/components/SubMenu/SubMenu";
 import Header from "../../../components/header/header";
 import SideMenu from "src/components/SideMenu/SideMenu";
-import MainTitle from "src/components/MainTitle/MainTitle";
-import { ButtonContainer, CheckboxContainer, ConsagracaoCard, MainContainer, NavigateButton, ResultsData, ResultsTable, ResultsUpdate, SelectContainer, UpdateInputContainer } from "../styles";
+import MainTitle from "src/components/MainContainer/MainContainer";
+import { ButtonContainer, CheckboxContainer, ConsagracaoCard, NavigateButton, ResultsData, ResultsTable, ResultsUpdate, SelectContainer, UpdateInputContainer } from "../styles";
 import { useContext, useEffect, useState } from "react";
 import { ListContext } from "src/contexts/ListContext";
 import { IConsagracao } from "src/types/types";
@@ -11,6 +11,7 @@ import { useNavigate } from "react-router-dom";
 import { Alert, Confirm } from "src/utilities/popups";
 import api from "src/api";
 import Loading from "src/utilities/Loading";
+import MainContainer from "src/components/MainContainer/MainContainer";
 
 interface ICenturia {
     medium: IConsagracao,
@@ -169,8 +170,7 @@ function UpdateCenturia() {
         <>
             <Header />
             <SubMenu list={listSubMenu}/>
-            <MainContainer>
-                <MainTitle content={'Atualizar médiuns centuriões'} />
+            <MainContainer title='Atualizar médiuns centuriões'>
                 <UpdateInputContainer>
                     <label>Data da Centúria:</label>
                     <input type="date" value={dateCenturia} onChange={(e) => setDateCenturia(e.target.value)} />

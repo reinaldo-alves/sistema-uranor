@@ -1,5 +1,5 @@
 import SubMenu from "src/components/SubMenu/SubMenu";
-import Header from "../../components/header/header";
+import Header from "../header/header";
 import { ButtonUtilDoc, CardsContainer } from "./styles";
 import SideMenu from "src/components/SideMenu/SideMenu";
 import { generateChamadaOficial, generateFicha, generatePrefixos, generateTurnos } from "src/utilities/createDocs";

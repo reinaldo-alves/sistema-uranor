@@ -1,9 +1,9 @@
 import SubMenu from "src/components/SubMenu/SubMenu";
 import Header from "../../../components/header/header";
 import SideMenu from "src/components/SideMenu/SideMenu";
-import MainTitle from "src/components/MainTitle/MainTitle";
-import { ButtonContainer, ConsagracaoCard, InputContainer, MainContainer, ModalMediumContent, MudancaObs, MudancaWarning, NavigateButton, PageSubTitle, PhotoContainer, Results, ResultsData, ResultsPanel, ResultsTable, ResultsTitle } from "../styles";
-import { alphabeticOrder, countMedium } from "src/utilities/functions";
+import MainTitle from "src/components/MainContainer/MainContainer";
+import { ButtonContainer, ConsagracaoCard, InputContainer, ModalMediumContent, MudancaObs, MudancaWarning, NavigateButton, PageSubTitle, PhotoContainer, Results, ResultsData, ResultsPanel, ResultsTable, ResultsTitle } from "../styles";
+import { alphabeticOrder, countMedium, handleEnterPress } from "src/utilities/functions";
 import { useContext, useEffect, useState } from "react";
 import { ListContext } from "src/contexts/ListContext";
 import { IConsagracao, IMedium } from "src/types/types";
@@ -16,6 +16,7 @@ import { defaultConsagracao, defaultMedium } from "src/utilities/default";
 import { useNavigate } from "react-router-dom";
 import { generateAutorizacao, generateConsReport, generateProtocolo, generateTermo } from "src/utilities/createDocs";
 import { Modal, ModalButton, ModalSubTitle, ModalTitle } from "src/components/Modal/modal";
+import MainContainer from "src/components/MainContainer/MainContainer";
 
 function Elevacao() {
     const { templos, adjuntos, ministros, falMest, listElevacao, listMudanca, loadConsagracao, searchMediumInCons } = useContext(ListContext);
@@ -183,8 +184,7 @@ function Elevacao() {
         <>
             <Header />
             <SubMenu list={listSubMenu}/>
-            <MainContainer>
-                <MainTitle content={[...listElevacao, ...listMudanca].length ? `Lista de médiuns para elevação - ${countMedium([...listElevacao, ...listMudanca])}` : 'Nenhum médium para elevação'} />
+            <MainContainer title={[...listElevacao, ...listMudanca].length ? `Lista de médiuns para elevação - ${countMedium([...listElevacao, ...listMudanca])}` : 'Nenhum médium para elevação'}>
                 <ConsagracaoCard hide={![...listElevacao, ...listMudanca].length}>
                     <ResultsTable show={[...listElevacao, ...listMudanca].length}>
                         <thead>
@@ -289,12 +289,13 @@ function Elevacao() {
                             setValue={setDropMedium}
                             inputValue={searchMedium}
                             setInputValue={setSearchMedium}
+                            onKeyUp={() => addElevacao(token)}
                         />
                     </InputContainer>
                     <MudancaWarning show={Boolean(dropMedium?.dtEmplac) && !dropMedium?.dtIniciacao}>O médium selecionado não é iniciado</MudancaWarning>
                     <InputContainer box>
                         <label>Mudança de mediunidade?</label>
-                        <input type="checkbox" checked={checkMudanca} onChange={(e) => setCheckMudanca(e.target.checked)} />
+                        <input type="checkbox" checked={checkMudanca} onKeyUp={(e) => handleEnterPress(e, () => addElevacao(token))} onChange={(e) => setCheckMudanca(e.target.checked)} />
                     </InputContainer>
                     <div style={{display: 'flex', gap: '20px'}}>
                         <ModalButton color="red" onClick={() => closeModal()}>Cancelar</ModalButton>
@@ -306,7 +307,15 @@ function Elevacao() {
                     <ModalTitle>{`Gerar ${selectModal}`}</ModalTitle>
                     <InputContainer>
                         <label>Título</label>
-                        <input type="text" value={reportTitle} onChange={(e) => setReportTitle(e.target.value)} />
+                        <input type="text" value={reportTitle} onKeyUp={(e) => handleEnterPress(e, () => {
+                            if (selectModal === 'Protocolo') {
+                                generateProtocolo(alphabeticOrder([...listElevacao, ...listMudanca]), reportTitle, 2);
+                            }
+                            if (selectModal === 'Relatório') {
+                                generateConsReport(alphabeticOrder([...listElevacao, ...listMudanca]), templos, adjuntos, ministros, falMest, reportTitle, 2);
+                            }
+                            closeModal();
+                        })} onChange={(e) => setReportTitle(e.target.value)} />
                     </InputContainer>
                     <div style={{display: 'flex', gap: '20px'}}>
                         <ModalButton color="red" onClick={() => closeModal()}>Cancelar</ModalButton>

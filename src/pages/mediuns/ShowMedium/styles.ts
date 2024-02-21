@@ -1,13 +1,5 @@
 import styled from "styled-components";
 
-export const MainContainer = styled.div`
-    min-height: ${(props) => {return props.theme.height.mainContent}};
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-`;
-
 export const GridContainer = styled.div`
     width: 90%;
     max-width: 1472px;

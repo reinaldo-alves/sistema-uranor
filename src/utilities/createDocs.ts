@@ -1573,19 +1573,34 @@ export const generateReportAllCons = (listIniciacao: Array<IConsagracao>, listEl
         ] as Content
     }
 
+    const noMedium = (margin: number) => {
+        return {
+            text: '- Nenhum médium -',
+            fontSize: 12,
+            alignment: 'center',
+            margin: [0, -2, 0, margin],
+        } as Content
+    }
+
     const arrayContent = () => {
         const array: Content = [docHeader, reportTitle];
-        array.push(reportSubTitle([...listIniciacao, ...listMudanca].length ? 'INICIAÇÃO' : 'INICIAÇÃO - NENHUM MÉDIUM'));
+        array.push(reportSubTitle('INICIAÇÃO'));
         if ([...listIniciacao, ...listMudanca].length) {
             array.push(reportTable([...listIniciacao, ...listMudanca]))
+        } else {
+            array.push(noMedium(15))
         }
-        array.push(reportSubTitle([...listElevacao, ...listMudanca].length ? 'ELEVAÇÃO' : 'INICIAÇÃO - NENHUM MÉDIUM'));
+        array.push(reportSubTitle('ELEVAÇÃO'));
         if ([...listElevacao, ...listMudanca].length) {
             array.push(reportTable([...listElevacao, ...listMudanca]))
+        } else {
+            array.push(noMedium(15))
         }
-        array.push(reportSubTitle(listCenturia.length ? 'CENTÚRIA' : 'CENTÚRIA - NENHUM MÉDIUM'));
+        array.push(reportSubTitle('CENTÚRIA'));
         if (listCenturia.length) {
             array.push(reportTable(listCenturia))
+        } else {
+            array.push(noMedium(0))
         }
         return array
     }

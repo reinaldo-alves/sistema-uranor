@@ -1,4 +1,5 @@
 import Autocomplete from '@mui/material/Autocomplete';
+import { handleEnterPress } from 'src/utilities/functions';
 
 interface IProps {
     default: any,
@@ -10,7 +11,8 @@ interface IProps {
     inputValue: any,
     setInputValue: React.Dispatch<React.SetStateAction<any>>
     value: any,
-    setValue: React.Dispatch<React.SetStateAction<any>>
+    setValue: React.Dispatch<React.SetStateAction<any>>,
+    onKeyUp?: () => void
 }
 
 function AutocompleteInput(props: IProps) {
@@ -37,7 +39,7 @@ function AutocompleteInput(props: IProps) {
             options={[props.default, ...props.options]}
             renderInput={(params) => (
                 <div ref={params.InputProps.ref}>
-                    <input type="text" {...params.inputProps} />
+                    <input type="text" onKeyUp={(e) => handleEnterPress(e, () => {if(props.onKeyUp) {props.onKeyUp()}})} {...params.inputProps} />
                 </div>
             )}
         />

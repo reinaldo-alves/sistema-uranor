@@ -1,8 +1,8 @@
 import SubMenu from "src/components/SubMenu/SubMenu";
 import Header from "../../components/header/header";
-import { ButtonContainer, ConsagracaoCard, ConsagracaoHeader, ConsagracaoTitle, MainContainer, MudancaObs, NavigateButton, ResultsPanel, ResultsData, ResultsTable, ResultsTitle } from "./styles";
+import { ButtonContainer, ConsagracaoCard, ConsagracaoHeader, ConsagracaoTitle, MudancaObs, NavigateButton, ResultsPanel, ResultsData, ResultsTable, ResultsTitle } from "./styles";
 import SideMenu from "src/components/SideMenu/SideMenu";
-import MainTitle from "src/components/MainTitle/MainTitle";
+import MainTitle from "src/components/MainContainer/MainContainer";
 import { useNavigate } from "react-router-dom";
 import { useContext, useEffect, useState } from "react";
 import { countMedium } from "src/utilities/functions";
@@ -10,6 +10,7 @@ import { ListContext } from "src/contexts/ListContext";
 import { IConsagracao } from "src/types/types";
 import { UserContext } from "src/contexts/UserContext";
 import { generateReportAllCons } from "src/utilities/createDocs";
+import MainContainer from "src/components/MainContainer/MainContainer";
 
 function Consagracoes() {
     const { listIniciacao, listElevacao, listCenturia, listMudanca, loadConsagracao } = useContext(ListContext);
@@ -61,8 +62,7 @@ function Consagracoes() {
         <>
             <Header />
             <SubMenu list={listSubMenu}/>
-            <MainContainer>
-                <MainTitle content="Painel - Consagrações" />
+            <MainContainer title="Painel - Consagrações">
                 <ConsagracaoCard>
                     <ConsagracaoHeader>
                         <ConsagracaoTitle>Iniciação - {countMedium([...listIniciacao, ...listMudanca])}</ConsagracaoTitle>

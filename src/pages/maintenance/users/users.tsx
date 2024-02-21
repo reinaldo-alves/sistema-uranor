@@ -1,10 +1,9 @@
 import { useState, useContext, useEffect } from "react";
-import { InfoCard, InputContainer, MainContainer, InfoContent, Results, ResultsCard, ResultsDetails, ResultsTable, ResultsTitle, SearchButton, SearchCard, SearchContainer } from "./styles";
+import { InfoCard, InputContainer, InfoContent, Results, ResultsCard, ResultsDetails, ResultsTable, ResultsTitle, SearchButton, SearchCard, SearchContainer } from "./styles";
 import SideMenu from "src/components/SideMenu/SideMenu";
 import Header from "src/components/header/header";
 import SubMenu from "src/components/SubMenu/SubMenu";
 import { IMedium, IUser } from "src/types/types";
-import MainTitle from "src/components/MainTitle/MainTitle";
 import { MediumContext } from "src/contexts/MediumContext";
 import { UserContext } from "src/contexts/UserContext";
 import api from "src/api";
@@ -12,8 +11,9 @@ import { useNavigate } from "react-router-dom";
 import { Alert } from "src/utilities/popups";
 import { defaultMedium, defaultUser } from "src/utilities/default";
 import AutocompleteInput from "src/components/AutocompleteInput/AutocompleteInput";
-import { alphabeticOrder } from "src/utilities/functions";
+import { alphabeticOrder, handleEnterPress } from "src/utilities/functions";
 import { Modal, ModalButton, ModalContent, ModalTitle } from "src/components/Modal/modal";
+import MainContainer from "src/components/MainContainer/MainContainer";
 
 function Users() {
     const [searchName, setSearchName] = useState('');
@@ -142,8 +142,7 @@ function Users() {
         <>
             <Header />
             <SubMenu list={listSubMenu}/>
-            <MainContainer>
-                <MainTitle content="Usuários - Manutenção" />
+            <MainContainer title="Usuários - Manutenção">
                 <SearchCard>
                     <SearchContainer>
                         <InputContainer>
@@ -192,7 +191,7 @@ function Users() {
                     <ModalTitle>{edit? 'Editar Usuário' : 'Novo Usuário'}</ModalTitle>
                     <InputContainer>
                         <label>Nome do Usuário</label>
-                        <input type="text" value={edited.name} onChange={(e) => updateProps('name', e.target.value)} />
+                        <input type="text" value={edited.name} onKeyUp={edit? (e) => handleEnterPress(e, async () => await editUser(edited, selected, token)) : (e) => handleEnterPress(e, async () => await handleAddUser(edited.name, [password1, password2], edited.level, edited.medium_id))} onChange={(e) => updateProps('name', e.target.value)} />
                     </InputContainer>
                     <InputContainer>
                         <label>Médium</label>
@@ -206,6 +205,7 @@ function Users() {
                             setValue={setDropMedium}
                             inputValue={searchMedium}
                             setInputValue={setSearchMedium}
+                            onKeyUp={edit? async () => await editUser(edited, selected, token) : async () => await handleAddUser(edited.name, [password1, password2], edited.level, edited.medium_id)}
                         />
                     </InputContainer>
                     <InputContainer>
@@ -230,11 +230,11 @@ function Users() {
                         <>         
                             <InputContainer>
                                 <label>Senha</label>
-                                <input type="password" value={password1} onChange={(e) => setPassword1(e.target.value)} />
+                                <input type="password" value={password1} onKeyUp={(e) => handleEnterPress(e, async () => await handleAddUser(edited.name, [password1, password2], edited.level, edited.medium_id))} onChange={(e) => setPassword1(e.target.value)} />
                             </InputContainer>
                             <InputContainer>
                                 <label>Confirmar Senha</label>
-                                <input type="password" value={password2} onChange={(e) => setPassword2(e.target.value)} />
+                                <input type="password" value={password2} onKeyUp={(e) => handleEnterPress(e, async () => await handleAddUser(edited.name, [password1, password2], edited.level, edited.medium_id))} onChange={(e) => setPassword2(e.target.value)} />
                             </InputContainer>
                         </>
                     }

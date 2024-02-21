@@ -1,14 +1,5 @@
 import styled from "styled-components";
 
-export const MainContainer = styled.div`
-    height: 100%;
-    min-height: ${(props) => {return props.theme.height.mainContent}};
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-`;
-
 export const SearchCard = styled.div`
     width: 90%;
     max-width: 1400px;
