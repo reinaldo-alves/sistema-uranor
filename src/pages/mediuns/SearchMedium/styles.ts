@@ -11,6 +11,7 @@ export const SearchCard = styled.div`
     align-items: center;
     gap: 20px;
     border: solid 1px ${(props) => {return props.theme.color.darkerColor}};
+    margin-top: 30px;
 
     @media (max-width: 786px) {
         display: flex;

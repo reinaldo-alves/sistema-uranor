@@ -162,7 +162,7 @@ function ShowMedium() {
                             <MediumMainInfo>Condição Atual: <span>{medium.condicao}</span></MediumMainInfo>
                             <MediumButton disabled={!medium.dtCenturia && !medium.falMiss} onClick={() => validateEmissao(medium, mediuns, adjuntos, turnoL, turnoT, () => generateEmissao(medium, user, emissaoText(medium, mediuns, ministros, cavaleiros, guias, adjuntos, templos, falMiss) as string))} color="green">Gerar Emissão</MediumButton>
                             <MediumButton onClick={() => navigate(`/mediuns/editar/${medium.medium_id}`)} color="green">Editar</MediumButton>
-                            <MediumButton color="green" onClick={() => generateFichaMedium(medium)}>Gerar Ficha</MediumButton>
+                            <MediumButton color="green" onClick={() => generateFichaMedium(medium, adjuntos, ministros, cavaleiros, guias, falMiss)}>Gerar Ficha</MediumButton>
                             <MediumButton color="green" disabled={searchMediumInCons(medium.medium_id) === defaultConsagracao} onClick={() => generateAutorizacao([searchMediumInCons(medium.medium_id)], templos, adjuntos, ministros, searchMediumInCons(medium.medium_id).consagracao)}>Autorização</MediumButton>
                             <MediumButton color="green" disabled={!medium.dtCenturia || medium.sex !== 'Masculino'} onClick={() => generateReclass(medium, adjuntos, ministros, cavaleiros, user)}>Reclassificação</MediumButton>
                             <MediumButton onClick={() => navigate(`/mediuns/historico/${medium.medium_id}`)} color="green">Linha do Tempo</MediumButton>
@@ -282,7 +282,7 @@ function ShowMedium() {
                                 </InfoContainer>
                             : <div></div>}
                         </PersonalCard>
-                        <PersonalCard hide={medium.sex.concat(medium.med).length < 10 || !medium.dtCenturia}>
+                        <PersonalCard hide={medium.sex.concat(medium.med).length < 10 || !medium.dtCenturia || !positionsAndFunctions(medium)}>
                             <SectionTitle>Cargos e Funções</SectionTitle>
                             <MediumText>
                                 {positionsAndFunctions(medium)}
@@ -317,7 +317,7 @@ function ShowMedium() {
                                 : <div></div>}
                             </InfoContainer>
                         </PersonalCard>
-                        <PersonalCard>
+                        <PersonalCard hide={!medium.observ}>
                             <SectionTitle>Observações</SectionTitle>
                             <MediumText>{medium.observ}</MediumText>
                         </PersonalCard>

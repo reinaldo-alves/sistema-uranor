@@ -1,15 +1,15 @@
 import styled from "styled-components";
 
-export const CardsContainer = styled.div`
+export const ButtonContainer = styled.div`
     width: 80%;
     max-width: 1450px;
     display: grid;
     gap: 20px;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    margin-bottom: 25px;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    margin-bottom: 25px; 
 `;
 
-export const ButtonUtilDoc = styled.div<{disabled?: boolean}>`
+export const ButtonOptions = styled.div<{disabled?: boolean}>`
     border: solid 1px ${(props) => props.disabled ? props.theme.color.lighterColor : props.theme.color.darkerColor};
     border-radius: 8px;
     padding: 10px;

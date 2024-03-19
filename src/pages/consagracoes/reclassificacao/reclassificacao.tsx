@@ -1,6 +1,6 @@
 import SubMenu from "src/components/SubMenu/SubMenu";
 import Header from "../../../components/header/header";
-import { ButtonReclassDoc, CardsContainer, InputContainer, ModalMediumContent, NavigateButton } from "../styles";
+import { InputContainer, ModalMediumContent, NavigateButton } from "../styles";
 import SideMenu from "src/components/SideMenu/SideMenu";
 import AutocompleteInput from "src/components/AutocompleteInput/AutocompleteInput";
 import { defaultMedium } from "src/utilities/default";
@@ -13,6 +13,7 @@ import { alphabeticOrder } from "src/utilities/functions";
 import { UserContext } from "src/contexts/UserContext";
 import { Modal, ModalButton, ModalTitle } from "src/components/Modal/modal";
 import MainContainer from "src/components/MainContainer/MainContainer";
+import GridButton from "src/components/GridButton/GridButton";
 
 function Reclassificacao() {
     const { adjuntos, ministros, cavaleiros } = useContext(ListContext);
@@ -64,10 +65,10 @@ function Reclassificacao() {
     }
     
     const docs = [
-        {name: 'Documento para reclassificação', link: 'reclass'},
-        {name: 'Autorização para consagrar Devas', link: 'Filho de Devas'},
-        {name: 'Autorização para consagrar Trino Solitário', link: 'Trino Solitário'},
-        {name: 'Autorização para consagrar Trino Sardyos', link: 'Trino Sardyos'}
+        {name: 'Documento para reclassificação', link: () => setShowModal('reclass')},
+        {name: 'Autorização para consagrar Devas', link: () => setShowModal('Filho de Devas')},
+        {name: 'Autorização para consagrar Trino Solitário', link: () => setShowModal('Trino Solitário')},
+        {name: 'Autorização para consagrar Trino Sardyos', link: () => setShowModal('Trino Sardyos')}
     ]
     
     const listSubMenu = [
@@ -84,11 +85,7 @@ function Reclassificacao() {
             <Header />
             <SubMenu list={listSubMenu}/>
             <MainContainer title="Documentos - Classificações e Consagrações">
-                <CardsContainer>
-                    {docs.map((item, index) => (
-                        <ButtonReclassDoc key={index} onClick={() => setShowModal(item.link)}>{item.name}</ButtonReclassDoc>
-                    ))}
-                </CardsContainer>
+                <GridButton docs={docs} />
             </MainContainer>
             <SideMenu list={listSubMenu}/>
             <Modal vis={Boolean(showModal)}>

@@ -2102,52 +2102,70 @@ export const generateFicha = async () => {
     pdfMake.createPdf(termoDefinitions).open({}, window.open('Ficha_mediunica.pdf', '_blank'));
 }
 
-export const generateFichaMedium = async (medium: IMedium) => {    
-    const fichaFrente = async () => {
+export const generateFichaMedium = async (medium: IMedium, adjuntos: Array<IAdjunto>, ministros: Array<IMentor>, cavaleiros: Array<ICavaleiro>, guias: Array<IMentor>, falanges: Array<IFalange>) => {    
+    const adjOrigem = ministros.find((item: IMentor) => item.id === adjuntos.find((item: IAdjunto) => item.adjunto_id === medium.adjOrigem)?.ministro)?.nome
+    const ministro = ministros.find((item: IMentor) => item.id === medium.ministro)?.nome
+    const cavGuia = medium.sex === 'Masculino' ? cavaleiros.find((item: ICavaleiro) => item.id === medium.cavaleiro)?.nome : medium.sex === 'Feminino' ? guias.find((item: IMentor) => item.id === medium.guia)?.nome : ''
+    const falMiss = falanges.find((item: IFalange) => item.falange_id === medium.falMiss)?.nome
+    
+    const personalData = async () => {
         return [
             {                
                 columns: [
                     {
                         stack: [
-                            { text: 'TEMPLO URANOR DO AMANHECER DE JABOATÃO - PE', alignment: 'center', bold: true, margin: [0, 0, -85, 3] },
-                            { text: 'CASTELO DOS DEVAS - FICHA MEDIÚNICA', alignment: 'center', margin: [0, 0, -85, 15] },
+                            { text: `TEMPLO URANOR DO AMANHECER DE ${medium.templo === 5 ? 'PRAZERES' : 'JABOATÃO'} - PE`, alignment: 'center', bold: true, margin: [0, 0, -85, 3] },
+                            { text: 'CASTELO DOS DEVAS - FICHA MEDIÚNICA', alignment: 'center', margin: [0, 0, -85, 30] },
                             {
                                 text: [
                                     'NOME: ',
-                                    medium.nome,
+                                    {text: medium.nome.toUpperCase(), bold: true},
                                 ],
-                                margin: [0, 0, 0, 6]
+                                margin: [0, 0, 0, 6],
+                                fontSize: 14
                             },
                             {
-                                text: [
-                                    'MINISTRO DE ORIGEM: ',
-                                    '__________________________',
-                                    '  ',
-                                    'SEXO: ',
-                                    medium.sex
+                                columns: [
+                                    {
+                                        stack: [
+                                            {
+                                                text: [
+                                                    'DATA DE NASCIMENTO: ',
+                                                    {text: convertDate(medium.dtNasc), bold: true},
+                                                ],
+                                                margin: [0, 0, 0, 6]
+                                            },
+                                            {
+                                                text: [
+                                                    'RG: ',
+                                                    {text: medium.rg.toUpperCase(), bold: true},
+                                                ],
+                                                margin: [0, 0, 0, 6]
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        stack: [
+                                            {
+                                                text: [
+                                                    'SEXO: ',
+                                                    {text: medium.sex.toUpperCase(), bold: true}
+                                                ],
+                                                margin: [0, 0, 0, 6]
+                                            },
+                                            {
+                                                text: [
+                                                    'CPF: ',
+                                                    {text: medium.cpf.toUpperCase(), bold: true},
+                                                ],
+                                                margin: [0, 0, 0, 6]
+                                            }
+                                        ]
+                                    }
                                 ],
-                                margin: [0, 0, 0, 6]
+                                columnGap: 10,
+                                fontSize: 11
                             },
-                            {
-                                text: [
-                                    'DATA DE NASCIMENTO: ',
-                                    convertDate(medium.dtNasc),
-                                    '  ',
-                                    'MEDIUNIDADE: ',
-                                    medium.med
-                                ],
-                                margin: [0, 0, 0, 6]
-                            },
-                            {
-                                text: [
-                                    'NATURAL DE: ',
-                                    medium.natur,
-                                    '  ',
-                                    'UF: ',
-                                    medium.naturUF
-                                ],
-                                margin: [0, 0, 0, 6]
-                            }
                         ],
                         fontSize: 11,
                         width: '*'
@@ -2171,85 +2189,8 @@ export const generateFichaMedium = async (medium: IMedium) => {
                         margin: [5, -5, 0, 0]
                     }
                 ],
-                columnGap: 0
-            },
-            {
-                text: [
-                    'MÃE: ',
-                    medium.mae,
-                    '  ',
-                    'PAI: ',
-                    medium.pai
-                ],
-                fontSize: 11,
-                margin: [0, 0, 0, 6]
-            },
-            {
-                text: [
-                    'RG: ',
-                    medium.rg,
-                    '  ',
-                    'CPF: ',
-                    medium.cpf,
-                    '  ',
-                    'PROFISSÃO: ',
-                    medium.profissao
-                ],
-                fontSize: 11,
-                margin: [0, 0, 0, 6]
-            },
-            {
-                text: [
-                    'ESTADO CIVIL: ',
-                    medium.estCivil,
-                    '  ',
-                    'CÔNJUGE: ',
-                    medium.conjuge
-                ],
-                fontSize: 11,
-                margin: [0, 0, 0, 6]
-            },
-            {
-                text: [
-                    'ENDEREÇO: ',
-                    medium.endereco,
-                    '  ',
-                    'N°: ',
-                    medium.endNumero
-                ],
-                fontSize: 11,
-                margin: [0, 0, 0, 6]
-            },
-            {
-                text: [
-                    'COMPLEMENTO: ',
-                    medium.endCompl,
-                    '  ',
-                    'BAIRRO: ',
-                    medium.endBairro,
-                    '  ',
-                    'TEL: ',
-                    medium.telefone1,
-                ],
-                fontSize: 11,
-                margin: [0, 0, 0, 6]
-            },
-            {
-                text: [
-                    'CIDADE: ',
-                    medium.endCidade,
-                    '  ',
-                    'UF: ',
-                    medium.endUF,
-                    '  ',
-                    'CEP: ',
-                    medium.cep,
-                    '  ',
-                    'CEL: ',
-                    medium.telefone2
-                ],
-                fontSize: 11,
-                margin: [0, 0, 0, 17]
+                columnGap: 0,
+                margin: [-15, -20, -15, 0]
             },
             {
                 columns: [
@@ -2257,69 +2198,150 @@ export const generateFichaMedium = async (medium: IMedium) => {
                         stack: [
                             {
                                 text: [
-                                    'DATA DE INGRESSO: ',
-                                    convertDate(medium.dtIngresso),
+                                    'NATURAL DE: ',
+                                    {text: `${medium.natur} - ${medium.naturUF}`.toUpperCase(), bold: true},
                                 ],
                                 margin: [0, 0, 0, 6]
                             },
                             {
                                 text: [
-                                    'DATA DE EMPLACAMENTO: ',
-                                    convertDate(medium.dtEmplac),
+                                    'MÃE: ',
+                                    {text: medium.mae.toUpperCase(), bold: true},
                                 ],
                                 margin: [0, 0, 0, 6]
                             },
                             {
                                 text: [
-                                    'DATA DE INICIAÇÃO: ',
-                                    convertDate(medium.dtIniciacao),
+                                    'ESTADO CIVIL: ',
+                                    {text: medium.estCivil.toUpperCase(), bold: true},
                                 ],
                                 margin: [0, 0, 0, 6]
-                            },
-                            {
-                                text: [
-                                    'DATA DE ELEVAÇÃO: ',
-                                    convertDate(medium.dtElevacao),
-                                ],
-                                margin: [0, 0, 0, 6]
-                            },
-                            {
-                                text: [
-                                    'DATA DE CENTÚRIA: ',
-                                    convertDate(medium.dtCenturia),
-                                ],
-                                margin: [0, 0, 0, 6]
-                            },
-                        ],
-                        fontSize: 11
+                            }
+                        ]
                     },
                     {
                         stack: [
                             {
                                 text: [
+                                    'PROFISSÃO: ',
+                                    {text: medium.profissao.toUpperCase(), bold: true}
+                                ],
+                                margin: [0, 0, 0, 6]
+                            },
+                            {
+                                text: [
+                                    'PAI: ',
+                                    {text: medium.pai.toUpperCase(), bold: true}
+                                ],
+                                margin: [0, 0, 0, 6]
+                            },
+                            {
+                                text: [
+                                    'CÔNJUGE: ',
+                                    {text: medium.conjuge.toUpperCase(), bold: true}
+                                ],
+                                margin: [0, 0, 0, 6]
+                            }
+                        ]
+                    }
+                ],
+                margin: [-15, 0, -15, 0],
+                columnGap: 10,
+                fontSize: 11
+            },
+            {
+                columns: [
+                    {
+                        stack: [
+                            {
+                                text: [
+                                    'TELEFONE 1: ',
+                                    {text: medium.telefone1.toUpperCase(), bold: true},
+                                ],
+                                margin: [0, 0, 0, 6]
+                            }
+                        ]
+                    },
+                    {
+                        stack: [
+                            {
+                                text: [
+                                    'TELEFONE 2: ',
+                                    {text: medium.telefone2.toUpperCase(), bold: true},
+                                ],
+                                margin: [0, 0, 0, 6]
+                            }
+                        ]
+                    },
+                    {
+                        stack: [
+                            {
+                                text: [
+                                    'CEP: ',
+                                    {text: medium.cep.toUpperCase(), bold: true},
+                                ],
+                                margin: [0, 0, 0, 6]
+                            }
+                        ]
+                    }
+                ],
+                margin: [-15, 0, -15, 0],
+                columnGap: 10,
+                fontSize: 11
+            },
+            {
+                text: [
+                    'ENDEREÇO: ',
+                    {text: [medium.endereco, medium.endNumero? 'n° ' + medium.endNumero : '', medium.endCompl, medium.endBairro, [medium.endCidade, medium.endUF].filter(el => el !== '').join(" - ")].filter(el => el !== '').join(", ").toUpperCase(), bold: true},
+                ],
+                fontSize: 11,
+                margin: [-15, 0, -15, 17]
+            }
+        ] as Content
+    };
+
+    const mediumData = async () => {
+        return [
+            { text: 'DADOS MEDIÚNICOS', alignment: 'center', bold: true, margin: [0, 0, 0, 15] },
+            {
+                text: [
+                    'MINISTRO DE ORIGEM: ',
+                    {text: adjOrigem? adjOrigem.toUpperCase() : '', bold: true},
+                    '  ',
+                    'MEDIUNIDADE: ',
+                    {text: medium.med.toUpperCase(), bold: true}
+                ],
+                margin: [0, 0, 0, 17]
+            },
+            {
+                columns: [                        
+                    {
+                        stack: [
+                            {
+                                text: [
                                     'PRINCESA: ',
-                                    medium.princesa,
+                                    {text: medium.princesa.toUpperCase(), bold: true},
                                 ],
                                 margin: [0, 0, 0, 6]
                             },
                             {
                                 text: [
                                     'PRETO VELHO: ',
-                                    medium.pretovelho,
+                                    {text: medium.pretovelho.toUpperCase(), bold: true},
                                 ],
                                 margin: [0, 0, 0, 6]
                             },
                             {
                                 text: [
                                     'CABOCLO: ',
-                                    medium.caboclo,
+                                    {text: medium.caboclo.toUpperCase(), bold: true},
                                 ],
                                 margin: [0, 0, 0, 6]
                             },
                             {
                                 text: [
                                     'MÉDICO: ',
-                                    medium.medico,
+                                    {text: medium.medico.toUpperCase(), bold: true},
                                 ],
                                 margin: [0, 0, 0, 6]
                             },
@@ -2329,28 +2351,12 @@ export const generateFichaMedium = async (medium: IMedium) => {
                 ]
             },
             {
-                text: '________________________________________________________________',
-                fontSize: 9,
-                alignment: 'center',
-                margin: [0, 20, 0, 3]
-            },
-            {
-                text: 'ASSINATURA',
-                fontSize: 9,
-                alignment: 'center'
-            }
-        ] as Content
-    };
-
-    const fichaVerso = async () => {
-        return [
-            {
                 text: [
                     'CLASSIFICAÇÃO: ',
-                    medium.classMest,
+                    {text: medium.classMest.toUpperCase(), bold: true},
                     '  ',
                     'FALANGE DE MESTRADO: ',
-                    medium.falMest
+                    {text: medium.falMest.toUpperCase(), bold: true}
                 ],
                 fontSize: 11,
                 margin: [0, 0, 0, 6]
@@ -2358,13 +2364,13 @@ export const generateFichaMedium = async (medium: IMedium) => {
             {
                 text: [
                     'POVO: ',
-                    medium.povo,
+                    {text: medium.povo.toUpperCase(), bold: true},
                     '  ',
                     'TURNO: ',
-                    medium.turnoLeg,
+                    {text: medium.turnoLeg.toUpperCase(), bold: true},
                     '  ',
                     'ESTRELA: ',
-                    medium.estrela
+                    {text: medium.estrela.toUpperCase(), bold: true}
                 ],
                 fontSize: 11,
                 margin: [0, 0, 0, 6]
@@ -2372,10 +2378,10 @@ export const generateFichaMedium = async (medium: IMedium) => {
             {
                 text: [
                     'CAVALEIRO/GUIA: ',
-                    '________________________________________',
+                    {text: cavGuia? `${cavGuia} ${medium.cor}`.toUpperCase() : '', bold: true},
                     '  ',
                     'MINISTRO: ',
-                    '_____________________________'
+                    {text: ministro? ministro.toUpperCase() : '', bold: true},
                 ],
                 fontSize: 11,
                 margin: [0, 0, 0, 6]
@@ -2383,10 +2389,10 @@ export const generateFichaMedium = async (medium: IMedium) => {
             {
                 text: [
                     'FALANGE MISSIONÁRIA: ',
-                    '________________________________________',
+                    {text: falMiss? falMiss.toUpperCase() : '', bold: true},
                     '  ',
                     'ADJUNTO DEVAS: ',
-                    medium.adjDevas
+                    {text: medium.adjDevas.toUpperCase(), bold: true}
                 ],
                 fontSize: 11,
                 margin: [0, 0, 0, 6]
@@ -2394,143 +2400,131 @@ export const generateFichaMedium = async (medium: IMedium) => {
             {
                 text: [
                     'TURNO DE TRABALHO: ',
-                    medium.turnoTrab,
+                    {text: medium.turnoTrab.toUpperCase(), bold: true},
                     '  ',
                     'DATA MINISTRO/CAVALEIRO/GUIA: ',
-                    convertDate(medium.dtMentor)
+                    {text: convertDate(medium.dtMentor), bold: true}
+                ],
+                fontSize: 11,
+                margin: [0, 0, 0, 6]
+            },
+            {
+                text: [
+                    'CLASSIFICAÇÃO ATUAL: ',
+                    {text: medium.classif.toUpperCase(), bold: true}
+                ],
+                fontSize: 11,
+                margin: [0, 0, 0, 6]
+            },
+            {
+                text: [
+                    'DATA DA ÚLTIMA CLASSIFICAÇÃO: ',
+                    {text: convertDate(medium.dtClassif), bold: true}
                 ],
                 fontSize: 11,
                 margin: [0, 0, 0, 17]
-            },
-            {
-                text: 'CLASSIFICAÇÕES',
-                fontSize: 11,
-                margin: [0, 0, 0, 8]
-            },
-            {
-                columns: [
-                    {
-                        stack: [
-                            {
-                                text: [
-                                    'DATA: ',
-                                    '____/____/______',
-                                ],
-                                margin: [0, 0, 0, 6]
-                            },
-                            {
-                                text: [
-                                    'DATA: ',
-                                    '____/____/______',
-                                ],
-                                margin: [0, 0, 0, 6]
-                            },
-                            {
-                                text: [
-                                    'DATA: ',
-                                    '____/____/______',
-                                ],
-                                margin: [0, 0, 0, 6]
-                            },
-                            {
-                                text: [
-                                    'DATA: ',
-                                    '____/____/______',
-                                ],
-                                margin: [0, 0, 0, 6]
-                            },
-                            {
-                                text: [
-                                    'DATA: ',
-                                    '____/____/______',
-                                ],
-                                margin: [0, 0, 0, 6]
-                            },
-                        ],
-                        fontSize: 11,
-                        width: 'auto'
-                    },
-                    {
-                        stack: [
-                            {
-                                text: [
-                                    'CLASSIFICAÇÃO: ',
-                                    '_______________________________________________________',
-                                ],
-                                margin: [0, 0, 0, 6]
-                            },
-                            {
-                                text: [
-                                    'CLASSIFICAÇÃO: ',
-                                    '_______________________________________________________',
-                                ],
-                                margin: [0, 0, 0, 6]
-                            },
-                            {
-                                text: [
-                                    'CLASSIFICAÇÃO: ',
-                                    '_______________________________________________________',
-                                ],
-                                margin: [0, 0, 0, 6]
-                            },
-                            {
-                                text: [
-                                    'CLASSIFICAÇÃO: ',
-                                    '_______________________________________________________',
-                                ],
-                                margin: [0, 0, 0, 6]
-                            },
-                            {
-                                text: [
-                                    'CLASSIFICAÇÃO: ',
-                                    '_______________________________________________________',
-                                ],
-                                margin: [0, 0, 0, 6]
-                            },
-                        ],
-                        fontSize: 11,
-                        width: '*'
-                    }
-                ],
-                columnGap: 30
             },
             {
                 text: 'OBSERVAÇÕES',
                 fontSize: 11,
                 margin: [0, 17, 0, 8]
             },
+            {text: medium.observ.toUpperCase(), bold: true}
+        ] as Content
+    };
+
+    const datesData = async () => {
+        return [
+            { text: 'DATAS MEDIÚNICOS', alignment: 'center', bold: true, margin: [0, 0, 0, 15] },
             {
-                stack: [
+                columns: [
                     {
-                        text: '___________________________________________________________________________________________________',
-                        margin: [0, 0, 0, 5]
+                        stack: [
+                            {
+                                text: [
+                                    'INGRESSO: ',
+                                    {text: convertDate(medium.dtIngresso), bold: true},
+                                ],
+                                margin: [0, 0, 0, 6]
+                            },
+                            {
+                                text: [
+                                    'ELEVAÇÃO: ',
+                                    {text: convertDate(medium.dtElevacao), bold: true},
+                                ],
+                                margin: [0, 0, 0, 6]
+                            }
+                        ]
                     },
                     {
-                        text: '___________________________________________________________________________________________________',
-                        margin: [0, 0, 0, 5]
+                        stack: [
+                            {
+                                text: [
+                                    'EMPLACAMENTO: ',
+                                    {text: convertDate(medium.dtEmplac), bold: true},
+                                ],
+                                margin: [0, 0, 0, 6]
+                            },
+                            {
+                                text: [
+                                    'CENTÚRIA: ',
+                                    {text: convertDate(medium.dtCenturia), bold: true},
+                                ],
+                                margin: [0, 0, 0, 6]
+                            },
+                        ]
                     },
                     {
-                        text: '___________________________________________________________________________________________________',
-                        margin: [0, 0, 0, 5]
-                    },
-                    {
-                        text: '___________________________________________________________________________________________________',
-                        margin: [0, 0, 0, 5]
-                    },
-                    {
-                        text: '___________________________________________________________________________________________________',
-                        margin: [0, 0, 0, 5]
-                    },
-                    {
-                        text: '___________________________________________________________________________________________________',
-                        margin: [0, 0, 0, 5]
-                    },
-                    {
-                        text: '___________________________________________________________________________________________________',
-                        margin: [0, 0, 0, 5]
+                        stack: [
+                            {
+                                text: [
+                                    'INICIAÇÃO: ',
+                                    {text: convertDate(medium.dtIniciacao), bold: true},
+                                ],
+                                margin: [0, 0, 0, 6]
+                            },
+                            {
+                                text: [
+                                    'SÉTIMO: ',
+                                    {text: convertDate(medium.dtSetimo), bold: true},
+                                ],
+                                margin: [0, 0, 0, 6]
+                            }
+                        ]
                     }
                 ],
+                columnGap: 10,
                 fontSize: 11
+            }
+        ] as Content
+    };
+
+    const fichaSignature = async () => {
+        return [
+            {
+                columns: [
+                    {
+                        stack: [
+                            {
+                                text: '______________________________________________________',
+                                margin: [0, 20, 0, 3]
+                            },
+                            'ASSINATURA DO MÉDIUM'
+                        ]
+                    },
+                    {
+                        stack: [
+                            {
+                                text: '______________________________________________________',
+                                margin: [0, 20, 0, 3]
+                            },
+                            'FILHO DE DEVAS'
+                        ]
+                    }
+                ],
+                fontSize: 9,
+                alignment: 'center',
+                columnGap: 10
             }
         ] as Content
     };
@@ -2551,17 +2545,21 @@ export const generateFichaMedium = async (medium: IMedium) => {
                 paddingTop: function() { return 10; },
                 paddingBottom: function() { return 10; }
             },
-            margin: [0, 0, 0, 30],
+            margin: [-30, 10, -30, 10],
             style: {
                 alignment: 'justify'
             }
         } as Content
     }
 
+    const fichaFooter = (currentPage: number, pageCount: number): Content => docFooter(currentPage, pageCount);
+
     const contentArray = async () => {
         const array = [] as Array<Content>;
-        array.push(await contentTable(fichaFrente));
-        array.push(await contentTable(fichaVerso));
+        array.push(await personalData());
+        array.push(await contentTable(mediumData));
+        array.push(await contentTable(datesData));
+        array.push(await fichaSignature());
         return array
     }
    
@@ -2569,9 +2567,9 @@ export const generateFichaMedium = async (medium: IMedium) => {
         info: {
             title: `Ficha_${medium.medium_id.toString().padStart(5, '0')}_${medium.nome.replace(/ /g, '_')}`
         },
-        pageMargins: [10, 10, 10, 10],
         pageSize: 'A4',
         content: await contentArray(),
+        footer: fichaFooter,
         defaultStyle: {
             font: 'Times'
         }

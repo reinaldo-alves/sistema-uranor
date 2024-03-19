@@ -1,5 +1,5 @@
 import Header from "src/components/header/header";
-import { CardsContainer, InputContainer, ObsContainer, PageButton } from "./styles";
+import { InputContainer, ObsContainer } from "./styles";
 import SubMenu from "src/components/SubMenu/SubMenu";
 import SideMenu from "src/components/SideMenu/SideMenu";
 import MainContainer from "src/components/MainContainer/MainContainer";
@@ -8,6 +8,7 @@ import { useContext, useState } from "react";
 import { UserContext } from "src/contexts/UserContext";
 import { Alert, Confirm } from "src/utilities/popups";
 import { Modal, ModalButton, ModalContent, ModalTitle } from "src/components/Modal/modal";
+import GridButton from "src/components/GridButton/GridButton";
 
 function Backup() {
     const { token, logOut } = useContext(UserContext);
@@ -63,11 +64,7 @@ function Backup() {
             <Header />
             <SubMenu list={listSubMenu}/>
             <MainContainer title="Gerenciar Backups" >
-                <CardsContainer>
-                    {docs.map((item, index) => (
-                        <PageButton key={index} height='3em' onClick={item.link}>{item.name}</PageButton>
-                    ))}
-                </CardsContainer>
+                <GridButton docs={docs} />
                 <ObsContainer>
                     <h2>Observações</h2>
                     <p>Os arquivos de backup ficam armazenados na pasta do Sistema Uranor. Para encontrá-los, acesse /backend/public/backup</p>

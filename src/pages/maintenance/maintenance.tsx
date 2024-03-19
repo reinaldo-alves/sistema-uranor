@@ -1,22 +1,22 @@
 import SubMenu from "src/components/SubMenu/SubMenu";
 import Header from "../../components/header/header";
-import { CardsContainer, PageButton } from "./styles";
 import SideMenu from "src/components/SideMenu/SideMenu";
 import { useNavigate } from "react-router-dom";
 import MainContainer from "src/components/MainContainer/MainContainer";
+import GridButton from "src/components/GridButton/GridButton";
 
 function Maintenance() {
     const navigate = useNavigate();
 
     const docs = [
-        {name: 'Ministros', link: '/manutencao/ministros'},
-        {name: 'Cavaleiros', link: '/manutencao/cavaleiros'},
-        {name: 'Guias Missionárias', link: '/manutencao/guias'},
-        {name: 'Adjuntos', link: '/manutencao/adjuntos'},
-        {name: 'Templos', link: '/manutencao/templos'},
-        {name: 'Falanges Missionárias', link: '/manutencao/falanges'},
-        {name: 'Usuários', link: '/manutencao/usuarios'},
-        {name: 'Backup', link: '/manutencao/backup'}
+        {name: 'Ministros', link: () => navigate('/manutencao/ministros')},
+        {name: 'Cavaleiros', link: () => navigate('/manutencao/cavaleiros')},
+        {name: 'Guias Missionárias', link: () => navigate('/manutencao/guias')},
+        {name: 'Adjuntos', link: () => navigate('/manutencao/adjuntos')},
+        {name: 'Templos', link: () => navigate('/manutencao/templos')},
+        {name: 'Falanges Missionárias', link: () => navigate('/manutencao/falanges')},
+        {name: 'Usuários', link: () => navigate('/manutencao/usuarios')},
+        {name: 'Backup', link: () => navigate('/manutencao/backup')}
     ]
     
     const menuList = [{title: 'Página Inicial', click: '/'}]
@@ -26,11 +26,7 @@ function Maintenance() {
             <Header />
             <SubMenu list={menuList}/>
             <MainContainer title="Sistema Uranor - Manutenção">
-                <CardsContainer>
-                    {docs.map((item, index) => (
-                        <PageButton key={index} height='3em' onClick={() => navigate(item.link)}>{item.name}</PageButton>
-                    ))}
-                </CardsContainer>
+                <GridButton docs={docs} />
             </MainContainer>
             <SideMenu list={menuList}/>
         </>
