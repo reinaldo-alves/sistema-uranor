@@ -3,9 +3,9 @@ import pdfTimes from 'pdfmake/build/vfs_fonts'
 import { timesRegular, timesBold, timesItalic, timesBI } from 'src/assets/encodedFiles/TimesFont';
 import { arialBI, arialBold, arialItalic, arialRegular } from 'src/assets/encodedFiles/ArialFont';
 import { Content, TDocumentDefinitions } from 'pdfmake/interfaces';
-import { IAdjunto, ICanto, ICavaleiro, IConsagracao, IFalange, IMedium, IMentor, ITemplo, IUser } from "src/types/types";
+import { IAdjunto, ICanto, ICavaleiro, IConsagracao, IEvento, IFalange, IMedium, IMentor, ITemplo, IUser } from "src/types/types";
 import { assTiaNeiva } from '../assets/encodedFiles/signature';
-import { alphabeticOrder, convertDate, getCurrentDate, imageToBase64, reduceClassFalMest } from './functions';
+import { alphabeticOrder, convertDate, generateListEventos, getCurrentDate, imageToBase64, positionsAndFunctions, reduceClassFalMest } from './functions';
 import { jaguarImage } from 'src/assets/encodedFiles/jaguar';
 import { aparaImage } from 'src/assets/encodedFiles/apara';
 import { doutrinadorImage } from 'src/assets/encodedFiles/doutrinador';
@@ -2102,11 +2102,13 @@ export const generateFicha = async () => {
     pdfMake.createPdf(termoDefinitions).open({}, window.open('Ficha_mediunica.pdf', '_blank'));
 }
 
-export const generateFichaMedium = async (medium: IMedium, adjuntos: Array<IAdjunto>, ministros: Array<IMentor>, cavaleiros: Array<ICavaleiro>, guias: Array<IMentor>, falanges: Array<IFalange>) => {    
+export const generateFichaMedium = async (medium: IMedium, adjuntos: Array<IAdjunto>, ministros: Array<IMentor>, cavaleiros: Array<ICavaleiro>, guias: Array<IMentor>, falanges: Array<IFalange>, mediuns: Array<IMedium>, token: string) => {    
     const adjOrigem = ministros.find((item: IMentor) => item.id === adjuntos.find((item: IAdjunto) => item.adjunto_id === medium.adjOrigem)?.ministro)?.nome
     const ministro = ministros.find((item: IMentor) => item.id === medium.ministro)?.nome
     const cavGuia = medium.sex === 'Masculino' ? cavaleiros.find((item: ICavaleiro) => item.id === medium.cavaleiro)?.nome : medium.sex === 'Feminino' ? guias.find((item: IMentor) => item.id === medium.guia)?.nome : ''
     const falMiss = falanges.find((item: IFalange) => item.falange_id === medium.falMiss)?.nome
+    const base64String = await imageToBase64(medium.foto);
+    const events = await generateListEventos(medium, token, mediuns, ministros, cavaleiros, guias)
     
     const personalData = async () => {
         return [
@@ -2173,21 +2175,26 @@ export const generateFichaMedium = async (medium: IMedium, adjuntos: Array<IAdju
                     {
                         table: {
                             body: [
+                                // [{
+                                //     stack: [
+                                //         'FOTO',
+                                //         '3X4'
+                                //     ],
+                                //     alignment: 'center',
+                                //     width: 80,
+                                //     height: 107,
+                                //     margin: [24, 40, 25, 40]
+                                // }]
                                 [{
-                                    stack: [
-                                        'FOTO',
-                                        '3X4'
-                                    ],
-                                    alignment: 'center',
+                                    image: base64String,
                                     width: 80,
-                                    height: 107,
-                                    margin: [24, 40, 25, 40]
+                                    height: 107
                                 }]
                             ]
                         },
                         width: 85,
                         margin: [5, -5, 0, 0]
-                    }
+                    },
                 ],
                 columnGap: 0,
                 margin: [-15, -20, -15, 0]
@@ -2304,109 +2311,116 @@ export const generateFichaMedium = async (medium: IMedium, adjuntos: Array<IAdju
         return [
             { text: 'DADOS MEDIÚNICOS', alignment: 'center', bold: true, margin: [0, 0, 0, 15] },
             {
-                text: [
-                    'MINISTRO DE ORIGEM: ',
-                    {text: adjOrigem? adjOrigem.toUpperCase() : '', bold: true},
-                    '  ',
-                    'MEDIUNIDADE: ',
-                    {text: medium.med.toUpperCase(), bold: true}
-                ],
-                margin: [0, 0, 0, 17]
-            },
-            {
                 columns: [                        
                     {
                         stack: [
                             {
                                 text: [
-                                    'PRINCESA: ',
-                                    {text: medium.princesa.toUpperCase(), bold: true},
+                                    'MINISTRO DE ORIGEM: ',
+                                    {text: adjOrigem? adjOrigem.toUpperCase() : '', bold: true},
                                 ],
                                 margin: [0, 0, 0, 6]
                             },
                             {
                                 text: [
-                                    'PRETO VELHO: ',
-                                    {text: medium.pretovelho.toUpperCase(), bold: true},
+                                    'CLASSIFICAÇÃO: ',
+                                    {text: medium.classMest.toUpperCase(), bold: true},
                                 ],
                                 margin: [0, 0, 0, 6]
                             },
                             {
+                                text: [
+                                    'POVO: ',
+                                    {text: medium.povo.toUpperCase(), bold: true},
+                                ],
+                                margin: [0, 0, 0, 6]
+                            },
+                            medium.med === 'Apará' ? {
                                 text: [
                                     'CABOCLO: ',
                                     {text: medium.caboclo.toUpperCase(), bold: true},
                                 ],
                                 margin: [0, 0, 0, 6]
+                            } : '',
+                            {
+                                text: [
+                                    'FALANGE MISSIONÁRIA: ',
+                                    {text: falMiss? falMiss.toUpperCase() : '', bold: true},
+                                ],
+                                margin: [0, 0, 0, 6]
                             },
                             {
+                                text: [
+                                    'TURNO: ',
+                                    {text: medium.turnoLeg.toUpperCase(), bold: true},
+                                ],
+                                margin: [0, 0, 0, 6]
+                            },
+                            {
+                                text: [
+                                    medium.sex === 'Masculino' ? 'MINISTRO: ' : medium.sex === 'Feminino' ? 'ESTRELA: ' : '',
+                                    {text: medium.sex === 'Masculino' ? ministro? ministro.toUpperCase() : '' : medium.sex === 'Feminino' ? medium.estrela.toUpperCase() : '' , bold: true},
+                                ],
+                                margin: [0, 0, 0, 6]
+                            },
+                        ]
+                    },
+                    {
+                        stack: [
+                            {
+                                text: [
+                                    'MEDIUNIDADE: ',
+                                    {text: medium.med.toUpperCase(), bold: true}
+                                ],
+                                margin: [0, 0, 0, 6]
+                            },
+                            {
+                                text: [
+                                    'FALANGE DE MESTRADO: ',
+                                    {text: medium.falMest.toUpperCase(), bold: true}
+                                ],
+                                margin: [0, 0, 0, 6]
+                            },
+                            {
+                                text: [
+                                    medium.med === 'Doutrinador' ? 'PRINCESA: ' : medium.med === 'Apará' ? 'PRETO VELHO: ' : '',
+                                    {text: medium.med === 'Doutrinador' ? medium.princesa.toUpperCase() : medium.med === 'Apará' ? medium.pretovelho.toUpperCase() : '' , bold: true},
+                                ],
+                                margin: [0, 0, 0, 6]
+                            },
+                            medium.med === 'Apará' ? {
                                 text: [
                                     'MÉDICO: ',
                                     {text: medium.medico.toUpperCase(), bold: true},
                                 ],
                                 margin: [0, 0, 0, 6]
+                            } : '',
+                            {
+                                text: [
+                                    'ADJUNTO DEVAS: ',
+                                    {text: medium.adjDevas.toUpperCase(), bold: true}
+                                ],
+                                margin: [0, 0, 0, 6]
                             },
-                        ],
-                        fontSize: 11
+                            {
+                                text: [
+                                    'TURNO DE TRABALHO: ',
+                                    {text: medium.turnoTrab.toUpperCase(), bold: true},
+                                ],
+                                margin: [0, 0, 0, 6]
+                            },
+                            {
+                                text: [
+                                    medium.sex === 'Masculino' ? 'CAVALEIRO: ' : medium.sex === 'Feminino' ? 'GUIA MISSIONÁRIA: ' : '',
+                                    {text: cavGuia? `${cavGuia} ${medium.cor}`.toUpperCase() : '', bold: true},
+                                ],
+                                margin: [0, 0, 0, 6]
+                            }
+                        ]
                     }
-                ]
-            },
-            {
-                text: [
-                    'CLASSIFICAÇÃO: ',
-                    {text: medium.classMest.toUpperCase(), bold: true},
-                    '  ',
-                    'FALANGE DE MESTRADO: ',
-                    {text: medium.falMest.toUpperCase(), bold: true}
                 ],
-                fontSize: 11,
-                margin: [0, 0, 0, 6]
-            },
-            {
-                text: [
-                    'POVO: ',
-                    {text: medium.povo.toUpperCase(), bold: true},
-                    '  ',
-                    'TURNO: ',
-                    {text: medium.turnoLeg.toUpperCase(), bold: true},
-                    '  ',
-                    'ESTRELA: ',
-                    {text: medium.estrela.toUpperCase(), bold: true}
-                ],
-                fontSize: 11,
-                margin: [0, 0, 0, 6]
-            },
-            {
-                text: [
-                    'CAVALEIRO/GUIA: ',
-                    {text: cavGuia? `${cavGuia} ${medium.cor}`.toUpperCase() : '', bold: true},
-                    '  ',
-                    'MINISTRO: ',
-                    {text: ministro? ministro.toUpperCase() : '', bold: true},
-                ],
-                fontSize: 11,
-                margin: [0, 0, 0, 6]
-            },
-            {
-                text: [
-                    'FALANGE MISSIONÁRIA: ',
-                    {text: falMiss? falMiss.toUpperCase() : '', bold: true},
-                    '  ',
-                    'ADJUNTO DEVAS: ',
-                    {text: medium.adjDevas.toUpperCase(), bold: true}
-                ],
-                fontSize: 11,
-                margin: [0, 0, 0, 6]
-            },
-            {
-                text: [
-                    'TURNO DE TRABALHO: ',
-                    {text: medium.turnoTrab.toUpperCase(), bold: true},
-                    '  ',
-                    'DATA MINISTRO/CAVALEIRO/GUIA: ',
-                    {text: convertDate(medium.dtMentor), bold: true}
-                ],
-                fontSize: 11,
-                margin: [0, 0, 0, 6]
+                columnGap: 10,
+                fontSize: 11
             },
             {
                 text: [
@@ -2414,28 +2428,13 @@ export const generateFichaMedium = async (medium: IMedium, adjuntos: Array<IAdju
                     {text: medium.classif.toUpperCase(), bold: true}
                 ],
                 fontSize: 11,
-                margin: [0, 0, 0, 6]
-            },
-            {
-                text: [
-                    'DATA DA ÚLTIMA CLASSIFICAÇÃO: ',
-                    {text: convertDate(medium.dtClassif), bold: true}
-                ],
-                fontSize: 11,
-                margin: [0, 0, 0, 17]
-            },
-            {
-                text: 'OBSERVAÇÕES',
-                fontSize: 11,
-                margin: [0, 17, 0, 8]
-            },
-            {text: medium.observ.toUpperCase(), bold: true}
+            }
         ] as Content
     };
 
     const datesData = async () => {
         return [
-            { text: 'DATAS MEDIÚNICOS', alignment: 'center', bold: true, margin: [0, 0, 0, 15] },
+            { text: 'DATAS MEDIÚNICAS', alignment: 'center', bold: true, margin: [0, 0, 0, 15] },
             {
                 columns: [
                     {
@@ -2451,8 +2450,7 @@ export const generateFichaMedium = async (medium: IMedium, adjuntos: Array<IAdju
                                 text: [
                                     'ELEVAÇÃO: ',
                                     {text: convertDate(medium.dtElevacao), bold: true},
-                                ],
-                                margin: [0, 0, 0, 6]
+                                ]
                             }
                         ]
                     },
@@ -2469,8 +2467,7 @@ export const generateFichaMedium = async (medium: IMedium, adjuntos: Array<IAdju
                                 text: [
                                     'CENTÚRIA: ',
                                     {text: convertDate(medium.dtCenturia), bold: true},
-                                ],
-                                margin: [0, 0, 0, 6]
+                                ]
                             },
                         ]
                     },
@@ -2487,8 +2484,7 @@ export const generateFichaMedium = async (medium: IMedium, adjuntos: Array<IAdju
                                 text: [
                                     'SÉTIMO: ',
                                     {text: convertDate(medium.dtSetimo), bold: true},
-                                ],
-                                margin: [0, 0, 0, 6]
+                                ]
                             }
                         ]
                     }
@@ -2496,6 +2492,35 @@ export const generateFichaMedium = async (medium: IMedium, adjuntos: Array<IAdju
                 columnGap: 10,
                 fontSize: 11
             }
+        ] as Content
+    };
+
+    const observData = async () => {
+        return [
+            positionsAndFunctions(medium) ? {
+                text: 'CARGOS E FUNÇÕES',
+                bold: true,
+                alignment: 'center',
+                fontSize: 11,
+                margin: [0, 17, 0, 6]
+            } : '',
+            positionsAndFunctions(medium) ? {
+                text: positionsAndFunctions(medium).toUpperCase(),
+                alignment: 'center',
+                margin: [-15, 0, -15, 0]
+            } : '',
+            medium.observ ? {
+                text: 'OBSERVAÇÕES',
+                bold: true,
+                alignment: 'center',
+                fontSize: 11,
+                margin: [0, 17, 0, 6]
+            } : '',
+            medium.observ ? {
+                text: medium.observ.toUpperCase(),
+                alignment: 'center',
+                margin: [-15, 0, -15, 0]
+            } : ''
         ] as Content
     };
 
@@ -2507,7 +2532,7 @@ export const generateFichaMedium = async (medium: IMedium, adjuntos: Array<IAdju
                         stack: [
                             {
                                 text: '______________________________________________________',
-                                margin: [0, 20, 0, 3]
+                                margin: [0, 50, 0, 3]
                             },
                             'ASSINATURA DO MÉDIUM'
                         ]
@@ -2516,7 +2541,7 @@ export const generateFichaMedium = async (medium: IMedium, adjuntos: Array<IAdju
                         stack: [
                             {
                                 text: '______________________________________________________',
-                                margin: [0, 20, 0, 3]
+                                margin: [0, 50, 0, 3]
                             },
                             'FILHO DE DEVAS'
                         ]
@@ -2524,7 +2549,33 @@ export const generateFichaMedium = async (medium: IMedium, adjuntos: Array<IAdju
                 ],
                 fontSize: 9,
                 alignment: 'center',
-                columnGap: 10
+                columnGap: 10,
+                pageBreak: 'after'
+            }
+        ] as Content
+    };
+
+    const timelineData = async () => {
+        return [
+            { text: `LINHA DO TEMPO - ${medium.nome.toUpperCase()}`, alignment: 'center', bold: true, margin: [0, 0, 0, 20] },
+            {
+                table: {
+                    widths: [60, '*'],
+                    body: events.reverse().map((item: IEvento) => (
+                        [
+                            {text: convertDate(item.data), bold: true},
+                            {
+                                stack: [
+                                    {text: item.mensagem.toUpperCase(), fontSize: 11, bold: true},
+                                    {text: item.observ.toUpperCase(), fontSize: 9, margin: [8, 0, 0, 0]}
+                                ],
+                                margin: [0, 0, 0, 8]
+                            }
+                        ]
+                    ))
+                },
+                layout: 'noBorders',
+                margin: [-15, 0, -15, 0]
             }
         ] as Content
     };
@@ -2559,7 +2610,9 @@ export const generateFichaMedium = async (medium: IMedium, adjuntos: Array<IAdju
         array.push(await personalData());
         array.push(await contentTable(mediumData));
         array.push(await contentTable(datesData));
+        array.push(await observData());
         array.push(await fichaSignature());
+        array.push(await timelineData());
         return array
     }
    

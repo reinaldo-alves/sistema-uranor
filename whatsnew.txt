@@ -35,5 +35,6 @@ VERSÃO 1.2.0
 - Alteração no layout do relatório de médiuns para consagrações.
 - Ocultar as seções Observações e Cargos e Funções na página Exibir Médium quando a mesma for vazia.
 
-// Terminar de criar o componente GridButton e usar em relatórios, em reclassificação.
 // Concluir ficha de médium preenchida
+// Quando edita a foto e salva, ela não aparece na página de exibição de médium, apenas quando recarrega. Corrigir isso.
+// Remover borda da imagem na ficha preenchida

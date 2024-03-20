@@ -4,19 +4,17 @@ import SubMenu from "src/components/SubMenu/SubMenu";
 import SideMenu from "src/components/SideMenu/SideMenu";
 import { useNavigate, useParams } from "react-router-dom";
 import { useContext, useEffect, useState } from "react";
-import { defaultEvento, defaultMedium } from "src/utilities/default";
+import { defaultEvento, defaultMedium, eventTypes } from "src/utilities/default";
 import { MediumContext } from "src/contexts/MediumContext";
-import { ICavaleiro, IEvento, IMedium, IMentor } from "src/types/types";
+import { IEvento, IMedium } from "src/types/types";
 import { UserContext } from "src/contexts/UserContext";
 import { ListContext } from "src/contexts/ListContext";
 import Loading from "src/utilities/Loading";
 import PageNotFound from "src/pages/PageNotFound/PageNotFound";
-import { convertDate, handleEnterPress } from "src/utilities/functions";
+import { convertDate, generateListEventos, handleEnterPress } from "src/utilities/functions";
 import { Modal, ModalButton, ModalContent, ModalTitle } from "src/components/Modal/modal";
 import api from "src/api";
-import { IEventoAPI } from "src/types/typesAPI";
 import { Alert, Confirm } from "src/utilities/popups";
-import MainTitle from "src/components/MainContainer/MainContainer";
 import MainContainer from "src/components/MainContainer/MainContainer";
 
 function TimeLine() {
@@ -47,62 +45,7 @@ function TimeLine() {
 
     const loadEventosMedium = async (medium: IMedium, token: string) => {
         try {
-            const { data } = await api.get(`/evento/get?medium=${medium?.medium_id}`, {headers:{Authorization: token}})
-            const evento = data.evento.map((item: IEventoAPI) => ({
-                ...item,
-                data: item.data === null ? '' : item.data.toString().split('T')[0],
-            }));
-            if(medium?.dtIngresso && !evento.some((item: IEvento) => item.tipo === 'Ingresso')) {
-                evento.push({evento_id: 0, medium: medium?.medium_id, data: medium?.dtIngresso, mensagem: 'Ingresso na doutrina', observ: '', tipo: 'Ingresso'})
-            }
-            if(medium?.dtTest && !evento.some((item: IEvento) => item.tipo === `Teste ${medium?.med}`)) {
-                evento.push({evento_id: 0, medium: medium?.medium_id, data: medium?.dtTest, mensagem: `Teste mediúnico - ${medium?.med}`, observ: '', tipo: `Teste ${medium?.med}`})
-            }
-            if(medium?.dtEmplac && !evento.some((item: IEvento) => item.tipo === `Emplacamento ${medium?.med}`)) {
-                evento.push({evento_id: 0, medium: medium?.medium_id, data: medium?.dtEmplac, mensagem: `Emplacamento como ${medium?.med}`, observ: '', tipo: `Emplacamento ${medium?.med}`})
-            }
-            if(medium?.dtIniciacao  && !evento.some((item: IEvento) => item.tipo === `Iniciação ${medium?.med}`)) {
-                evento.push({evento_id: 0, medium: medium?.medium_id, data: medium?.dtIniciacao, mensagem: `Iniciação como ${medium?.med}`, observ: '', tipo: `Iniciação ${medium?.med}`})
-            }
-            if(medium?.dtElevacao && !evento.some((item: IEvento) => item.tipo === `Elevação ${medium?.med}`)) {
-                evento.push({evento_id: 0, medium: medium?.medium_id, data: medium?.dtElevacao, mensagem: `Elevação como ${medium?.med}`, observ: '', tipo: `Elevação ${medium?.med}`})
-            }
-            if(medium?.dtCenturia && !evento.some((item: IEvento) => item.tipo === 'Centúria')) {
-                evento.push({evento_id: 0, medium: medium?.medium_id, data: medium?.dtCenturia, mensagem: 'Centúria', observ: '', tipo: 'Centúria'})
-            }
-            if(medium?.dtSetimo && !evento.some((item: IEvento) => item.tipo === 'Curso de Sétimo')) {
-                evento.push({evento_id: 0, medium: medium?.medium_id, data: medium?.dtSetimo, mensagem: 'Curso de 7° Raio concluído', observ: '', tipo: 'Curso de Sétimo'})
-            }
-            if(medium?.oldDtTest && !evento.some((item: IEvento) => item.tipo === `Teste ${medium?.med === 'Apará' ? 'Doutrinador' : medium?.med === 'Doutrinador' ? 'Apará' : ''}`)) {
-                evento.push({evento_id: 0, medium: medium?.medium_id, data: medium?.oldDtTest, mensagem: `Teste mediúnico - ${medium?.med === 'Apará' ? 'Doutrinador' : medium?.med === 'Doutrinador' ? 'Apará' : ''}`, observ: '', tipo: `Teste ${medium?.med === 'Apará' ? 'Doutrinador' : medium?.med === 'Doutrinador' ? 'Apará' : ''}`})
-            }
-            if(medium?.oldDtEmplac && !evento.some((item: IEvento) => item.tipo === `Emplacamento ${medium.med === 'Apará' ? 'Doutrinador' : medium?.med === 'Doutrinador' ? 'Apará' : ''}`)) {
-                evento.push({evento_id: 0, medium: medium?.medium_id, data: medium?.oldDtEmplac, mensagem: `Emplacamento como ${medium?.med === 'Apará' ? 'Doutrinador' : medium?.med === 'Doutrinador' ? 'Apará' : ''}`, observ: '', tipo: `Emplacamento ${medium?.med === 'Apará' ? 'Doutrinador' : medium?.med === 'Doutrinador' ? 'Apará' : ''}`})
-            }
-            if(medium?.oldDtIniciacao && !evento.some((item: IEvento) => item.tipo === `Iniciação ${medium?.med === 'Apará' ? 'Doutrinador' : medium?.med === 'Doutrinador' ? 'Apará' : ''}`)) {
-                evento.push({evento_id: 0, medium: medium?.medium_id, data: medium?.oldDtIniciacao, mensagem: `Iniciação como ${medium?.med === 'Apará' ? 'Doutrinador' : medium?.med === 'Doutrinador' ? 'Apará' : ''}`, observ: '', tipo: `Iniciação ${medium?.med === 'Apará' ? 'Doutrinador' : medium?.med === 'Doutrinador' ? 'Apará' : ''}`})
-            }
-            if(medium?.oldDtElevacao && !evento.some((item: IEvento) => item.tipo === `Elevação ${medium?.med === 'Apará' ? 'Doutrinador' : medium?.med === 'Doutrinador' ? 'Apará' : ''}`)) {
-                evento.push({evento_id: 0, medium: medium?.medium_id, data: medium?.oldDtElevacao, mensagem: `Elevação como ${medium?.med === 'Apará' ? 'Doutrinador' : medium?.med === 'Doutrinador' ? 'Apará' : ''}`, observ: '', tipo: `Elevação ${medium?.med === 'Apará' ? 'Doutrinador' : medium?.med === 'Doutrinador' ? 'Apará' : ''}`})
-            }
-            if(medium?.dtMentor && !evento.some((item: IEvento) => item.tipo === `Mentores ${medium?.med}`)) {
-                evento.push({evento_id: 0, medium: medium?.medium_id, data: medium?.dtMentor, mensagem: medium?.sex === 'Masculino' ? `Recebeu ministro ${ministros.find((m: IMentor) => m.id === medium?.ministro)?.nome} e cavaleiro ${cavaleiros.find((c: ICavaleiro) => c.id === medium?.cavaleiro)?.nome} ${medium?.cor}` : medium?.sex === 'Feminino' ? `Recebeu guia missionária ${guias.find((g: IMentor) => g.id === medium?.guia)?.nome} ${medium?.cor}` : '', observ: '', tipo: `Mentores ${medium?.med}`})
-            }
-            if(medium?.dtClassif && !evento.some((item: IEvento) => item.tipo === 'Classificações' && item.mensagem.split('de ')[1] === medium?.classif)) {
-                evento.push({evento_id: 0, medium: medium?.medium_id, data: medium?.dtClassif, mensagem: `Classificação de ${medium?.classif}`, observ: '', tipo: 'Classificações'})
-            }
-            if(medium?.oldDtMentor && !evento.some((item: IEvento) => item.tipo === `Mentores ${medium?.med === 'Apará' ? 'Doutrinador' : medium?.med === 'Doutrinador' ? 'Apará' : ''}`)) {
-                evento.push({evento_id: 0, medium: medium?.medium_id, data: medium?.dtMentor, mensagem: medium?.sex === 'Masculino' ? `Recebeu ministro ${ministros.find((m: IMentor) => m.id === medium?.ministro)?.nome} e cavaleiro ${cavaleiros.find((c: ICavaleiro) => c.id === medium?.oldCavaleiro)?.nome} ${medium?.oldCor}` : '', observ: '', tipo: `Mentores ${medium?.med === 'Apará' ? 'Doutrinador' : medium?.med === 'Doutrinador' ? 'Apará' : ''}`})
-            }
-            if(medium?.oldDtClassif && !evento.some((item: IEvento) => item.tipo === 'Classificações' && item.mensagem.split('de ')[1] === medium?.oldClassif)) {
-                evento.push({evento_id: 0, medium: medium?.medium_id, data: medium?.oldDtClassif, mensagem: `Classificação de ${medium?.oldClassif}`, observ: '', tipo: 'Classificações'})
-            }
-            if(medium?.dtTrinoSol && !evento.some((item: IEvento) => item.tipo === 'Trino Solitário')) {
-                evento.push({evento_id: 0, medium: medium?.medium_id, data: medium?.dtTrinoSol, mensagem: `Consagração de Trino Solitário ${medium?.trinoSol}`, observ: '', tipo: 'Trino Solitário'})
-            }
-            if(medium?.dtTrinoSar && !evento.some((item: IEvento) => item.tipo === 'Trino Sardyos')) {
-                evento.push({evento_id: 0, medium: medium?.medium_id, data: medium?.dtTrinoSar, mensagem: `Consagração de Trino Sardyos - Herdeiro do Adj. ${ministros.find((m: IMentor) => m.id === mediuns.find((item: IMedium) => item.medium_id === medium.herdeiro)?.ministro)?.nome} Mestre ${mediuns.find((item: IMedium) => item.medium_id === medium.herdeiro)?.nomeEmissao}`, observ: '', tipo: 'Trino Sardyos'})
-            }
+            const evento = await generateListEventos(medium, token, mediuns, ministros, cavaleiros, guias);
             setEventos(evento);
         } catch (error) {
             console.error('Erro ao carregar a lista de eventos da linha do tempo do médium', error);
@@ -234,34 +177,6 @@ function TimeLine() {
         setSelected(defaultEvento);
         setDropClassif('');
     }
-
-    const eventTypes = [
-        {event: 'Classificações', prior: 3, auto: false},
-        {event: 'Mudança de Mediunidade', prior: 1, auto: false},
-        {event: 'Mudança de Templo', prior: 1, auto: false},
-        {event: 'Mudança de Adjunto de Origem', prior: 6, auto: false},
-        {event: 'Mudança de Turno', prior: 6, auto: false},
-        {event: 'Outras Consagrações', prior: 5, auto: false},
-        {event: 'Entregou as Armas', prior: 7, auto: false},
-        {event: 'Retornou à Doutrina', prior: 1, auto: false},
-        {event: 'Desencarnou', prior: 8, auto: false},
-        {event: 'Outros Eventos', prior: 7, auto: false},
-        {event: 'Ingresso', prior: 1, auto: true},
-        {event: 'Teste Apará', prior: 2, auto: true},
-        {event: 'Teste Doutrinador', prior: 2, auto: true},
-        {event: 'Emplacamento Apará', prior: 2, auto: true},
-        {event: 'Emplacamento Doutrinador', prior: 2, auto: true},
-        {event: 'Iniciação Apará', prior: 2, auto: true},
-        {event: 'Iniciação Doutrinador', prior: 2, auto: true},
-        {event: 'Elevação Apará', prior: 2, auto: true},
-        {event: 'Elevação Doutrinador', prior: 2, auto: true},
-        {event: 'Centúria', prior: 2, auto: true},
-        {event: 'Curso de Sétimo', prior: 2, auto: true},
-        {event: 'Mentores Apará', prior: 4, auto: true},
-        {event: 'Mentores Doutrinador', prior: 4, auto: true},
-        {event: 'Trino Solitário', prior: 5, auto: true},
-        {event: 'Trino Sardyos', prior: 5, auto: true},
-    ] 
     
     const listSubMenu = [
         {title: 'Página Inicial', click: '/'},
@@ -269,18 +184,6 @@ function TimeLine() {
         {title: 'Cadastrar Médium', click: '/mediuns/cadastro'},
         {title: 'Médium Menor', click: '/mediuns/menor'}
     ]
-
-    eventos.sort((a: IEvento, b: IEvento) => {
-        const dateA = new Date(a.data).getTime();
-        const dateB = new Date(b.data).getTime();
-        const priorA = eventTypes.find(item => item.event === a.tipo)?.prior || 6
-        const priorB = eventTypes.find(item => item.event === b.tipo)?.prior || 6
-        if (dateA !== dateB) {
-            return dateB - dateA;
-        } else {
-            return priorB - priorA;
-        }
-    })
 
     const arrayCards = [];
 

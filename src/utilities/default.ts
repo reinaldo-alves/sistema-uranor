@@ -154,3 +154,31 @@ export const defaultMedium: IMedium = {
     oldClassif: '',
     oldDtClassif: ''
 }
+
+export const eventTypes = [
+    {event: 'Classificações', prior: 3, auto: false},
+    {event: 'Mudança de Mediunidade', prior: 1, auto: false},
+    {event: 'Mudança de Templo', prior: 1, auto: false},
+    {event: 'Mudança de Adjunto de Origem', prior: 6, auto: false},
+    {event: 'Mudança de Turno', prior: 6, auto: false},
+    {event: 'Outras Consagrações', prior: 5, auto: false},
+    {event: 'Entregou as Armas', prior: 7, auto: false},
+    {event: 'Retornou à Doutrina', prior: 1, auto: false},
+    {event: 'Desencarnou', prior: 8, auto: false},
+    {event: 'Outros Eventos', prior: 7, auto: false},
+    {event: 'Ingresso', prior: 1, auto: true},
+    {event: 'Teste Apará', prior: 2, auto: true},
+    {event: 'Teste Doutrinador', prior: 2, auto: true},
+    {event: 'Emplacamento Apará', prior: 2, auto: true},
+    {event: 'Emplacamento Doutrinador', prior: 2, auto: true},
+    {event: 'Iniciação Apará', prior: 2, auto: true},
+    {event: 'Iniciação Doutrinador', prior: 2, auto: true},
+    {event: 'Elevação Apará', prior: 2, auto: true},
+    {event: 'Elevação Doutrinador', prior: 2, auto: true},
+    {event: 'Centúria', prior: 2, auto: true},
+    {event: 'Curso de Sétimo', prior: 2, auto: true},
+    {event: 'Mentores Apará', prior: 4, auto: true},
+    {event: 'Mentores Doutrinador', prior: 4, auto: true},
+    {event: 'Trino Solitário', prior: 5, auto: true},
+    {event: 'Trino Sardyos', prior: 5, auto: true},
+] 

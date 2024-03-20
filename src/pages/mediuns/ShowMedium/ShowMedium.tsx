@@ -7,7 +7,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { MediumContext } from "src/contexts/MediumContext";
 import { IAdjunto, ICavaleiro, IFalange, IMedium, IMentor, ITemplo } from "src/types/types";
 import { UserContext } from "src/contexts/UserContext";
-import { convertDate, handleEnterPress, setSituation } from "src/utilities/functions";
+import { convertDate, handleEnterPress, positionsAndFunctions, setSituation } from "src/utilities/functions";
 import { ListContext } from "src/contexts/ListContext";
 import PageNotFound from "src/pages/PageNotFound/PageNotFound";
 import Loading from "src/utilities/Loading";
@@ -71,23 +71,6 @@ function ShowMedium() {
     const cityUF = [medium.endCidade, medium.endUF].filter(el => el !== '').join(" - ")
     const naturCityUF = [medium.natur, medium.naturUF].filter(el => el !== '').join(" - ")
     const fullAddress = [medium.endereco, endNum, medium.endCompl, medium.endBairro, cityUF].filter(el => el !== '').join(", ")
-
-    const positionsAndFunctions = (medium: IMedium) => {
-        const array = [];
-        if (medium.comando === 'Comandante'){array.push('Comandante')}
-        else if (medium.comando === 'Janatã'){array.push('Comandante Janatã')}
-        else if (medium.comando === 'Lança'){array.push('Comandante, Lança Vermelha')}
-        else if (medium.comando === 'JanatãLança'){array.push('Comandante Janatã, Lança Vermelha')};
-        if (medium.presidente === 'Presidente'){array.push('Presidente')}
-        else if (medium.presidente === 'Vice'){array.push('Vice-presidente')};
-        if (medium.recepcao){array.push('Recepcionista')};
-        if (medium.devas){array.push(medium.sex === 'Feminino'? 'Filha de Devas' : 'Filho de Devas')};
-        if (medium.regente){array.push('Regente')};
-        if (medium.janda){array.push('Janda')};
-        if (medium.trinoSol){array.push(medium.dtTrinoSol ? `Trino Solitário ${medium.trinoSol}  em ${convertDate(medium.dtTrinoSol)}` : `Trino Solitário ${medium.trinoSol}`)};
-        if (medium.trinoSar){array.push('Trino Sardyos')};
-        return array.join(', ')
-    }
 
     const handleChangeMed = async (dtTest: string) => {
         await changeMed(medium, token, dtTest);
@@ -162,7 +145,7 @@ function ShowMedium() {
                             <MediumMainInfo>Condição Atual: <span>{medium.condicao}</span></MediumMainInfo>
                             <MediumButton disabled={!medium.dtCenturia && !medium.falMiss} onClick={() => validateEmissao(medium, mediuns, adjuntos, turnoL, turnoT, () => generateEmissao(medium, user, emissaoText(medium, mediuns, ministros, cavaleiros, guias, adjuntos, templos, falMiss) as string))} color="green">Gerar Emissão</MediumButton>
                             <MediumButton onClick={() => navigate(`/mediuns/editar/${medium.medium_id}`)} color="green">Editar</MediumButton>
-                            <MediumButton color="green" onClick={() => generateFichaMedium(medium, adjuntos, ministros, cavaleiros, guias, falMiss)}>Gerar Ficha</MediumButton>
+                            <MediumButton color="green" onClick={() => generateFichaMedium(medium, adjuntos, ministros, cavaleiros, guias, falMiss, mediuns, token)}>Gerar Ficha</MediumButton>
                             <MediumButton color="green" disabled={searchMediumInCons(medium.medium_id) === defaultConsagracao} onClick={() => generateAutorizacao([searchMediumInCons(medium.medium_id)], templos, adjuntos, ministros, searchMediumInCons(medium.medium_id).consagracao)}>Autorização</MediumButton>
                             <MediumButton color="green" disabled={!medium.dtCenturia || medium.sex !== 'Masculino'} onClick={() => generateReclass(medium, adjuntos, ministros, cavaleiros, user)}>Reclassificação</MediumButton>
                             <MediumButton onClick={() => navigate(`/mediuns/historico/${medium.medium_id}`)} color="green">Linha do Tempo</MediumButton>

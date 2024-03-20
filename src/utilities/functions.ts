@@ -1,4 +1,7 @@
-import { IConsagracao, IMedium, ITurno } from "src/types/types";
+import api from "src/api";
+import { ICavaleiro, IConsagracao, IEvento, IMedium, IMentor, ITurno } from "src/types/types";
+import { IEventoAPI } from "src/types/typesAPI";
+import { eventTypes } from "./default";
 
 export function convertDate(date: string) {
     const dateParts = date.split('-');
@@ -55,7 +58,7 @@ export function setSituation(medium: IMedium) {
 }
 
 //Função que retorna o turno (legião ou trabalho) correspondente do sexo oposto
-export const oppositeTurno = (obj: ITurno, turno: string) => {
+export function oppositeTurno(obj: ITurno, turno: string) {
     if(obj.jaguar.includes(turno)) {
         const index = obj.jaguar.indexOf(turno);
         return obj.ninfa[index] || ''
@@ -104,7 +107,7 @@ export async function imageToBase64 (url: string) {
 }
 
 //Escreve a classificação e falange de mestrado de forma reduzida, para relatório de centúria
-export const reduceClassFalMest = (medium: IConsagracao, falMest: {completo: Array<string>, abrev: Array<string>}) => {
+export function reduceClassFalMest(medium: IConsagracao, falMest: {completo: Array<string>, abrev: Array<string>}) {
     const splitClass = medium.classMest.split(' ');
     const falMestIndex = falMest.completo.findIndex((item: string) => item === medium.falMest)
     const reducedClass = splitClass.length >= 2 ? `${splitClass[0]} ${splitClass[1]}` : '';
@@ -127,4 +130,98 @@ export function handleEnterPress(e: React.KeyboardEvent, func: () => void) {
     if (e.key === 'Enter') {
         func();
     } 
+}
+
+//Cria o texto da seção Cargos e Funções do médium
+export function positionsAndFunctions(medium: IMedium) {
+    const array = [];
+    if (medium.comando === 'Comandante'){array.push('Comandante')}
+    else if (medium.comando === 'Janatã'){array.push('Comandante Janatã')}
+    else if (medium.comando === 'Lança'){array.push('Comandante, Lança Vermelha')}
+    else if (medium.comando === 'JanatãLança'){array.push('Comandante Janatã, Lança Vermelha')};
+    if (medium.presidente === 'Presidente'){array.push('Presidente')}
+    else if (medium.presidente === 'Vice'){array.push('Vice-presidente')};
+    if (medium.recepcao){array.push('Recepcionista')};
+    if (medium.devas){array.push(medium.sex === 'Feminino'? 'Filha de Devas' : 'Filho de Devas')};
+    if (medium.regente){array.push('Regente')};
+    if (medium.janda){array.push('Janda')};
+    if (medium.trinoSol){array.push(medium.dtTrinoSol ? `Trino Solitário ${medium.trinoSol}  em ${convertDate(medium.dtTrinoSol)}` : `Trino Solitário ${medium.trinoSol}`)};
+    if (medium.trinoSar){array.push('Trino Sardyos')};
+    return array.join(', ')
+}
+
+//Retorna um array com todos os eventos associados ao médium selecionado
+export async function generateListEventos(medium: IMedium, token: string, mediuns: Array<IMedium>, ministros: Array<IMentor>, cavaleiros: Array<ICavaleiro>, guias: Array<IMentor>) {
+    try {
+        const { data } = await api.get(`/evento/get?medium=${medium?.medium_id}`, {headers:{Authorization: token}})
+        const evento = data.evento.map((item: IEventoAPI) => ({
+            ...item,
+            data: item.data === null ? '' : item.data.toString().split('T')[0],
+        }));
+        if(medium?.dtIngresso && !evento.some((item: IEvento) => item.tipo === 'Ingresso')) {
+            evento.push({evento_id: 0, medium: medium?.medium_id, data: medium?.dtIngresso, mensagem: 'Ingresso na doutrina', observ: '', tipo: 'Ingresso'})
+        }
+        if(medium?.dtTest && !evento.some((item: IEvento) => item.tipo === `Teste ${medium?.med}`)) {
+            evento.push({evento_id: 0, medium: medium?.medium_id, data: medium?.dtTest, mensagem: `Teste mediúnico - ${medium?.med}`, observ: '', tipo: `Teste ${medium?.med}`})
+        }
+        if(medium?.dtEmplac && !evento.some((item: IEvento) => item.tipo === `Emplacamento ${medium?.med}`)) {
+            evento.push({evento_id: 0, medium: medium?.medium_id, data: medium?.dtEmplac, mensagem: `Emplacamento como ${medium?.med}`, observ: '', tipo: `Emplacamento ${medium?.med}`})
+        }
+        if(medium?.dtIniciacao  && !evento.some((item: IEvento) => item.tipo === `Iniciação ${medium?.med}`)) {
+            evento.push({evento_id: 0, medium: medium?.medium_id, data: medium?.dtIniciacao, mensagem: `Iniciação como ${medium?.med}`, observ: '', tipo: `Iniciação ${medium?.med}`})
+        }
+        if(medium?.dtElevacao && !evento.some((item: IEvento) => item.tipo === `Elevação ${medium?.med}`)) {
+            evento.push({evento_id: 0, medium: medium?.medium_id, data: medium?.dtElevacao, mensagem: `Elevação como ${medium?.med}`, observ: '', tipo: `Elevação ${medium?.med}`})
+        }
+        if(medium?.dtCenturia && !evento.some((item: IEvento) => item.tipo === 'Centúria')) {
+            evento.push({evento_id: 0, medium: medium?.medium_id, data: medium?.dtCenturia, mensagem: 'Centúria', observ: '', tipo: 'Centúria'})
+        }
+        if(medium?.dtSetimo && !evento.some((item: IEvento) => item.tipo === 'Curso de Sétimo')) {
+            evento.push({evento_id: 0, medium: medium?.medium_id, data: medium?.dtSetimo, mensagem: 'Curso de 7° Raio concluído', observ: '', tipo: 'Curso de Sétimo'})
+        }
+        if(medium?.oldDtTest && !evento.some((item: IEvento) => item.tipo === `Teste ${medium?.med === 'Apará' ? 'Doutrinador' : medium?.med === 'Doutrinador' ? 'Apará' : ''}`)) {
+            evento.push({evento_id: 0, medium: medium?.medium_id, data: medium?.oldDtTest, mensagem: `Teste mediúnico - ${medium?.med === 'Apará' ? 'Doutrinador' : medium?.med === 'Doutrinador' ? 'Apará' : ''}`, observ: '', tipo: `Teste ${medium?.med === 'Apará' ? 'Doutrinador' : medium?.med === 'Doutrinador' ? 'Apará' : ''}`})
+        }
+        if(medium?.oldDtEmplac && !evento.some((item: IEvento) => item.tipo === `Emplacamento ${medium.med === 'Apará' ? 'Doutrinador' : medium?.med === 'Doutrinador' ? 'Apará' : ''}`)) {
+            evento.push({evento_id: 0, medium: medium?.medium_id, data: medium?.oldDtEmplac, mensagem: `Emplacamento como ${medium?.med === 'Apará' ? 'Doutrinador' : medium?.med === 'Doutrinador' ? 'Apará' : ''}`, observ: '', tipo: `Emplacamento ${medium?.med === 'Apará' ? 'Doutrinador' : medium?.med === 'Doutrinador' ? 'Apará' : ''}`})
+        }
+        if(medium?.oldDtIniciacao && !evento.some((item: IEvento) => item.tipo === `Iniciação ${medium?.med === 'Apará' ? 'Doutrinador' : medium?.med === 'Doutrinador' ? 'Apará' : ''}`)) {
+            evento.push({evento_id: 0, medium: medium?.medium_id, data: medium?.oldDtIniciacao, mensagem: `Iniciação como ${medium?.med === 'Apará' ? 'Doutrinador' : medium?.med === 'Doutrinador' ? 'Apará' : ''}`, observ: '', tipo: `Iniciação ${medium?.med === 'Apará' ? 'Doutrinador' : medium?.med === 'Doutrinador' ? 'Apará' : ''}`})
+        }
+        if(medium?.oldDtElevacao && !evento.some((item: IEvento) => item.tipo === `Elevação ${medium?.med === 'Apará' ? 'Doutrinador' : medium?.med === 'Doutrinador' ? 'Apará' : ''}`)) {
+            evento.push({evento_id: 0, medium: medium?.medium_id, data: medium?.oldDtElevacao, mensagem: `Elevação como ${medium?.med === 'Apará' ? 'Doutrinador' : medium?.med === 'Doutrinador' ? 'Apará' : ''}`, observ: '', tipo: `Elevação ${medium?.med === 'Apará' ? 'Doutrinador' : medium?.med === 'Doutrinador' ? 'Apará' : ''}`})
+        }
+        if(medium?.dtMentor && !evento.some((item: IEvento) => item.tipo === `Mentores ${medium?.med}`)) {
+            evento.push({evento_id: 0, medium: medium?.medium_id, data: medium?.dtMentor, mensagem: medium?.sex === 'Masculino' ? `Recebeu ministro ${ministros.find((m: IMentor) => m.id === medium?.ministro)?.nome} e cavaleiro ${cavaleiros.find((c: ICavaleiro) => c.id === medium?.cavaleiro)?.nome} ${medium?.cor}` : medium?.sex === 'Feminino' ? `Recebeu guia missionária ${guias.find((g: IMentor) => g.id === medium?.guia)?.nome} ${medium?.cor}` : '', observ: '', tipo: `Mentores ${medium?.med}`})
+        }
+        if(medium?.dtClassif && !evento.some((item: IEvento) => item.tipo === 'Classificações' && item.mensagem.split('de ')[1] === medium?.classif)) {
+            evento.push({evento_id: 0, medium: medium?.medium_id, data: medium?.dtClassif, mensagem: `Classificação de ${medium?.classif}`, observ: '', tipo: 'Classificações'})
+        }
+        if(medium?.oldDtMentor && !evento.some((item: IEvento) => item.tipo === `Mentores ${medium?.med === 'Apará' ? 'Doutrinador' : medium?.med === 'Doutrinador' ? 'Apará' : ''}`)) {
+            evento.push({evento_id: 0, medium: medium?.medium_id, data: medium?.dtMentor, mensagem: medium?.sex === 'Masculino' ? `Recebeu ministro ${ministros.find((m: IMentor) => m.id === medium?.ministro)?.nome} e cavaleiro ${cavaleiros.find((c: ICavaleiro) => c.id === medium?.oldCavaleiro)?.nome} ${medium?.oldCor}` : '', observ: '', tipo: `Mentores ${medium?.med === 'Apará' ? 'Doutrinador' : medium?.med === 'Doutrinador' ? 'Apará' : ''}`})
+        }
+        if(medium?.oldDtClassif && !evento.some((item: IEvento) => item.tipo === 'Classificações' && item.mensagem.split('de ')[1] === medium?.oldClassif)) {
+            evento.push({evento_id: 0, medium: medium?.medium_id, data: medium?.oldDtClassif, mensagem: `Classificação de ${medium?.oldClassif}`, observ: '', tipo: 'Classificações'})
+        }
+        if(medium?.dtTrinoSol && !evento.some((item: IEvento) => item.tipo === 'Trino Solitário')) {
+            evento.push({evento_id: 0, medium: medium?.medium_id, data: medium?.dtTrinoSol, mensagem: `Consagração de Trino Solitário ${medium?.trinoSol}`, observ: '', tipo: 'Trino Solitário'})
+        }
+        if(medium?.dtTrinoSar && !evento.some((item: IEvento) => item.tipo === 'Trino Sardyos')) {
+            evento.push({evento_id: 0, medium: medium?.medium_id, data: medium?.dtTrinoSar, mensagem: `Consagração de Trino Sardyos - Herdeiro do Adj. ${ministros.find((m: IMentor) => m.id === mediuns.find((item: IMedium) => item.medium_id === medium.herdeiro)?.ministro)?.nome} Mestre ${mediuns.find((item: IMedium) => item.medium_id === medium.herdeiro)?.nomeEmissao}`, observ: '', tipo: 'Trino Sardyos'})
+        }
+        evento.sort((a: IEvento, b: IEvento) => {
+            const dateA = new Date(a.data).getTime();
+            const dateB = new Date(b.data).getTime();
+            const priorA = eventTypes.find(item => item.event === a.tipo)?.prior || 6
+            const priorB = eventTypes.find(item => item.event === b.tipo)?.prior || 6
+            if (dateA !== dateB) {
+                return dateB - dateA;
+            } else {
+                return priorB - priorA;
+            }
+        })
+        return evento;
+    } catch (error) {
+        console.error('Erro ao criar a lista de eventos da linha do tempo do médium', error);
+    }
 }
