@@ -2175,21 +2175,20 @@ export const generateFichaMedium = async (medium: IMedium, adjuntos: Array<IAdju
                     {
                         table: {
                             body: [
-                                // [{
-                                //     stack: [
-                                //         'FOTO',
-                                //         '3X4'
-                                //     ],
-                                //     alignment: 'center',
-                                //     width: 80,
-                                //     height: 107,
-                                //     margin: [24, 40, 25, 40]
-                                // }]
-                                [{
+                                [medium.foto ? {
                                     image: base64String,
                                     width: 80,
                                     height: 107
-                                }]
+                                } : {
+                                    stack: [
+                                        'FOTO',
+                                        '3X4'
+                                    ],
+                                    alignment: 'center',
+                                    width: 80,
+                                    height: 107,
+                                    margin: [24, 40, 25, 40]
+                                }]  
                             ]
                         },
                         width: 85,

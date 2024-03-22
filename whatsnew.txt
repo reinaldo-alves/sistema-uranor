@@ -34,7 +34,9 @@ VERSÃO 1.2.0
 - Implementação de mecanismo para executar funções dos botões ao pressionar enter em inputs dos modais e das páginas de login e alteração de senha
 - Alteração no layout do relatório de médiuns para consagrações.
 - Ocultar as seções Observações e Cargos e Funções na página Exibir Médium quando a mesma for vazia.
+- Geração da ficha do médium com dados do mesmo, incluindo eventos da linha do tempo.
 
-// Concluir ficha de médium preenchida
-// Quando edita a foto e salva, ela não aparece na página de exibição de médium, apenas quando recarrega. Corrigir isso.
-// Remover borda da imagem na ficha preenchida
+// Quando filtrar por datas, considerar das duas mediunidades. Adicionar observação no rodapé do relatório
+// Organizar a seção de datas mediúnicas, como campos para data inicial e final
+// Construir lógica para selecionar entre templo atual e de origem por checkbox
+// Corrigir o responsivo e o posicionamento dos checkbox atual e origem
