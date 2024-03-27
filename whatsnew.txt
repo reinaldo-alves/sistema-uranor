@@ -37,6 +37,4 @@ VERSÃO 1.2.0
 - Geração da ficha do médium com dados do mesmo, incluindo eventos da linha do tempo.
 
 // Quando filtrar por datas, considerar das duas mediunidades. Adicionar observação no rodapé do relatório
-// Organizar a seção de datas mediúnicas, como campos para data inicial e final
 // Construir lógica para selecionar entre templo atual e de origem por checkbox
-// Corrigir o responsivo e o posicionamento dos checkbox atual e origem

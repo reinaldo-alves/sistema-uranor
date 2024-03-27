@@ -17,40 +17,8 @@ CURSOS
 - Frequência
 
 RELATÓRIOS
-- Relatório Personalizado
 - Relatório médium menor
-- Relatório emplacados
-- Relatório iniciados
-- Relatório elevados
-- Relatório centurioes
-- Relatório 7° Raio
-- Relatório por falanges missionárias
-- Relatório por classificação
-- Relatório por período (datas ingresso, inciação, elevação, centúria)
 - Relatório desenvolvimento (testes, desistentes)
-
-------------------------------------------------------------------------------------------------------------
-FAZER APENAS RELATÓRIO PERSONALIZADO, LEVAR EM CONSIDERAÇÃO APENAS ESSA SEÇÃO
-
-- Tipos: lista de médiuns (mediunidade), contato (telefone), protocolo (assinatura)
-    - Padrão: não adiciona nada
-    - Contato: adiciona telefones
-    - Protocolo: adiciona assinatura
-    - Propriedade: adiciona propriedade (escolher)
-Adicionar input para título
-Adicionar select para escolher tipo
-Adicionar dois checkbox: mostrar mediunidade e mostrar templo.
-Adicionar dois selects: templo e condição.
-
-- Relatório médium menor
-------------------------------------------------------------------------------------------------------------
-
-- Relatórios por situação (em desenvolvimento, emplacado, iniciado, elevado, centurião, 7° Raio).
-- Relatórios por classificações.
-- Relatório por cargo ou função (Comandante, Janatã, Lança Vermelha, Devas, Janda, Regente, Recepcionista, Aganaros).
-- Relatório por falange missionária
-- Relatório por condição atual (Ativo, Não ativos, Afastado, Entregou as Armas, Desencarnado)
-- Relatório personalizado: todas as propriedades para combinar.
 
 DOCUMENTOS ÚTEIS
 - Calendário de atividades doutrinárias

@@ -85,7 +85,7 @@ function AddMedium() {
             default:
                 setListFalMiss([]);
                 setListTurnoL([]);
-                setListTurnoL([]);
+                setListTurnoT([]);
         }
     }, [newMedium.sex, falMiss])
 

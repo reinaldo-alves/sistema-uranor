@@ -146,7 +146,7 @@ function EditMedium() {
             default:
                 setListFalMiss([]);
                 setListTurnoL([]);
-                setListTurnoL([]);
+                setListTurnoT([]);
         }
     }, [medium.sex, falMiss])
 

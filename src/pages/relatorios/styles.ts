@@ -67,7 +67,6 @@ export const PersonalCard = styled.div`
         font-size: 18px;
         color: ${(props) => {return props.theme.color.darkerColor}};
         white-space: nowrap;
-        text-decoration: underline;
         
         @media (max-width: 1000px) {
             font-size: 14px;
@@ -132,35 +131,26 @@ export const GridContainer = styled.div`
 `;
 
 export const GridDatesContainer = styled.div`
-    width: 100%;
     display: grid;
-    grid-template-columns: repeat(3, auto 1fr);
+    grid-template-columns: auto 1fr;
     align-items: center;
     gap: 20px 10px;
 
-    label:nth-child(6n-1), label:nth-child(6n-3) {
-        padding-left: 10px;
-    }
+    @media (max-width: 540px) {
+        grid-template-columns: 1fr;
 
-    @media (max-width: 1000px) {
-        grid-template-columns: repeat(2, auto 1fr);
-
-        label:nth-child(6n-1), label:nth-child(6n-3) {
-            padding-left: 0px;
-        }
-
-        label:nth-child(4n-1) {
-            padding-left: 10px;
+        label {
+            text-align: center;
+            margin-bottom: -15px;
         }
     }
+`;
 
-    @media (max-width: 680px) {
-        grid-template-columns: auto 1fr;
-
-        label:nth-child(4n-1) {
-            padding-left: 0px;
-        }
-    }
+export const DatesContainer = styled.div`
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 20px 10px;
 `;
 
 export const FieldContainer = styled.div<{width?: string}>`
@@ -204,77 +194,13 @@ export const FieldContainerBox = styled.div`
     }
 `;
 
-export const PhotoPosition = styled.div<{hide?: boolean}>`
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 5px;
-    align-self: flex-end;
-
-    span {
-        font-size: 16px;
-        cursor: pointer;
-        visibility: ${({ hide }) => hide? 'hidden' : 'visible'};;
-    }
-
-    @media (max-width: 800px) {
-        align-self: center;
-    }
-`;
-
-export const PhotoContainer = styled.div<{photo: string | null}>`
-    height: 182px;
-    aspect-ratio: 3 / 4;
-    border-radius: 10px;
-    border: 2px solid ${(props) => {return props.theme.color.lighterColor}};
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    color: ${(props) => {return props.theme.color.darkerColor}};
-    text-align: center;
-    font-weight: bold;
-    padding: 15px;
-    position: relative;
-    background-image: ${({ photo }) => photo? `url(${photo})` : 'none'};
-    background-size: cover;
-    background-position: 50% 50%;
-    
-    input {
-        position: absolute;
-        top: 0;
-        height: 100%;
-        width: 100%;
-        opacity: 0;
-        cursor: pointer;
-        
-    }
-
-    @media (max-width: 800px) {
-        width: 136px
-    }
-
-`;
-
-export const Observations = styled.textarea`
-    border-radius: 8px;
-    border: solid 1px ${(props) => {return props.theme.color.darkerColor}};
-    padding: 6px;
-    font-size: 18px;
-    font-weight: bold;
-    resize: none;
-    
-    @media (max-width: 1000px) {
-            font-size: 14px;
-        }
-`;
-
-export const ReportButton = styled.button`
+export const ReportButton = styled.button<{color: string}>`
     font-weight: bold;
     border: solid 1px ${(props) => {return props.theme.color.darkerColor}};
     border-radius: 8px;
     margin-top: 30px;
-    width: 200px;
-    background-color: green;
+    width: 165px;
+    background-color: ${({color}) => {return color}};
     color: ${(props) => {return props.theme.color.lighterColor}};
     text-align: center;
     height: 45px;
@@ -296,4 +222,11 @@ export const Divider = styled.div`
     width: 100%;
     height: 1px;
     background-color: ${(props) => {return props.theme.color.lighterColor}};
+`;
+
+export const CheckboxContainer = styled.div`
+    display: flex;
+    gap: 10px 30px;
+    justify-content: center;
+    flex-wrap: wrap;
 `;

@@ -5,31 +5,27 @@ import MainContainer from "src/components/MainContainer/MainContainer";
 import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { defaultAdj, defaultCavaleiro, defaultMedium, defaultMentor } from "src/utilities/default";
-import { ICavaleiro, IEstado, IFalange, IMedium, IMentor, ITemplo } from "src/types/types";
+import { IEstado, IFalange, IMedium, IMentor, ITemplo } from "src/types/types";
 import { MediumContext } from "src/contexts/MediumContext";
 import { UserContext } from "src/contexts/UserContext";
 import { ListContext } from "src/contexts/ListContext";
 import { Alert } from "src/utilities/popups";
 import api from "src/api";
-import { Divider, FieldContainer, FieldContainerBox, GridContainer, GridDatesContainer, InputContainer, MainContent, MainInfoContainer, PersonalCard, ReportButton, SectionTitle } from "./styles";
-import { alphabeticOrder } from "src/utilities/functions";
+import { CheckboxContainer, DatesContainer, Divider, FieldContainer, FieldContainerBox, GridContainer, GridDatesContainer, InputContainer, MainContent, MainInfoContainer, PersonalCard, ReportButton, SectionTitle } from "./styles";
+import { alphabeticOrder, oppositeTurno } from "src/utilities/functions";
 import AutocompleteInput from "src/components/AutocompleteInput/AutocompleteInput";
 import { validateMedium } from "src/utilities/validations";
 
 function Relatorios() {
     const { templos, estados, adjuntos, coletes, classMest, falMest, povos, falMiss, turnoL, turnoT, ministros, cavaleiros, guias, estrelas, princesas, classificacao } = useContext(ListContext);
     const { token } = useContext(UserContext);
-    const { mediuns, loadMedium, convertMediumToSend, setComponentes, uploadImage } = useContext(MediumContext);
+    const { mediuns, loadMedium, convertMediumToSend, setComponentes } = useContext(MediumContext);
 
     const [newMedium, setNewMedium] = useState(defaultMedium);
-    const [listClassMest, setListClassMest] = useState([]);
-    const [listFalMiss, setListFalMiss] = useState([]);
-    const [listTurnoL, setListTurnoL] = useState([]);
-    const [listTurnoT, setListTurnoT] = useState([]);
-    const [listCav, setListCav] = useState([] as Array<ICavaleiro>);
-    const [listEst, setListEst] = useState([]);
-    const [listClass, setListClass] = useState([]);
-    const [photo, setPhoto] = useState<File | null>(null);
+    const [reportType, setReportType] = useState('');
+    const [reportProperty, setReportProperty] = useState('');
+    const [showMed, setShowMed] = useState(true);
+    const [showTemplo, setShowTemplo] = useState(false);
     const [dropPres, setDropPres] = useState(defaultAdj);
     const [dropMin, setDropMin] = useState(defaultMentor);
     const [dropCav, setDropCav] = useState(defaultCavaleiro);
@@ -44,115 +40,6 @@ function Relatorios() {
     const now = new Date().toISOString().split('T')[0];
 
     const navigate = useNavigate();
-
-    useEffect(() => {
-        console.log(newMedium)
-    }, [newMedium])
-
-    useEffect(() => {
-        switch (newMedium.sex) {
-            case 'Masculino':
-                setListFalMiss(falMiss.filter((item: IFalange) => item.ninfa === false));
-                setListTurnoL(turnoL.jaguar);
-                setListTurnoT(turnoT.jaguar);
-                break;
-            case 'Feminino':
-                setListFalMiss(falMiss.filter((item: IFalange) => item.ninfa === true));
-                setListTurnoL(turnoL.ninfa);
-                setListTurnoT(turnoT.ninfa);
-                break;
-            default:
-                setListFalMiss([]);
-                setListTurnoL([]);
-                setListTurnoL([]);
-        }
-    }, [newMedium.sex, falMiss])
-
-    useEffect(() => {
-        switch (newMedium.sex.concat(newMedium.med)) {
-            case 'MasculinoDoutrinador':
-                setListClassMest(classMest.MS);
-                setListCav(cavaleiros.filter((item: ICavaleiro) => item.med === 'Doutrinador'));
-                setListClass(classificacao.sol);
-                break;
-            case 'MasculinoApará':
-                setListClassMest(classMest.ML);
-                setListCav(cavaleiros.filter((item: ICavaleiro) => item.med === 'Apará'));
-                setListClass(classificacao.lua);
-                break;
-            case 'FemininoDoutrinador':
-                setListClassMest(classMest.NS);
-                setListEst(estrelas.sol);
-                break;
-            case 'FemininoApará':
-                setListClassMest(classMest.NL);
-                setListEst(estrelas.lua);
-                break;
-            default:
-                setListClassMest([]);
-                setListCav([]);
-                setListEst([]);
-                setListClass([]);
-        }
-    }, [newMedium.med, newMedium.sex])
-
-    useEffect(() => {
-        if(newMedium.classMest) {
-            if(newMedium.sex.concat(newMedium.med) === 'MasculinoDoutrinador') {
-                if(newMedium.classMest.includes('Mestre Sol')) {
-                    if(newMedium.falMiss === 6) {updateProps('classMest', 'Mestre Sol Mago')}
-                    else if(newMedium.falMiss === 7) {updateProps('classMest', 'Mestre Sol Príncipe Maya')}
-                    else {updateProps('classMest', 'Mestre Sol')}
-                }
-                if(newMedium.classMest.includes('Mestre Luz')) {
-                    if(newMedium.falMiss === 6) {updateProps('classMest', 'Mestre Luz Mago')}
-                    else if(newMedium.falMiss === 7) {updateProps('classMest', 'Mestre Luz Príncipe Maya')}
-                    else {updateProps('classMest', 'Mestre Luz')}
-                }
-            }
-            if(newMedium.sex.concat(newMedium.med) === 'MasculinoApará') {
-                if(newMedium.falMiss === 6) {updateProps('classMest', 'Mestre Lua Mago')}
-                else if(newMedium.falMiss === 7) {updateProps('classMest', 'Mestre Lua Príncipe Maya')}
-                else {updateProps('classMest', 'Mestre Lua')}
-            }
-            if(newMedium.sex.concat(newMedium.med) === 'FemininoDoutrinador') {
-                if(newMedium.falMiss === 1 || newMedium.falMiss === 2) {updateProps('classMest', 'Ninfa Sol Nityama')}
-                else if(newMedium.falMiss === 4) {updateProps('classMest', 'Ninfa Sol Grega')}
-                else if(newMedium.falMiss === 5) {updateProps('classMest', 'Ninfa Sol Maya')}
-                else {updateProps('classMest', 'Ninfa Sol')}
-            }
-            if(newMedium.sex.concat(newMedium.med) === 'FemininoApará') {
-                if(newMedium.falMiss === 1 || newMedium.falMiss === 2) {updateProps('classMest', 'Ninfa Lua Nityama')}
-                else if(newMedium.falMiss === 4) {updateProps('classMest', 'Ninfa Lua Grega')}
-                else if(newMedium.falMiss === 5) {updateProps('classMest', 'Ninfa Lua Maya')}
-                else {updateProps('classMest', 'Ninfa Lua')}
-            }
-        }
-    }, [newMedium.falMiss])
-
-    useEffect(() => {
-        if(newMedium.classMest === 'Mestre Sol' || newMedium.classMest === 'Mestre Luz' || newMedium.classMest === 'Mestre Lua') {
-            updateProps('falMiss', 0);
-        }
-        if((newMedium.classMest === 'Ninfa Sol' || newMedium.classMest === 'Ninfa Lua') && [1, 2, 4, 5].includes(newMedium.falMiss)) {
-            updateProps('falMiss', 0);
-        }
-        if(newMedium.classMest === 'Ninfa Sol Nityama' || newMedium.classMest === 'Ninfa Lua Nityama') {
-            updateProps('falMiss', 1);
-        }
-        if(newMedium.classMest === 'Ninfa Sol Grega' || newMedium.classMest === 'Ninfa Lua Grega') {
-            updateProps('falMiss', 4);
-        }
-        if(newMedium.classMest === 'Ninfa Sol Maya' || newMedium.classMest === 'Ninfa Lua Maya') {
-            updateProps('falMiss', 5);
-        }
-        if(newMedium.classMest === 'Mestre Sol Mago' || newMedium.classMest === 'Mestre Luz Mago' || newMedium.classMest === 'Mestre Lua Mago') {
-            updateProps('falMiss', 6);
-        }
-        if(newMedium.classMest === 'Mestre Sol Príncipe Maya' || newMedium.classMest === 'Mestre Luz Príncipe Maya' || newMedium.classMest === 'Mestre Lua Príncipe Maya') {
-            updateProps('falMiss', 7);
-        }
-    }, [newMedium.classMest])
 
     useEffect(() => {
         if(dropPres) {
@@ -200,7 +87,6 @@ function Relatorios() {
         setSearchMin('');
         setSearchCav('');
         setSearchGuia('');
-        setPhoto(null);
         navigate('/mediuns/consulta');
     }
 
@@ -258,7 +144,6 @@ function Relatorios() {
         try {
             const response = await api.post('/medium/create', newMediumObj, {headers:{Authorization: token}})
             const { medium_id } = response.data;
-            await uploadImage(medium_id, token, photo);
             await setComponentes({...medium, medium_id}, token);
             await generateEvents(medium, medium_id, token);
             Alert('Médium adicionado com sucesso', 'success');
@@ -286,135 +171,94 @@ function Relatorios() {
                         <MainInfoContainer>
                             <SectionTitle>Configurar Relatório</SectionTitle>
                             <FieldContainer>
-                                <label>Nome Médium: </label>
+                                <label>Título do Relatório: </label>
                                 <input type="text" value={newMedium.nome} onChange={(e) => updateProps('nome', e.target.value)}/>
                             </FieldContainer>
                             <GridContainer>
-                                <label>Sexo: </label>
-                                <select
-                                    value={newMedium.sex}
-                                    onChange={(e) => {
-                                        updateProps('sex', e.target.value);
-                                        updateProps('classMest', '');
-                                        updateProps('falMiss', 0);
-                                        updateProps('turnoLeg', '');
-                                        updateProps('turnoTrab', '');
-                                        updateProps('presidente', '');
-                                        updateProps('trinoSol', '');
-                                        updateProps('trinoSar', false);
-                                        updateProps('classif', '');
-                                        updateProps('ministro', 0);
-                                        updateProps('cavaleiro', 0);
-                                        updateProps('oldCavaleiro', 0);
-                                        updateProps('guia', 0);
-                                        updateProps('estrela', '');
-                                        updateProps('dtTrinoSar', '');
-                                        updateProps('dtTrinoSol', '');
-                                        updateProps('dtClassif', '');
-                                        updateProps('herdeiro', 0);
-                                        updateProps('madrinha', 0);
-                                        updateProps('padrinho', 0);
-                                        updateProps('ninfa', 0);
-                                        updateProps('mestre', 0);
-                                        updateProps('afilhado', 0);
-                                        updateProps('comando', '');
-                                        updateProps('janda', false);
-                                    }}
-                                >
+                                <label>Tipo: </label>
+                                <select value={reportType} onChange={(e) => setReportType(e.target.value)}>
+                                    <option value={'Padrão'}>Padrão</option>
+                                    <option value={'Contato'}>Contato: mostra telefones</option>
+                                    <option value={'Protocolo'}>Protocolo: mostra assinatura</option>
+                                    <option value={'Propriedade'}>Propriedade: mostra outra informação</option>
+                                </select>
+                                <label>Propriedade: </label>
+                                <select value={reportProperty} disabled={reportType !== 'Propriedade'} onChange={(e) => setReportProperty(e.target.value)}>
                                     <option value={''}></option>
-                                    <option value={'Feminino'}>Feminino</option>
-                                    <option value={'Masculino'}>Masculino</option>
-                                </select>
-                                <label>Mediunidade: </label>
-                                <select value={newMedium.med} onChange={(e) => {
-                                    updateProps('med', e.target.value);
-                                    updateProps('cavaleiro', 0);
-                                    updateProps('oldCavaleiro', 0);
-                                    updateProps('cor', '');
-                                    updateProps('oldCor', '');
-                                    updateProps('estrela', '');
-                                    updateProps('classif', '');
-                                    updateProps('madrinha', 0);
-                                    updateProps('padrinho', 0);
-                                    updateProps('ninfa', 0);
-                                    updateProps('mestre', 0);
-                                    updateProps('afilhado', 0);
-                                    updateProps('comando', '');
-                                    updateProps('presidente', '');
-                                    updateProps('janda', false);
-                                    }}
-                                >
-                                    <option value={''}></option>
-                                    <option value={'Apará'}>Apará</option>
-                                    <option value={'Doutrinador'}>Doutrinador</option>
-                                </select>
-                                <label>Templo: </label>
-                                <select value={newMedium.templo} onChange={(e) => updateProps('templo', e.target.value)}>
-                                    <option value={0}></option>
-                                    {templos.map((item: ITemplo, index: number) => (
-                                        <option key={index} value={item.templo_id}>{item.cidade} - {item.estado.abrev}</option>
-                                    ))}
-                                </select>
-                                <label>Condição Atual: </label>
-                                <select value={newMedium.condicao} onChange={(e) => updateProps('condicao', e.target.value)}>
-                                    <option value={'Ativo'}>Ativo</option>
-                                    <option value={'Afastado'}>Afastado</option>
-                                    <option value={'Entregou as Armas'}>Entregou as Armas</option>
-                                    <option value={'Desencarnado'}>Desencarnado</option>
+                                    <option value={'Propriedade'}>Propriedade</option>
                                 </select>
                             </GridContainer>
+                            <CheckboxContainer>
+                                <FieldContainerBox>
+                                    <input type="checkBox" checked={showMed} onChange={(e) => setShowMed(e.target.checked)}/>
+                                    <label>Mostrar Mediunidade</label>
+                                </FieldContainerBox>
+                                <FieldContainerBox>
+                                    <input type="checkBox" checked={showTemplo} onChange={(e) => setShowTemplo(e.target.checked)}/>
+                                    <label>Mostrar Templo</label>
+                                </FieldContainerBox>
+                            </CheckboxContainer>
                         </MainInfoContainer>
                     </MainContent>
                 </PersonalCard>
                 <div style={{width: '90%', maxWidth: '1200px', display: 'flex', justifyContent: 'space-around'}}>
-                    <ReportButton onClick={() => validateMedium(newMedium, async () => await addMedium(newMedium, token))}>Gerar Relatório</ReportButton>
+                    <ReportButton color="red" onClick={() => resetNewMedium()}>Resetar Filtros</ReportButton>
+                    <ReportButton color="green" onClick={() => validateMedium(newMedium, async () => await addMedium(newMedium, token))}>Gerar Relatório</ReportButton>
                 </div>
                 <PersonalCard>
                     <SectionTitle>Configurar Filtros</SectionTitle>
                     <GridContainer>
                         <label>Nome Médium: </label>
-                            <input type="text" value={newMedium.nome} onChange={(e) => updateProps('nome', e.target.value)}/>
+                        <input type="text" value={newMedium.nome} onChange={(e) => updateProps('nome', e.target.value)}/>
+                        <label>Situação: </label>
+                        <select value={newMedium.condicao} onChange={(e) => updateProps('condicao', e.target.value)}>
+                            <option value={''}></option>
+                            <option value={'Em desenvolvimento'}>Em desenvolvimento</option>
+                            <option value={'Liberado'}>Liberado</option>
+                            <option value={'Iniciado'}>Iniciado</option>
+                            <option value={'Elevado'}>Elevado</option>
+                            <option value={'Centurião'}>Centurião</option>
+                            <option value={'Centurião 7° Raio'}>Centurião 7° Raio</option>
+                        </select>
                         <label>Sexo: </label>
                         <select value={newMedium.sex} onChange={(e) => updateProps('sex', e.target.value)}>
-                            <option value={''}>Todos</option>
+                            <option value={''}></option>
                             <option value={'Feminino'}>Feminino</option>
                             <option value={'Masculino'}>Masculino</option>
                         </select>
                         <label>Mediunidade: </label>
                         <select value={newMedium.med} onChange={(e) => updateProps('med', e.target.value)}>
-                            <option value={''}>Todas</option>
+                            <option value={''}></option>
                             <option value={'Apará'}>Apará</option>
                             <option value={'Doutrinador'}>Doutrinador</option>
                         </select>
                         <label>Condição Atual: </label>
                         <select value={newMedium.condicao} onChange={(e) => updateProps('condicao', e.target.value)}>
                             <option value={'Ativo'}>Ativo</option>
+                            <option value={'Não Ativo'}>Não Ativo</option>
                             <option value={'Afastado'}>Afastado</option>
                             <option value={'Entregou as Armas'}>Entregou as Armas</option>
                             <option value={'Desencarnado'}>Desencarnado</option>
+                            <option value={'Todas'}>Todas</option>
+                        </select>
+                        <label>Templo: </label>
+                        <select value={newMedium.templo} onChange={(e) => updateProps('templo', e.target.value)}>
+                            <option value={0}></option>
+                            {templos.map((item: ITemplo, index: number) => (
+                                <option key={index} value={item.templo_id}>{item.cidade} - {item.estado.abrev}</option>
+                            ))}
                         </select>
                     </GridContainer>
-                    <InputContainer>
-                        <FieldContainer width="calc(50% - 5px)">
-                            <label>Templo: </label>
-                            <select value={newMedium.templo} onChange={(e) => updateProps('templo', e.target.value)}>
-                                <option value={0}></option>
-                                {templos.map((item: ITemplo, index: number) => (
-                                    <option key={index} value={item.templo_id}>{item.cidade} - {item.estado.abrev}</option>
-                                ))}
-                            </select>
-                        </FieldContainer>
-                        <div style={{width: 'calc(50% - 5px)', display: 'flex', gap: '20px', justifyContent: 'center'}}>  
-                            <FieldContainerBox>
-                                <input type="checkBox" />
-                                <label>Atual</label>
-                            </FieldContainerBox> 
-                            <FieldContainerBox>
-                                <input type="checkBox" />
-                                <label>Origem</label>
-                            </FieldContainerBox> 
-                        </div>
-                    </InputContainer>
+                    <CheckboxContainer>
+                        <FieldContainerBox>
+                            <input type="checkBox" />
+                            <label>Templo Atual</label>
+                        </FieldContainerBox> 
+                        <FieldContainerBox>
+                            <input type="checkBox" />
+                            <label>Templo de Origem</label>
+                        </FieldContainerBox> 
+                    </CheckboxContainer>
                     <Divider></Divider>
                     <GridContainer>
                         <label>Adjunto Origem.: </label>
@@ -438,7 +282,7 @@ function Relatorios() {
                         <label>Classif. Mestrado: </label>
                         <select value={newMedium.classMest} onChange={(e) => updateProps('classMest', e.target.value)}>
                             <option value={''}></option>
-                            {listClassMest.map((item: string, index: number) => (
+                            {[...classMest.MS, ...classMest.ML, classMest.NS, classMest.NL].map((item: string, index: number) => (
                                 <option key={index} value={item}>{item}</option>
                             ))}
                         </select>
@@ -467,7 +311,7 @@ function Relatorios() {
                             }}
                         >
                             <option value={0}></option>
-                            {listFalMiss.map((item: IFalange, index: number) => (
+                            {falMiss.map((item: IFalange, index: number) => (
                                 <option key={index} value={item.falange_id}>{item.nome}</option>
                             ))}
                         </select>
@@ -480,21 +324,21 @@ function Relatorios() {
                         <label>Turno: </label>
                         <select value={newMedium.turnoLeg} onChange={(e) => updateProps('turnoLeg', e.target.value)}>
                             <option value={''}></option>
-                            {listTurnoL.map((item: string, index: number) => (
+                            {[...turnoL.jaguar, ...turnoL.ninfa].map((item: string, index: number) => (
                                 <option key={index} value={item}>{item}</option>
                             ))}
                         </select>
                         <label>Turno Trabalho: </label>
                         <select value={newMedium.turnoTrab} onChange={(e) => updateProps('turnoTrab', e.target.value)}>
                             <option value={''}></option>
-                            {listTurnoT.map((item: string, index: number) => (
-                                <option key={index} value={item}>{item}</option>
+                            {turnoT.jaguar.map((item: string, index: number) => (
+                                <option key={index} value={item}>{item + ' / ' + oppositeTurno(turnoT, item)}</option>
                             ))}
                         </select>
                         <label>Estrela: </label>
                         <select value={newMedium.estrela} onChange={(e) => updateProps('estrela', e.target.value)}>
                             <option value={''}></option>
-                            {listEst.map((item: string, index: number) => (
+                            {[...estrelas.lua, ...estrelas.sol].map((item: string, index: number) => (
                                 <option key={index} value={item}>{item}</option>
                             ))}
                         </select>
@@ -513,7 +357,7 @@ function Relatorios() {
                         <AutocompleteInput 
                             label={(option) => option.nome}
                             default={defaultCavaleiro}
-                            options={listCav}
+                            options={cavaleiros}
                             equality={(option, value) => option.id === value.id}
                             value={dropCav}
                             setValue={setDropCav}
@@ -557,7 +401,7 @@ function Relatorios() {
                                 }
                             }}>
                                 <option value={''}></option>
-                                {listClass.map((item: string, index: number) => (
+                                {[...classificacao.sol, ...classificacao.lua].map((item: string, index: number) => (
                                     <option key={index} value={item}>{item}</option>
                                 ))}
                             </select>
@@ -653,7 +497,7 @@ function Relatorios() {
                             </select>
                         </FieldContainer>
                     </InputContainer>
-                    <div style={{display: 'flex', justifyContent: 'center', gap: '10px', flexWrap: 'wrap'}}>
+                    <CheckboxContainer>
                         <FieldContainerBox>
                             <input type="checkBox" checked={newMedium.recepcao} onChange={(e) => updateProps('recepcao', e.target.checked)}/>
                             <label>Recepcionista</label>
@@ -674,8 +518,9 @@ function Relatorios() {
                             <input type="checkBox" checked={newMedium.janda} onChange={(e) => updateProps('janda', e.target.checked)}/>
                             <label>Janda</label>
                         </FieldContainerBox>
-                    </div>
-                    <div style={{display: 'flex', justifyContent: 'center', gap: '10px', flexWrap: 'wrap'}}>
+                    </CheckboxContainer>
+                    <Divider></Divider>
+                    <CheckboxContainer>
                         <FieldContainerBox>
                             <input type="checkBox" />
                             <label>Com Escrava</label>
@@ -696,35 +541,94 @@ function Relatorios() {
                             <input type="checkBox" />
                             <label>Com Mestre</label>
                         </FieldContainerBox>
-                    </div>
+                    </CheckboxContainer>
                 </PersonalCard>
                 <PersonalCard>
-                    <SectionTitle>Datas Mediúnicas</SectionTitle>
+                    <SectionTitle>Filtros por Datas</SectionTitle>
                     <GridDatesContainer>
-                        <label>Data Ingresso: </label>
-                        <input type="date" value={newMedium.dtIngresso} onChange={(e) => updateProps('dtIngresso', e.target.value)} min={newMedium.dtNasc}  max={now} />
-                        <label>Data Emplacamento: </label>
-                        <input type="date" value={newMedium.dtEmplac} onChange={(e) => updateProps('dtEmplac', e.target.value)} min={newMedium.dtIngresso} max={now} />
-                        <label>Data Iniciação: </label>
-                        <input type="date" value={newMedium.dtIniciacao} onChange={(e) => updateProps('dtIniciacao', e.target.value)} min={newMedium.dtEmplac} max={now} />
-                        <label>Data Elevação: </label>
-                        <input type="date" value={newMedium.dtElevacao} onChange={(e) => updateProps('dtElevacao', e.target.value)} min={newMedium.dtIniciacao} max={now} />
-                        <label>Data Centúria: </label>
-                        <input type="date" value={newMedium.dtCenturia} onChange={(e) => updateProps('dtCenturia', e.target.value)} min={newMedium.dtElevacao} max={now} />
-                        <label>Data Sétimo: </label>
-                        <input type="date" value={newMedium.dtSetimo} onChange={(e) => updateProps('dtSetimo', e.target.value)} min={newMedium.dtCenturia} max={now} />
-                        <label>Data Mentor: </label>
-                        <input type="date" value={newMedium.dtMentor} onChange={(e) => updateProps('dtMentor', e.target.value)} min={newMedium.dtCenturia}  max={now} />
-                        <label>Data Classificação: </label>
-                        <input type="date" value={newMedium.dtClassif} onChange={(e) => updateProps('dtClassif', e.target.value)} min={newMedium.dtCenturia}  max={now} />
-                        <label>Data Trino: </label>
-                        <input type="date" value={newMedium.dtTrinoSol} onChange={(e) => updateProps('dtTrinoSol', e.target.value)} min={newMedium.dtCenturia}  max={now} />
-                        <label>Data Sardyos: </label>
-                        <input type="date" value={newMedium.dtTrinoSar} onChange={(e) => updateProps('dtTrinoSar', e.target.value)} min={newMedium.dtCenturia}  max={now} />
                         <label>Data Nascimento: </label>
-                        <input type="date" value={newMedium.dtNasc} onChange={(e) => updateProps('dtNasc', e.target.value)} max={now} />
+                        <DatesContainer>
+                            <span>De</span>
+                            <input type="date" value={newMedium.dtNasc} onChange={(e) => updateProps('dtNasc', e.target.value)} max={now} />
+                            <span>até</span>
+                            <input type="date" />
+                        </DatesContainer>
+                        <label>Data Ingresso: </label>
+                        <DatesContainer>
+                            <span>De</span>
+                            <input type="date" value={newMedium.dtIngresso} onChange={(e) => updateProps('dtIngresso', e.target.value)} min={newMedium.dtNasc}  max={now} />
+                            <span>até</span>
+                            <input type="date" />
+                        </DatesContainer>
+                        <label>Data Emplacamento: </label>
+                        <DatesContainer>
+                            <span>De</span>
+                            <input type="date" value={newMedium.dtEmplac} onChange={(e) => updateProps('dtEmplac', e.target.value)} min={newMedium.dtIngresso} max={now} />
+                            <span>até</span>
+                            <input type="date" />
+                        </DatesContainer>
+                        <label>Data Iniciação: </label>
+                        <DatesContainer>
+                            <span>De</span>
+                            <input type="date" value={newMedium.dtIniciacao} onChange={(e) => updateProps('dtIniciacao', e.target.value)} min={newMedium.dtEmplac} max={now} />
+                            <span>até</span>
+                            <input type="date" />
+                        </DatesContainer>
+                        <label>Data Elevação: </label>
+                        <DatesContainer>
+                            <span>De</span>
+                            <input type="date" value={newMedium.dtElevacao} onChange={(e) => updateProps('dtElevacao', e.target.value)} min={newMedium.dtIniciacao} max={now} />
+                            <span>até</span>
+                            <input type="date" />
+                        </DatesContainer>
+                        <label>Data Centúria: </label>
+                        <DatesContainer>
+                            <span>De</span>
+                            <input type="date" value={newMedium.dtCenturia} onChange={(e) => updateProps('dtCenturia', e.target.value)} min={newMedium.dtElevacao} max={now} />
+                            <span>até</span>
+                            <input type="date" />
+                        </DatesContainer>
+                        <label>Data Sétimo: </label>
+                        <DatesContainer>
+                            <span>De</span>
+                            <input type="date" value={newMedium.dtSetimo} onChange={(e) => updateProps('dtSetimo', e.target.value)} min={newMedium.dtCenturia} max={now} />
+                            <span>até</span>
+                            <input type="date" />
+                        </DatesContainer>
+                        <label>Data Mentor: </label>
+                        <DatesContainer>
+                            <span>De</span>
+                            <input type="date" value={newMedium.dtMentor} onChange={(e) => updateProps('dtMentor', e.target.value)} min={newMedium.dtCenturia}  max={now} />
+                            <span>até</span>
+                            <input type="date" />
+                        </DatesContainer>
+                        <label>Data Classificação: </label>
+                        <DatesContainer>
+                            <span>De</span>
+                            <input type="date" value={newMedium.dtClassif} onChange={(e) => updateProps('dtClassif', e.target.value)} min={newMedium.dtCenturia}  max={now} />
+                            <span>até</span>
+                            <input type="date" />
+                        </DatesContainer>
+                        <label>Data Trino: </label>
+                        <DatesContainer>
+                            <span>De</span>
+                            <input type="date" value={newMedium.dtTrinoSol} onChange={(e) => updateProps('dtTrinoSol', e.target.value)} min={newMedium.dtCenturia}  max={now} />
+                            <span>até</span>
+                            <input type="date" />
+                        </DatesContainer>
+                        <label>Data Sardyos: </label>
+                        <DatesContainer>
+                            <span>De</span>
+                            <input type="date" value={newMedium.dtTrinoSar} onChange={(e) => updateProps('dtTrinoSar', e.target.value)} min={newMedium.dtCenturia}  max={now} />
+                            <span>até</span>
+                            <input type="date" />
+                        </DatesContainer>    
                     </GridDatesContainer>
                 </PersonalCard>
+                <div style={{width: '90%', maxWidth: '1200px', display: 'flex', justifyContent: 'space-around'}}>
+                    <ReportButton color="red" onClick={() => resetNewMedium()}>Resetar Filtros</ReportButton>
+                    <ReportButton color="green" onClick={() => validateMedium(newMedium, async () => await addMedium(newMedium, token))}>Gerar Relatório</ReportButton>
+                </div>
             </MainContainer>
             <SideMenu list={listSubMenu} />
         </>
