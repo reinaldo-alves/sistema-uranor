@@ -36,5 +36,6 @@ VERSÃO 1.2.0
 - Ocultar as seções Observações e Cargos e Funções na página Exibir Médium quando a mesma for vazia.
 - Geração da ficha do médium com dados do mesmo, incluindo eventos da linha do tempo.
 
-// Quando filtrar por datas, considerar das duas mediunidades. Adicionar observação no rodapé do relatório
-// Construir lógica para selecionar entre templo atual e de origem por checkbox
+// Quando filtrar por datas, considerar das duas mediunidades. Adicionar observação no rodapé do relatório e adicionar mecanismo para filtrar e diferenciar dados 'old'
+// Adicionar validação para não gerar relatório quando não tiver preenchida as datas inicial e final.
+// Estudar como remover datas de trino solitário e trino sardyos

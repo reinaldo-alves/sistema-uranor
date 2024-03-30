@@ -2,7 +2,6 @@ import SubMenu from "src/components/SubMenu/SubMenu";
 import Header from "../../components/header/header";
 import { ButtonContainer, ConsagracaoCard, ConsagracaoHeader, ConsagracaoTitle, MudancaObs, NavigateButton, ResultsPanel, ResultsData, ResultsTable, ResultsTitle } from "./styles";
 import SideMenu from "src/components/SideMenu/SideMenu";
-import MainTitle from "src/components/MainContainer/MainContainer";
 import { useNavigate } from "react-router-dom";
 import { useContext, useEffect, useState } from "react";
 import { countMedium } from "src/utilities/functions";
