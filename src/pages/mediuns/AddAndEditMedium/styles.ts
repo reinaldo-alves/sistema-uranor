@@ -102,12 +102,8 @@ export const InputContainer = styled.div<{herdeiro?: boolean}>`
     gap: 20px;
 
     @media (max-width: 800px) {
-        flex-direction: ${({ herdeiro }) => herdeiro? 'row' : 'column'};
-        align-items: ${({ herdeiro }) => herdeiro? 'center' : 'flex-start'};
-    }
-
-    @media (max-width: 520px) {
         flex-direction: column;
+        align-items: ${({ herdeiro }) => herdeiro? 'center' : 'flex-start'};
     }
 `;
 
@@ -262,10 +258,15 @@ export const Observations = styled.textarea`
     font-size: 18px;
     font-weight: bold;
     resize: none;
+    height: 150px;
     
     @media (max-width: 1000px) {
-            font-size: 14px;
-        }
+        font-size: 14px;
+    }
+
+    @media (max-width: 500px) {
+        height: 200px;
+    }
 `;
 
 export const MediumButton = styled.button<{color: string}>`

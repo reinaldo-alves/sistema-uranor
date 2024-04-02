@@ -145,7 +145,7 @@ export function positionsAndFunctions(medium: IMedium) {
     if (medium.devas){array.push(medium.sex === 'Feminino'? 'Filha de Devas' : 'Filho de Devas')};
     if (medium.regente){array.push('Regente')};
     if (medium.janda){array.push('Janda')};
-    if (medium.trinoSol){array.push(medium.dtTrinoSol ? `Trino Solitário ${medium.trinoSol}  em ${convertDate(medium.dtTrinoSol)}` : `Trino Solitário ${medium.trinoSol}`)};
+    if (medium.trinoSol){array.push(`Trino Solitário ${medium.trinoSol}`)};
     if (medium.trinoSar){array.push('Trino Sardyos')};
     return array.join(', ')
 }
@@ -202,12 +202,6 @@ export async function generateListEventos(medium: IMedium, token: string, mediun
         }
         if(medium?.oldDtClassif && !evento.some((item: IEvento) => item.tipo === 'Classificações' && item.mensagem.split('de ')[1] === medium?.oldClassif)) {
             evento.push({evento_id: 0, medium: medium?.medium_id, data: medium?.oldDtClassif, mensagem: `Classificação de ${medium?.oldClassif}`, observ: '', tipo: 'Classificações'})
-        }
-        if(medium?.dtTrinoSol && !evento.some((item: IEvento) => item.tipo === 'Trino Solitário')) {
-            evento.push({evento_id: 0, medium: medium?.medium_id, data: medium?.dtTrinoSol, mensagem: `Consagração de Trino Solitário ${medium?.trinoSol}`, observ: '', tipo: 'Trino Solitário'})
-        }
-        if(medium?.dtTrinoSar && !evento.some((item: IEvento) => item.tipo === 'Trino Sardyos')) {
-            evento.push({evento_id: 0, medium: medium?.medium_id, data: medium?.dtTrinoSar, mensagem: `Consagração de Trino Sardyos - Herdeiro do Adj. ${ministros.find((m: IMentor) => m.id === mediuns.find((item: IMedium) => item.medium_id === medium.herdeiro)?.ministro)?.nome} Mestre ${mediuns.find((item: IMedium) => item.medium_id === medium.herdeiro)?.nomeEmissao}`, observ: '', tipo: 'Trino Sardyos'})
         }
         evento.sort((a: IEvento, b: IEvento) => {
             const dateA = new Date(a.data).getTime();

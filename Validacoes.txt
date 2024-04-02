@@ -2,7 +2,7 @@
 
 med
 oldFoto, oldDtEmplac, oldDtIniciacao, oldDtElevacao, oldDtTest, oldClassMest, oldCavaleiro, oldCor,  oldDtMinistro, oldEstrela, oldClassif, oldDtClassif
-(trinoSol, dtTrinoSol, princesa, preto velho, caboclo)
+(trinoSol, princesa, preto velho, caboclo)
 
 ALTER TABLE `api-devas`.`medium`
 ADD COLUMN oldFoto VARCHAR(100) NULL,

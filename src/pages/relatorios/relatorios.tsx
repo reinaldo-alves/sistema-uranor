@@ -163,8 +163,6 @@ function Relatorios() {
             if (filters.dtSetimo && (item.dtSetimo < filters.dtSetimo.split('/')[0] || item.dtSetimo > filters.dtSetimo.split('/')[1])){return false}
             if (filters.dtMentor && (item.dtMentor < filters.dtMentor.split('/')[0] || item.dtMentor > filters.dtMentor.split('/')[1])){return false}
             if (filters.dtClassif && (item.dtClassif < filters.dtClassif.split('/')[0] || item.dtClassif > filters.dtClassif.split('/')[1])){return false}
-            if (filters.dtTrinoSol && (item.dtTrinoSol < filters.dtTrinoSol.split('/')[0] || item.dtTrinoSol > filters.dtTrinoSol.split('/')[1])){return false}
-            if (filters.dtTrinoSar && (item.dtTrinoSar < filters.dtTrinoSar.split('/')[0] || item.dtTrinoSar > filters.dtTrinoSar.split('/')[1])){return false}
             return true
         })
         console.log(mediumList.length, mediumList);
@@ -612,20 +610,6 @@ function Relatorios() {
                             <span>até</span>
                             <input type="date" value={reportFilter.dtClassif.split('/')[1] || ''} onChange={(e) => handleDateChange('dtClassif', 1, e.target.value)} max={now} />
                         </DatesContainer>
-                        <label>Data Trino: </label>
-                        <DatesContainer>
-                            <span>De</span>
-                            <input type="date" value={reportFilter.dtTrinoSol.split('/')[0] || ''} onChange={(e) => handleDateChange('dtTrinoSol', 0, e.target.value)} max={now} />
-                            <span>até</span>
-                            <input type="date" value={reportFilter.dtTrinoSol.split('/')[1] || ''} onChange={(e) => handleDateChange('dtTrinoSol', 1, e.target.value)} max={now} />
-                        </DatesContainer>
-                        <label>Data Sardyos: </label>
-                        <DatesContainer>
-                            <span>De</span>
-                            <input type="date" value={reportFilter.dtTrinoSar.split('/')[0] || ''} onChange={(e) => handleDateChange('dtTrinoSar', 0, e.target.value)} max={now} />
-                            <span>até</span>
-                            <input type="date" value={reportFilter.dtTrinoSar.split('/')[1] || ''} onChange={(e) => handleDateChange('dtTrinoSar', 1, e.target.value)} max={now} />
-                        </DatesContainer>    
                     </GridDatesContainer>
                 </PersonalCard>
                 <div style={{width: '90%', maxWidth: '1200px', display: 'flex', justifyContent: 'space-around'}}>

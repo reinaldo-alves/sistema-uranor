@@ -35,6 +35,7 @@ VERSÃO 1.2.0
 - Alteração no layout do relatório de médiuns para consagrações.
 - Ocultar as seções Observações e Cargos e Funções na página Exibir Médium quando a mesma for vazia.
 - Geração da ficha do médium com dados do mesmo, incluindo eventos da linha do tempo.
+- Remoção das propriedades data de consagração de Trino Solitário e Trino Sardyos.
 
 // Quando filtrar por datas, considerar das duas mediunidades. Adicionar observação no rodapé do relatório e adicionar mecanismo para filtrar e diferenciar dados 'old'
 // Adicionar validação para não gerar relatório quando não tiver preenchida as datas inicial e final.

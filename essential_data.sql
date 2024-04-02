@@ -1091,9 +1091,7 @@ CREATE TABLE `medium` (
   `regente` tinyint(1) DEFAULT NULL,
   `janda` tinyint(1) DEFAULT NULL,
   `trinoSol` varchar(45) DEFAULT NULL,
-  `dtTrinoSol` date DEFAULT NULL,
   `trinoSar` tinyint(1) DEFAULT NULL,
-  `dtTrinoSar` date DEFAULT NULL,
   `herdeiro` int(11) DEFAULT NULL,
   `filho` tinyint(1) DEFAULT NULL,
   `observ` varchar(1000) DEFAULT NULL,
@@ -1145,7 +1143,7 @@ CREATE TABLE `medium` (
 LOCK TABLES `medium` WRITE;
 /*!40000 ALTER TABLE `medium` DISABLE KEYS */;
 INSERT INTO `medium` VALUES
-(1,'Master','Doutrinador','Masculino','','Ativo',1,'2024-01-26','','','Master','','','','','','','','','','','','','','','','',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'','','',NULL,'','','',NULL,NULL,NULL,NULL,'','','',NULL,'','','','','',NULL,NULL,NULL,NULL,NULL,'','',0,0,0,0,'',NULL,0,NULL,0,0,'','',NULL,NULL,NULL,NULL,'',NULL,'',NULL,'','',NULL);
+(1,'Master','Doutrinador','Masculino','','Ativo',1,'2024-01-26','','','Master','','','','','','','','','','','','','','','','',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'','','',NULL,'','','',NULL,NULL,NULL,NULL,'','','',NULL,'','','','','',NULL,NULL,NULL,NULL,NULL,'','',0,0,0,0,'',0,0,0,'','',NULL,NULL,NULL,NULL,'',NULL,'',NULL,'','',NULL);
 /*!40000 ALTER TABLE `medium` ENABLE KEYS */;
 UNLOCK TABLES;
 

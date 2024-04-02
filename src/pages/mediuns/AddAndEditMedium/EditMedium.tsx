@@ -69,6 +69,8 @@ function EditMedium() {
     const [showModal, setShowModal] = useState(false);
     const [dataDevas, setDataDevas] = useState('');
     const [dataJanda, setDataJanda] = useState('');
+    const [dataTSol, setDataTSol] = useState('');
+    const [dataTSar, setDataTSar] = useState('');
     const [dataTransf, setDataTransf] = useState('');
     const [dataCondicao, setDataCondicao] = useState('');
 
@@ -417,6 +419,26 @@ function EditMedium() {
                 };
                 await api.post('/evento/create', newEvento, {headers:{Authorization: token}});
             }
+            if (newMedium.trinoSol && newMedium.trinoSol !== oldMedium.trinoSol && dataTSol) {
+                const newEvento = {
+                    medium: newMedium.medium_id,
+                    data: dataTSol,
+                    mensagem: `Consagração de Trino Solitário ${newMedium.trinoSol}`,
+                    tipo: 'Trino Solitário',
+                    observ: ''
+                };
+                await api.post('/evento/create', newEvento, {headers:{Authorization: token}});
+            }
+            if (newMedium.trinoSar && newMedium.herdeiro && !oldMedium.trinoSar && dataTSar) {
+                const newEvento = {
+                    medium: newMedium.medium_id,
+                    data: dataTSar,
+                    mensagem: `Consagração de Trino Sardyos - Herdeiro do Adj. ${ministros.find((m: IMentor) => m.id === mediuns.find((item: IMedium) => item.medium_id === newMedium.herdeiro)?.ministro)?.nome} Mestre ${mediuns.find((item: IMedium) => item.medium_id === newMedium.herdeiro)?.nomeEmissao}`,
+                    tipo: 'Trino Sardyos',
+                    observ: ''
+                };
+                await api.post('/evento/create', newEvento, {headers:{Authorization: token}});
+            }
             if (dataCondicao) {
                 const newEvento = {
                     medium: newMedium.medium_id,
@@ -572,6 +594,8 @@ function EditMedium() {
     const closeModal = () => {
         setDataDevas('');
         setDataJanda('');
+        setDataTSol('');
+        setDataTSar('');
         setDataTransf('');
         setDataCondicao('');
         setShowModal(false);
@@ -1069,7 +1093,7 @@ function EditMedium() {
                                     </select>
                                 </FieldContainer>
                             </InputContainer>
-                            <div style={{display: 'flex', justifyContent: 'center', gap: '10px', flexWrap: 'wrap'}}>
+                            <div style={{display: 'flex', justifyContent: 'center', gap: '10px 30px', flexWrap: 'wrap'}}>
                                 <FieldContainerBox>
                                     <input type="checkBox" disabled={medium.devas} checked={medium.recepcao} onChange={(e) => updateProps('recepcao', e.target.checked)}/>
                                     <label>Recepcionista</label>
@@ -1082,59 +1106,48 @@ function EditMedium() {
                                     <input type="checkBox" disabled={!medium.falMiss} checked={medium.regente} onChange={(e) => updateProps('regente', e.target.checked)}/>
                                     <label>Regente</label>
                                 </FieldContainerBox>
+                                <div style={{display: 'flex', gap: '10px'}}>
+                                    <FieldContainerBox>
+                                        <input type="checkBox" checked={tSol} disabled={medium.classif !== 'Adjunto Koatay 108 Herdeiro Triada Harpásios Raio Adjuração Rama 2000' || medium.presidente === 'Presidente'} onChange={(e) => setTSol(e.target.checked)}/>
+                                        <label>Trino Solitário</label>
+                                    </FieldContainerBox> 
+                                    <FieldContainer width="100px">
+                                        <select disabled={!tSol} value={medium.trinoSol} onChange={(e) => updateProps('trinoSol', e.target.value)}>
+                                            <option value={''}></option>
+                                            <option value={'Juremá'}>Juremá</option>
+                                            <option value={'Iramar'}>Iramar</option>
+                                        </select>
+                                    </FieldContainer>
+                                </div>
                             </div>
                             {medium.classif === 'Adjunto Koatay 108 Herdeiro Triada Harpásios 7° Raio Adjuração Arcanos Rama 2000' || medium.presidente === 'Presidente' ? '' : 
                                 <>
                                     <Divider></Divider>
-                                    <InputContainer>
-                                        <div style={{width: '100%', display: 'flex', gap: '10px'}}>
-                                            <FieldContainerBox>
-                                                <input type="checkBox" checked={tSol} disabled={medium.classif !== 'Adjunto Koatay 108 Herdeiro Triada Harpásios Raio Adjuração Rama 2000' || medium.presidente === 'Presidente'} onChange={(e) => setTSol(e.target.checked)}/>
-                                                <label>Trino Solitário</label>
-                                            </FieldContainerBox> 
-                                            <FieldContainer>
-                                                <select disabled={!tSol} value={medium.trinoSol} onChange={(e) => updateProps('trinoSol', e.target.value)}>
-                                                    <option value={''}></option>
-                                                    <option value={'Juremá'}>Juremá</option>
-                                                    <option value={'Iramar'}>Iramar</option>
-                                                </select>
-                                            </FieldContainer>
-                                        </div>
-                                        <FieldContainer width="190px">
-                                            <label>Data: </label>
-                                            <input type="date" disabled={!tSol} value={medium.dtTrinoSol} onChange={(e) => updateProps('dtTrinoSol', e.target.value)} min={medium.dtCenturia}  max={now} />
-                                        </FieldContainer>
-                                    </InputContainer>
-                                    <Divider></Divider>
-                                    <div style={{display: 'flex', gap: '10px'}}>
+                                    <InputContainer herdeiro>
                                         <FieldContainerBox>
                                             <input type="checkBox" checked={medium.trinoSar} onChange={(e) => updateProps('trinoSar', e.target.checked)} />
                                             <label>Trino Sardyos</label>
                                         </FieldContainerBox>
-                                        <FieldContainer>
-                                            <label>Data: </label>
-                                            <input type="date" disabled={!medium.trinoSar} value={medium.dtTrinoSar} onChange={(e) => updateProps('dtTrinoSar', e.target.value)} min={medium.dtCenturia}  max={now} />
-                                        </FieldContainer>
-                                    </div>
-                                    <InputContainer herdeiro>
-                                        <FieldContainer>
-                                            <label>Herdeiro de: </label>
-                                            <AutocompleteInput 
-                                                label={(option) => option.nome}
-                                                default={defaultMedium}
-                                                options={mediuns.filter((item: IMedium) => item.classif === 'Adjunto Koatay 108 Herdeiro Triada Harpásios 7° Raio Adjuração Arcanos Rama 2000')}
-                                                disabled={!medium.trinoSar}
-                                                equality={(option, value) => option.medium_id === value.medium_id}
-                                                value={dropMes}
-                                                setValue={setDropMes}
-                                                inputValue={searchMes}
-                                                setInputValue={setSearchMes}
-                                            />
-                                        </FieldContainer>
-                                        <FieldContainerBox>
-                                            <input type="checkBox" disabled={!medium.trinoSar} checked={medium.filho} onChange={(e) => updateProps('filho', e.target.checked)}/>
-                                            <label>Filho?</label>
-                                        </FieldContainerBox>
+                                        <div style={{display: 'flex', gap: '10px', width: '100%'}}>
+                                            <FieldContainer>
+                                                <label>Herdeiro de: </label>
+                                                <AutocompleteInput 
+                                                    label={(option) => option.nome}
+                                                    default={defaultMedium}
+                                                    options={mediuns.filter((item: IMedium) => item.classif === 'Adjunto Koatay 108 Herdeiro Triada Harpásios 7° Raio Adjuração Arcanos Rama 2000')}
+                                                    disabled={!medium.trinoSar}
+                                                    equality={(option, value) => option.medium_id === value.medium_id}
+                                                    value={dropMes}
+                                                    setValue={setDropMes}
+                                                    inputValue={searchMes}
+                                                    setInputValue={setSearchMes}
+                                                />
+                                            </FieldContainer>
+                                            <FieldContainerBox>
+                                                <input type="checkBox" disabled={!medium.trinoSar} checked={medium.filho} onChange={(e) => updateProps('filho', e.target.checked)}/>
+                                                <label>Filho?</label>
+                                            </FieldContainerBox>
+                                        </div>
                                     </InputContainer>
                                 </>
                             }
@@ -1156,35 +1169,31 @@ function EditMedium() {
                                 </FieldContainerBox>
                             </div>
                             <Divider></Divider>
-                            <div style={{display: 'flex', gap: '10px'}}>
+                            <InputContainer herdeiro> 
                                 <FieldContainerBox>
                                     <input type="checkBox" checked={medium.trinoSar} onChange={(e) => updateProps('trinoSar', e.target.checked)} />
                                     <label>Trino Sardyos</label>
                                 </FieldContainerBox>
-                                <FieldContainer>
-                                    <label>Data: </label>
-                                    <input type="date" disabled={!medium.trinoSar} value={medium.dtTrinoSar} onChange={(e) => updateProps('dtTrinoSar', e.target.value)} min={medium.dtCenturia}  max={now} />
-                                </FieldContainer>
-                            </div>
-                            <InputContainer herdeiro> 
-                                <FieldContainer>
-                                    <label>Herdeiro de: </label>
-                                    <AutocompleteInput 
-                                        label={(option) => option.nome}
-                                        default={defaultMedium}
-                                        options={mediuns.filter((item: IMedium) => item.classif === 'Adjunto Koatay 108 Herdeiro Triada Harpásios 7° Raio Adjuração Arcanos Rama 2000')}
-                                        disabled={!medium.trinoSar}
-                                        equality={(option, value) => option.medium_id === value.medium_id}
-                                        value={dropMes}
-                                        setValue={setDropMes}
-                                        inputValue={searchMes}
-                                        setInputValue={setSearchMes}
-                                    />
-                                </FieldContainer>
-                                <FieldContainerBox>
-                                    <input type="checkBox" disabled={!medium.trinoSar} checked={medium.filho} onChange={(e) => updateProps('filho', e.target.checked)}/>
-                                    <label>Filho?</label>
-                                </FieldContainerBox>
+                                <div style={{display: 'flex', gap: '10px', width: '100%'}}>
+                                    <FieldContainer>
+                                        <label>Herdeiro de: </label>
+                                        <AutocompleteInput 
+                                            label={(option) => option.nome}
+                                            default={defaultMedium}
+                                            options={mediuns.filter((item: IMedium) => item.classif === 'Adjunto Koatay 108 Herdeiro Triada Harpásios 7° Raio Adjuração Arcanos Rama 2000')}
+                                            disabled={!medium.trinoSar}
+                                            equality={(option, value) => option.medium_id === value.medium_id}
+                                            value={dropMes}
+                                            setValue={setDropMes}
+                                            inputValue={searchMes}
+                                            setInputValue={setSearchMes}
+                                        />
+                                    </FieldContainer>
+                                    <FieldContainerBox>
+                                        <input type="checkBox" disabled={!medium.trinoSar} checked={medium.filho} onChange={(e) => updateProps('filho', e.target.checked)}/>
+                                        <label>Filho?</label>
+                                    </FieldContainerBox>
+                                </div>
                             </InputContainer>
                         </>
                     : medium.sex.concat(medium.med)==='FemininoDoutrinador'?
@@ -1281,6 +1290,16 @@ function EditMedium() {
                                 </select>
                                 <label>Data: </label>
                                 <input type="date" value={medium.oldDtClassif} onChange={(e) => updateProps('oldDtClassif', e.target.value)} min={medium.dtCenturia}  max={now} />
+                                {medium.med === 'Apará'?
+                                    <>
+                                        <label>Trino Solitário: </label>
+                                        <select disabled={medium.oldClassif !== 'Adjunto Koatay 108 Herdeiro Triada Harpásios Raio Adjuração Rama 2000' || medium.presidente === 'Presidente'} value={medium.trinoSol} onChange={(e) => updateProps('trinoSol', e.target.value)}>
+                                            <option value={''}></option>
+                                            <option value={'Juremá'}>Juremá</option>
+                                            <option value={'Iramar'}>Iramar</option>
+                                        </select>
+                                    </>
+                                : ''}
                             </>
                         : medium.sex === 'Feminino' ?
                             <>
@@ -1314,34 +1333,10 @@ function EditMedium() {
                             </>
                         : <div></div>}
                     </GridContainer>
-                    {medium.sex.concat(medium.med) === 'MasculinoApará'?
-                        <>
-                            <Divider></Divider>
-                            <InputContainer>
-                                <div style={{width: '100%', display: 'flex', gap: '10px'}}>
-                                    <FieldContainerBox>
-                                        <input type="checkBox" checked={tSol} disabled={medium.oldClassif !== 'Adjunto Koatay 108 Herdeiro Triada Harpásios Raio Adjuração Rama 2000' || medium.presidente === 'Presidente'} onChange={(e) => setTSol(e.target.checked)}/>
-                                        <label>Trino Solitário</label>
-                                    </FieldContainerBox> 
-                                    <FieldContainer>
-                                        <select disabled={!tSol} value={medium.trinoSol} onChange={(e) => updateProps('trinoSol', e.target.value)}>
-                                            <option value={''}></option>
-                                            <option value={'Juremá'}>Juremá</option>
-                                            <option value={'Iramar'}>Iramar</option>
-                                        </select>
-                                    </FieldContainer>
-                                </div>
-                                <FieldContainer width="190px">
-                                    <label>Data: </label>
-                                    <input type="date" disabled={!tSol} value={medium.dtTrinoSol} onChange={(e) => updateProps('dtTrinoSol', e.target.value)} min={medium.dtCenturia}  max={now} />
-                                </FieldContainer>
-                            </InputContainer>
-                        </>
-                    : <div></div>}
                 </PersonalCard>
                 <PersonalCard>
                     <SectionTitle>Observações</SectionTitle>
-                    <Observations rows={5} value={medium.observ} onChange={(e) => updateProps('observ', e.target.value)}/>
+                    <Observations value={medium.observ} onChange={(e) => updateProps('observ', e.target.value)}/>
                 </PersonalCard>
                 <div style={{width: '90%', maxWidth: '1200px', display: 'flex', justifyContent: 'space-around'}}>
                     <MediumButton color="red" onClick={() => navigate(`/mediuns/consulta/${params.id}`)}>Cancelar</MediumButton>
@@ -1362,6 +1357,18 @@ function EditMedium() {
                         <ModalInputContainer>
                             <label>Data da consagração de Janda</label>
                             <input type="date" value={dataJanda} onKeyUp={(e) => handleEnterPress(e, async () => await editMedium(medium, selected, token))} onChange={(e) => setDataJanda(e.target.value)} />
+                        </ModalInputContainer>
+                    : ''}
+                    {medium.trinoSol && medium.trinoSol !== selected.trinoSol ?
+                        <ModalInputContainer>
+                            <label>Data da consagração de Trino Solitário</label>
+                            <input type="date" value={dataTSol} onKeyUp={(e) => handleEnterPress(e, async () => await editMedium(medium, selected, token))} onChange={(e) => setDataTSol(e.target.value)} />
+                        </ModalInputContainer>
+                    : ''}
+                    {medium.trinoSar && !selected.trinoSar ?
+                        <ModalInputContainer>
+                            <label>Data da consagração de Trino Sardyos</label>
+                            <input type="date" value={dataTSar} onKeyUp={(e) => handleEnterPress(e, async () => await editMedium(medium, selected, token))} onChange={(e) => setDataTSar(e.target.value)} />
                         </ModalInputContainer>
                     : ''}
                     {medium.condicao !== selected.condicao && medium.condicao !== 'Afastado' ?
