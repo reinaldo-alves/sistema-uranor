@@ -6,21 +6,20 @@ import { useContext, useEffect, useState } from "react";
 import { defaultAdj, defaultCavaleiro, defaultMedium, defaultMentor } from "src/utilities/default";
 import { IEstado, IFalange, IMedium, IMentor, ITemplo } from "src/types/types";
 import { MediumContext } from "src/contexts/MediumContext";
-import { UserContext } from "src/contexts/UserContext";
 import { ListContext } from "src/contexts/ListContext";
-import { CheckboxContainer, DatesContainer, Divider, FieldContainer, FieldContainerBox, GridContainer, GridDatesContainer, InputContainer, MainContent, MainInfoContainer, PersonalCard, ReportButton, SectionTitle } from "./styles";
+import { CheckboxContainer, DatesContainer, Divider, FieldContainer, FieldContainerBox, GridContainer, GridDatesContainer, InputContainer, MainContent, MainInfoContainer, MixedContainer, PersonalCard, ReportButton, SectionTitle } from "./styles";
 import { alphabeticOrder, oppositeTurno, setSituation } from "src/utilities/functions";
 import AutocompleteInput from "src/components/AutocompleteInput/AutocompleteInput";
+import { generateReport } from "src/utilities/createDocs";
+import { Alert } from "src/utilities/popups";
 
 function Relatorios() {
     const { templos, estados, adjuntos, coletes, classMest, falMest, povos, falMiss, turnoL, turnoT, ministros, cavaleiros, guias, estrelas, princesas, classificacao } = useContext(ListContext);
-    const { token } = useContext(UserContext);
     const { mediuns } = useContext(MediumContext);
 
-    const [reportFilter, setReportFilter] = useState({...defaultMedium, condicao: ''});
+    const [reportFilter, setReportFilter] = useState(defaultMedium);
     const [reportTitle, setReportTitle] = useState('');
     const [reportType, setReportType] = useState('');
-    const [reportProperty, setReportProperty] = useState('');
     const [showMed, setShowMed] = useState(true);
     const [showTemplo, setShowTemplo] = useState(false);
     const [filterSituation, setFilterSituation] = useState('');
@@ -36,7 +35,7 @@ function Relatorios() {
     const now = new Date().toISOString().split('T')[0];
 
     useEffect (() => {
-        console.log(reportFilter.dtNasc);
+        console.log(reportFilter);
     }, [reportFilter])
 
     useEffect(() => {
@@ -81,13 +80,16 @@ function Relatorios() {
     };
 
     const resetReportFilter = () => {
-        setReportFilter({...defaultMedium, condicao: ''});
+        setReportFilter(defaultMedium);
         setReportTitle('');
         setReportType('');
-        setReportProperty('');
         setShowMed(true);
         setShowTemplo(false);
         setFilterSituation('');
+        setDropPres(defaultAdj);
+        setDropMin(defaultMentor);
+        setDropCav(defaultCavaleiro);
+        setDropGuia(defaultMentor);
         setSearchMin('');
         setSearchCav('');
         setSearchGuia('');
@@ -143,6 +145,7 @@ function Relatorios() {
             if (filters.endCidade && filters.endCidade !== item.endCidade){return false};
             if (filters.endUF && filters.endUF !== item.endUF){return false};
             if ((filters.comando && filters.comando !== item.comando) && !(filters.comando === 'Todos' && item.comando)){return false};
+            if (filters.presidente && filters.presidente !== item.presidente){return false};
             if (filters.recepcao && !item.recepcao){return false};
             if (filters.devas && !item.devas){return false};
             if (filters.regente && !item.regente){return false};
@@ -155,20 +158,76 @@ function Relatorios() {
             if (filters.mestre && (!item.mestre || item.sex.concat(item.med) !== 'FemininoApará')){return false};
             if (filters.dtNasc && (item.dtNasc < filters.dtNasc.split('/')[0] || item.dtNasc > filters.dtNasc.split('/')[1])){return false}
             if (filters.dtIngresso && (item.dtIngresso < filters.dtIngresso.split('/')[0] || item.dtIngresso > filters.dtIngresso.split('/')[1])){return false}
-            if (filters.dtTest && (item.dtTest < filters.dtTest.split('/')[0] || item.dtTest > filters.dtTest.split('/')[1])){return false}
-            if (filters.dtEmplac && (item.dtEmplac < filters.dtEmplac.split('/')[0] || item.dtEmplac > filters.dtEmplac.split('/')[1])){return false}
-            if (filters.dtIniciacao && (item.dtIniciacao < filters.dtIniciacao.split('/')[0] || item.dtIngresso > filters.dtIniciacao.split('/')[1])){return false}
-            if (filters.dtElevacao && (item.dtElevacao < filters.dtElevacao.split('/')[0] || item.dtElevacao > filters.dtElevacao.split('/')[1])){return false}
+            if (filters.dtTest && (item.dtTest < filters.dtTest.split('/')[0] || item.dtTest > filters.dtTest.split('/')[1]) && (item.oldDtTest < filters.dtTest.split('/')[0] || item.oldDtTest > filters.dtTest.split('/')[1])){return false}
+            if (filters.dtEmplac && (item.dtEmplac < filters.dtEmplac.split('/')[0] || item.dtEmplac > filters.dtEmplac.split('/')[1]) && (item.oldDtEmplac < filters.dtEmplac.split('/')[0] || item.oldDtEmplac > filters.dtEmplac.split('/')[1])){return false}
+            if (filters.dtIniciacao && (item.dtIniciacao < filters.dtIniciacao.split('/')[0] || item.dtIniciacao > filters.dtIniciacao.split('/')[1]) && (item.oldDtIniciacao < filters.dtIniciacao.split('/')[0] || item.oldDtIniciacao > filters.dtIniciacao.split('/')[1])){return false}
+            if (filters.dtElevacao && (item.dtElevacao < filters.dtElevacao.split('/')[0] || item.dtElevacao > filters.dtElevacao.split('/')[1]) && (item.oldDtElevacao < filters.dtElevacao.split('/')[0] || item.oldDtElevacao > filters.dtElevacao.split('/')[1])){return false}
             if (filters.dtCenturia && (item.dtCenturia < filters.dtCenturia.split('/')[0] || item.dtCenturia > filters.dtCenturia.split('/')[1])){return false}
             if (filters.dtSetimo && (item.dtSetimo < filters.dtSetimo.split('/')[0] || item.dtSetimo > filters.dtSetimo.split('/')[1])){return false}
-            if (filters.dtMentor && (item.dtMentor < filters.dtMentor.split('/')[0] || item.dtMentor > filters.dtMentor.split('/')[1])){return false}
+            if (filters.dtMentor && (item.dtMentor < filters.dtMentor.split('/')[0] || item.dtMentor > filters.dtMentor.split('/')[1]) && (item.oldDtMentor < filters.dtMentor.split('/')[0] || item.oldDtMentor > filters.dtMentor.split('/')[1])){return false}
             if (filters.dtClassif && (item.dtClassif < filters.dtClassif.split('/')[0] || item.dtClassif > filters.dtClassif.split('/')[1])){return false}
             return true
         })
         console.log(mediumList.length, mediumList);
+        return mediumList;
     }
 
-    const generateReport = async () => await generateMediumList(mediuns, reportFilter, filterSituation)
+    const handleGenerateReport = async () => {
+        if ((reportFilter.dtNasc.length && reportFilter.dtNasc.length < 21) || (reportFilter.dtNasc.split('/')[1] < reportFilter.dtNasc.split('/')[0])) {
+            Alert('Preencha corretamente o intervalo de data de nascimento', 'warning')
+            return
+        }
+        if ((reportFilter.dtIngresso.length && reportFilter.dtIngresso.length < 21) || (reportFilter.dtIngresso.split('/')[1] < reportFilter.dtIngresso.split('/')[0])) {
+            Alert('Preencha corretamente o intervalo de data de ingresso', 'warning')
+            return
+        }
+        if ((reportFilter.dtTest.length && reportFilter.dtTest.length < 21) || (reportFilter.dtTest.split('/')[1] < reportFilter.dtTest.split('/')[0])) {
+            Alert('Preencha corretamente o intervalo de data de teste', 'warning')
+            return
+        }
+        if ((reportFilter.dtEmplac.length && reportFilter.dtEmplac.length < 21) || (reportFilter.dtEmplac.split('/')[1] < reportFilter.dtEmplac.split('/')[0])) {
+            Alert('Preencha corretamente o intervalo de data de emplacamento', 'warning')
+            return
+        }
+        if ((reportFilter.dtIniciacao.length && reportFilter.dtIniciacao.length < 21) || (reportFilter.dtIniciacao.split('/')[1] < reportFilter.dtIniciacao.split('/')[0])) {
+            Alert('Preencha corretamente o intervalo de data de iniciação', 'warning')
+            return
+        }
+        if ((reportFilter.dtElevacao.length && reportFilter.dtElevacao.length < 21) || (reportFilter.dtElevacao.split('/')[1] < reportFilter.dtElevacao.split('/')[0])) {
+            Alert('Preencha corretamente o intervalo de data de elevação', 'warning')
+            return
+        }
+        if ((reportFilter.dtCenturia.length && reportFilter.dtCenturia.length < 21) || (reportFilter.dtCenturia.split('/')[1] < reportFilter.dtCenturia.split('/')[0])) {
+            Alert('Preencha corretamente o intervalo de data de centúria', 'warning')
+            return
+        }
+        if ((reportFilter.dtSetimo.length && reportFilter.dtSetimo.length < 21) || (reportFilter.dtSetimo.split('/')[1] < reportFilter.dtSetimo.split('/')[0])) {
+            Alert('Preencha corretamente o intervalo de data de sétimo', 'warning')
+            return
+        }
+        if ((reportFilter.dtMentor.length && reportFilter.dtMentor.length < 21) || (reportFilter.dtMentor.split('/')[1] < reportFilter.dtMentor.split('/')[0])) {
+            Alert('Preencha corretamente o intervalo de data de mentor', 'warning')
+            return
+        }
+        if ((reportFilter.dtClassif.length && reportFilter.dtClassif.length < 21) || (reportFilter.dtClassif.split('/')[1] < reportFilter.dtClassif.split('/')[0])) {
+            Alert('Preencha corretamente o intervalo de data da última classificação', 'warning')
+            return
+        }
+        const mediumList = await generateMediumList(mediuns, reportFilter, filterSituation);
+        const finalMediumList = mediumList.map((item: IMedium) => {
+            if (reportFilter.dtTest && (item.dtTest < reportFilter.dtTest.split('/')[0] || item.dtTest > reportFilter.dtTest.split('/')[1])){return {...item, nome: `${item.nome} (1)`}}
+            else if (reportFilter.dtEmplac && (item.dtEmplac < reportFilter.dtEmplac.split('/')[0] || item.dtEmplac > reportFilter.dtEmplac.split('/')[1])){return {...item, nome: `${item.nome} (2)`}}
+            else if (reportFilter.dtIniciacao && (item.dtIniciacao < reportFilter.dtIniciacao.split('/')[0] || item.dtIniciacao > reportFilter.dtIniciacao.split('/')[1])){return {...item, nome: `${item.nome} (3)`}}
+            else if (reportFilter.dtElevacao && (item.dtElevacao < reportFilter.dtElevacao.split('/')[0] || item.dtElevacao > reportFilter.dtElevacao.split('/')[1])){return {...item, nome: `${item.nome} (4)`}}
+            else if (reportFilter.dtMentor && (item.dtMentor < reportFilter.dtMentor.split('/')[0] || item.dtMentor > reportFilter.dtMentor.split('/')[1])){return {...item, nome: `${item.nome} (5)`}}
+            else {return item}
+        })
+        if (finalMediumList.length) {
+            generateReport(finalMediumList, templos, reportTitle, showMed, showTemplo, reportType);
+        } else {
+            Alert('Não há dados para exibir neste relatório', 'error');
+        }
+    }
     
     return (
         <>
@@ -183,36 +242,32 @@ function Relatorios() {
                                 <label>Título do Relatório: </label>
                                 <input type="text" value={reportTitle} onChange={(e) => setReportTitle(e.target.value)}/>
                             </FieldContainer>
-                            <GridContainer>
-                                <label>Tipo: </label>
-                                <select value={reportType} onChange={(e) => setReportType(e.target.value)}>
-                                    <option value={'Padrão'}>Padrão</option>
-                                    <option value={'Contato'}>Contato: mostra telefones</option>
-                                    <option value={'Protocolo'}>Protocolo: mostra assinatura</option>
-                                    <option value={'Propriedade'}>Propriedade: mostra outra informação</option>
-                                </select>
-                                <label>Propriedade: </label>
-                                <select value={reportProperty} disabled={reportType !== 'Propriedade'} onChange={(e) => setReportProperty(e.target.value)}>
-                                    <option value={''}></option>
-                                    <option value={'Propriedade'}>Propriedade</option>
-                                </select>
-                            </GridContainer>
-                            <CheckboxContainer>
-                                <FieldContainerBox>
-                                    <input type="checkBox" checked={showMed} onChange={(e) => setShowMed(e.target.checked)}/>
-                                    <label>Mostrar Mediunidade</label>
-                                </FieldContainerBox>
-                                <FieldContainerBox>
-                                    <input type="checkBox" checked={showTemplo} onChange={(e) => setShowTemplo(e.target.checked)}/>
-                                    <label>Mostrar Templo</label>
-                                </FieldContainerBox>
-                            </CheckboxContainer>
+                            <MixedContainer>
+                                <FieldContainer>
+                                    <label>Tipo do Relatório: </label>
+                                    <select value={reportType} onChange={(e) => setReportType(e.target.value)}>
+                                        <option value={''}>Padrão</option>
+                                        <option value={'Telefones'}>Contato: mostra telefones</option>
+                                        <option value={'Assinatura'}>Protocolo: mostra assinatura</option>
+                                    </select>
+                                </FieldContainer>
+                                <CheckboxContainer style={{flexWrap: 'nowrap'}}>
+                                    <FieldContainerBox>
+                                        <input type="checkBox" checked={showMed} onChange={(e) => setShowMed(e.target.checked)}/>
+                                        <label>Mostrar Mediunidade</label>
+                                    </FieldContainerBox>
+                                    <FieldContainerBox>
+                                        <input type="checkBox" checked={showTemplo} onChange={(e) => setShowTemplo(e.target.checked)}/>
+                                        <label>Mostrar Templo</label>
+                                    </FieldContainerBox>
+                                </CheckboxContainer>
+                            </MixedContainer>
                         </MainInfoContainer>
                     </MainContent>
                 </PersonalCard>
                 <div style={{width: '90%', maxWidth: '1200px', display: 'flex', justifyContent: 'space-around'}}>
                     <ReportButton color="red" onClick={() => resetReportFilter()}>Resetar Filtros</ReportButton>
-                    <ReportButton color="green" onClick={async () => await generateReport()}>Gerar Relatório</ReportButton>
+                    <ReportButton color="green" onClick={async () => await handleGenerateReport()}>Gerar Relatório</ReportButton>
                 </div>
                 <PersonalCard>
                     <SectionTitle>Configurar Filtros</SectionTitle>
@@ -243,15 +298,15 @@ function Relatorios() {
                         </select>
                         <label>Condição Atual: </label>
                         <select value={reportFilter.condicao} onChange={(e) => updateProps('condicao', e.target.value)}>
-                            <option value={''}></option>
                             <option value={'Ativo'}>Ativo</option>
                             <option value={'Não Ativo'}>Não Ativo</option>
                             <option value={'Afastado'}>Afastado</option>
                             <option value={'Entregou as Armas'}>Entregou as Armas</option>
                             <option value={'Desencarnado'}>Desencarnado</option>
+                            <option value={''}>Todas</option>
                         </select>
                         <label>Templo: </label>
-                        <select value={reportFilter.templo} onChange={(e) => updateProps('templo', e.target.value)}>
+                        <select value={reportFilter.templo} onChange={(e) => updateProps('templo', Number(e.target.value))}>
                             <option value={0}></option>
                             {templos.map((item: ITemplo, index: number) => (
                                 <option key={index} value={item.templo_id}>{item.cidade} - {item.estado.abrev}</option>
@@ -272,7 +327,7 @@ function Relatorios() {
                             setInputValue={setSearchPres}
                         />
                         <label>Templo Origem: </label>
-                        <select value={reportFilter.temploOrigem} onChange={(e) => updateProps('temploOrigem', e.target.value)}>
+                        <select value={reportFilter.temploOrigem} onChange={(e) => updateProps('temploOrigem', Number(e.target.value))}>
                             <option value={0}></option>
                             {templos.map((item: ITemplo, index: number) => (
                                 <option key={index} value={item.templo_id}>{item.cidade} - {item.estado.abrev}</option>
@@ -545,76 +600,76 @@ function Relatorios() {
                             <span>De</span>
                             <input type="date" value={reportFilter.dtNasc.split('/')[0] || ''} onChange={(e) => handleDateChange('dtNasc', 0, e.target.value)} max={now} />
                             <span>até</span>
-                            <input type="date" value={reportFilter.dtNasc.split('/')[1] || ''} onChange={(e) => handleDateChange('dtNasc', 1, e.target.value)} max={now} />
+                            <input type="date" value={reportFilter.dtNasc.split('/')[1] || ''} onChange={(e) => handleDateChange('dtNasc', 1, e.target.value)} min={reportFilter.dtNasc.split('/')[0]} max={now} />
                         </DatesContainer>
                         <label>Data Ingresso: </label>
                         <DatesContainer>
                             <span>De</span>
                             <input type="date" value={reportFilter.dtIngresso.split('/')[0] || ''} onChange={(e) => handleDateChange('dtIngresso', 0, e.target.value)} max={now} />
                             <span>até</span>
-                            <input type="date" value={reportFilter.dtIngresso.split('/')[1] || ''} onChange={(e) => handleDateChange('dtIngresso', 1, e.target.value)} max={now} />
+                            <input type="date" value={reportFilter.dtIngresso.split('/')[1] || ''} onChange={(e) => handleDateChange('dtIngresso', 1, e.target.value)} min={reportFilter.dtIngresso.split('/')[0]} max={now} />
                         </DatesContainer>
                         <label>Data Teste: </label>
                         <DatesContainer>
                             <span>De</span>
                             <input type="date" value={reportFilter.dtTest.split('/')[0] || ''} onChange={(e) => handleDateChange('dtTest', 0, e.target.value)} max={now} />
                             <span>até</span>
-                            <input type="date" value={reportFilter.dtTest.split('/')[1] || ''} onChange={(e) => handleDateChange('dtTest', 1, e.target.value)} max={now} />
+                            <input type="date" value={reportFilter.dtTest.split('/')[1] || ''} onChange={(e) => handleDateChange('dtTest', 1, e.target.value)} min={reportFilter.dtTest.split('/')[0]} max={now} />
                         </DatesContainer>
                         <label>Data Emplacamento: </label>
                         <DatesContainer>
                             <span>De</span>
                             <input type="date" value={reportFilter.dtEmplac.split('/')[0] || ''} onChange={(e) => handleDateChange('dtEmplac', 0, e.target.value)} max={now} />
                             <span>até</span>
-                            <input type="date" value={reportFilter.dtEmplac.split('/')[1] || ''} onChange={(e) => handleDateChange('dtEmplac', 1, e.target.value)} max={now} />
+                            <input type="date" value={reportFilter.dtEmplac.split('/')[1] || ''} onChange={(e) => handleDateChange('dtEmplac', 1, e.target.value)} min={reportFilter.dtEmplac.split('/')[0]} max={now} />
                         </DatesContainer>
                         <label>Data Iniciação: </label>
                         <DatesContainer>
                             <span>De</span>
                             <input type="date" value={reportFilter.dtIniciacao.split('/')[0] || ''} onChange={(e) => handleDateChange('dtIniciacao', 0, e.target.value)} max={now} />
                             <span>até</span>
-                            <input type="date" value={reportFilter.dtIniciacao.split('/')[1] || ''} onChange={(e) => handleDateChange('dtIniciacao', 1, e.target.value)} max={now} />
+                            <input type="date" value={reportFilter.dtIniciacao.split('/')[1] || ''} onChange={(e) => handleDateChange('dtIniciacao', 1, e.target.value)} min={reportFilter.dtIniciacao.split('/')[0]} max={now} />
                         </DatesContainer>
                         <label>Data Elevação: </label>
                         <DatesContainer>
                             <span>De</span>
                             <input type="date" value={reportFilter.dtElevacao.split('/')[0] || ''} onChange={(e) => handleDateChange('dtElevacao', 0, e.target.value)} max={now} />
                             <span>até</span>
-                            <input type="date" value={reportFilter.dtElevacao.split('/')[1] || ''} onChange={(e) => handleDateChange('dtElevacao', 1, e.target.value)} max={now} />
+                            <input type="date" value={reportFilter.dtElevacao.split('/')[1] || ''} onChange={(e) => handleDateChange('dtElevacao', 1, e.target.value)} min={reportFilter.dtElevacao.split('/')[0]} max={now} />
                         </DatesContainer>
                         <label>Data Centúria: </label>
                         <DatesContainer>
                             <span>De</span>
                             <input type="date" value={reportFilter.dtCenturia.split('/')[0] || ''} onChange={(e) => handleDateChange('dtCenturia', 0, e.target.value)} max={now} />
                             <span>até</span>
-                            <input type="date" value={reportFilter.dtCenturia.split('/')[1] || ''} onChange={(e) => handleDateChange('dtCenturia', 1, e.target.value)} max={now} />
+                            <input type="date" value={reportFilter.dtCenturia.split('/')[1] || ''} onChange={(e) => handleDateChange('dtCenturia', 1, e.target.value)} min={reportFilter.dtCenturia.split('/')[0]} max={now} />
                         </DatesContainer>
                         <label>Data Sétimo: </label>
                         <DatesContainer>
                             <span>De</span>
                             <input type="date" value={reportFilter.dtSetimo.split('/')[0] || ''} onChange={(e) => handleDateChange('dtSetimo', 0, e.target.value)} max={now} />
                             <span>até</span>
-                            <input type="date" value={reportFilter.dtSetimo.split('/')[1] || ''} onChange={(e) => handleDateChange('dtSetimo', 1, e.target.value)} max={now} />
+                            <input type="date" value={reportFilter.dtSetimo.split('/')[1] || ''} onChange={(e) => handleDateChange('dtSetimo', 1, e.target.value)} min={reportFilter.dtSetimo.split('/')[0]} max={now} />
                         </DatesContainer>
                         <label>Data Mentor: </label>
                         <DatesContainer>
                             <span>De</span>
                             <input type="date" value={reportFilter.dtMentor.split('/')[0] || ''} onChange={(e) => handleDateChange('dtMentor', 0, e.target.value)} max={now} />
                             <span>até</span>
-                            <input type="date" value={reportFilter.dtMentor.split('/')[1] || ''} onChange={(e) => handleDateChange('dtMentor', 1, e.target.value)} max={now} />
+                            <input type="date" value={reportFilter.dtMentor.split('/')[1] || ''} onChange={(e) => handleDateChange('dtMentor', 1, e.target.value)} min={reportFilter.dtMentor.split('/')[0]} max={now} />
                         </DatesContainer>
                         <label>Data Classificação: </label>
                         <DatesContainer>
                             <span>De</span>
                             <input type="date" value={reportFilter.dtClassif.split('/')[0] || ''} onChange={(e) => handleDateChange('dtClassif', 0, e.target.value)} max={now} />
                             <span>até</span>
-                            <input type="date" value={reportFilter.dtClassif.split('/')[1] || ''} onChange={(e) => handleDateChange('dtClassif', 1, e.target.value)} max={now} />
+                            <input type="date" value={reportFilter.dtClassif.split('/')[1] || ''} onChange={(e) => handleDateChange('dtClassif', 1, e.target.value)} min={reportFilter.dtClassif.split('/')[0]} max={now} />
                         </DatesContainer>
                     </GridDatesContainer>
                 </PersonalCard>
                 <div style={{width: '90%', maxWidth: '1200px', display: 'flex', justifyContent: 'space-around'}}>
                     <ReportButton color="red" onClick={() => resetReportFilter()}>Resetar Filtros</ReportButton>
-                    <ReportButton color="green" onClick={async () => await generateReport()}>Gerar Relatório</ReportButton>
+                    <ReportButton color="green" onClick={async () => await handleGenerateReport()}>Gerar Relatório</ReportButton>
                 </div>
             </MainContainer>
             <SideMenu list={listSubMenu} />

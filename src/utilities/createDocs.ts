@@ -1622,6 +1622,119 @@ export const generateReportAllCons = (listIniciacao: Array<IConsagracao>, listEl
     pdfMake.createPdf(emissaoDefinitions).open({}, window.open(`${reportTitle.text.toString().replace(/ /g, '_')}.pdf`, '_blank'));
 }
 
+export const generateReport = (listMediuns: Array<IMedium>, listTemplo: Array<ITemplo>, title: string, showMed: boolean, showTemp: boolean, type: string) => {    
+    const reportTitle: Content = {
+        text: title ? title.toUpperCase() : `RELATÓRIO DE MÉDIUNS`,
+        fontSize: 14,
+        alignment: 'center',
+        bold: true, 
+        margin: [0, 0, 0, 20]
+    }
+
+    const reportTable = (array: Array<IMedium>) => {
+        const widthArray : Array<string | number> = ['*'];
+        const headerArray : Array<Object> = [{text: 'NOME DO MÉDIUM', bold: true, margin: [0, 0, 0, 0]}];
+
+        if (showMed) {
+            widthArray.push(type ? 30 : 100);
+            headerArray.push({text: type ? 'MED.' : 'MEDIUNIDADE', alignment: 'center', bold: true, margin: [0, 0, 0, 0]})
+        }
+
+        if (showTemp) {
+            widthArray.push(100);
+            headerArray.push({text: 'TEMPLO', alignment: 'center', bold: true, margin: [0, 0, 0, 0]})
+        }
+
+        if (type) {
+            widthArray.push(type === 'Telefones' ? 80 : type === 'Assinatura' ? '*' : '');
+            headerArray.push({text: type.toUpperCase(), alignment: 'center', bold: true, margin: [0, 0, 0, 0]})
+        }
+        
+        return [
+            {
+                style: {
+                    fontSize: 10
+                },
+                table: {
+                    headerRows: 1,
+                    widths: widthArray,
+                    heights: type === 'Assinatura' ? 25 : 'auto',
+                    body: [
+                        headerArray,
+                        ...alphabeticOrder(array).map((item: IMedium) => {
+                            const itemNome = (el: IMedium) => {
+                                const numberMap = [
+                                    '',
+                                    `Teste como ${el.med === 'Doutrinador' ? 'Apará' : el.med === 'Apará' ? 'Doutrinador' : ''}`,
+                                    `Emplacamento como ${el.med === 'Doutrinador' ? 'Apará' : el.med === 'Apará' ? 'Doutrinador' : ''}`,
+                                    `Iniciação como ${el.med === 'Doutrinador' ? 'Apará' : el.med === 'Apará' ? 'Doutrinador' : ''}`,
+                                    `Elevação como ${el.med === 'Doutrinador' ? 'Apará' : el.med === 'Apará' ? 'Doutrinador' : ''}`,
+                                    `Mentor como ${el.med === 'Doutrinador' ? 'Apará' : el.med === 'Apará' ? 'Doutrinador' : ''}`
+                                ]
+                                const match = el.nome.match(/\((\d)\)$/);
+                                if(match) {
+                                    const number = Number(match[1]);
+                                    return [
+                                        el.nome.replace(/\((\d)\)$/, '').trim().toUpperCase(),
+                                        {text: ` (${numberMap[number]})`, bold: true, fontSize: 8}
+                                    ]
+                                } else {
+                                    return el.nome.toUpperCase();
+                                }
+                            };
+                            const itemArray : Array<Object> = [{
+                                text: itemNome(item),
+                                margin: [0, 0, 0, 0]
+                            }];
+                            if (showMed) {
+                                itemArray.push({text: type ? item.med.charAt(0).toUpperCase() : item.med.toUpperCase(), alignment: 'center', margin: [0, 0, 0, 0]})
+                            }
+                            if (showTemp) {
+                                const templo = listTemplo.find((el: ITemplo) => el.templo_id === item.templo)
+                                itemArray.push({text: `${templo?.cidade} - ${templo?.estado.abrev}`.toUpperCase(), alignment: 'center', margin: [0, 0, 0, 0]})
+                            } 
+                            if (type) {
+                                const telArray = [];
+                                if (item.telefone1) {telArray.push(item.telefone1)};
+                                if (item.telefone2) {telArray.push(item.telefone2)};
+                                const text = type === 'Telefones' ? telArray.join('   ')
+                                 : '';
+                                itemArray.push({text: text, alignment: 'center', margin: [0, 0, 0, 0]})
+                            }
+                            return itemArray
+                        })
+                    ]
+                },
+            },
+            {
+                text: `Número de médiuns: ${array.length}`, fontSize: 12, bold: true, margin: [0, 15, 0, 0]
+            }
+        ] as Content
+    }
+
+    const arrayContent = () => {
+        const array: Content = [docHeader, reportTitle];
+        array.push(reportTable(listMediuns))
+        return array
+    }
+
+    const reportFooter = (currentPage: number, pageCount: number): Content => docFooter(currentPage, pageCount);
+
+    const reportDefinitions: TDocumentDefinitions = {
+        info: {
+            title: reportTitle.text.toString().replace(/ /g, '_')
+        },
+        pageSize: 'A4',
+        content: arrayContent(),
+        footer: reportFooter,
+        defaultStyle: {
+            font: 'Times'
+        }
+    }
+
+    pdfMake.createPdf(reportDefinitions).open({}, window.open(`${reportTitle.text.toString().replace(/ /g, '_')}.pdf`, '_blank'));
+}
+
 export const generateFicha = async () => {    
     const fichaFrente = async () => {
         return [

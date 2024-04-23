@@ -230,3 +230,13 @@ export const CheckboxContainer = styled.div`
     justify-content: center;
     flex-wrap: wrap;
 `;
+
+export const MixedContainer = styled.div`
+    display: flex;
+    gap: 20px;
+    justify-content: space-between;
+
+    @media (max-width: 800px) {
+        flex-direction: column;
+    }
+`;

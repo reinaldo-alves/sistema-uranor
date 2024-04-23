@@ -32,6 +32,7 @@ BIBLIOTECA
 - Cartas
 - Instruções Práticas
 - Contagem Trino Araken
+- Terceiro Sétimo dos cavaleiros da luz
 
 OUTROS
 - Emissão de crachá

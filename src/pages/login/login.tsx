@@ -17,6 +17,7 @@ function Login() {
     const loginButtonFunc = async () => {
         if(name.trim() && password.trim()){
             try {
+                setErrorMessage('Aguarde...');
                 await handleLogin(name, password);
                 if(errorMessage === 'Autenticado com sucesso') {
                     navigate('/');
