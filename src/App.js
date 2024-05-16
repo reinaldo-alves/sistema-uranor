@@ -38,6 +38,12 @@ import UpdateIniciacao from './pages/consagracoes/iniciacao/updateIniciacao';
 import UpdateElevacao from './pages/consagracoes/elevacao/updateElevacao';
 import UpdateCenturia from './pages/consagracoes/centuria/updateCenturia';
 import TimeLine from './pages/mediuns/TimeLine/TimeLine';
+import LivroDeLeis from './pages/biblioteca/livrodeleis';
+import Unificacao from './pages/biblioteca/unificacao';
+import ManualDevas from './pages/biblioteca/manualdevas';
+import Cartas from './pages/biblioteca/cartas';
+import PequenasHistorias from './pages/biblioteca/pequenashistorias';
+import InstrucoesPraticas from './pages/biblioteca/instrucoespraticas';
 
 function App() {
   const [mainContainer, setMainContainer] = useState('199')
@@ -120,6 +126,12 @@ function App() {
               <Route path='/relatorios' element={<Relatorios />} /> 
               <Route path='/documentosuteis' element={<DocumentosUteis />} />
               <Route path='/biblioteca' element={<Biblioteca />} />
+              <Route path='/biblioteca/livrodeleis' element={<LivroDeLeis />} />
+              <Route path='/biblioteca/unificacao' element={<Unificacao />} />
+              <Route path='/biblioteca/manualdevas' element={<ManualDevas />} />
+              <Route path='/biblioteca/cartas' element={<Cartas />} />
+              <Route path='/biblioteca/pequenashistorias' element={<PequenasHistorias />} />
+              <Route path='/biblioteca/instrucoespraticas' element={<InstrucoesPraticas />} />
               <Route path='*' element={<PageNotFound />} />
             </Route>
             <Route path='/login' element={!login? <Login /> : <Navigate to='/' />} />

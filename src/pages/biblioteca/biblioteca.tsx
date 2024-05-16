@@ -11,18 +11,22 @@ import Peq from "../../assets/bib-pequenashistorias.jpg";
 import Ter from "../../assets/bib-terceirosetimo.jpg";
 import Tri from "../../assets/bib-trinoarakem.jpg";
 import Uni from "../../assets/bib-unificacao.jpg";
+import Tcl from "src/assets/pdf/TerceiroSetimoCavaleirosLuz.pdf"
+import Cta from "src/assets/pdf/ContagemTrinoArakem.pdf"
+import { useNavigate } from "react-router-dom";
 
 function Biblioteca() {
-    
+    const navigate = useNavigate();
+
     const docs = [
-        {name: 'Livro de Leis', image: Lei, link: null},
-        {name: 'Unificação dos Trabalhos nos Templos do Amanhecer', image: Uni, link: null},
-        {name: 'Manual do Devas', image: Dev, link: null},
-        {name: 'Cartas', image: Car, link: null},
-        {name: 'Pequenas Histórias', image: Peq, link: null},
-        {name: 'Instruções Práticas', image: Ins, link: null},
-        {name: 'Terceiro Sétimo dos Cavaleiros da Luz', image: Ter, link: null},
-        {name: 'Contagem Trino Arakém', image: Tri, link: null}
+        {name: 'Livro de Leis', image: Lei, pdf: false, link: () => navigate('/biblioteca/livrodeleis')},
+        {name: 'Unificação dos Trabalhos nos Templos do Amanhecer', image: Uni, pdf: false, link: () => navigate('/biblioteca/unificacao')},
+        {name: 'Manual dos Devas', image: Dev, pdf: false, link: () => navigate('/biblioteca/manualdevas')},
+        {name: 'Cartas', image: Car, pdf: false, link: () => navigate('/biblioteca/cartas')},
+        {name: 'Pequenas Histórias', image: Peq, pdf: false, link: () => navigate('/biblioteca/pequenashistorias')},
+        {name: 'Instruções Práticas', image: Ins, pdf: false, link: () => navigate('/biblioteca/instrucoespraticas')},
+        {name: 'Terceiro Sétimo dos Três Cavaleiros da Luz', image: Ter, pdf: true, link: Tcl},
+        {name: 'Contagem Trino Arakém', image: Tri, pdf: true, link: Cta}
     ]
 
     const menuList = [{title: 'Página Inicial', click: '/'}];

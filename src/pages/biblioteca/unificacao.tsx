@@ -2,7 +2,7 @@ import SubMenu from "src/components/SubMenu/SubMenu";
 import Header from "../../components/header/header";
 import SideMenu from "src/components/SideMenu/SideMenu";
 import MainContainer from "src/components/MainContainer/MainContainer";
-import GridButton from "src/components/GridButton/GridButton";
+import GridButtonPDF from "src/components/GridButtonPDF/GridButtonPDF";
 
 function Unificacao() {
     
@@ -44,14 +44,17 @@ function Unificacao() {
         {name: 'Tronos Vermelhos e Amarelos', link: null},
     ]
     
-    const menuList = [{title: 'Página Inicial', click: '/'}]
+    const menuList = [
+        {title: 'Página Inicial', click: '/'},
+        {title: 'Voltar para Biblioteca', click: '/biblioteca'},
+    ]
     
     return (
         <>
             <Header />
             <SubMenu list={menuList}/>
-            <MainContainer title="Documentos Úteis" >
-                <GridButton docs={docs}/>
+            <MainContainer title="Unificação dos Trabalhos nos Templos do Amanhecer" >
+                <GridButtonPDF docs={docs}/>
             </MainContainer>
             <SideMenu list={menuList}/>
         </>

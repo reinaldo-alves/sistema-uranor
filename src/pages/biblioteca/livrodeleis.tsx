@@ -2,61 +2,104 @@ import SubMenu from "src/components/SubMenu/SubMenu";
 import Header from "../../components/header/header";
 import SideMenu from "src/components/SideMenu/SideMenu";
 import MainContainer from "src/components/MainContainer/MainContainer";
-import GridButton from "src/components/GridButton/GridButton";
+import GridButtonPDF from "src/components/GridButtonPDF/GridButtonPDF";
+import L01 from "../../assets/pdf/LivroLeis-Abata.pdf"
+import L02 from "../../assets/pdf/LivroLeis-AbataFalanges.pdf"
+import L03 from "../../assets/pdf/LivroLeis-AbataSemCorrente.pdf"
+import L04 from "../../assets/pdf/LivroLeis-ChaveAberturaCorrenteMestra.pdf"
+import L05 from "../../assets/pdf/LivroLeis-ChaveAberturaEncerramento.pdf"
+import L06 from "../../assets/pdf/LivroLeis-Alaba.pdf"
+import L07 from "../../assets/pdf/LivroLeis-Angical.pdf"
+import L08 from "../../assets/pdf/LivroLeis-Arame.pdf"
+import L09 from "../../assets/pdf/LivroLeis-ArameTemplosSemTurigano.pdf"
+import L10 from "../../assets/pdf/LivroLeis-Sacramento.pdf"
+import L11 from "../../assets/pdf/LivroLeis-BencaoPaiSetaBranca.pdf"
+import L12 from "../../assets/pdf/LivroLeis-Casamento.pdf"
+import L13 from "../../assets/pdf/LivroLeis-Cassandra.pdf"
+import L14 from "../../assets/pdf/LivroLeis-CruzCaminho.pdf"
+import L15 from "../../assets/pdf/LivroLeis-Cura.pdf"
+import L16 from "../../assets/pdf/LivroLeis-Defumacao.pdf"
+import L17 from "../../assets/pdf/LivroLeis-EstrelaCandente.pdf"
+import L18 from "../../assets/pdf/LivroLeis-EstrelaSublimacao.pdf"
+import L19 from "../../assets/pdf/LivroLeis-Imunizacao.pdf"
+import L20 from "../../assets/pdf/LivroLeis-Inducao.pdf"
+import L21 from "../../assets/pdf/LivroLeis-Julgamento.pdf"
+import L22 from "../../assets/pdf/LivroLeis-Juncao.pdf"
+import L23 from "../../assets/pdf/LivroLeis-LeitoMagnetico.pdf"
+import L24 from "../../assets/pdf/LivroLeis-LibertacaoEspecial.pdf"
+import L25 from "../../assets/pdf/LivroLeis-MesaEvangelica.pdf"
+import L26 from "../../assets/pdf/LivroLeis-Oraculo.pdf"
+import L27 from "../../assets/pdf/LivroLeis-Quadrantes.pdf"
+import L28 from "../../assets/pdf/LivroLeis-Randy.pdf"
+import L29 from "../../assets/pdf/LivroLeis-Retiro.pdf"
+import L30 from "../../assets/pdf/LivroLeis-SandayTronos.pdf"
+import L31 from "../../assets/pdf/LivroLeis-SessaoBranca.pdf"
+import L32 from "../../assets/pdf/LivroLeis-Sudalio.pdf"
+import L33 from "../../assets/pdf/LivroLeis-TrabalhoPrisioneirosTemploMae.pdf"
+import L34 from "../../assets/pdf/LivroLeis-TrabalhoPrisioneirosTemplosAmanhecer.pdf"
+import L35 from "../../assets/pdf/LivroLeis-TrabalhoEspecial.pdf"
+import L36 from "../../assets/pdf/LivroLeis-Triada.pdf"
+import L37 from "../../assets/pdf/LivroLeis-TronoMilenar.pdf"
+import L38 from "../../assets/pdf/LivroLeis-Tronos.pdf"
+import L39 from "../../assets/pdf/LivroLeis-Turigano.pdf"
+import L40 from "../../assets/pdf/LivroLeis-Unificacao.pdf"
 
 function LivroDeLeis() {
     
     const docs = [
-        {name: 'Abatá', link: null},
-        {name: 'Abatá das Falanges Missionárias', link: null},
-        {name: 'Abatá (Templo Sem Corrente Mestra)', link: null},
-        {name: 'Alabá', link: null},
-        {name: 'Angical', link: null},
-        {name: 'Aramê', link: null},
-        {name: 'Aramê (Templo Sem Turigano)', link: null},
-        {name: 'Batizado', link: null},
-        {name: 'Bênção do Pai Seta Branca', link: null},
-        {name: 'Casamento', link: null},
-        {name: 'Cassandra', link: null},
-        {name: 'Chave de Abertura da Corrente Mestra', link: null},
-        {name: 'Chave de Abertura e Encerramento dos Trabalhos', link: null},
-        {name: 'Cruz do Caminho', link: null},
-        {name: 'Cura Iniciática', link: null},
-        {name: 'Defumação', link: null},
-        {name: 'Estrela Candente', link: null},
-        {name: 'Estrela Sublimação', link: null},
-        {name: 'Imunização', link: null},
-        {name: 'Indução', link: null},
-        {name: 'Julgamento', link: null},
-        {name: 'Junção', link: null},
-        {name: 'Leito Magnético', link: null},
-        {name: 'Libertação Especial', link: null},
-        {name: 'Mesa Evangélica', link: null},
-        {name: 'Oráculo', link: null},
-        {name: 'Quadrantes', link: null},
-        {name: 'Randy', link: null},
-        {name: 'Retiro', link: null},
-        {name: 'Sanday de Tronos', link: null},
-        {name: 'Sessão Branca', link: null},
-        {name: 'Sudálio', link: null},
-        {name: 'Trabalho de Prisioneiros (Templo Mãe)', link: null},
-        {name: 'Trabalho de Prisioneiros (Templos do Amanhecer)', link: null},
-        {name: 'Trabalho Especial', link: null},
-        {name: 'Triada', link: null},
-        {name: 'Trono Milenar', link: null},
-        {name: 'Tronos Vermelhos e Amarelos', link: null},
-        {name: 'Turigano', link: null},
-        {name: 'Unificação', link: null},
+        {name: 'Abatá', link: L01},
+        {name: 'Abatá das Falanges Missionárias', link: L02},
+        {name: 'Abatá (Templo Sem Corrente Mestra)', link: L03},
+        {name: 'Abertura da Corrente Mestra', link: L04},
+        {name: 'Abertura e Encerramento dos Trabalhos', link: L05},
+        {name: 'Alabá', link: L06},
+        {name: 'Angical', link: L07},
+        {name: 'Aramê', link: L08},
+        {name: 'Aramê (Templo Sem Turigano)', link: L09},
+        {name: 'Batizado', link: L10},
+        {name: 'Bênção do Pai Seta Branca', link: L11},
+        {name: 'Casamento', link: L12},
+        {name: 'Cassandra', link: L13},
+        {name: 'Cruz do Caminho', link: L14},
+        {name: 'Cura Iniciática', link: L15},
+        {name: 'Defumação', link: L16},
+        {name: 'Estrela Candente', link: L17},
+        {name: 'Estrela Sublimação', link: L18},
+        {name: 'Imunização', link: L19},
+        {name: 'Indução', link: L20},
+        {name: 'Julgamento', link: L21},
+        {name: 'Junção', link: L22},
+        {name: 'Leito Magnético', link: L23},
+        {name: 'Libertação Especial', link: L24},
+        {name: 'Mesa Evangélica', link: L25},
+        {name: 'Oráculo', link: L26},
+        {name: 'Quadrantes', link: L27},
+        {name: 'Randy', link: L28},
+        {name: 'Retiro', link: L29},
+        {name: 'Sanday de Tronos', link: L30},
+        {name: 'Sessão Branca', link: L31},
+        {name: 'Sudálio', link: L32},
+        {name: 'Trabalho de Prisioneiros (Templo Mãe)', link: L33},
+        {name: 'Trabalho de Prisioneiros (Templos do Amanhecer)', link: L34},
+        {name: 'Trabalho Especial', link: L35},
+        {name: 'Triada', link: L36},
+        {name: 'Trono Milenar', link: L37},
+        {name: 'Tronos Vermelhos e Amarelos', link: L38},
+        {name: 'Turigano', link: L39},
+        {name: 'Unificação', link: L40},
     ]
     
-    const menuList = [{title: 'Página Inicial', click: '/'}]
+    const menuList = [
+        {title: 'Página Inicial', click: '/'},
+        {title: 'Voltar para Biblioteca', click: '/biblioteca'},
+    ]
     
     return (
         <>
             <Header />
             <SubMenu list={menuList}/>
-            <MainContainer title="Documentos Úteis" >
-                <GridButton docs={docs}/>
+            <MainContainer title="Leis e Chaves Ritualísticas" >
+                <GridButtonPDF docs={docs}/>
             </MainContainer>
             <SideMenu list={menuList}/>
         </>

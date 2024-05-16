@@ -61,6 +61,8 @@ function Reclassificacao() {
         setDropMedium([defaultMedium]);
         setDynamicFields(['id']);
         setSearchMedium([]);
+        setAdjuntoPai(defaultMedium);
+        setSearchPai('');
         setShowModal('');
     }
     

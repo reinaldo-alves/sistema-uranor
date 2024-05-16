@@ -219,3 +219,18 @@ export async function generateListEventos(medium: IMedium, token: string, mediun
         console.error('Erro ao criar a lista de eventos da linha do tempo do médium', error);
     }
 }
+
+//Formata os textos inseridos nos inputs para que cada palavra fique com a inicial maiúscula
+export function formatInputText(input: HTMLInputElement) {
+    const exceptWords = ['e', 'de', 'da', 'do', 'dos', 'das']
+    const text = input.value.trim().toLowerCase();
+    const words = text.split(" ");
+    let result = words.map(word => {
+        if (!exceptWords.includes(word)) {
+            return word.charAt(0).toUpperCase() + word.slice(1);
+        } else {
+            return word;
+        }
+    }).join(" ");
+    input.value = result;
+}

@@ -38,6 +38,5 @@ VERSÃO 1.2.0
 - Remoção das propriedades data de consagração de Trino Solitário e Trino Sardyos.
 - Geração de relatórios padrão, de contato e de protocolo, com possibilidade de mostrar mediunidade e templo e diversos filtros por propriedades ou por intervalo de datas.
 - Exibição da mensagem 'Aguarde...' na tela de login quando o mecanismo de login é disparado.
-
-// Criar rotas para biblioteca/livrodeleis e biblioteca/unificacao
-// Criar páginas semelhantes para manual dos devas, cartas, pequenas histórias e instruções práticas.
+- Criação da seção Biblioteca, com páginas para Livro de Leis, Unificação dos Trabalhos, Manual dos Devas, Cartas, Pequenas Histórias e Instruções Práticas
+- Disponibilização dos documentos pdf para Livro de Leis, Manual dos Devas, Cartas, Pequenas Histórias e Instruções Práticas, além do livro Terceiro Sétimo dos Cavaleiros da Luz e Contagem do Trino Arakém

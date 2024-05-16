@@ -45,3 +45,37 @@ export const ButtonOptions = styled.div`
         border-color: ${(props) => {return props.theme.color.lighterColor}};
     }
 `;
+
+export const ButtonLink = styled.a`
+    border: solid 1px ${(props) => props.theme.color.darkerColor};
+    border-radius: 8px;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    color: ${(props) => props.theme.color.darkerColor};
+    font-weight: bold;
+    font-size: 20px;
+    text-align: center;
+    background-color: ${(props) => props.theme.color.mediumColorTr};
+    aspect-ratio: 1 / 1;
+    z-index: 1;
+    width: 100%;
+    max-width: 300px;
+    max-height: 300px;
+
+    img {
+        height: 220px;
+    }
+
+    :hover {
+        transform: scale(1.05);
+        cursor: pointer;
+        background-color: ${(props) => props.theme.color.mediumColorOp};
+    }
+
+    :active {
+        border-color: ${(props) => {return props.theme.color.lighterColor}};
+    }
+`;
