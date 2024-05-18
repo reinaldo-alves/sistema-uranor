@@ -221,9 +221,9 @@ export async function generateListEventos(medium: IMedium, token: string, mediun
 }
 
 //Formata os textos inseridos nos inputs para que cada palavra fique com a inicial maiúscula
-export function formatInputText(input: HTMLInputElement) {
+export function formatInputText(inputText: string) {
     const exceptWords = ['e', 'de', 'da', 'do', 'dos', 'das']
-    const text = input.value.trim().toLowerCase();
+    const text = inputText.toLowerCase();
     const words = text.split(" ");
     let result = words.map(word => {
         if (!exceptWords.includes(word)) {
@@ -232,5 +232,5 @@ export function formatInputText(input: HTMLInputElement) {
             return word;
         }
     }).join(" ");
-    input.value = result;
+    return result;
 }

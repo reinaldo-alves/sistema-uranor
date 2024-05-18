@@ -40,3 +40,4 @@ VERSÃO 1.2.0
 - Exibição da mensagem 'Aguarde...' na tela de login quando o mecanismo de login é disparado.
 - Criação da seção Biblioteca, com páginas para Livro de Leis, Unificação dos Trabalhos, Manual dos Devas, Cartas, Pequenas Histórias e Instruções Práticas
 - Disponibilização dos documentos pdf para Livro de Leis, Manual dos Devas, Cartas, Pequenas Histórias e Instruções Práticas, além do livro Terceiro Sétimo dos Cavaleiros da Luz e Contagem do Trino Arakém
+- Configuração de inputs de textos das páginas Adicionar Médium e Editar Médium para exibir apenas as iniciais maiúsculas

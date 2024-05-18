@@ -453,7 +453,7 @@ function AddMedium() {
                             <SectionTitle>Novo Médium</SectionTitle>
                             <FieldContainer>
                                 <label>Nome Médium: </label>
-                                <input type="text" value={newMedium.nome} onChange={(e) => updateProps('nome', e.target.value)} onBlur={(e) => formatInputText(e.target)}/>
+                                <input type="text" value={newMedium.nome} onChange={(e) => updateProps('nome', formatInputText(e.target.value))}/>
                             </FieldContainer>
                             <GridContainer>
                                 <label>Sexo: </label>
@@ -540,17 +540,17 @@ function AddMedium() {
                         <label>Data Nascimento: </label>
                         <input type="date" value={newMedium.dtNasc} onChange={(e) => updateProps('dtNasc', e.target.value)} max={now} />
                         <label>Profissão: </label>
-                        <input type="text" value={newMedium.profissao} onChange={(e) => updateProps('profissao', e.target.value)} onBlur={(e) => formatInputText(e.target)}/>
+                        <input type="text" value={newMedium.profissao} onChange={(e) => updateProps('profissao', formatInputText(e.target.value))}/>
                         <label>RG: </label>
                         <input type="text" value={newMedium.rg} onChange={(e) => updateProps('rg', e.target.value)}/>
                         <label>CPF: </label>
                         <input type="text" maxLength={14} value={newMedium.cpf} onChange={(e) => updateProps('cpf', formatCpf(e.target.value))}/>
                         <label>Mãe: </label>
-                        <input type="text" value={newMedium.mae} onChange={(e) => updateProps('mae', e.target.value)} onBlur={(e) => formatInputText(e.target)}/>
+                        <input type="text" value={newMedium.mae} onChange={(e) => updateProps('mae', formatInputText(e.target.value))}/>
                         <label>Pai: </label>
-                        <input type="text" value={newMedium.pai} onChange={(e) => updateProps('pai', e.target.value)} onBlur={(e) => formatInputText(e.target)}/>
+                        <input type="text" value={newMedium.pai} onChange={(e) => updateProps('pai', formatInputText(e.target.value))}/>
                         <label>Natural de: </label>
-                        <input type="text" value={newMedium.natur} onChange={(e) => updateProps('natur', e.target.value)} onBlur={(e) => formatInputText(e.target)}/>
+                        <input type="text" value={newMedium.natur} onChange={(e) => updateProps('natur', formatInputText(e.target.value))}/>
                         <label>UF: </label>
                         <select value={newMedium.naturUF} onChange={(e) => updateProps('naturUF', e.target.value)}>
                             <option value={''}></option>
@@ -569,19 +569,19 @@ function AddMedium() {
                             <option value={'Viúvo'}>Viúvo</option>
                         </select>
                         <label>Cônjuge: </label>
-                        <input type="text" value={newMedium.conjuge} onChange={(e) => updateProps('conjuge', e.target.value)} onBlur={(e) => formatInputText(e.target)}/>
+                        <input type="text" value={newMedium.conjuge} onChange={(e) => updateProps('conjuge', formatInputText(e.target.value))}/>
                         <label>CEP: </label>
                         <input type="text" maxLength={9} value={newMedium.cep} onChange={(e) => updateProps('cep', formatCep(e.target.value))} onBlur={fillAddressByCep}/>
                         <label>Endereço: </label>
-                        <input type="text" value={newMedium.endereco} onChange={(e) => updateProps('endereco', e.target.value)} onBlur={(e) => formatInputText(e.target)}/>
+                        <input type="text" value={newMedium.endereco} onChange={(e) => updateProps('endereco', formatInputText(e.target.value))}/>
                         <label>Número: </label>
                         <input type="text" value={newMedium.endNumero} onChange={(e) => updateProps('endNumero', e.target.value)}/>
                         <label>Complemento: </label>
-                        <input type="text" value={newMedium.endCompl} onChange={(e) => updateProps('endCompl', e.target.value)} onBlur={(e) => formatInputText(e.target)}/>
+                        <input type="text" value={newMedium.endCompl} onChange={(e) => updateProps('endCompl', formatInputText(e.target.value))}/>
                         <label>Bairro: </label>
-                        <input type="text" value={newMedium.endBairro} onChange={(e) => updateProps('endBairro', e.target.value)} onBlur={(e) => formatInputText(e.target)}/>
+                        <input type="text" value={newMedium.endBairro} onChange={(e) => updateProps('endBairro', formatInputText(e.target.value))}/>
                         <label>Cidade: </label>
-                        <input type="text" value={newMedium.endCidade} onChange={(e) => updateProps('endCidade', e.target.value)} onBlur={(e) => formatInputText(e.target)}/>
+                        <input type="text" value={newMedium.endCidade} onChange={(e) => updateProps('endCidade', formatInputText(e.target.value))}/>
                         <label>UF: </label>
                         <select value={newMedium.endUF} onChange={(e) => updateProps('endUF', e.target.value)}>
                             <option value={''}></option>
@@ -594,7 +594,7 @@ function AddMedium() {
                         <label>Telefone 2: </label>
                         <input type="tel" maxLength={15} value={newMedium.telefone2} onChange={(e) => updateProps('telefone2', formatPhoneNumber(e.target.value))}/>
                         <label>E-mail: </label>
-                        <input type="text" value={newMedium.email} onChange={(e) => updateProps('email', e.target.value)} onBlur={(e) => e.target.value.toLowerCase()}/>
+                        <input type="text" value={newMedium.email} onChange={(e) => updateProps('email', e.target.value.toLowerCase())}/>
                     </GridContainer>
                 </PersonalCard>
                 <PersonalCard>
@@ -821,7 +821,7 @@ function AddMedium() {
                                     ))}
                                 </select>
                                 <label>Nome na emissão: </label>
-                                <input type="text" value={newMedium.nomeEmissao} onChange={(e) => updateProps('nomeEmissao', e.target.value)}/>
+                                <input type="text" value={newMedium.nomeEmissao} onChange={(e) => updateProps('nomeEmissao', formatInputText(e.target.value))}/>
                             </GridContainer>
                         </>
                     : newMedium.med==='Apará'?
@@ -829,13 +829,13 @@ function AddMedium() {
                             <Divider></Divider>
                             <GridContainer>
                                 <label>Preto Velho: </label>
-                                <input type="text" value={newMedium.pretovelho} onChange={(e) => updateProps('pretovelho', e.target.value)}/>
+                                <input type="text" value={newMedium.pretovelho} onChange={(e) => updateProps('pretovelho', formatInputText(e.target.value))}/>
                                 <label>Caboclo: </label>
-                                <input type="text" value={newMedium.caboclo} onChange={(e) => updateProps('caboclo', e.target.value)}/>
+                                <input type="text" value={newMedium.caboclo} onChange={(e) => updateProps('caboclo', formatInputText(e.target.value))}/>
                                 <label>Médico: </label>
-                                <input type="text" value={newMedium.medico} onChange={(e) => updateProps('medico', e.target.value)}/>
+                                <input type="text" value={newMedium.medico} onChange={(e) => updateProps('medico', formatInputText(e.target.value))}/>
                                 <label>Nome na emissão: </label>
-                                <input type="text" value={newMedium.nomeEmissao} onChange={(e) => updateProps('nomeEmissao', e.target.value)}/>
+                                <input type="text" value={newMedium.nomeEmissao} onChange={(e) => updateProps('nomeEmissao', formatInputText(e.target.value))}/>
                             </GridContainer> 
                         </>
                     : ''}
@@ -1191,11 +1191,11 @@ function AddMedium() {
                         {newMedium.med === 'Doutrinador' ?
                             <>
                                 <label>Preto Velho: </label>
-                                <input type="text" value={newMedium.pretovelho} onChange={(e) => updateProps('pretovelho', e.target.value)}/>
+                                <input type="text" value={newMedium.pretovelho} onChange={(e) => updateProps('pretovelho', formatInputText(e.target.value))}/>
                                 <label>Caboclo: </label>
-                                <input type="text" value={newMedium.caboclo} onChange={(e) => updateProps('caboclo', e.target.value)}/>
+                                <input type="text" value={newMedium.caboclo} onChange={(e) => updateProps('caboclo', formatInputText(e.target.value))}/>
                                 <label>Médico: </label>
-                                <input type="text" value={newMedium.medico} onChange={(e) => updateProps('medico', e.target.value)}/>
+                                <input type="text" value={newMedium.medico} onChange={(e) => updateProps('medico', formatInputText(e.target.value))}/>
                             </>
                         : newMedium.med === 'Apará' ?
                             <>
