@@ -4,13 +4,14 @@ import { ListContext } from "src/contexts/ListContext";
 import SideMenu from "src/components/SideMenu/SideMenu";
 import Header from "src/components/header/header";
 import SubMenu from "src/components/SubMenu/SubMenu";
-import { IMentor } from "src/types/types";
+import { IMedium, IMentor } from "src/types/types";
 import MainContainer from "src/components/MainContainer/MainContainer";
 import { UserContext } from "src/contexts/UserContext";
 import api from "src/api";
-import { Alert } from "src/utilities/popups";
+import { Alert, Confirm } from "src/utilities/popups";
 import { Modal, ModalButton, ModalContent, ModalTitle } from "src/components/Modal/modal";
-import { handleEnterPress } from "src/utilities/functions";
+import { formatInputText, handleEnterPress } from "src/utilities/functions";
+import { MediumContext } from "src/contexts/MediumContext";
 
 function Guias() {
     const [search, setSearch] = useState('');
@@ -19,8 +20,9 @@ function Guias() {
     const [guia, setGuia] = useState('');
     const [showModal, setShowModal] = useState(false);    
     
-    const { token } = useContext(UserContext)
+    const { token } = useContext(UserContext);
     const { guias, loadGuia } = useContext(ListContext);
+    const { mediuns } = useContext(MediumContext);
 
     const listSubMenu = [
         {title: 'Página Inicial', click: '/'},
@@ -48,27 +50,58 @@ function Guias() {
     }
 
     const addGuia = async (nome: string, token: string) => {
-        try {
-            await api.post('/guia/create', {nome}, {headers:{Authorization: token}})
-            Alert('Guia missionária adicionada com sucesso', 'success');
-            await loadGuia(token);
-            closeModal();
-        } catch (error) {
-            console.log('Não foi possível adicionar a guia missionária', error);
-            Alert('Não foi possível adicionar a guia missionária', 'error');
-        }
+        const exists = guias.some((item: IMentor) => item.nome.toLowerCase() === nome.toLowerCase());
+        if (!nome) {
+            Alert('Preencha os dados corretamente', 'warning');
+        } else if (exists) {
+            Alert('Já existe uma guia missionária com esse nome', 'error');
+        } else {
+            try {
+                await api.post('/guia/create', {nome}, {headers:{Authorization: token}})
+                Alert('Guia missionária adicionada com sucesso', 'success');
+                await loadGuia(token);
+                closeModal();
+            } catch (error) {
+                console.log('Não foi possível adicionar a guia missionária', error);
+                Alert('Não foi possível adicionar a guia missionária', 'error');
+            }
+        } 
     }
 
     const editGuia = async (guia_id: number, nome: string, token: string) => {
-        try {
-            await api.put('/guia/update', {guia_id, nome}, {headers:{Authorization: token}})
-            Alert('Guia missionária editada com sucesso', 'success');
-            await loadGuia(token);
-            closeModal();
-        } catch (error) {
-            console.log('Não foi possível editar a guia missionária', error);
-            Alert('Não foi possível editar a guia missionária', 'error');
+        const guia = guias.find((item: IMentor) => item.id === guia_id)
+        if (guia.nome === nome) {
+            Alert('Não foi feita nenhuma alteração na guia missionária', 'info')
+        } else {
+            try {
+                await api.put('/guia/update', {guia_id, nome}, {headers:{Authorization: token}})
+                Alert('Guia missionária editada com sucesso', 'success');
+                await loadGuia(token);
+                closeModal();
+            } catch (error) {
+                console.log('Não foi possível editar a guia missionária', error);
+                Alert('Não foi possível editar a guia missionária', 'error');
+            }
         }
+    }
+
+    const deleteGuia = async (guia_id: number) => {
+        await Confirm('ATENÇÃO! O nome da guia missionária será excluído e removido de todos os cadastros. Continuar?', 'warning', 'Cancelar', 'Excluir', async () => {
+            try {
+                mediuns.forEach(async (item: IMedium) => {
+                    if (item.guia === guia_id) {
+                        await api.put('/medium/update', {medium_id: item.medium_id, guia: null}, {headers:{Authorization: token}})
+                    } 
+                })
+                await api.delete(`/guia/delete?guia_id=${guia_id}`, {headers:{Authorization: token}})
+                Alert('Guia missionária excluída com sucesso', 'success');
+                await loadGuia(token);
+                closeModal();
+            } catch (error) {
+                console.log('Erro ao excluir guia missionária', error);
+                Alert('Erro ao excluir guia missionária', 'error');
+            }
+        });
     }
     
     guias.sort((guiaA: IMentor, guiaB: IMentor) => {
@@ -91,7 +124,7 @@ function Guias() {
                         <SearchButton onClick={() => modalAddGuia()}>Adicionar nova</SearchButton>
                     </SearchContainer>
                     <InfoCard>
-                        <InfoContent>Clique sobre uma guia missionária para EDITAR</InfoContent>
+                        <InfoContent>Clique sobre uma guia missionária para EDITAR ou EXCLUIR</InfoContent>
                         <InfoContent>Resultados encontrados: {guias.filter((item: IMentor) => item.nome.toLowerCase().includes(search.trim().toLowerCase())).length}</InfoContent>
                     </InfoCard>
                 </SearchCard>
@@ -114,8 +147,15 @@ function Guias() {
                     <ModalTitle>{edit ? 'Editar Guia Missionária' : 'Nova Guia Missionária'}</ModalTitle>
                     <InputContainer>
                         <label>Nome da Guia Missionária</label>
-                        <input type="text" value={guia} onKeyUp={edit? (e) => handleEnterPress(e, async () => await editGuia(id, guia, token)) : (e) => handleEnterPress(e, async () => await addGuia(guia, token))} onChange={(e) => setGuia(e.target.value)} />
+                        <input type="text" value={guia} onKeyUp={edit? (e) => handleEnterPress(e, async () => await editGuia(id, guia, token)) : (e) => handleEnterPress(e, async () => await addGuia(guia, token))} onChange={(e) => setGuia(formatInputText(e.target.value.trim()))} />
                     </InputContainer>
+                    {edit? 
+                        <ModalButton 
+                            color="red"
+                            style={{alignSelf: 'center'}}
+                            onClick={async () => {await deleteGuia(id)}}
+                        >Excluir</ModalButton>
+                    : ''}
                     <div style={{display: 'flex', gap: '20px'}}>
                         <ModalButton color="red" onClick={() => closeModal()}>Cancelar</ModalButton>
                         <ModalButton color='green' onClick={edit ? async () => await editGuia(id, guia, token) : async () => await addGuia(guia, token)}>Salvar</ModalButton>

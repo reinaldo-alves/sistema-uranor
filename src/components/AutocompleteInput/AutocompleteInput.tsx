@@ -1,5 +1,5 @@
 import Autocomplete from '@mui/material/Autocomplete';
-import { handleEnterPress } from 'src/utilities/functions';
+import { alphabeticOrder, handleEnterPress } from 'src/utilities/functions';
 
 interface IProps {
     default: any,
@@ -36,7 +36,7 @@ function AutocompleteInput(props: IProps) {
             fullWidth={true}
             loading={props.options.length === 0}
             loadingText="Carregando..."
-            options={[props.default, ...props.options]}
+            options={alphabeticOrder([props.default, ...props.options])}
             renderInput={(params) => (
                 <div ref={params.InputProps.ref}>
                     <input type="text" onKeyUp={(e) => handleEnterPress(e, () => {if(props.onKeyUp) {props.onKeyUp()}})} {...params.inputProps} />

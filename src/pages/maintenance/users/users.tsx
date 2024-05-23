@@ -8,10 +8,10 @@ import { MediumContext } from "src/contexts/MediumContext";
 import { UserContext } from "src/contexts/UserContext";
 import api from "src/api";
 import { useNavigate } from "react-router-dom";
-import { Alert } from "src/utilities/popups";
+import { Alert, Confirm } from "src/utilities/popups";
 import { defaultMedium, defaultUser } from "src/utilities/default";
 import AutocompleteInput from "src/components/AutocompleteInput/AutocompleteInput";
-import { alphabeticOrder, handleEnterPress } from "src/utilities/functions";
+import { formatInputText, handleEnterPress } from "src/utilities/functions";
 import { Modal, ModalButton, ModalContent, ModalTitle } from "src/components/Modal/modal";
 import MainContainer from "src/components/MainContainer/MainContainer";
 
@@ -95,8 +95,11 @@ function Users() {
     }
 
     const handleAddUser = async (name: string, password: Array<string>, level: string, medium: number) => {
+        const exists = users.some((item: IUser) => item.name.toLowerCase() === name.toLowerCase());
         if(name.trim() && password[0].trim() && password[1].trim() && level && medium) {
-            if (password[0] === password[1]) {
+            if (exists) {
+                Alert('Já existe um usuário com o mesmo nome', 'error');
+            } else if (password[0] === password[1]) {
                 const finalPassword = password[1];
                 await addUser(name, finalPassword, level, medium, token)
             } else {
@@ -131,6 +134,20 @@ function Users() {
             Alert('Não foi feita nenhuma alteração no usuário', 'info')
         }
     }
+
+    const deleteUser = async (user_id: number) => {
+        await Confirm('ATENÇÃO! O usuário será excluído do sistema. Continuar?', 'warning', 'Cancelar', 'Excluir', async () => {
+            try {
+                await api.delete(`/user/delete?user_id=${user_id}`, {headers:{Authorization: token}})
+                Alert('Usuário excluído com sucesso', 'success');
+                await loadUser(token);
+                closeModal();
+            } catch (error) {
+                console.log('Erro ao excluir usuário', error);
+                Alert('Erro ao excluir usuário', 'error');
+            }
+        });
+    }
     
     users.sort((userA: IUser, userB: IUser) => {
         const nomeA = userA.name.toLowerCase();
@@ -161,7 +178,7 @@ function Users() {
                         <SearchButton onClick={() => modalAddUser()}>Adicionar novo</SearchButton>
                     </SearchContainer>
                     <InfoCard>
-                        <InfoContent>Clique sobre um usuário para EDITAR</InfoContent>
+                        <InfoContent>Clique sobre um usuário para EDITAR ou EXCLUIR</InfoContent>
                         <InfoContent>
                             Resultados encontrados: {users
                                 .filter((item: IUser) => item.name.toLowerCase().includes(searchName.trim().toLowerCase()))
@@ -191,15 +208,15 @@ function Users() {
                     <ModalTitle>{edit? 'Editar Usuário' : 'Novo Usuário'}</ModalTitle>
                     <InputContainer>
                         <label>Nome do Usuário</label>
-                        <input type="text" value={edited.name} onKeyUp={edit? (e) => handleEnterPress(e, async () => await editUser(edited, selected, token)) : (e) => handleEnterPress(e, async () => await handleAddUser(edited.name, [password1, password2], edited.level, edited.medium_id))} onChange={(e) => updateProps('name', e.target.value)} />
+                        <input type="text" value={edited.name} onKeyUp={edit? (e) => handleEnterPress(e, async () => await editUser(edited, selected, token)) : (e) => handleEnterPress(e, async () => await handleAddUser(edited.name, [password1, password2], edited.level, edited.medium_id))} onChange={(e) => updateProps('name', formatInputText(e.target.value))} />
                     </InputContainer>
                     <InputContainer>
                         <label>Médium</label>
                         <AutocompleteInput 
-                            label={(option) => option.nome}
+                            label={(option) => option.medium_id ? `${option.nome} (${option.medium_id.toString().padStart(5, '0')})` : ''}
                             default={defaultMedium}
                             disabledOptions={(option) => option? users.some((item: IUser) => item?.medium_id === option?.medium_id) : false}
-                            options={alphabeticOrder(mediuns.filter((item: IMedium) => Boolean(item.dtElevacao) === true))}
+                            options={mediuns.filter((item: IMedium) => Boolean(item.dtElevacao) === true)}
                             equality={(option, value) => option?.medium_id === value?.medium_id}
                             value={dropMedium}
                             setValue={setDropMedium}
@@ -218,14 +235,13 @@ function Users() {
                         </select>
                     </InputContainer>
                     {edit? 
-                        <ModalButton 
-                            color="green"
-                            style={{alignSelf: 'center'}}
-                            onClick={() => {
+                        <div style={{display: 'flex', gap: '20px'}}>
+                            <ModalButton color="red" onClick={async () => {await deleteUser(selected.user_id)}}>Excluir</ModalButton>
+                            <ModalButton color="green" onClick={() => {
                                 setUserChangePassword(selected);
                                 navigate('/manutencao/usuarios/alterarsenha');
-                            }}
-                        >Alterar Senha</ModalButton>
+                            }}>Alterar Senha</ModalButton>
+                        </div>
                     : 
                         <>         
                             <InputContainer>

@@ -2,7 +2,7 @@ import SubMenu from "src/components/SubMenu/SubMenu";
 import Header from "../../components/header/header";
 import SideMenu from "src/components/SideMenu/SideMenu";
 import MainContainer from "src/components/MainContainer/MainContainer";
-import GridButtonPDF from "src/components/GridButtonPDF/GridButtonPDF";
+import GridButton from "src/components/GridButton/GridButton";
 import F1 from "src/assets/pdf/Instrucoes1.pdf";
 import F2 from "src/assets/pdf/Instrucoes2.pdf";
 import F3 from "src/assets/pdf/Instrucoes3.pdf";
@@ -14,13 +14,13 @@ import F7 from "src/assets/pdf/Instrucoes7.pdf";
 function InstrucoesPraticas() {
     
     const docs = [
-        {name: 'Fascículo 1', link: F1},
-        {name: 'Fascículo 2', link: F2},
-        {name: 'Fascículo 3', link: F3},
-        {name: 'Fascículo 4', link: F4},
-        {name: 'Fascículo 5', link: F5},
-        {name: 'Fascículo 6', link: F6},
-        {name: 'Fascículo 7', link: F7},        
+        {name: 'Fascículo 1', pdf: F1},
+        {name: 'Fascículo 2', pdf: F2},
+        {name: 'Fascículo 3', pdf: F3},
+        {name: 'Fascículo 4', pdf: F4},
+        {name: 'Fascículo 5', pdf: F5},
+        {name: 'Fascículo 6', pdf: F6},
+        {name: 'Fascículo 7', pdf: F7},        
     ]
     
     const menuList = [
@@ -33,7 +33,7 @@ function InstrucoesPraticas() {
             <Header />
             <SubMenu list={menuList}/>
             <MainContainer title="Instruções Práticas" >
-                <GridButtonPDF docs={docs}/>
+                <GridButton pdf docs={docs}/>
             </MainContainer>
             <SideMenu list={menuList}/>
         </>

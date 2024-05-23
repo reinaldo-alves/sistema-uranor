@@ -4,15 +4,16 @@ import { ListContext } from "src/contexts/ListContext";
 import SideMenu from "src/components/SideMenu/SideMenu";
 import Header from "src/components/header/header";
 import SubMenu from "src/components/SubMenu/SubMenu";
-import { IAdjunto, IEstado, IMentor, ITemplo } from "src/types/types";
+import { IAdjunto, IEstado, IMedium, IMentor, ITemplo } from "src/types/types";
 import MainContainer from "src/components/MainContainer/MainContainer";
 import { UserContext } from "src/contexts/UserContext";
 import api from "src/api";
-import { Alert } from "src/utilities/popups";
+import { Alert, Confirm } from "src/utilities/popups";
 import { defaultAdj, defaultTemp } from "src/utilities/default";
 import AutocompleteInput from "src/components/AutocompleteInput/AutocompleteInput";
-import { alphabeticOrder, handleEnterPress } from "src/utilities/functions";
+import { formatInputText, handleEnterPress } from "src/utilities/functions";
 import { Modal, ModalButton, ModalContent, ModalTitle } from "src/components/Modal/modal";
+import { MediumContext } from "src/contexts/MediumContext";
 
 function Templos() {
     const [searchName, setSearchName] = useState('');
@@ -27,6 +28,7 @@ function Templos() {
     
     const { token } = useContext(UserContext);
     const { ministros, adjuntos, templos, estados, loadTemplo } = useContext(ListContext);
+    const { mediuns } = useContext(MediumContext);
 
     const listSubMenu = [
         {title: 'Página Inicial', click: '/'},
@@ -71,14 +73,21 @@ function Templos() {
 
     const addTemp = async (templo: ITemplo, token: string) => {
         const {templo_id, ...newTemplo} = templo;
-        try {
-            await api.post('/templo/create', newTemplo, {headers:{Authorization: token}})
-            Alert('Templo adicionado com sucesso', 'success');
-            await loadTemplo(token);
-            closeModal();
-        } catch (error) {
-            console.log('Não foi possível adicionar o templo', error);
-            Alert('Não foi possível adicionar o templo', 'error');
+        const exists = templos.some((item: ITemplo) => item.cidade.toLowerCase() === templo.cidade.toLowerCase() && item.presidente === templo.presidente);
+        if (!templo.cidade || !templo.estado || !templo.presidente) {
+            Alert('Preencha os dados corretamente', 'warning');
+        } else if (exists) {
+            Alert('Já existe um templo com o mesmo nome e adjunto', 'error');
+        } else {
+            try {
+                await api.post('/templo/create', newTemplo, {headers:{Authorization: token}})
+                Alert('Templo adicionado com sucesso', 'success');
+                await loadTemplo(token);
+                closeModal();
+            } catch (error) {
+                console.log('Não foi possível adicionar o templo', error);
+                Alert('Não foi possível adicionar o templo', 'error');
+            }
         }
     }
 
@@ -105,6 +114,24 @@ function Templos() {
             }
         } else {
             Alert('Não foi feita nenhuma alteração no templo', 'info')
+        }
+    }
+
+    const deleteTemp = async (templo_id: number) => {
+        if (mediuns.some((item: IMedium) => item.templo === templo_id || item.temploOrigem === templo_id)) {
+            Alert('Ainda há médiuns ligados a este templo', 'warning')
+        } else {
+            await Confirm('ATENÇÃO! O templo será excluído do sistema. Continuar?', 'warning', 'Cancelar', 'Excluir', async () => {
+                try {
+                    await api.delete(`/templo/delete?templo_id=${templo_id}`, {headers:{Authorization: token}})
+                    Alert('Templo excluído com sucesso', 'success');
+                    await loadTemplo(token);
+                    closeModal();
+                } catch (error) {
+                    console.log('Erro ao excluir templo', error);
+                    Alert('Erro ao excluir templo', 'error');
+                }
+            });
         }
     }
     
@@ -141,7 +168,7 @@ function Templos() {
                         <SearchButton onClick={() => modalAddTemp()}>Adicionar novo</SearchButton>
                     </SearchContainer>
                     <InfoCard>
-                        <InfoContent>Clique sobre um templo para EDITAR</InfoContent>
+                        <InfoContent>Clique sobre um templo para EDITAR ou EXCLUIR</InfoContent>
                         <InfoContent>
                             Resultados encontrados: {templos
                                 .filter((item: ITemplo) => ministros.filter((min: IMentor) => min.id === adjuntos.filter((ad: IAdjunto) => ad.adjunto_id === item.presidente)[0].ministro)[0].nome.toLowerCase().includes(searchMin.trim().toLowerCase()))
@@ -172,7 +199,7 @@ function Templos() {
                     <ModalTitle>{edit? 'Editar Templo' : 'Novo Templo'}</ModalTitle>
                     <InputContainer>
                         <label>Nome do Templo (Cidade)</label>
-                        <input type="text" value={edited.cidade} onKeyUp={edit? (e) => handleEnterPress(e, async () => await editTemp(edited, selected, token)) : (e) => handleEnterPress(e, async () => await addTemp(edited, token))} onChange={(e) => updateProps('cidade', e.target.value)} />
+                        <input type="text" value={edited.cidade} onKeyUp={edit? (e) => handleEnterPress(e, async () => await editTemp(edited, selected, token)) : (e) => handleEnterPress(e, async () => await addTemp(edited, token))} onChange={(e) => updateProps('cidade', formatInputText(e.target.value))} />
                     </InputContainer>
                     <InputContainer>
                         <label>Estado</label>
@@ -188,7 +215,7 @@ function Templos() {
                         <AutocompleteInput 
                             label={(option) => option === defaultAdj ? '' : `Adj. ${ministros.filter((min: IMentor) => min.id === option.ministro)[0].nome} - Mestre ${option.nome}` }
                             default={defaultAdj}
-                            options={alphabeticOrder(adjuntos.filter((item: IAdjunto) => item.esperanca === false))}
+                            options={adjuntos.filter((item: IAdjunto) => item.esperanca === false)}
                             equality={(option, value) => option?.adjunto_id === value?.adjunto_id}
                             value={dropPres}
                             setValue={setDropPres}
@@ -197,6 +224,13 @@ function Templos() {
                             onKeyUp={edit? async () => await editTemp(edited, selected, token) : async () => await addTemp(edited, token)}
                         />
                     </InputContainer>
+                    {edit? 
+                        <ModalButton 
+                            color="red"
+                            style={{alignSelf: 'center'}}
+                            onClick={async () => {await deleteTemp(selected.templo_id)}}
+                        >Excluir</ModalButton>
+                    : ''}
                     <div style={{display: 'flex', gap: '20px'}}>
                         <ModalButton color="red" onClick={() => closeModal()}>Cancelar</ModalButton>
                         <ModalButton color='green' onClick={edit? async () => await editTemp(edited, selected, token) : async () => await addTemp(edited, token)}>Salvar</ModalButton>

@@ -1,9 +1,8 @@
 import SubMenu from "src/components/SubMenu/SubMenu";
 import Header from "../../../components/header/header";
 import SideMenu from "src/components/SideMenu/SideMenu";
-import MainTitle from "src/components/MainContainer/MainContainer";
 import { ButtonContainer, ConsagracaoCard, InputContainer, ModalMediumContent, MudancaObs, MudancaWarning, NavigateButton, PageSubTitle, PhotoContainer, Results, ResultsData, ResultsPanel, ResultsTable, ResultsTitle } from "../styles";
-import { alphabeticOrder, countMedium, handleEnterPress } from "src/utilities/functions";
+import { alphabeticOrder, countMedium, handleEnterPress, setSituation } from "src/utilities/functions";
 import { useContext, useEffect, useState } from "react";
 import { ListContext } from "src/contexts/ListContext";
 import { IConsagracao, IMedium } from "src/types/types";
@@ -281,9 +280,9 @@ function Elevacao() {
                     <InputContainer>
                         <label>Nome do Médium</label>
                         <AutocompleteInput 
-                            label={(option) => option.nome}
+                            label={(option) => option.medium_id ? `${option.nome} (${option.medium_id.toString().padStart(5, '0')})` : ''}
                             default={defaultMedium}
-                            options={mediuns.filter((item: IMedium) => item.medium_id && item.dtEmplac && !item.dtElevacao && item.condicao === 'Ativo' && searchMediumInCons(item.medium_id) === defaultConsagracao)}
+                            options={mediuns.filter((item: IMedium) => item.medium_id && (setSituation(item) === 'Iniciado' || setSituation(item) === 'Liberado') && item.condicao === 'Ativo' && searchMediumInCons(item.medium_id) === defaultConsagracao)}
                             equality={(option, value) => option.medium_id === value.medium_id}
                             value={dropMedium}
                             setValue={setDropMedium}

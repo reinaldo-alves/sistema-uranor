@@ -4,13 +4,14 @@ import { ListContext } from "src/contexts/ListContext";
 import SideMenu from "src/components/SideMenu/SideMenu";
 import Header from "src/components/header/header";
 import SubMenu from "src/components/SubMenu/SubMenu";
-import { IMentor } from "src/types/types";
+import { IMedium, IMentor } from "src/types/types";
 import MainContainer from "src/components/MainContainer/MainContainer";
 import api from "src/api";
 import { UserContext } from "src/contexts/UserContext";
-import { Alert } from "src/utilities/popups";
+import { Alert, Confirm } from "src/utilities/popups";
 import { Modal, ModalButton, ModalContent, ModalTitle } from "src/components/Modal/modal";
-import { handleEnterPress } from "src/utilities/functions";
+import { formatInputText, handleEnterPress } from "src/utilities/functions";
+import { MediumContext } from "src/contexts/MediumContext";
 
 function Ministros() {
     const [search, setSearch] = useState('');
@@ -19,8 +20,9 @@ function Ministros() {
     const [ministro, setMinistro] = useState('');
     const [showModal, setShowModal] = useState(false);
     
-    const { token } = useContext(UserContext)
+    const { token } = useContext(UserContext);
     const { ministros, loadMinistro } = useContext(ListContext);
+    const { mediuns } = useContext(MediumContext);
 
     const listSubMenu = [
         {title: 'Página Inicial', click: '/'},
@@ -48,27 +50,58 @@ function Ministros() {
     }
 
     const addMin = async (nome: string, token: string) => {
-        try {
-            await api.post('/ministro/create', {nome}, {headers:{Authorization: token}})
-            Alert('Ministro adicionado com sucesso', 'success');
-            await loadMinistro(token);
-            closeModal();
-        } catch (error) {
-            console.log('Não foi possível adicionar o ministro', error);
-            Alert('Não foi possível adicionar o ministro', 'error');
-        }
+        const exists = ministros.some((item: IMentor) => item.nome.toLowerCase() === nome.toLowerCase());
+        if (!nome) {
+            Alert('Preencha os dados corretamente', 'warning');
+        } else if (exists) {
+            Alert('Já existe um ministro com esse nome', 'error');
+        } else {
+            try {
+                await api.post('/ministro/create', {nome}, {headers:{Authorization: token}})
+                Alert('Ministro adicionado com sucesso', 'success');
+                await loadMinistro(token);
+                closeModal();
+            } catch (error) {
+                console.log('Não foi possível adicionar o ministro', error);
+                Alert('Não foi possível adicionar o ministro', 'error');
+            }
+        }        
     }
 
     const editMin = async (ministro_id: number, nome: string, token: string) => {
-        try {
-            await api.put('/ministro/update', {ministro_id, nome}, {headers:{Authorization: token}})
-            Alert('Ministro editado com sucesso', 'success');
-            await loadMinistro(token);
-            closeModal();
-        } catch (error) {
-            console.log('Não foi possível editar o ministro', error);
-            Alert('Não foi possível editar o ministro', 'error');
+        const min = ministros.find((item: IMentor) => item.id === ministro_id)
+        if (min.nome === nome) {
+            Alert('Não foi feita nenhuma alteração no ministro', 'info')
+        } else {
+            try {
+                await api.put('/ministro/update', {ministro_id, nome}, {headers:{Authorization: token}})
+                Alert('Ministro editado com sucesso', 'success');
+                await loadMinistro(token);
+                closeModal();
+            } catch (error) {
+                console.log('Não foi possível editar o ministro', error);
+                Alert('Não foi possível editar o ministro', 'error');
+            }
         }
+    }
+
+    const deleteMin = async (ministro_id: number) => {
+        await Confirm('ATENÇÃO! O nome do ministro será excluído e removido de todos os cadastros. Continuar?', 'warning', 'Cancelar', 'Excluir', async () => {
+            try {
+                mediuns.forEach(async (item: IMedium) => {
+                    if (item.ministro === ministro_id) {
+                        await api.put('/medium/update', {medium_id: item.medium_id, ministro: null}, {headers:{Authorization: token}})
+                    } 
+                })
+                await api.delete(`/ministro/delete?ministro_id=${ministro_id}`, {headers:{Authorization: token}})
+                Alert('Ministro excluído com sucesso', 'success');
+                await loadMinistro(token);
+                closeModal();
+            } catch (error) {
+                console.log('Erro ao excluir ministro', error);
+                Alert('Erro ao excluir ministro', 'error');
+            }
+        });
     }
     
     ministros.sort((minA: IMentor, minB: IMentor) => {
@@ -91,7 +124,7 @@ function Ministros() {
                         <SearchButton onClick={() => modalAddMin()}>Adicionar novo</SearchButton>
                     </SearchContainer>
                     <InfoCard>
-                        <InfoContent>Clique sobre um ministro para EDITAR</InfoContent>
+                        <InfoContent>Clique sobre um ministro para EDITAR ou EXCLUIR</InfoContent>
                         <InfoContent>Resultados encontrados: {ministros.filter((item: IMentor) => item.nome.toLowerCase().includes(search.trim().toLowerCase())).length}</InfoContent>
                     </InfoCard>
                 </SearchCard>
@@ -114,8 +147,15 @@ function Ministros() {
                     <ModalTitle>{edit ? 'Editar Ministro' : 'Novo Ministro'}</ModalTitle>
                     <InputContainer>
                         <label>Nome do Ministro</label>
-                        <input type="text" value={ministro} onKeyUp={edit? (e) => handleEnterPress(e, async () => await editMin(id, ministro, token)) : (e) => handleEnterPress(e, async () => await addMin(ministro, token))} onChange={(e) => setMinistro(e.target.value)} />
+                        <input type="text" value={ministro} onKeyUp={edit? (e) => handleEnterPress(e, async () => await editMin(id, ministro, token)) : (e) => handleEnterPress(e, async () => await addMin(ministro, token))} onChange={(e) => setMinistro(formatInputText(e.target.value.trim()))} />
                     </InputContainer>
+                    {edit? 
+                        <ModalButton 
+                            color="red"
+                            style={{alignSelf: 'center'}}
+                            onClick={async () => {await deleteMin(id)}}
+                        >Excluir</ModalButton>
+                    : ''}
                     <div style={{display: 'flex', gap: '20px'}}>
                         <ModalButton color="red" onClick={() => closeModal()}>Cancelar</ModalButton>
                         <ModalButton color='green' onClick={edit ? async () => await editMin(id, ministro, token) : async () => await addMin(ministro, token)}>Salvar</ModalButton>

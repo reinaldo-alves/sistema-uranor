@@ -10,7 +10,7 @@ import { UserContext } from "src/contexts/UserContext";
 import api from "src/api";
 import { Alert } from "src/utilities/popups";
 import { Modal, ModalButton, ModalContent, ModalSubTitle, ModalTitle } from "src/components/Modal/modal";
-import { handleEnterPress } from "src/utilities/functions";
+import { formatInputText, handleEnterPress } from "src/utilities/functions";
 
 function Falanges() {   
     const [search, setSearch] = useState('');
@@ -112,11 +112,11 @@ function Falanges() {
                     <ModalSubTitle>{edited.nome}</ModalSubTitle>
                     <InputContainer>
                         <label>Nome da Primeira</label>
-                        <input type="text" value={edited.primeira} onKeyUp={(e) => handleEnterPress(e, async () => await editFal(edited, selected, token))} onChange={(e) => updateProps('primeira', e.target.value)} />
+                        <input type="text" value={edited.primeira} onKeyUp={(e) => handleEnterPress(e, async () => await editFal(edited, selected, token))} onChange={(e) => updateProps('primeira', formatInputText(e.target.value))} />
                     </InputContainer>
                     <InputContainer>
                         <label>Classificação do Adjunto de Apoio</label>
-                        <input type="text" disabled={!edited.ninfa} value={edited.adjMin} onKeyUp={(e) => handleEnterPress(e, async () => await editFal(edited, selected, token))} onChange={(e) => updateProps('adjMin', e.target.value)} />
+                        <input type="text" disabled={!edited.ninfa} value={edited.adjMin} onKeyUp={(e) => handleEnterPress(e, async () => await editFal(edited, selected, token))} onChange={(e) => updateProps('adjMin', formatInputText(e.target.value))} />
                     </InputContainer>
                     <InputContainer>
                         <label>Nome do Adjunto de Apoio</label>

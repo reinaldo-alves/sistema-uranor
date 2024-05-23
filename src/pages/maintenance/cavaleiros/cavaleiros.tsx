@@ -4,14 +4,15 @@ import { ListContext } from "src/contexts/ListContext";
 import SideMenu from "src/components/SideMenu/SideMenu";
 import Header from "src/components/header/header";
 import SubMenu from "src/components/SubMenu/SubMenu";
-import { ICavaleiro } from "src/types/types";
+import { ICavaleiro, IMedium } from "src/types/types";
 import MainContainer from "src/components/MainContainer/MainContainer";
 import { UserContext } from "src/contexts/UserContext";
 import api from "src/api";
-import { Alert } from "src/utilities/popups";
+import { Alert, Confirm } from "src/utilities/popups";
 import { defaultCavaleiro } from "src/utilities/default";
 import { Modal, ModalButton, ModalContent, ModalTitle } from "src/components/Modal/modal";
-import { handleEnterPress } from "src/utilities/functions";
+import { formatInputText, handleEnterPress } from "src/utilities/functions";
+import { MediumContext } from "src/contexts/MediumContext";
 
 function Cavaleiros() {
     const [search, setSearch] = useState('');
@@ -22,6 +23,7 @@ function Cavaleiros() {
     
     const { token } = useContext(UserContext);
     const { cavaleiros, loadCavaleiro } = useContext(ListContext);
+    const { mediuns } = useContext(MediumContext);
 
     const listSubMenu = [
         {title: 'Página Inicial', click: '/'},
@@ -56,15 +58,22 @@ function Cavaleiros() {
     }
 
     const addCav = async (cavaleiro: ICavaleiro, token: string) => {
-        try {
-            await api.post('/cavaleiro/create', {nome:cavaleiro.nome, med:cavaleiro.med}, {headers:{Authorization: token}})
-            Alert('Cavaleiro adicionado com sucesso', 'success');
-            await loadCavaleiro(token);
-            closeModal();
-        } catch (error) {
-            console.log('Não foi possível adicionar o cavaleiro', error);
-            Alert('Não foi possível adicionar o cavaleiro', 'error');
-        }
+        const exists = cavaleiros.some((item: ICavaleiro) => item.nome.toLowerCase() === cavaleiro.nome.toLowerCase());
+        if (!cavaleiro.nome || !cavaleiro.med) {
+            Alert('Preencha os dados corretamente', 'warning');
+        } else if (exists) {
+            Alert('Já existe um cavaleiro com esse nome', 'error');
+        } else {
+            try {
+                await api.post('/cavaleiro/create', {nome:cavaleiro.nome, med:cavaleiro.med}, {headers:{Authorization: token}})
+                Alert('Cavaleiro adicionado com sucesso', 'success');
+                await loadCavaleiro(token);
+                closeModal();
+            } catch (error) {
+                console.log('Não foi possível adicionar o cavaleiro', error);
+                Alert('Não foi possível adicionar o cavaleiro', 'error');
+            }
+        }   
     }
 
     const editCav = async (newCav: ICavaleiro, oldCav: ICavaleiro, token: string) => {
@@ -90,6 +99,28 @@ function Cavaleiros() {
             Alert('Não foi feita nenhuma alteração no cavaleiro', 'info')
         }
     }
+
+    const deleteCav = async (cavaleiro_id: number) => {
+        await Confirm('ATENÇÃO! O nome do cavaleiro será excluído e removido de todos os cadastros. Continuar?', 'warning', 'Cancelar', 'Excluir', async () => {
+            try {
+                mediuns.forEach(async (item: IMedium) => {
+                    if (item.cavaleiro === cavaleiro_id) {
+                        await api.put('/medium/update', {medium_id: item.medium_id, cavaleiro: null}, {headers:{Authorization: token}})
+                    }
+                    if (item.oldCavaleiro === cavaleiro_id) {
+                        await api.put('/medium/update', {medium_id: item.medium_id, oldCavaleiro: null}, {headers:{Authorization: token}})
+                    } 
+                })
+                await api.delete(`/cavaleiro/delete?cavaleiro_id=${cavaleiro_id}`, {headers:{Authorization: token}})
+                Alert('Cavaleiro excluído com sucesso', 'success');
+                await loadCavaleiro(token);
+                closeModal();
+            } catch (error) {
+                console.log('Erro ao excluir cavaleiro', error);
+                Alert('Erro ao excluir cavaleiro', 'error');
+            }
+        });
+    }
     
     cavaleiros.sort((cavA: ICavaleiro, cavB: ICavaleiro) => {
         const nomeA = cavA.nome.toLowerCase();
@@ -111,7 +142,7 @@ function Cavaleiros() {
                         <SearchButton onClick={() => modalAddCav()}>Adicionar novo</SearchButton>
                     </SearchContainer>
                     <InfoCard>
-                        <InfoContent>Clique sobre um cavaleiro para EDITAR</InfoContent>
+                        <InfoContent>Clique sobre um cavaleiro para EDITAR ou EXCLUIR</InfoContent>
                         <InfoContent>Resultados encontrados: {cavaleiros.filter((item: ICavaleiro) => item.nome.toLowerCase().includes(search.trim().toLowerCase())).length}</InfoContent>
                     </InfoCard>
                 </SearchCard>
@@ -135,7 +166,7 @@ function Cavaleiros() {
                     <ModalTitle>{edit? 'Editar Cavaleiro' : 'Novo Cavaleiro'}</ModalTitle>
                     <InputContainer>
                         <label>Nome do Cavaleiro</label>
-                        <input type="text" value={edited.nome} onKeyUp={edit? (e) => handleEnterPress(e, async () => await editCav(edited, selected, token)) : (e) => handleEnterPress(e, async () => await addCav(edited, token))} onChange={(e) => updateProps('nome', e.target.value)} />
+                        <input type="text" value={edited.nome} onKeyUp={edit? (e) => handleEnterPress(e, async () => await editCav(edited, selected, token)) : (e) => handleEnterPress(e, async () => await addCav(edited, token))} onChange={(e) => updateProps('nome', formatInputText(e.target.value.trim()))} />
                     </InputContainer>
                     <InputContainer>
                         <label>Mediunidade</label>
@@ -145,6 +176,13 @@ function Cavaleiros() {
                             <option value='Doutrinador'>Doutrinador</option>
                         </select>
                     </InputContainer>
+                    {edit? 
+                        <ModalButton 
+                            color="red"
+                            style={{alignSelf: 'center'}}
+                            onClick={async () => {await deleteCav(selected.id)}}
+                        >Excluir</ModalButton>
+                    : ''}
                     <div style={{display: 'flex', gap: '20px'}}>
                         <ModalButton color="red" onClick={() => closeModal()}>Cancelar</ModalButton>
                         <ModalButton color='green' onClick={edit? async () => await editCav(edited, selected, token) : async () => await addCav(edited, token)}>Salvar</ModalButton>

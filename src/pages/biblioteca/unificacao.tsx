@@ -2,46 +2,46 @@ import SubMenu from "src/components/SubMenu/SubMenu";
 import Header from "../../components/header/header";
 import SideMenu from "src/components/SideMenu/SideMenu";
 import MainContainer from "src/components/MainContainer/MainContainer";
-import GridButtonPDF from "src/components/GridButtonPDF/GridButtonPDF";
+import GridButton from "src/components/GridButton/GridButton";
 
 function Unificacao() {
     
     const docs = [
-        {name: '1° Estágio (Templos em Projeção)', link: null},
-        {name: '2° Estágio (Trabalho Especial)', link: null},
-        {name: '3° Estágio (Corrente Mestra)', link: null},
-        {name: 'Abatá', link: null},
-        {name: 'Abatá das Falanges Missionárias', link: null},
-        {name: 'Abatá (Templo Sem Corrente Mestra)', link: null},
-        {name: 'Alabá', link: null},
-        {name: 'Angical', link: null},
-        {name: 'Aramê', link: null},
-        {name: 'Autorização', link: null},
-        {name: 'Batizado', link: null},
-        {name: 'Bênção do Ministro', link: null},
-        {name: 'Crianças e Adolescentes no Desenvolvimento', link: null},
-        {name: 'Cruz do Caminho', link: null},
-        {name: 'Cura Evangélica', link: null},
-        {name: 'Cura Iniciática', link: null},
-        {name: 'Defumação', link: null},
-        {name: 'Defumação na Mesa Evangélica', link: null},
-        {name: 'Desenvolvimento', link: null},
-        {name: 'Imunização', link: null},
-        {name: 'Indução', link: null},
-        {name: 'Junção', link: null},
-        {name: 'Leito Magnético', link: null},
-        {name: 'Linha de Passe', link: null},
-        {name: 'Mesa Evangélica', link: null},
-        {name: 'Oráculo', link: null},
-        {name: 'Randy', link: null},
-        {name: 'Retiro', link: null},
-        {name: 'Roteiro para Palestra Dominical', link: null},
-        {name: 'Sanday de Tronos', link: null},
-        {name: 'Sessão Branca', link: null},
-        {name: 'Sudálio', link: null},
-        {name: 'Teste Mediúnico', link: null},
-        {name: 'Triagem', link: null},
-        {name: 'Tronos Vermelhos e Amarelos', link: null},
+        {name: '1° Estágio (Templos em Projeção)', pdf: null},
+        {name: '2° Estágio (Trabalho Especial)', pdf: null},
+        {name: '3° Estágio (Corrente Mestra)', pdf: null},
+        {name: 'Abatá', pdf: null},
+        {name: 'Abatá das Falanges Missionárias', pdf: null},
+        {name: 'Abatá (Templo Sem Corrente Mestra)', pdf: null},
+        {name: 'Alabá', pdf: null},
+        {name: 'Angical', pdf: null},
+        {name: 'Aramê', pdf: null},
+        {name: 'Autorização', pdf: null},
+        {name: 'Batizado', pdf: null},
+        {name: 'Bênção do Ministro', pdf: null},
+        {name: 'Crianças e Adolescentes no Desenvolvimento', pdf: null},
+        {name: 'Cruz do Caminho', pdf: null},
+        {name: 'Cura Evangélica', pdf: null},
+        {name: 'Cura Iniciática', pdf: null},
+        {name: 'Defumação', pdf: null},
+        {name: 'Defumação na Mesa Evangélica', pdf: null},
+        {name: 'Desenvolvimento', pdf: null},
+        {name: 'Imunização', pdf: null},
+        {name: 'Indução', pdf: null},
+        {name: 'Junção', pdf: null},
+        {name: 'Leito Magnético', pdf: null},
+        {name: 'Linha de Passe', pdf: null},
+        {name: 'Mesa Evangélica', pdf: null},
+        {name: 'Oráculo', pdf: null},
+        {name: 'Randy', pdf: null},
+        {name: 'Retiro', pdf: null},
+        {name: 'Roteiro para Palestra Dominical', pdf: null},
+        {name: 'Sanday de Tronos', pdf: null},
+        {name: 'Sessão Branca', pdf: null},
+        {name: 'Sudálio', pdf: null},
+        {name: 'Teste Mediúnico', pdf: null},
+        {name: 'Triagem', pdf: null},
+        {name: 'Tronos Vermelhos e Amarelos', pdf: null},
     ]
     
     const menuList = [
@@ -54,7 +54,7 @@ function Unificacao() {
             <Header />
             <SubMenu list={menuList}/>
             <MainContainer title="Unificação dos Trabalhos nos Templos do Amanhecer" >
-                <GridButtonPDF docs={docs}/>
+                <GridButton pdf docs={docs}/>
             </MainContainer>
             <SideMenu list={menuList}/>
         </>

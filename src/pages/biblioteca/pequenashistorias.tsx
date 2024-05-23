@@ -2,7 +2,7 @@ import SubMenu from "src/components/SubMenu/SubMenu";
 import Header from "../../components/header/header";
 import SideMenu from "src/components/SideMenu/SideMenu";
 import MainContainer from "src/components/MainContainer/MainContainer";
-import GridButtonPDF from "src/components/GridButtonPDF/GridButtonPDF";
+import GridButton from "src/components/GridButton/GridButton";
 import PH1 from "src/assets/pdf/PH01-AHistoriaManoelTruncado.pdf";
 import PH2 from "src/assets/pdf/PH02-NaraSuicida.pdf";
 import PH3 from "src/assets/pdf/PH03-MensagemAmigoRecemDesencarnado.pdf";
@@ -22,21 +22,21 @@ import Tab from "src/assets/pdf/TabelaLivros.pdf";
 function PequenasHistorias() {
     
     const docs = [
-        {name: '01 - A História de Manoel Truncado', link: PH1},
-        {name: '02 - Nara, a Suicida', link: PH2},
-        {name: '03 - Mensagem de um Amigo Recém-Desencarnado', link: PH3},
-        {name: '04 - A Noivinha Desencarnada', link: PH4},
-        {name: '05 - O Velho Coronel', link: PH5},
-        {name: '06 - O Pequeno Pajé', link: PH6},
-        {name: '07 - Um Homem de Dois Mundos', link: PH7},
-        {name: '08 - Meus Primeiros Passos no Canal Vermelho', link: PH8},
-        {name: '09 - O Presidiário Conselheiro', link: PH9},
-        {name: '10 - A Volta dos Ciganos', link: PH10},
-        {name: '11 - O Amanhecer das Princesas na Cachoeira do Jaguar', link: PH11},
-        {name: '12 - Tiãozinho e Justininha', link: PH12},
-        {name: '13 - Almas Gêmeas', link: PH13},
-        {name: '14 - As Vidas do Lenhador', link: PH14},
-        {name: 'Tabela de Livros e Período Indicado', link: Tab},
+        {name: '01 - A História de Manoel Truncado', pdf: PH1},
+        {name: '02 - Nara, a Suicida', pdf: PH2},
+        {name: '03 - Mensagem de um Amigo Recém-Desencarnado', pdf: PH3},
+        {name: '04 - A Noivinha Desencarnada', pdf: PH4},
+        {name: '05 - O Velho Coronel', pdf: PH5},
+        {name: '06 - O Pequeno Pajé', pdf: PH6},
+        {name: '07 - Um Homem de Dois Mundos', pdf: PH7},
+        {name: '08 - Meus Primeiros Passos no Canal Vermelho', pdf: PH8},
+        {name: '09 - O Presidiário Conselheiro', pdf: PH9},
+        {name: '10 - A Volta dos Ciganos', pdf: PH10},
+        {name: '11 - O Amanhecer das Princesas na Cachoeira do Jaguar', pdf: PH11},
+        {name: '12 - Tiãozinho e Justininha', pdf: PH12},
+        {name: '13 - Almas Gêmeas', pdf: PH13},
+        {name: '14 - As Vidas do Lenhador', pdf: PH14},
+        {name: 'Tabela de Livros e Período Indicado', pdf: Tab},
         
     ]
     
@@ -50,7 +50,7 @@ function PequenasHistorias() {
             <Header />
             <SubMenu list={menuList}/>
             <MainContainer title="Pequenas Histórias" >
-                <GridButtonPDF docs={docs} fontSize={20}/>
+                <GridButton docs={docs} pdf fontSize={20}/>
             </MainContainer>
             <SideMenu list={menuList}/>
         </>

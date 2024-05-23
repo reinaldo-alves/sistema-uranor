@@ -8,7 +8,7 @@ import { IEstado, IFalange, IMedium, IMentor, ITemplo } from "src/types/types";
 import { MediumContext } from "src/contexts/MediumContext";
 import { ListContext } from "src/contexts/ListContext";
 import { CheckboxContainer, DatesContainer, Divider, FieldContainer, FieldContainerBox, GridContainer, GridDatesContainer, InputContainer, MainContent, MainInfoContainer, MixedContainer, PersonalCard, ReportButton, SectionTitle } from "./styles";
-import { alphabeticOrder, oppositeTurno, setSituation } from "src/utilities/functions";
+import { oppositeTurno, setSituation } from "src/utilities/functions";
 import AutocompleteInput from "src/components/AutocompleteInput/AutocompleteInput";
 import { generateReport } from "src/utilities/createDocs";
 import { Alert } from "src/utilities/popups";
@@ -319,7 +319,7 @@ function Relatorios() {
                         <AutocompleteInput 
                             label={(option) => option === defaultAdj ? '' : `Adj. ${ministros.filter((min: IMentor) => min.id === option.ministro)[0].nome} - Mestre ${option.nome}` }
                             default={defaultAdj}
-                            options={alphabeticOrder(adjuntos)}
+                            options={adjuntos}
                             equality={(option, value) => option?.adjunto_id === value?.adjunto_id}
                             value={dropPres}
                             setValue={setDropPres}

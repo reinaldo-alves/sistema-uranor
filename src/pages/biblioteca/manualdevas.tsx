@@ -2,7 +2,7 @@ import SubMenu from "src/components/SubMenu/SubMenu";
 import Header from "../../components/header/header";
 import SideMenu from "src/components/SideMenu/SideMenu";
 import MainContainer from "src/components/MainContainer/MainContainer";
-import GridButtonPDF from "src/components/GridButtonPDF/GridButtonPDF";
+import GridButton from "src/components/GridButton/GridButton";
 import Cen from "src/assets/pdf/MANUALDEVAS-CENTURIA.pdf";
 import Cee from "src/assets/pdf/MANUALDEVAS-CENTURIAESPECIAL.pdf";
 import Cfm from "src/assets/pdf/MANUALDEVAS-CONSAGRACAOFALANGESMESTRADO.pdf";
@@ -21,20 +21,20 @@ import Pma from "src/assets/pdf/MANUALDEVAS-1DEMAIO.pdf";
 function ManualDevas() {
     
     const docs = [
-        {name: 'Centúria', link: Cen},
-        {name: 'Centúria Especial', link: Cee},
-        {name: 'Consagração de Falange de Mestrado', link: Cfm},
-        {name: 'Critérios para Classificações', link: Ccl},
-        {name: 'Devas: Histórico e Atribuições', link: Dha},
-        {name: 'Elevação de Espadas', link: Ele},
-        {name: 'Elevação de Espadas Especial', link: Eee},
-        {name: 'Enlevo', link: Enl},
-        {name: 'Entrega de Energias', link: EEn},
-        {name: 'Imantração Externa', link: Ime},
-        {name: 'Reclassificação', link: Rec},
-        {name: 'Reclassificação Especial', link: Ree},
-        {name: 'Reconsagração de Adjuntos', link: Rea},
-        {name: '1º de Maio', link: Pma},
+        {name: 'Centúria', pdf: Cen},
+        {name: 'Centúria Especial', pdf: Cee},
+        {name: 'Consagração de Falange de Mestrado', pdf: Cfm},
+        {name: 'Critérios para Classificações', pdf: Ccl},
+        {name: 'Devas: Histórico e Atribuições', pdf: Dha},
+        {name: 'Elevação de Espadas', pdf: Ele},
+        {name: 'Elevação de Espadas Especial', pdf: Eee},
+        {name: 'Enlevo', pdf: Enl},
+        {name: 'Entrega de Energias', pdf: EEn},
+        {name: 'Imantração Externa', pdf: Ime},
+        {name: 'Reclassificação', pdf: Rec},
+        {name: 'Reclassificação Especial', pdf: Ree},
+        {name: 'Reconsagração de Adjuntos', pdf: Rea},
+        {name: '1º de Maio', pdf: Pma},
     ]
     
     const menuList = [
@@ -47,7 +47,7 @@ function ManualDevas() {
             <Header />
             <SubMenu list={menuList}/>
             <MainContainer title="Manual de Orientação para Devas (2006)" >
-                <GridButtonPDF docs={docs}/>
+                <GridButton pdf docs={docs}/>
             </MainContainer>
             <SideMenu list={menuList}/>
         </>

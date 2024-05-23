@@ -2534,13 +2534,14 @@ export const generateFichaMedium = async (medium: IMedium, adjuntos: Array<IAdju
                 columnGap: 10,
                 fontSize: 11
             },
+            medium.sex === 'Masculino' ?
             {
                 text: [
                     'CLASSIFICAÇÃO ATUAL: ',
                     {text: medium.classif.toUpperCase(), bold: true}
                 ],
                 fontSize: 11,
-            }
+            } : ''
         ] as Content
     };
 

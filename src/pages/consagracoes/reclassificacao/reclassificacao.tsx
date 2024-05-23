@@ -96,9 +96,9 @@ function Reclassificacao() {
                     <InputContainer>
                         <label>Selecione um médium</label>
                         <AutocompleteInput 
-                            label={(option) => option.nome}
+                            label={(option) => option.medium_id ? `${option.nome} (${option.medium_id.toString().padStart(5, '0')})` : ''}
                             default={defaultMedium}
-                            options={alphabeticOrder(mediuns.filter((item: IMedium) => Boolean(item.dtCenturia) === true && item.sex === 'Masculino'))}
+                            options={mediuns.filter((item: IMedium) => Boolean(item.dtCenturia) === true && item.sex === 'Masculino')}
                             equality={(option, value) => option?.medium_id === value?.medium_id}
                             value={dropMedium[0]}
                             setValue={(newValue: IMedium) => handleDropMedium(0, newValue)}
@@ -125,9 +125,9 @@ function Reclassificacao() {
                         {dynamicFiels.map((fieldId: string, index: number) => (
                             <AutocompleteInput 
                                 key={fieldId}
-                                label={(option) => option.nome}
+                                label={(option) => option.medium_id ? `${option.nome} (${option.medium_id.toString().padStart(5, '0')})` : ''}
                                 default={defaultMedium}
-                                options={alphabeticOrder(mediumOptions(showModal))}
+                                options={mediumOptions(showModal)}
                                 equality={(option, value) => option?.medium_id === value?.medium_id}
                                 disabledOptions={(option) => option? dropMedium.some(m => m?.medium_id === option?.medium_id) : false}
                                 value={dropMedium[index]}
@@ -146,9 +146,9 @@ function Reclassificacao() {
                         <InputContainer style={{gap: '10px'}}>
                             <label>Selecione o adjunto</label>
                             <AutocompleteInput 
-                                label={(option) => option.nome}
+                                label={(option) => option.medium_id ? `${option.nome} (${option.medium_id.toString().padStart(5, '0')})` : ''}
                                 default={defaultMedium}
-                                options={alphabeticOrder(mediuns.filter((item: IMedium) => item.classif === 'Adjunto Koatay 108 Herdeiro Triada Harpásios 7° Raio Adjuração Arcanos Rama 2000'))}
+                                options={mediuns.filter((item: IMedium) => item.classif === 'Adjunto Koatay 108 Herdeiro Triada Harpásios 7° Raio Adjuração Arcanos Rama 2000')}
                                 equality={(option, value) => option?.medium_id === value?.medium_id}
                                 value={adjuntoPai}
                                 setValue={setAdjuntoPai}

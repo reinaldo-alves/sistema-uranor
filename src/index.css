@@ -37,6 +37,14 @@ input:disabled, select:disabled {
   background-color: rgba(255, 255, 255, 0.5);
 }
 
+input:focus, select:focus, textarea:focus, button:focus {
+  outline: 1px solid #002776;
+}
+
+input[type="checkbox"]:focus {
+  outline: 1px solid #fff;
+}
+
 .popup {
   border-radius: 10px !important;
   border: 1px solid #002776 !important;

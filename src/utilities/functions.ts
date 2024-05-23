@@ -48,12 +48,12 @@ export function formatCep(value: string) {
 }
 
 export function setSituation(medium: IMedium) {
-    if (!medium.dtEmplac) {return 'Em desenvolvimento'}
-    else if (!medium.dtIniciacao) {return 'Liberado'}
-    else if (!medium.dtElevacao) {return 'Iniciado'}
-    else if (!medium.dtCenturia) {return 'Elevado'}
-    else if (!medium.dtSetimo) {return 'Centurião'}
-    else if (medium.dtSetimo) {return 'Centurião 7° Raio'}
+    if (medium.dtSetimo) {return 'Centurião 7° Raio'}
+    else if (medium.dtCenturia) {return 'Centurião'}
+    else if (medium.dtElevacao) {return 'Elevado'}
+    else if (medium.dtIniciacao) {return 'Iniciado'}
+    else if (medium.dtEmplac) {return 'Liberado'}
+    else if (medium.dtIngresso) {return 'Em desenvolvimento'}
     else {return ''}
 }
 
@@ -198,7 +198,7 @@ export async function generateListEventos(medium: IMedium, token: string, mediun
             evento.push({evento_id: 0, medium: medium?.medium_id, data: medium?.dtClassif, mensagem: `Classificação de ${medium?.classif}`, observ: '', tipo: 'Classificações'})
         }
         if(medium?.oldDtMentor && !evento.some((item: IEvento) => item.tipo === `Mentores ${medium?.med === 'Apará' ? 'Doutrinador' : medium?.med === 'Doutrinador' ? 'Apará' : ''}`)) {
-            evento.push({evento_id: 0, medium: medium?.medium_id, data: medium?.dtMentor, mensagem: medium?.sex === 'Masculino' ? `Recebeu ministro ${ministros.find((m: IMentor) => m.id === medium?.ministro)?.nome} e cavaleiro ${cavaleiros.find((c: ICavaleiro) => c.id === medium?.oldCavaleiro)?.nome} ${medium?.oldCor}` : '', observ: '', tipo: `Mentores ${medium?.med === 'Apará' ? 'Doutrinador' : medium?.med === 'Doutrinador' ? 'Apará' : ''}`})
+            evento.push({evento_id: 0, medium: medium?.medium_id, data: medium?.oldDtMentor, mensagem: medium?.sex === 'Masculino' ? `Recebeu ministro ${ministros.find((m: IMentor) => m.id === medium?.ministro)?.nome} e cavaleiro ${cavaleiros.find((c: ICavaleiro) => c.id === medium?.oldCavaleiro)?.nome} ${medium?.oldCor}` : '', observ: '', tipo: `Mentores ${medium?.med === 'Apará' ? 'Doutrinador' : medium?.med === 'Doutrinador' ? 'Apará' : ''}`})
         }
         if(medium?.oldDtClassif && !evento.some((item: IEvento) => item.tipo === 'Classificações' && item.mensagem.split('de ')[1] === medium?.oldClassif)) {
             evento.push({evento_id: 0, medium: medium?.medium_id, data: medium?.oldDtClassif, mensagem: `Classificação de ${medium?.oldClassif}`, observ: '', tipo: 'Classificações'})
