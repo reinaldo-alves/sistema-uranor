@@ -8,7 +8,7 @@ import { IEstado, IFalange, IMedium, IMentor, ITemplo } from "src/types/types";
 import { MediumContext } from "src/contexts/MediumContext";
 import { ListContext } from "src/contexts/ListContext";
 import { CheckboxContainer, DatesContainer, Divider, FieldContainer, FieldContainerBox, GridContainer, GridDatesContainer, InputContainer, MainContent, MainInfoContainer, MixedContainer, PersonalCard, ReportButton, SectionTitle } from "./styles";
-import { oppositeTurno, setSituation } from "src/utilities/functions";
+import { oppositeTurno, removeDiacritics, setSituation } from "src/utilities/functions";
 import AutocompleteInput from "src/components/AutocompleteInput/AutocompleteInput";
 import { generateReport } from "src/utilities/createDocs";
 import { Alert } from "src/utilities/popups";
@@ -111,7 +111,7 @@ function Relatorios() {
 
     const generateMediumList = async (mediuns: Array<IMedium>, filters: IMedium, situation: string) => {
         const mediumList = mediuns.filter((item: IMedium) => {
-            if (filters.nome && !item.nome.toLowerCase().includes(filters.nome.toLowerCase())) {return false};
+            if (filters.nome && !removeDiacritics(item.nome).includes(removeDiacritics(filters.nome))) {return false};
             if (situation && situation !== setSituation(item)){return false};
             if (filters.sex && filters.sex !== item.sex){return false};
             if (filters.med && filters.med !== item.med){return false};
@@ -282,7 +282,7 @@ function Relatorios() {
                             <option value={'Iniciado'}>Iniciado</option>
                             <option value={'Elevado'}>Elevado</option>
                             <option value={'Centurião'}>Centurião</option>
-                            <option value={'Centurião 7° Raio'}>Centurião 7° Raio</option>
+                            <option value={'Centurião 7º Raio'}>Centurião 7º Raio</option>
                         </select>
                         <label>Sexo: </label>
                         <select value={reportFilter.sex} onChange={(e) => updateProps('sex', e.target.value)}>
@@ -333,7 +333,7 @@ function Relatorios() {
                                 <option key={index} value={item.templo_id}>{item.cidade} - {item.estado.abrev}</option>
                             ))}
                         </select>
-                        <label>Colete N°: </label>
+                        <label>Colete Nº: </label>
                         <select value={reportFilter.colete} onChange={(e) => updateProps('colete', e.target.value)}>
                             <option value={0}></option>
                             {coletes.map((item: number, index: number) => (
@@ -460,7 +460,7 @@ function Relatorios() {
                             <label>Classificação Atual: </label>
                             <select value={reportFilter.classif} onChange={(e) => {
                                 updateProps('classif', e.target.value)
-                                if(e.target.value === 'Adjunto Koatay 108 Herdeiro Triada Harpásios 7° Raio Adjuração Arcanos Rama 2000') {
+                                if(e.target.value === 'Adjunto Koatay 108 Herdeiro Triada Harpásios 7º Raio Adjuração Arcanos Rama 2000') {
                                     updateProps('trinoSol', '');
                                     updateProps('trinoSar', false);
                                     updateProps('filho', false);

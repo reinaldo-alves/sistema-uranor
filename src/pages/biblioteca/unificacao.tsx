@@ -7,9 +7,9 @@ import GridButton from "src/components/GridButton/GridButton";
 function Unificacao() {
     
     const docs = [
-        {name: '1° Estágio (Templos em Projeção)', pdf: null},
-        {name: '2° Estágio (Trabalho Especial)', pdf: null},
-        {name: '3° Estágio (Corrente Mestra)', pdf: null},
+        {name: '1º Estágio (Templos em Projeção)', pdf: null},
+        {name: '2º Estágio (Trabalho Especial)', pdf: null},
+        {name: '3º Estágio (Corrente Mestra)', pdf: null},
         {name: 'Abatá', pdf: null},
         {name: 'Abatá das Falanges Missionárias', pdf: null},
         {name: 'Abatá (Templo Sem Corrente Mestra)', pdf: null},

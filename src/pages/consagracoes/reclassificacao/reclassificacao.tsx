@@ -51,7 +51,7 @@ function Reclassificacao() {
         } else if (cons === 'Trino Solitário') {
             return mediuns.filter((item: IMedium) => item.classif === 'Adjunto Koatay 108 Herdeiro Triada Harpásios Raio Adjuração Rama 2000');
         } else if (cons === 'Trino Sardyos') {
-            return mediuns.filter((item: IMedium) => item.sex === 'Masculino' && Boolean(item.dtElevacao) === true && item.classif !== 'Adjunto Koatay 108 Herdeiro Triada Harpásios 7° Raio Adjuração Arcanos Rama 2000');
+            return mediuns.filter((item: IMedium) => item.sex === 'Masculino' && Boolean(item.dtElevacao) === true && item.classif !== 'Adjunto Koatay 108 Herdeiro Triada Harpásios 7º Raio Adjuração Arcanos Rama 2000');
         } else {
             return []
         }
@@ -148,7 +148,7 @@ function Reclassificacao() {
                             <AutocompleteInput 
                                 label={(option) => option.medium_id ? `${option.nome} (${option.medium_id.toString().padStart(5, '0')})` : ''}
                                 default={defaultMedium}
-                                options={mediuns.filter((item: IMedium) => item.classif === 'Adjunto Koatay 108 Herdeiro Triada Harpásios 7° Raio Adjuração Arcanos Rama 2000')}
+                                options={mediuns.filter((item: IMedium) => item.classif === 'Adjunto Koatay 108 Herdeiro Triada Harpásios 7º Raio Adjuração Arcanos Rama 2000')}
                                 equality={(option, value) => option?.medium_id === value?.medium_id}
                                 value={adjuntoPai}
                                 setValue={setAdjuntoPai}

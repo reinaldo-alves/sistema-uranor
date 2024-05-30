@@ -10,7 +10,7 @@ import api from "src/api";
 import { UserContext } from "src/contexts/UserContext";
 import { Alert, Confirm } from "src/utilities/popups";
 import { Modal, ModalButton, ModalContent, ModalTitle } from "src/components/Modal/modal";
-import { formatInputText, handleEnterPress } from "src/utilities/functions";
+import { formatInputText, handleEnterPress, removeDiacritics } from "src/utilities/functions";
 import { MediumContext } from "src/contexts/MediumContext";
 
 function Ministros() {
@@ -125,13 +125,13 @@ function Ministros() {
                     </SearchContainer>
                     <InfoCard>
                         <InfoContent>Clique sobre um ministro para EDITAR ou EXCLUIR</InfoContent>
-                        <InfoContent>Resultados encontrados: {ministros.filter((item: IMentor) => item.nome.toLowerCase().includes(search.trim().toLowerCase())).length}</InfoContent>
+                        <InfoContent>Resultados encontrados: {ministros.filter((item: IMentor) => removeDiacritics(item.nome).includes(removeDiacritics(search))).length}</InfoContent>
                     </InfoCard>
                 </SearchCard>
                 <ResultsCard>
                     <ResultsTable>
                         {ministros
-                            .filter((item: IMentor) => item.nome.toLowerCase().includes(search.trim().toLowerCase()))
+                            .filter((item: IMentor) => removeDiacritics(item.nome).includes(removeDiacritics(search)))
                             .map((item: IMentor, index: number) => (
                                 <Results key={index} onClick={() => modalEditMin(item)}>
                                     <ResultsTitle>{item.nome}</ResultsTitle>

@@ -10,7 +10,7 @@ import { UserContext } from "src/contexts/UserContext";
 import api from "src/api";
 import { Alert } from "src/utilities/popups";
 import { Modal, ModalButton, ModalContent, ModalSubTitle, ModalTitle } from "src/components/Modal/modal";
-import { formatInputText, handleEnterPress } from "src/utilities/functions";
+import { formatInputText, handleEnterPress, removeDiacritics } from "src/utilities/functions";
 
 function Falanges() {   
     const [search, setSearch] = useState('');
@@ -88,14 +88,14 @@ function Falanges() {
                         </InputContainer>
                         <InfoCard>
                             <InfoContent>Clique sobre uma falange para EDITAR</InfoContent>
-                            <InfoContent>Resultados encontrados: {falMiss.filter((item: IFalange) => item.nome.toLowerCase().includes(search.trim().toLowerCase())).length}</InfoContent>
+                            <InfoContent>Resultados encontrados: {falMiss.filter((item: IFalange) => removeDiacritics(item.nome).includes(removeDiacritics(search))).length}</InfoContent>
                         </InfoCard>
                     </SearchContainer>
                 </SearchCard>
                 <ResultsCard>
                     <ResultsTable>
                         {falMiss
-                            .filter((item: IFalange) => item.nome.toLowerCase().includes(search.trim().toLowerCase()))
+                            .filter((item: IFalange) => removeDiacritics(item.nome).includes(removeDiacritics(search)))
                             .map((item: IFalange, index: number) => (
                                 <Results key={index} onClick={() => showModalFal(item)}>
                                     <ResultsTitle>{item.nome}</ResultsTitle>

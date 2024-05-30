@@ -11,7 +11,7 @@ import api from "src/api";
 import { Alert, Confirm } from "src/utilities/popups";
 import { defaultCavaleiro } from "src/utilities/default";
 import { Modal, ModalButton, ModalContent, ModalTitle } from "src/components/Modal/modal";
-import { formatInputText, handleEnterPress } from "src/utilities/functions";
+import { formatInputText, handleEnterPress, removeDiacritics } from "src/utilities/functions";
 import { MediumContext } from "src/contexts/MediumContext";
 
 function Cavaleiros() {
@@ -143,13 +143,13 @@ function Cavaleiros() {
                     </SearchContainer>
                     <InfoCard>
                         <InfoContent>Clique sobre um cavaleiro para EDITAR ou EXCLUIR</InfoContent>
-                        <InfoContent>Resultados encontrados: {cavaleiros.filter((item: ICavaleiro) => item.nome.toLowerCase().includes(search.trim().toLowerCase())).length}</InfoContent>
+                        <InfoContent>Resultados encontrados: {cavaleiros.filter((item: ICavaleiro) => removeDiacritics(item.nome).includes(removeDiacritics(search))).length}</InfoContent>
                     </InfoCard>
                 </SearchCard>
                 <ResultsCard>
                     <ResultsTable>
                         {cavaleiros
-                            .filter((item: ICavaleiro) => item.nome.toLowerCase().includes(search.trim().toLowerCase()))
+                            .filter((item: ICavaleiro) => removeDiacritics(item.nome).includes(removeDiacritics(search)))
                             .map((item: ICavaleiro, index: number) => (
                                 <Results key={index} onClick={() => modalEditCav(item)}>
                                     <ResultsTitle>{item.nome}</ResultsTitle>

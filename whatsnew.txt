@@ -42,3 +42,11 @@ VERSÃO 1.2.0
 - Disponibilização dos documentos pdf para Livro de Leis, Manual dos Devas, Cartas, Pequenas Histórias e Instruções Práticas, além do livro Terceiro Sétimo dos Cavaleiros da Luz e Contagem do Trino Arakém
 - Configuração de inputs de textos das páginas Adicionar Médium e Editar Médium para exibir apenas as iniciais maiúsculas
 - Criação de função para excluir ministro, cavaleiro, guia missionária, templo, adjunto e usuário.
+
+VERSÃO 1.2.1
+
+- Correção ortográfica da falange de Ascensão.
+- Substituição de todos os °(grau) por º(ordinal).
+- Remoção das princesas Janara, Jandaia, Juremá e Iramar.
+- Correção no objeto de envio de médium, enviando NULL ao invés de string vazia ou zero para o banco de dados.
+- Correçaõ de pesquisas para exibir resultados com acento/cedilha.

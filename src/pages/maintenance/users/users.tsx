@@ -11,7 +11,7 @@ import { useNavigate } from "react-router-dom";
 import { Alert, Confirm } from "src/utilities/popups";
 import { defaultMedium, defaultUser } from "src/utilities/default";
 import AutocompleteInput from "src/components/AutocompleteInput/AutocompleteInput";
-import { formatInputText, handleEnterPress } from "src/utilities/functions";
+import { formatInputText, handleEnterPress, removeDiacritics } from "src/utilities/functions";
 import { Modal, ModalButton, ModalContent, ModalTitle } from "src/components/Modal/modal";
 import MainContainer from "src/components/MainContainer/MainContainer";
 
@@ -181,7 +181,7 @@ function Users() {
                         <InfoContent>Clique sobre um usuário para EDITAR ou EXCLUIR</InfoContent>
                         <InfoContent>
                             Resultados encontrados: {users
-                                .filter((item: IUser) => item.name.toLowerCase().includes(searchName.trim().toLowerCase()))
+                                .filter((item: IUser) => removeDiacritics(item.name).includes(removeDiacritics(searchName)))
                                 .filter((item: IUser) => item.level.includes(searchLevel))
                                 .length}
                         </InfoContent>
@@ -190,7 +190,7 @@ function Users() {
                 <ResultsCard>
                     <ResultsTable>
                         {users
-                            .filter((item: IUser) => item.name.toLowerCase().includes(searchName.trim().toLowerCase()))
+                            .filter((item: IUser) => removeDiacritics(item.name).includes(removeDiacritics(searchName)))
                             .filter((item: IUser) => item.level.includes(searchLevel))
                             .map((item: IUser, index: number) => (
                                 <Results key={index} onClick={() => modalEditUser(item)}>

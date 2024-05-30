@@ -70,7 +70,7 @@ export const validateMedium = (medium: IMedium, action: () => void) => {
         Alert('Informe a cor do cavaleiro', 'error');
         return;
     }
-    if (medium.classif === 'Adjunto Koatay 108 Herdeiro Triada Harpásios 7° Raio Adjuração Arcanos Rama 2000' && !medium.ministro ) {
+    if (medium.classif === 'Adjunto Koatay 108 Herdeiro Triada Harpásios 7º Raio Adjuração Arcanos Rama 2000' && !medium.ministro ) {
         Alert('Informe o ministro do médium', 'error');
         return;
     }
@@ -128,10 +128,10 @@ export const validateEmissao = (medium: IMedium, mediuns: Array<IMedium>, adjunt
     const mestre = mediuns.find((item: IMedium) => item.medium_id === medium.mestre);
 
     //Retorna true se o afilhado for arcanos ou presidente
-    const afilhadoArcPre = afilhado?.classif === 'Adjunto Koatay 108 Herdeiro Triada Harpásios 7° Raio Adjuração Arcanos Rama 2000' || afilhado?.presidente === 'Presidente';
+    const afilhadoArcPre = afilhado?.classif === 'Adjunto Koatay 108 Herdeiro Triada Harpásios 7º Raio Adjuração Arcanos Rama 2000' || afilhado?.presidente === 'Presidente';
     
     //Retorna true se o mestre for arcanos ou presidente
-    const mestreArcPre = mestre?.classif === 'Adjunto Koatay 108 Herdeiro Triada Harpásios 7° Raio Adjuração Arcanos Rama 2000' || mestre?.presidente === 'Presidente';
+    const mestreArcPre = mestre?.classif === 'Adjunto Koatay 108 Herdeiro Triada Harpásios 7º Raio Adjuração Arcanos Rama 2000' || mestre?.presidente === 'Presidente';
     
     //Retorna true se o afilhado e o padrinho/madrinha tiver a mesma origem ou se a origem do padrinho/madrinha for Umaryã (raiz)
     const afilhadoMesmaOrigem = medium.adjOrigem === afilhado?.adjOrigem || medium.adjOrigem === 6;

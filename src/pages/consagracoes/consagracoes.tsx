@@ -72,7 +72,7 @@ function Consagracoes() {
                             <ResultsPanel columns={columnData[0] as string}>
                                 <ResultsTitle scope="col" align="left">Nome do Médium</ResultsTitle>
                                 <ResultsTitle scope="col">{columnData[2]? 'Mediunidade' : 'Med.'}</ResultsTitle>
-                                <ResultsTitle scope="col">{columnData[2]? 'Colete n°' : 'Col.'}</ResultsTitle>
+                                <ResultsTitle scope="col">{columnData[2]? 'Colete nº' : 'Col.'}</ResultsTitle>
                                 <ResultsTitle scope="col">Foto</ResultsTitle>
                             </ResultsPanel>
                         </thead>

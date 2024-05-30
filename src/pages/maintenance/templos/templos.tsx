@@ -11,7 +11,7 @@ import api from "src/api";
 import { Alert, Confirm } from "src/utilities/popups";
 import { defaultAdj, defaultTemp } from "src/utilities/default";
 import AutocompleteInput from "src/components/AutocompleteInput/AutocompleteInput";
-import { formatInputText, handleEnterPress } from "src/utilities/functions";
+import { formatInputText, handleEnterPress, removeDiacritics } from "src/utilities/functions";
 import { Modal, ModalButton, ModalContent, ModalTitle } from "src/components/Modal/modal";
 import { MediumContext } from "src/contexts/MediumContext";
 
@@ -171,9 +171,9 @@ function Templos() {
                         <InfoContent>Clique sobre um templo para EDITAR ou EXCLUIR</InfoContent>
                         <InfoContent>
                             Resultados encontrados: {templos
-                                .filter((item: ITemplo) => ministros.filter((min: IMentor) => min.id === adjuntos.filter((ad: IAdjunto) => ad.adjunto_id === item.presidente)[0].ministro)[0].nome.toLowerCase().includes(searchMin.trim().toLowerCase()))
+                                .filter((item: ITemplo) => removeDiacritics(ministros.filter((min: IMentor) => min.id === adjuntos.filter((ad: IAdjunto) => ad.adjunto_id === item.presidente)[0].ministro)[0].nome).includes(removeDiacritics(searchMin)))
                                 .filter((item: ITemplo) => item.estado.abrev.includes(searchState))
-                                .filter((item: ITemplo) => item.cidade.toLowerCase().includes(searchName.trim().toLowerCase()))
+                                .filter((item: ITemplo) => removeDiacritics(item.cidade).includes(removeDiacritics(searchName)))
                                 .length}
                         </InfoContent>
                     </InfoCard>
@@ -181,9 +181,9 @@ function Templos() {
                 <ResultsCard>
                     <ResultsTable>
                         {templos
-                            .filter((item: ITemplo) => ministros.filter((min: IMentor) => min.id === adjuntos.filter((ad: IAdjunto) => ad.adjunto_id === item.presidente)[0].ministro)[0].nome.toLowerCase().includes(searchMin.trim().toLowerCase()))
+                            .filter((item: ITemplo) => removeDiacritics(ministros.filter((min: IMentor) => min.id === adjuntos.filter((ad: IAdjunto) => ad.adjunto_id === item.presidente)[0].ministro)[0].nome).includes(removeDiacritics(searchMin)))
                             .filter((item: ITemplo) => item.estado.abrev.includes(searchState))
-                            .filter((item: ITemplo) => item.cidade.toLowerCase().includes(searchName.trim().toLowerCase()))
+                            .filter((item: ITemplo) => removeDiacritics(item.cidade).includes(removeDiacritics(searchName)))
                             .map((item: ITemplo, index: number) => (
                                 <Results key={index} onClick={() => modalEditTemp(item)}>
                                     <ResultsTitle>{item.cidade} - {item.estado.abrev}</ResultsTitle>

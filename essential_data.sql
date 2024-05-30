@@ -768,7 +768,7 @@ INSERT INTO `falange` VALUES
 (5,'Maya','Nancyara','Trino Maralto','Gilfran','ADALÃ RA','ADALÃ',1),
 (6,'Mago','Fábio Formiga',NULL,NULL,NULL,NULL,0),
 (7,'Príncipe Maya','Gilmar',NULL,NULL,NULL,NULL,0),
-(8,'Yuricy','Núbia',NULL,NULL,'1° RAIO ESKRA','ESKA',1),
+(8,'Yuricy','Núbia',NULL,NULL,'1º RAIO ESKRA','ESKA',1),
 (9,'Dharmo-oxinto','Maria Joaquina','Adjunto Valejo','Jeferson da Silva','CLYTIA RA','CLYTIA',1),
 (10,'Muruaicy','Carmem Lúcia','Trino Herdeiro Afã','Fernando Zelaya',NULL,NULL,1),
 (11,'Jaçanã','Cristina Vieira','Adjunto Alamar','Ademir Carlos','CEBELE','CEBELE',1),

@@ -48,7 +48,7 @@ export function formatCep(value: string) {
 }
 
 export function setSituation(medium: IMedium) {
-    if (medium.dtSetimo) {return 'Centurião 7° Raio'}
+    if (medium.dtSetimo) {return 'Centurião 7º Raio'}
     else if (medium.dtCenturia) {return 'Centurião'}
     else if (medium.dtElevacao) {return 'Elevado'}
     else if (medium.dtIniciacao) {return 'Iniciado'}
@@ -177,7 +177,7 @@ export async function generateListEventos(medium: IMedium, token: string, mediun
             evento.push({evento_id: 0, medium: medium?.medium_id, data: medium?.dtCenturia, mensagem: 'Centúria', observ: '', tipo: 'Centúria'})
         }
         if(medium?.dtSetimo && !evento.some((item: IEvento) => item.tipo === 'Curso de Sétimo')) {
-            evento.push({evento_id: 0, medium: medium?.medium_id, data: medium?.dtSetimo, mensagem: 'Curso de 7° Raio concluído', observ: '', tipo: 'Curso de Sétimo'})
+            evento.push({evento_id: 0, medium: medium?.medium_id, data: medium?.dtSetimo, mensagem: 'Curso de 7º Raio concluído', observ: '', tipo: 'Curso de Sétimo'})
         }
         if(medium?.oldDtTest && !evento.some((item: IEvento) => item.tipo === `Teste ${medium?.med === 'Apará' ? 'Doutrinador' : medium?.med === 'Doutrinador' ? 'Apará' : ''}`)) {
             evento.push({evento_id: 0, medium: medium?.medium_id, data: medium?.oldDtTest, mensagem: `Teste mediúnico - ${medium?.med === 'Apará' ? 'Doutrinador' : medium?.med === 'Doutrinador' ? 'Apará' : ''}`, observ: '', tipo: `Teste ${medium?.med === 'Apará' ? 'Doutrinador' : medium?.med === 'Doutrinador' ? 'Apará' : ''}`})
@@ -233,4 +233,9 @@ export function formatInputText(inputText: string) {
         }
     }).join(" ");
     return result;
+}
+
+//Remove acentuação dos textos para compará-los nas pesquisas
+export function removeDiacritics(str: string): string {
+    return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim().toLowerCase();
 }

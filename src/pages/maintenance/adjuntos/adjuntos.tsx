@@ -11,7 +11,7 @@ import api from "src/api";
 import { Alert, Confirm } from "src/utilities/popups";
 import { defaultAdj, defaultMentor } from "src/utilities/default";
 import AutocompleteInput from "src/components/AutocompleteInput/AutocompleteInput";
-import { formatInputText, handleEnterPress } from "src/utilities/functions";
+import { formatInputText, handleEnterPress, removeDiacritics } from "src/utilities/functions";
 import { Modal, ModalButton, ModalContent, ModalTitle } from "src/components/Modal/modal";
 import { MediumContext } from "src/contexts/MediumContext";
 
@@ -164,8 +164,8 @@ function Adjuntos() {
                         <InfoContent>Clique sobre um adjunto para EDITAR ou EXCLUIR</InfoContent>
                         <InfoContent>
                             Resultados encontrados: {adjuntos
-                                .filter((item: IAdjunto) => ministros.filter((min: IMentor) => min.id === item.ministro)[0].nome.toLowerCase().includes(searchMin.trim().toLowerCase()))
-                                .filter((item: IAdjunto) => item.nome.toLowerCase().includes(searchAdj.trim().toLowerCase()))
+                                .filter((item: IAdjunto) => removeDiacritics(ministros.filter((min: IMentor) => min.id === item.ministro)[0].nome).includes(removeDiacritics(searchMin)))
+                                .filter((item: IAdjunto) => removeDiacritics(item.nome).includes(removeDiacritics(searchAdj)))
                                 .length}
                         </InfoContent>
                     </InfoCard>
@@ -173,8 +173,8 @@ function Adjuntos() {
                 <ResultsCard>
                     <ResultsTable>
                         {adjuntos
-                            .filter((item: IAdjunto) => ministros.filter((min: IMentor) => min.id === item.ministro)[0].nome.toLowerCase().includes(searchMin.trim().toLowerCase()))
-                            .filter((item: IAdjunto) => item.nome.toLowerCase().includes(searchAdj.trim().toLowerCase()))
+                            .filter((item: IAdjunto) => removeDiacritics(ministros.filter((min: IMentor) => min.id === item.ministro)[0].nome).includes(removeDiacritics(searchMin)))
+                            .filter((item: IAdjunto) => removeDiacritics(item.nome).includes(removeDiacritics(searchAdj)))
                             .map((item: IAdjunto, index: number) => (
                                 <Results key={index} onClick={() => modalEditAdj(item)}>
                                     <ResultsTitle>Adj. {ministros.filter((min: IMentor) => min.id === item.ministro)[0].nome} - Mestre {item.nome}</ResultsTitle>

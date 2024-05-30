@@ -194,7 +194,7 @@ function Iniciacao() {
                             <ResultsPanel columns={columnData[0] as string}>
                                 <ResultsTitle scope="col" align="left">Nome do Médium</ResultsTitle>
                                 <ResultsTitle scope="col">{columnData[2]? 'Mediunidade' : 'Med.'}</ResultsTitle>
-                                <ResultsTitle scope="col">{columnData[2]? 'Colete n°' : 'Col.'}</ResultsTitle>
+                                <ResultsTitle scope="col">{columnData[2]? 'Colete nº' : 'Col.'}</ResultsTitle>
                                 <ResultsTitle scope="col">Foto</ResultsTitle>
                             </ResultsPanel>
                         </thead>
@@ -251,7 +251,7 @@ function Iniciacao() {
                     <ModalSubTitle>{selected.nome}</ModalSubTitle>
                     <ModalTitle>Atualizar Colete</ModalTitle>
                     <InputContainer>
-                        <label>Colete n°</label>
+                        <label>Colete nº</label>
                         <select value={colete} onChange={(e) => setColete(Number(e.target.value))}>
                             <option value={0}></option>
                             {coletes.map((item: number, index: number) => (

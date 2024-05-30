@@ -8,7 +8,7 @@ import SideMenu from "src/components/SideMenu/SideMenu";
 import SubMenu from "src/components/SubMenu/SubMenu";
 import Header from "src/components/header/header";
 import { UserContext } from "src/contexts/UserContext";
-import { setSituation } from "src/utilities/functions";
+import { removeDiacritics, setSituation } from "src/utilities/functions";
 import Loading from "src/utilities/Loading";
 import MainContainer from "src/components/MainContainer/MainContainer";
 
@@ -94,7 +94,7 @@ function SearchMedium() {
                     <TableContainer>
                         <ResultsTable>
                             {mediuns
-                                .filter((item: IMedium) => item.nome.toLowerCase().includes(searchName.trim().toLowerCase()))
+                                .filter((item: IMedium) => removeDiacritics(item.nome).includes(removeDiacritics(searchName)))
                                 .filter(searchTemp === '' ? (item: IMedium) => item.nome !== '' : (item: IMedium) => item.templo === Number(searchTemp))
                                 .map((item: any, index: number) => (
                                     <Results key={index} onClick={() => setSelected(item)}>
@@ -132,7 +132,7 @@ function SearchMedium() {
                         </InfoCard>
                         <MediumInfo>
                             Resultados encontrados: {mediuns
-                            .filter((item: IMedium) => item.nome.toLowerCase().includes(searchName.trim().toLowerCase()))
+                            .filter((item: IMedium) => removeDiacritics(item.nome).includes(removeDiacritics(searchName)))
                             .filter(searchTemp === '' ? (item: IMedium) => item.nome !== '' : (item: IMedium) => item.templo === Number(searchTemp))
                             .length}
                         </MediumInfo>

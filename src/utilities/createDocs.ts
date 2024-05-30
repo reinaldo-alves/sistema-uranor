@@ -1337,7 +1337,7 @@ export const generateChamadaOficial = (falanges: Array<IFalange>) => {
 
     const chamadaBody: Array<any> = [
         [
-            {text: 'N°', style: {bold: true}},
+            {text: 'Nº', style: {bold: true}},
             {text: 'FALANGE', style: {bold: true}},
             {text: 'PRIMEIRA (O)', style: {bold: true}},
             {text: 'ADJUNTO DE APOIO', style: {bold: true}},
@@ -1847,7 +1847,7 @@ export const generateFicha = async () => {
                     'ENDEREÇO: ',
                     '____________________________________________________________________________',
                     '  ',
-                    'N°: ',
+                    'Nº: ',
                     '______'
                 ],
                 fontSize: 11,
@@ -2411,7 +2411,7 @@ export const generateFichaMedium = async (medium: IMedium, adjuntos: Array<IAdju
             {
                 text: [
                     'ENDEREÇO: ',
-                    {text: [medium.endereco, medium.endNumero? 'n° ' + medium.endNumero : '', medium.endCompl, medium.endBairro, [medium.endCidade, medium.endUF].filter(el => el !== '').join(" - ")].filter(el => el !== '').join(", ").toUpperCase(), bold: true},
+                    {text: [medium.endereco, medium.endNumero? 'nº ' + medium.endNumero : '', medium.endCompl, medium.endBairro, [medium.endCidade, medium.endUF].filter(el => el !== '').join(" - ")].filter(el => el !== '').join(", ").toUpperCase(), bold: true},
                 ],
                 fontSize: 11,
                 margin: [-15, 0, -15, 17]

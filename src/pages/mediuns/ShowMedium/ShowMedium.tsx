@@ -67,7 +67,7 @@ function ShowMedium() {
         return <PageNotFound />
     }
 
-    const endNum = medium.endNumero? 'n° ' + medium.endNumero : ''
+    const endNum = medium.endNumero? 'nº ' + medium.endNumero : ''
     const cityUF = [medium.endCidade, medium.endUF].filter(el => el !== '').join(" - ")
     const naturCityUF = [medium.natur, medium.naturUF].filter(el => el !== '').join(" - ")
     const fullAddress = [medium.endereco, endNum, medium.endCompl, medium.endBairro, cityUF].filter(el => el !== '').join(", ")
@@ -189,7 +189,7 @@ function ShowMedium() {
                             <InfoContainer>
                                 <MediumInfo>Adjunto de Origem: <span>{medium.adjOrigem ? ministros.filter((item: IMentor) => item.id === adjuntos.filter((ad: IAdjunto) => ad.adjunto_id === medium.adjOrigem)[0].ministro)[0]? ministros.filter((item: IMentor) => item.id === adjuntos.filter((ad: IAdjunto) => ad.adjunto_id === medium.adjOrigem)[0].ministro)[0].nome : '' : ''} {medium.adjOrigem ? '- Mestre' : ''} {adjuntos.filter((item: IAdjunto) => item.adjunto_id === medium.adjOrigem)[0]? adjuntos.filter((item: IAdjunto) => item.adjunto_id === medium.adjOrigem)[0].nome : ''}</span></MediumInfo>
                                 <MediumInfo>Templo de Origem: <span>{medium.temploOrigem ? `${templos.filter((item: ITemplo) => item.templo_id === medium.temploOrigem)[0].cidade} - ${templos.filter((item: ITemplo) => item.templo_id === medium.temploOrigem)[0].estado.abrev}` : ''}</span></MediumInfo>
-                                <MediumInfo>Colete n°: <span>{medium.colete ? medium.colete : ''}</span></MediumInfo>
+                                <MediumInfo>Colete nº: <span>{medium.colete ? medium.colete : ''}</span></MediumInfo>
                                 <MediumInfo>Classificação: <span>{medium.classMest}</span></MediumInfo>
                                 <MediumInfo>Falange de Mestrado: <span>{medium.falMest}</span></MediumInfo>
                                 <MediumInfo>Povo: <span>{medium.povo}</span></MediumInfo>

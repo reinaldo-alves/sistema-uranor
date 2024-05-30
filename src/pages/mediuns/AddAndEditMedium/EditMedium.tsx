@@ -755,7 +755,7 @@ function EditMedium() {
                                 <option key={index} value={item.templo_id}>{item.cidade} - {item.estado.abrev}</option>
                             ))}
                         </select>
-                        <label>Colete N°: </label>
+                        <label>Colete Nº: </label>
                         <select value={medium.colete} onChange={(e) => updateProps('colete', e.target.value)}>
                             <option value={0}></option>
                             {coletes.map((item: number, index: number) => (
@@ -826,7 +826,7 @@ function EditMedium() {
                                 <label>Ministro: </label>
                                 <AutocompleteInput 
                                     label={(option) => option.nome}
-                                    disabled={medium.classif === '7° Raio Autorizado Taumantes Raio Rama Adjuração' || medium.classif === '5° Yurê Raio Autorizado Cautanenses Raio Rama Ajanã' || medium.classif === ''}
+                                    disabled={medium.classif === '7º Raio Autorizado Taumantes Raio Rama Adjuração' || medium.classif === '5º Yurê Raio Autorizado Cautanenses Raio Rama Ajanã' || medium.classif === ''}
                                     default={defaultMentor}
                                     options={ministros}
                                     equality={(option, value) => option.id === value.id}
@@ -836,11 +836,11 @@ function EditMedium() {
                                     setInputValue={setSearchMin}
                                 />
                                 <label>Data Ministro: </label>
-                                <input type="date" value={medium.dtMentor} onChange={(e) => updateProps('dtMentor', e.target.value)} min={medium.dtCenturia}  max={now} disabled={medium.classif === '7° Raio Autorizado Taumantes Raio Rama Adjuração' || medium.classif === '5° Yurê Raio Autorizado Cautanenses Raio Rama Ajanã' || medium.classif === ''} />
+                                <input type="date" value={medium.dtMentor} onChange={(e) => updateProps('dtMentor', e.target.value)} min={medium.dtCenturia}  max={now} disabled={medium.classif === '7º Raio Autorizado Taumantes Raio Rama Adjuração' || medium.classif === '5º Yurê Raio Autorizado Cautanenses Raio Rama Ajanã' || medium.classif === ''} />
                                 <label>Cavaleiro: </label>
                                 <AutocompleteInput 
                                     label={(option) => option.nome}
-                                    disabled={medium.classif === '7° Raio Autorizado Taumantes Raio Rama Adjuração' || medium.classif === '5° Yurê Raio Autorizado Cautanenses Raio Rama Ajanã' || medium.classif === ''}
+                                    disabled={medium.classif === '7º Raio Autorizado Taumantes Raio Rama Adjuração' || medium.classif === '5º Yurê Raio Autorizado Cautanenses Raio Rama Ajanã' || medium.classif === ''}
                                     default={defaultCavaleiro}
                                     options={listCav}
                                     equality={(option, value) => option.id === value.id}
@@ -850,7 +850,7 @@ function EditMedium() {
                                     setInputValue={setSearchCav}
                                 />
                                 <label>Cor do Cavaleiro: </label>
-                                <select value={medium.cor} onChange={(e) => updateProps('cor', e.target.value)} disabled={medium.classif === '7° Raio Autorizado Taumantes Raio Rama Adjuração' || medium.classif === '5° Yurê Raio Autorizado Cautanenses Raio Rama Ajanã' || medium.classif === ''} >
+                                <select value={medium.cor} onChange={(e) => updateProps('cor', e.target.value)} disabled={medium.classif === '7º Raio Autorizado Taumantes Raio Rama Adjuração' || medium.classif === '5º Yurê Raio Autorizado Cautanenses Raio Rama Ajanã' || medium.classif === ''} >
                                     {medium.med==='Doutrinador'?
                                         <>
                                             <option value={''}></option>
@@ -870,7 +870,7 @@ function EditMedium() {
                                     <label>Classificação Atual: </label>
                                     <select value={medium.classif} onChange={(e) => {
                                         updateProps('classif', e.target.value)
-                                        if(e.target.value === 'Adjunto Koatay 108 Herdeiro Triada Harpásios 7° Raio Adjuração Arcanos Rama 2000') {
+                                        if(e.target.value === 'Adjunto Koatay 108 Herdeiro Triada Harpásios 7º Raio Adjuração Arcanos Rama 2000') {
                                             updateProps('trinoSol', '');
                                             updateProps('trinoSar', false);
                                             updateProps('filho', false);
@@ -1120,7 +1120,7 @@ function EditMedium() {
                                     </FieldContainer>
                                 </div>
                             </div>
-                            {medium.classif === 'Adjunto Koatay 108 Herdeiro Triada Harpásios 7° Raio Adjuração Arcanos Rama 2000' || medium.presidente === 'Presidente' ? '' : 
+                            {medium.classif === 'Adjunto Koatay 108 Herdeiro Triada Harpásios 7º Raio Adjuração Arcanos Rama 2000' || medium.presidente === 'Presidente' ? '' : 
                                 <>
                                     <Divider></Divider>
                                     <InputContainer herdeiro>
@@ -1134,7 +1134,7 @@ function EditMedium() {
                                                 <AutocompleteInput 
                                                     label={(option) => option.medium_id ? `${option.nome} (${option.medium_id.toString().padStart(5, '0')})` : ''}
                                                     default={defaultMedium}
-                                                    options={mediuns.filter((item: IMedium) => item.classif === 'Adjunto Koatay 108 Herdeiro Triada Harpásios 7° Raio Adjuração Arcanos Rama 2000')}
+                                                    options={mediuns.filter((item: IMedium) => item.classif === 'Adjunto Koatay 108 Herdeiro Triada Harpásios 7º Raio Adjuração Arcanos Rama 2000')}
                                                     disabled={!medium.trinoSar}
                                                     equality={(option, value) => option.medium_id === value.medium_id}
                                                     value={dropMes}
@@ -1180,7 +1180,7 @@ function EditMedium() {
                                         <AutocompleteInput 
                                             label={(option) => option.medium_id ? `${option.nome} (${option.medium_id.toString().padStart(5, '0')})` : ''}
                                             default={defaultMedium}
-                                            options={mediuns.filter((item: IMedium) => item.classif === 'Adjunto Koatay 108 Herdeiro Triada Harpásios 7° Raio Adjuração Arcanos Rama 2000')}
+                                            options={mediuns.filter((item: IMedium) => item.classif === 'Adjunto Koatay 108 Herdeiro Triada Harpásios 7º Raio Adjuração Arcanos Rama 2000')}
                                             disabled={!medium.trinoSar}
                                             equality={(option, value) => option.medium_id === value.medium_id}
                                             value={dropMes}
