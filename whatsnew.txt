@@ -23,7 +23,6 @@ VERSÃO 1.1.0
 - Adição do botão Reclassificação na página de exibição de médium
 
 VERSÃO 1.2.0
-
 - Criação da página linha do tempo para os médiuns, com cadastro e exclusão de eventos
 - Criação de eventos de consagração de Devas e Janda ao adicionar médium
 - Criação de eventos na linha do tempo ao editar adjunto de origem, classificações, turno de legião, templo e condição, além de eventos de consagração de Devas e Janda
@@ -44,9 +43,11 @@ VERSÃO 1.2.0
 - Criação de função para excluir ministro, cavaleiro, guia missionária, templo, adjunto e usuário.
 
 VERSÃO 1.2.1
-
 - Correção ortográfica da falange de Ascensão.
 - Substituição de todos os °(grau) por º(ordinal).
 - Remoção das princesas Janara, Jandaia, Juremá e Iramar.
 - Correção no objeto de envio de médium, enviando NULL ao invés de string vazia ou zero para o banco de dados.
-- Correçaõ de pesquisas para exibir resultados com acento/cedilha.
+- Correção de pesquisas para exibir resultados com acento/cedilha.
+
+VERSÃO 1.3.0
+- Disponibilização dos documentos pdf para Unificação dos Trabalhos nos Templos do Amanhecer.
