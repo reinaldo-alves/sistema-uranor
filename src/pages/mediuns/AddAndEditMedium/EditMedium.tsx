@@ -654,6 +654,10 @@ function EditMedium() {
                         </PhotoPosition>
                     </MainContent>
                 </PersonalCard>
+                <div style={{width: '90%', maxWidth: '1200px', display: 'flex', justifyContent: 'space-around'}}>
+                    <MediumButton color="red" onClick={() => navigate(`/mediuns/consulta/${params.id}`)}>Cancelar</MediumButton>
+                    <MediumButton color="green" onClick={() => validateMedium(medium, async () => await handleEditMedium(medium, selected, token))}>Salvar</MediumButton>
+                </div>
                 <PersonalCard>
                     <SectionTitle>Dados Pessoais</SectionTitle>
                     <GridContainer>
@@ -721,17 +725,17 @@ function EditMedium() {
                     <SectionTitle>Datas Mediúnicas</SectionTitle>
                     <GridDatesContainer>
                         <label>Data Ingresso: </label>
-                        <input type="date" value={medium.dtIngresso} onChange={(e) => updateProps('dtIngresso', e.target.value)} min={medium.dtNasc}  max={now} disabled={user.level !== 'Administrador'}/>
+                        <input type="date" value={medium.dtIngresso} onChange={(e) => updateProps('dtIngresso', e.target.value)} min={medium.dtNasc}  max={now} disabled={user.level !== 'Administrador' && Boolean(selected.dtIngresso)}/>
                         <label>Data Emplacamento: </label>
-                        <input type="date" value={medium.dtEmplac} onChange={(e) => updateProps('dtEmplac', e.target.value)} min={medium.dtIngresso} max={now} disabled={!medium.dtIngresso || user.level !== 'Administrador'} />
+                        <input type="date" value={medium.dtEmplac} onChange={(e) => updateProps('dtEmplac', e.target.value)} min={medium.dtIngresso} max={now} disabled={!medium.dtIngresso || (user.level !== 'Administrador' && Boolean(selected.dtEmplac))} />
                         <label>Data Iniciação: </label>
-                        <input type="date" value={medium.dtIniciacao} onChange={(e) => updateProps('dtIniciacao', e.target.value)} min={medium.dtEmplac} max={now} disabled={!medium.dtEmplac || user.level !== 'Administrador'} />
+                        <input type="date" value={medium.dtIniciacao} onChange={(e) => updateProps('dtIniciacao', e.target.value)} min={medium.dtEmplac} max={now} disabled={!medium.dtEmplac || (user.level !== 'Administrador' && Boolean(selected.dtIniciacao))} />
                         <label>Data Elevação: </label>
-                        <input type="date" value={medium.dtElevacao} onChange={(e) => updateProps('dtElevacao', e.target.value)} min={medium.dtIniciacao} max={now} disabled={!medium.dtIniciacao || user.level !== 'Administrador'} />
+                        <input type="date" value={medium.dtElevacao} onChange={(e) => updateProps('dtElevacao', e.target.value)} min={medium.dtIniciacao} max={now} disabled={!medium.dtIniciacao || (user.level !== 'Administrador' && Boolean(selected.dtElevacao))} />
                         <label>Data Centúria: </label>
-                        <input type="date" value={medium.dtCenturia} onChange={(e) => updateProps('dtCenturia', e.target.value)} min={medium.dtElevacao} max={now} disabled={(!medium.dtElevacao && !medium.oldDtElevacao) || user.level !== 'Administrador'} />
+                        <input type="date" value={medium.dtCenturia} onChange={(e) => updateProps('dtCenturia', e.target.value)} min={medium.dtElevacao} max={now} disabled={(!medium.dtElevacao && !medium.oldDtElevacao) || (user.level !== 'Administrador' && Boolean(selected.dtCenturia))} />
                         <label>Data Sétimo: </label>
-                        <input type="date" value={medium.dtSetimo} onChange={(e) => updateProps('dtSetimo', e.target.value)} min={medium.dtCenturia} max={now} disabled={!medium.dtCenturia || user.level !== 'Administrador'} />
+                        <input type="date" value={medium.dtSetimo} onChange={(e) => updateProps('dtSetimo', e.target.value)} min={medium.dtCenturia} max={now} disabled={!medium.dtCenturia || (user.level !== 'Administrador' && Boolean(selected.dtSetimo))} />
                     </GridDatesContainer>
                 </PersonalCard>
                 <PersonalCard>

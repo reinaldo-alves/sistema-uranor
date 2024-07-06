@@ -50,10 +50,6 @@ export const validateMedium = (medium: IMedium, action: () => void) => {
         Alert('Data de sétimo não pode ser anterior à data de centúria', 'error');
         return;
     }
-    if (medium.falMiss && !medium.adjDevas) {
-        Alert('Selecione um Adjunto Devas', 'error');
-        return
-    }
     if ((medium.falMiss === 1 || medium.falMiss === 2 || medium.falMiss === 4 || medium.falMiss === 5 || medium.falMiss === 6 || medium.falMiss === 7) && (medium.falMest && medium.falMest !== 'Sublimação')) {
         Alert('Médiuns de falange de corte devem ser Sublimação', 'error');
         return;
@@ -119,6 +115,10 @@ export const validateEmissao = (medium: IMedium, mediuns: Array<IMedium>, adjunt
     if (medium.sex === 'Masculino' && medium.dtCenturia && !medium.classif) {
         Alert('Informe a classificação do mestre', 'error');
         return;
+    }
+    if (medium.falMiss && !medium.adjDevas) {
+        Alert('Selecione um Adjunto Devas', 'error');
+        return
     }
     
     //Retorna objeto médium correspondente ao afilhado do mestre lua ou ninfa sol

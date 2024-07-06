@@ -119,7 +119,7 @@ export const generateEmissao = (medium: IMedium, user: IUser, text: string) => {
             margin: [0, 0, 0, 5]
         },
         {
-            text: 'MEUS FILHOS JAGUARES, O MESTRE QUE ALTERAR A SUA EMISSÃO, TERÁ SOBRE SI A RESPONSABILIDADE DE NÃO ULTRAPASSAR O NEUTRÔN E CONSEQUENTEMENTE NÃO SERÁ OUVIDO E NEM REGISTRADA PELOS PLANOS ESPIRITUAIS.',
+            text: 'MEUS FILHOS JAGUARES, O MESTRE QUE ALTERAR A SUA EMISSÃO, TERÁ SOBRE SI A RESPONSABILIDADE DE NÃO ULTRAPASSAR O NEUTRÔN E CONSEQUENTEMENTE NÃO SERÁ OUVIDO E NEM REGISTRADO PELOS PLANOS ESPIRITUAIS.',
             alignment: 'justify',
             fontSize: 11,
             margin: [10, 0, 0, 5]
