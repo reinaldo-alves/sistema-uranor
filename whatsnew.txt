@@ -54,3 +54,9 @@ VERSÃO 1.2.2
 - Correção ortográfica no rodapé das emissões (de 'Registada' para 'Registrado').
 - Permissão para todos os usuários adicionarem datas mediúnicas, mas apenas administradores podem editá-las.
 - Permissão para cadastro de médium de falange missionária sem adjunto Devas, validação desta propriedade apenas ao gerar emissão.
+
+VERSÃO 1.3.0
+- Exibição de mensagem quando tecla Caps Lock está ativa e campos de senhas estão focados.
+- Inclusão do botão Ver Ficha no modal do médium na seção de consagrações.
+- Configuração de inputs de textos da seção Manutenção para exibir apenas as iniciais maiúsculas.
+- Exibição de templo e telefones dos médiuns nas listas de consagrações.

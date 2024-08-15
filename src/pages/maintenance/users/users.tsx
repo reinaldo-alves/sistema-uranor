@@ -1,5 +1,5 @@
-import { useState, useContext, useEffect } from "react";
-import { InfoCard, InputContainer, InfoContent, Results, ResultsCard, ResultsDetails, ResultsTable, ResultsTitle, SearchButton, SearchCard, SearchContainer } from "./styles";
+import { useState, useContext, useEffect, useRef } from "react";
+import { InfoCard, InputContainer, InfoContent, Results, ResultsCard, ResultsDetails, ResultsTable, ResultsTitle, SearchButton, SearchCard, SearchContainer, UserCapsLock } from "./styles";
 import SideMenu from "src/components/SideMenu/SideMenu";
 import Header from "src/components/header/header";
 import SubMenu from "src/components/SubMenu/SubMenu";
@@ -11,7 +11,7 @@ import { useNavigate } from "react-router-dom";
 import { Alert, Confirm } from "src/utilities/popups";
 import { defaultMedium, defaultUser } from "src/utilities/default";
 import AutocompleteInput from "src/components/AutocompleteInput/AutocompleteInput";
-import { formatInputText, handleEnterPress, removeDiacritics } from "src/utilities/functions";
+import { formatInputText, handleCapsLock, handleEnterPress, removeDiacritics } from "src/utilities/functions";
 import { Modal, ModalButton, ModalContent, ModalTitle } from "src/components/Modal/modal";
 import MainContainer from "src/components/MainContainer/MainContainer";
 
@@ -26,9 +26,14 @@ function Users() {
     const [password2, setPassword2] = useState('');
     const [dropMedium, setDropMedium] = useState(defaultMedium);
     const [searchMedium, setSearchMedium] = useState('');
+    const [isCapsLockOnPass, setIsCapsLockOnPass] = useState(false);
+    const [isCapsLockOnConf, setIsCapsLockOnConf] = useState(false);
     
     const { users, token, loadUser, setUserChangePassword, getUser } = useContext(UserContext);
     const { mediuns } = useContext(MediumContext);
+
+    const passRef = useRef<HTMLInputElement>(null);
+    const confRef = useRef<HTMLInputElement>(null);
 
     const navigate = useNavigate();
 
@@ -246,11 +251,13 @@ function Users() {
                         <>         
                             <InputContainer>
                                 <label>Senha</label>
-                                <input type="password" value={password1} onKeyUp={(e) => handleEnterPress(e, async () => await handleAddUser(edited.name, [password1, password2], edited.level, edited.medium_id))} onChange={(e) => setPassword1(e.target.value)} />
+                                <input type="password" value={password1} ref={passRef} onKeyUp={(e) => handleEnterPress(e, async () => await handleAddUser(edited.name, [password1, password2], edited.level, edited.medium_id))} onChange={(e) => setPassword1(e.target.value)} onFocus={handleCapsLock(setIsCapsLockOnPass, passRef).focus} onBlur={handleCapsLock(setIsCapsLockOnPass, passRef).blur} />
+                                <UserCapsLock>{isCapsLockOnPass ? 'Caps Lock ativo' : ''}</UserCapsLock>
                             </InputContainer>
                             <InputContainer>
                                 <label>Confirmar Senha</label>
-                                <input type="password" value={password2} onKeyUp={(e) => handleEnterPress(e, async () => await handleAddUser(edited.name, [password1, password2], edited.level, edited.medium_id))} onChange={(e) => setPassword2(e.target.value)} />
+                                <input type="password" value={password2} ref={confRef} onKeyUp={(e) => handleEnterPress(e, async () => await handleAddUser(edited.name, [password1, password2], edited.level, edited.medium_id))} onChange={(e) => setPassword2(e.target.value)} onFocus={handleCapsLock(setIsCapsLockOnConf, confRef).focus} onBlur={handleCapsLock(setIsCapsLockOnConf, confRef).blur} />
+                                <UserCapsLock>{isCapsLockOnConf ? 'Caps Lock ativo' : ''}</UserCapsLock>
                             </InputContainer>
                         </>
                     }

@@ -193,3 +193,14 @@ export const InfoContent = styled.span`
         text-align: center;
     }
 `;
+
+export const UserCapsLock = styled.p`
+    color: ${(props) => {return props.theme.color.darkerColor}};
+    text-align: right;
+    font-weight: bold;
+    font-size: 15px;
+    height: 1px;
+    width: 100%;
+    position: relative;
+    top: -60px
+`;

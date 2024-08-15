@@ -239,3 +239,30 @@ export function formatInputText(inputText: string) {
 export function removeDiacritics(str: string): string {
     return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim().toLowerCase();
 }
+
+//Manipuladores de eventos para inputs de senhas exibirem mensagens de Caps Lock ativo
+export function handleCapsLock(state: React.Dispatch<React.SetStateAction<boolean>>, ref: React.RefObject<HTMLInputElement>) {
+    function keyDown(e: KeyboardEvent) {
+        if (e.getModifierState('CapsLock')) {
+            state(true);
+        } else {
+            state(false);
+        }
+    };
+    function keyUp(e: KeyboardEvent) {
+        if (!e.getModifierState('CapsLock')) {
+            state(false);
+        }
+    };
+    return {
+        focus: () => {
+            ref.current?.addEventListener('keydown', keyDown);
+            ref.current?.addEventListener('keyup', keyUp);
+        },
+        blur: () => {
+            ref.current?.removeEventListener('keydown', keyDown);
+            ref.current?.removeEventListener('keyup', keyUp);
+            state(false);
+        }
+    }
+}

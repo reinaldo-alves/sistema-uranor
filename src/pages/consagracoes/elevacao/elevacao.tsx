@@ -1,11 +1,11 @@
 import SubMenu from "src/components/SubMenu/SubMenu";
 import Header from "../../../components/header/header";
 import SideMenu from "src/components/SideMenu/SideMenu";
-import { ButtonContainer, ConsagracaoCard, InputContainer, ModalMediumContent, MudancaObs, MudancaWarning, NavigateButton, PageSubTitle, PhotoContainer, Results, ResultsData, ResultsPanel, ResultsTable, ResultsTitle } from "../styles";
+import { ButtonContainer, ConsagracaoCard, InputContainer, ModalMediumContent, MudancaObs, MudancaWarning, NavigateButton, PageSubTitle, PhotoContainer, Results, ResultsData, ResultsDetails, ResultsPanel, ResultsTable, ResultsTitle } from "../styles";
 import { alphabeticOrder, countMedium, handleEnterPress, setSituation } from "src/utilities/functions";
 import { useContext, useEffect, useState } from "react";
 import { ListContext } from "src/contexts/ListContext";
-import { IConsagracao, IMedium } from "src/types/types";
+import { IConsagracao, IMedium, ITemplo } from "src/types/types";
 import { Alert, Confirm } from "src/utilities/popups";
 import { MediumContext } from "src/contexts/MediumContext";
 import { UserContext } from "src/contexts/UserContext";
@@ -186,26 +186,25 @@ function Elevacao() {
             <MainContainer title={[...listElevacao, ...listMudanca].length ? `Lista de médiuns para elevação - ${countMedium([...listElevacao, ...listMudanca])}` : 'Nenhum médium para elevação'}>
                 <ConsagracaoCard hide={![...listElevacao, ...listMudanca].length}>
                     <ResultsTable show={[...listElevacao, ...listMudanca].length}>
-                        <thead>
-                            <ResultsPanel columns={columnData[0] as string}>
-                                <ResultsTitle scope="col" align="left">Nome do Médium</ResultsTitle>
-                                <ResultsTitle scope="col">{columnData[2]? 'Mediunidade' : 'Med.'}</ResultsTitle>
-                                <ResultsTitle scope="col">Termo</ResultsTitle>
-                                <ResultsTitle scope="col">Foto</ResultsTitle>
-                            </ResultsPanel>
-                        </thead>
-                        <tbody>
-                            {alphabeticOrder([...listElevacao, ...listMudanca])
-                                .map((item: IConsagracao, index: number) => (
-                                    <Results columns={columnData[0] as string} key={index} onClick={() => handleClickMedium(item)}>
-                                        <ResultsData align="left">{listMudanca.some((el: IConsagracao) => el.medium === item.medium)? `${item.nome} *` : item.nome}</ResultsData>
-                                        <ResultsData>{columnData[2]? item.med : item.med[0]}</ResultsData>
-                                        <ResultsData isNegative={!item.termo}>{item.termo ? 'Sim' : 'Não'}</ResultsData>
-                                        <ResultsData isNegative={!item.foto}>{item.foto ? 'Sim' : 'Não'}</ResultsData>
-                                    </Results>
-                                ))
-                            }
-                        </tbody>
+                        <ResultsPanel columns={columnData[0] as string}>
+                            <ResultsTitle align="left">{columnData[2]? 'Nome do Médium' : 'Médium'}</ResultsTitle>
+                            <ResultsTitle>{columnData[2]? 'Mediunidade' : 'Med.'}</ResultsTitle>
+                            <ResultsTitle>Termo</ResultsTitle>
+                            <ResultsTitle>Foto</ResultsTitle>
+                        </ResultsPanel>
+                        {alphabeticOrder([...listElevacao, ...listMudanca])
+                            .map((item: IConsagracao, index: number) => (
+                                <Results columns={columnData[0] as string} key={index} onClick={() => handleClickMedium(item)}>
+                                    <ResultsData align="left">
+                                        {listMudanca.some((el: IConsagracao) => el.medium === item.medium)? `${item.nome} *` : item.nome}
+                                        <ResultsDetails>Templo: {templos.filter((temp: ITemplo) => temp.templo_id === item.templo)[0]?.cidade} - {templos.filter((temp: ITemplo) => temp.templo_id === item.templo)[0]?.estado.abrev} - Telefone: {mediuns.find((m: IMedium) => m.medium_id === item.medium)?.telefone1}{mediuns.find((m: IMedium) => m.medium_id === item.medium)?.telefone1 && mediuns.find((m: IMedium) => m.medium_id === item.medium)?.telefone2 ? ' / ' : ''}{mediuns.find((m: IMedium) => m.medium_id === item.medium)?.telefone2}</ResultsDetails>
+                                    </ResultsData>
+                                    <ResultsData>{columnData[2]? item.med : item.med[0]}</ResultsData>
+                                    <ResultsData isNegative={!item.termo}>{item.termo ? 'Sim' : 'Não'}</ResultsData>
+                                    <ResultsData isNegative={!item.foto}>{item.foto ? 'Sim' : 'Não'}</ResultsData>
+                                </Results>
+                            ))
+                        }
                     </ResultsTable>
                     <MudancaObs show={listMudanca.length}>* Mudança de mediunidade</MudancaObs>
                 </ConsagracaoCard>
@@ -241,6 +240,7 @@ function Elevacao() {
             <Modal vis={showModalMedium}>
                 <ModalMediumContent vis={selectModal === 'medium'}>
                     <ModalTitle>{selected.nome}</ModalTitle>
+                    <NavigateButton style={{marginBottom: '20px'}} width="230px" onClick={() => navigate(`/mediuns/consulta/${selected.medium}`)}>Ver ficha</NavigateButton>
                     <InputContainer box>
                         <label>Termo Assinado?</label>
                         <input type="checkbox" checked={checkTermo} onChange={(e) => editTermo(token, e.target.checked)} />
@@ -282,7 +282,7 @@ function Elevacao() {
                         <AutocompleteInput 
                             label={(option) => option.medium_id ? `${option.nome} (${option.medium_id.toString().padStart(5, '0')})` : ''}
                             default={defaultMedium}
-                            options={mediuns.filter((item: IMedium) => item.medium_id && (setSituation(item) === 'Iniciado' || setSituation(item) === 'Liberado') && item.condicao === 'Ativo' && searchMediumInCons(item.medium_id) === defaultConsagracao)}
+                            options={mediuns.filter((item: IMedium) => item.medium_id && !item.dtElevacao && item.condicao === 'Ativo' && searchMediumInCons(item.medium_id) === defaultConsagracao)}
                             equality={(option, value) => option.medium_id === value.medium_id}
                             value={dropMedium}
                             setValue={setDropMedium}

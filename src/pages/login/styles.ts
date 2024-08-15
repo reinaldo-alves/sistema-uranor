@@ -123,3 +123,14 @@ export const LoginError = styled.div`
     height: 50px;
     width: 90%;
 `;
+
+export const LoginCapsLock = styled.p`
+    color: ${(props) => {return props.theme.color.darkerColor}};
+    text-align: center;
+    font-weight: bold;
+    font-size: 15px;
+    height: 15px;
+    width: 100%;
+    position: relative;
+    top: -15px
+`;

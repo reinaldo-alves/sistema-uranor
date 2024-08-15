@@ -76,21 +76,21 @@ export const NavigateButton = styled.button<{width?: string, color?: string}>`
     }
 `;
 
-export const ResultsTable = styled.table<{show: number}>`
+export const ResultsTable = styled.div<{show: number}>`
     width: 100%;
     overflow-y: auto;
     display: ${({show}) => show? 'flex' : 'none'};
     flex-direction: column;
 `;
 
-export const ResultsPanel = styled.tr<{columns: string}>`
+export const ResultsPanel = styled.div<{columns: string}>`
     border-bottom: 1px solid ${(props) => {return props.theme.color.lighterColor}};
     display: grid;
     align-items: center;
     grid-template-columns: ${({columns}) => columns? columns : 'auto'};
 `;
 
-export const ResultsUpdate = styled.tr`
+export const ResultsUpdate = styled.div`
     border-bottom: 1px solid ${(props) => {return props.theme.color.lighterColor}};
     display: grid;
     justify-content: space-between;
@@ -98,7 +98,7 @@ export const ResultsUpdate = styled.tr`
     grid-template-columns: 1fr;
 `;
 
-export const Results = styled.tr<{columns: string}>`
+export const Results = styled.div<{columns: string}>`
     border-bottom: 1px solid ${(props) => {return props.theme.color.lighterColor}};
     display: grid;
     align-items: center;
@@ -110,7 +110,7 @@ export const Results = styled.tr<{columns: string}>`
     }
 `;
 
-export const ResultsTitle = styled.th<{align?: string}>`
+export const ResultsTitle = styled.div<{align?: string}>`
     font-size: 22px;
     color: ${(props) => {return props.theme.color.darkerColor}};
     padding: 4px;
@@ -124,7 +124,8 @@ export const ResultsTitle = styled.th<{align?: string}>`
     }
 `;
 
-export const ResultsData = styled.td<{align?: string, isNegative?: boolean}>`
+export const ResultsData = styled.div<{align?: string, isNegative?: boolean}>`
+    height: 100%;
     font-size: 18px;
     color: ${(props) => (props.isNegative? 'white' : props.theme.color.darkerColor)};
     background-color: ${({isNegative}) => isNegative? 'red' : 'transparent'};
@@ -133,13 +134,29 @@ export const ResultsData = styled.td<{align?: string, isNegative?: boolean}>`
     overflow: hidden;
     text-overflow: ellipsis;
     text-align: ${({align}) => align? align : 'center'};
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 
     @media (max-width: 786px) {
         font-size: 14px;
     }
 `;
 
-export const CheckboxContainer = styled.td`
+export const ResultsDetails = styled.div`
+    font-size: 12px;
+    color: ${(props) => {return props.theme.color.darkerColor}};
+    font-weight: bold;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-align: left;
+
+    @media (max-width: 786px) {
+        font-size: 10px;
+    }
+`;
+
+export const CheckboxContainer = styled.div`
     display: flex;
     gap: 30px;
     color: ${(props) => {return props.theme.color.darkerColor}};
@@ -147,7 +164,7 @@ export const CheckboxContainer = styled.td`
     justify-content: center;
 `;
 
-export const SelectContainer = styled.td`
+export const SelectContainer = styled.div`
     display: flex;
     gap: 30px;
     color: ${(props) => {return props.theme.color.darkerColor}};

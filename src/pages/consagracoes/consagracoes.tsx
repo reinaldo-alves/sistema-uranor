@@ -70,10 +70,10 @@ function Consagracoes() {
                     <ResultsTable show={[...listIniciacao, ...listMudanca].length}>
                         <thead>  
                             <ResultsPanel columns={columnData[0] as string}>
-                                <ResultsTitle scope="col" align="left">Nome do Médium</ResultsTitle>
-                                <ResultsTitle scope="col">{columnData[2]? 'Mediunidade' : 'Med.'}</ResultsTitle>
-                                <ResultsTitle scope="col">{columnData[2]? 'Colete nº' : 'Col.'}</ResultsTitle>
-                                <ResultsTitle scope="col">Foto</ResultsTitle>
+                                <ResultsTitle align="left">Nome do Médium</ResultsTitle>
+                                <ResultsTitle>{columnData[2]? 'Mediunidade' : 'Med.'}</ResultsTitle>
+                                <ResultsTitle>{columnData[2]? 'Colete nº' : 'Col.'}</ResultsTitle>
+                                <ResultsTitle>Foto</ResultsTitle>
                             </ResultsPanel>
                         </thead>
                         <tbody>
@@ -99,10 +99,10 @@ function Consagracoes() {
                     <ResultsTable show={[...listElevacao, ...listMudanca].length}>
                         <thead>
                             <ResultsPanel columns={columnData[0] as string}>
-                                <ResultsTitle scope="col" align="left">Nome do Médium</ResultsTitle>
-                                <ResultsTitle scope="col">{columnData[2]? 'Mediunidade' : 'Med.'}</ResultsTitle>
-                                <ResultsTitle scope="col">Termo</ResultsTitle>
-                                <ResultsTitle scope="col">Foto</ResultsTitle>
+                                <ResultsTitle align="left">Nome do Médium</ResultsTitle>
+                                <ResultsTitle>{columnData[2]? 'Mediunidade' : 'Med.'}</ResultsTitle>
+                                <ResultsTitle>Termo</ResultsTitle>
+                                <ResultsTitle>Foto</ResultsTitle>
                             </ResultsPanel>
                         </thead>
                         <tbody>
@@ -128,8 +128,8 @@ function Consagracoes() {
                     <ResultsTable show={listCenturia.length}>
                         <thead>
                             <ResultsPanel columns={columnData[1] as string}>
-                                <ResultsTitle scope="col" align="left">Nome do Médium</ResultsTitle>
-                                <ResultsTitle scope="col">{columnData[2]? 'Mediunidade' : 'Med.'}</ResultsTitle>
+                                <ResultsTitle align="left">Nome do Médium</ResultsTitle>
+                                <ResultsTitle>{columnData[2]? 'Mediunidade' : 'Med.'}</ResultsTitle>
                             </ResultsPanel>
                         </thead>
                         <tbody>

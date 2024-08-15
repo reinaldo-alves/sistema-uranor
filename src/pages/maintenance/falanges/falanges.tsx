@@ -120,7 +120,7 @@ function Falanges() {
                     </InputContainer>
                     <InputContainer>
                         <label>Nome do Adjunto de Apoio</label>
-                        <input type="text" disabled={!edited.ninfa} value={edited.adjNome} onKeyUp={(e) => handleEnterPress(e, async () => await editFal(edited, selected, token))} onChange={(e) => updateProps('adjNome', e.target.value)} />
+                        <input type="text" disabled={!edited.ninfa} value={edited.adjNome} onKeyUp={(e) => handleEnterPress(e, async () => await editFal(edited, selected, token))} onChange={(e) => updateProps('adjNome', formatInputText(e.target.value))} />
                     </InputContainer>
                     <div style={{display: 'flex', gap: '20px'}}>
                         <ModalButton color="red" onClick={() => closeModal()}>Cancelar</ModalButton>

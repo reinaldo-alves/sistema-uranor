@@ -55,3 +55,14 @@ export const PasswordForm = styled.div`
         }
     }
 `;
+
+export const UserCapsLock = styled.p<{modal?: boolean}>`
+    color: ${(props) => {return props.theme.color.darkerColor}};
+    text-align: ${(modal) => modal? 'center' : 'right'};
+    font-weight: bold;
+    font-size: 12px;
+    height: ${(modal) => modal? '12px' : '1px'};
+    width: 100%;
+    position: relative;
+    top: ${(modal) => modal? '5px' : '-75px'};
+`;

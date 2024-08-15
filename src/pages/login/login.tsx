@@ -1,16 +1,19 @@
-import { useContext, useState, useEffect } from 'react'
+import { useContext, useState, useEffect, useRef } from 'react'
 import logo from '../../assets/jaguar.jpg'
-import { LoginCard, LoginCardContainer, LoginError, LoginForm, LoginHeader, TitleContainer } from './styles'
+import { LoginCapsLock, LoginCard, LoginCardContainer, LoginError, LoginForm, LoginHeader, TitleContainer } from './styles'
 import { UserContext } from 'src/contexts/UserContext'
 import { useNavigate } from 'react-router-dom'
 import { Alert } from 'src/utilities/popups'
-import { handleEnterPress } from 'src/utilities/functions'
+import { handleCapsLock, handleEnterPress } from 'src/utilities/functions'
 
 function Login() {
     const { handleLogin, login, errorMessage, setErrorMessage } = useContext(UserContext)
     
     const [name, setName] = useState('');
     const [password, setPassword] = useState('');
+    const [isCapsLockOn, setIsCapsLockOn] = useState(false);
+
+    const inputRef = useRef<HTMLInputElement>(null);
 
     const navigate = useNavigate();
 
@@ -54,7 +57,17 @@ function Login() {
                         <label>Usuário:</label>
                         <input type="text" name="user" value={name} onKeyUp={(e) => handleEnterPress(e, () => loginButtonFunc())} onChange={(e) => setName(e.target.value)} />
                         <label>Senha:</label>
-                        <input type="password" name="password" value={password} onKeyUp={(e) => handleEnterPress(e, () => loginButtonFunc())} onChange={(e) => setPassword(e.target.value)} />
+                        <input 
+                            type="password"
+                            name="password"
+                            ref={inputRef}
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                            onKeyUp={(e) => handleEnterPress(e, () => loginButtonFunc())}
+                            onFocus={handleCapsLock(setIsCapsLockOn, inputRef).focus}
+                            onBlur={handleCapsLock(setIsCapsLockOn, inputRef).blur}
+                        />
+                        <LoginCapsLock>{isCapsLockOn ? 'Caps Lock ativo' : ''}</LoginCapsLock>
                         <button id='button-login' onClick={loginButtonFunc}>Entrar</button>
                     </LoginForm>
                     <LoginError>{errorMessage}</LoginError>
