@@ -65,6 +65,22 @@ export const defaultEvento: IEvento = {
     observ: '',
 }
 
+export const defaultCalendario = {
+    ano: 2024,
+    janeiro: 1,
+    fevereiro: 1,
+    marco: 1,
+    abril: 1,
+    maio: 1,
+    junho: 1,
+    julho: 1,
+    agosto: 1,
+    setembro: 1,
+    outubro: 1,
+    novembro: 1,
+    dezembro: 1,
+}
+
 export const defaultMedium: IMedium = {
     medium_id: 0,
     nome: '',

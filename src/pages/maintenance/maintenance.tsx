@@ -16,7 +16,8 @@ function Maintenance() {
         {name: 'Templos', link: () => navigate('/manutencao/templos')},
         {name: 'Falanges Missionárias', link: () => navigate('/manutencao/falanges')},
         {name: 'Usuários', link: () => navigate('/manutencao/usuarios')},
-        {name: 'Backup', link: () => navigate('/manutencao/backup')}
+        {name: 'Backup', link: () => navigate('/manutencao/backup')},
+        {name: 'Configurar Calendário', link: () => navigate('/manutencao/calendario')}
     ]
     
     const menuList = [{title: 'Página Inicial', click: '/'}]

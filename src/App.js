@@ -44,6 +44,7 @@ import ManualDevas from './pages/biblioteca/manualdevas';
 import Cartas from './pages/biblioteca/cartas';
 import PequenasHistorias from './pages/biblioteca/pequenashistorias';
 import InstrucoesPraticas from './pages/biblioteca/instrucoespraticas';
+import Calendar from './pages/maintenance/calendar/calendar';
 
 function App() {
   const [mainContainer, setMainContainer] = useState('199')
@@ -103,6 +104,7 @@ function App() {
                   <Route path='/manutencao/falanges' element={<Falanges />} />
                   <Route path='/manutencao/usuarios' element={<Users />} />
                   <Route path='/manutencao/backup' element={<Backup />} />
+                  <Route path='/manutencao/calendario' element={<Calendar />} />
                   <Route path='/consagracoes/iniciacao/atualizar' element={<UpdateIniciacao />} />
                   <Route path='/consagracoes/elevacao/atualizar' element={<UpdateElevacao />} />
                   <Route path='/consagracoes/centuria/atualizar' element={<UpdateCenturia />} />

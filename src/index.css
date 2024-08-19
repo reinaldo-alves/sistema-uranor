@@ -45,6 +45,12 @@ input[type="checkbox"]:focus {
   outline: 1px solid #fff;
 }
 
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
 .popup {
   border-radius: 10px !important;
   border: 1px solid #002776 !important;

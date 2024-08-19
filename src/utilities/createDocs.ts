@@ -3,7 +3,7 @@ import pdfTimes from 'pdfmake/build/vfs_fonts'
 import { timesRegular, timesBold, timesItalic, timesBI } from 'src/assets/encodedFiles/TimesFont';
 import { arialBI, arialBold, arialItalic, arialRegular } from 'src/assets/encodedFiles/ArialFont';
 import { Content, TDocumentDefinitions } from 'pdfmake/interfaces';
-import { IAdjunto, ICanto, ICavaleiro, IConsagracao, IEvento, IFalange, IMedium, IMentor, ITemplo, IUser } from "src/types/types";
+import { IAdjunto, ICalendario, ICanto, ICavaleiro, IConsagracao, IEvento, IFalange, IMedium, IMentor, ITemplo, IUser } from "src/types/types";
 import { assTiaNeiva } from '../assets/encodedFiles/signature';
 import { alphabeticOrder, convertDate, generateListEventos, getCurrentDate, imageToBase64, positionsAndFunctions, reduceClassFalMest } from './functions';
 import { jaguarImage } from 'src/assets/encodedFiles/jaguar';
@@ -1515,6 +1515,131 @@ export const generateTurnos = () => {
     }
 
     pdfMake.createPdf(emissaoDefinitions).open({}, window.open(`${turnoTitle.text.toString().replace(/ /g, '_')}.pdf`, '_blank'));
+}
+
+export const generateCalendario = (calendar: ICalendario) => {    
+    const arrayDatas = Array.from({length: 12}, (_, index) => {
+        return new Date(calendar.ano, index)
+    })
+
+    const formatMonth = new Intl.DateTimeFormat('pt-BR', {month: 'long'});
+
+    const getTrabalho = (trabalho: 'Angical' | 'Sessão Branca', month: Date) => {
+        const params = trabalho === 'Angical' ? [13, 14, 21] : trabalho === 'Sessão Branca' ? [21, 22, 29] : [];
+        month.setDate(params[0]);
+        const dayOfWeek = month.getDay();
+        let result;
+        if(dayOfWeek <= 4) {
+            result = params[1] - dayOfWeek;
+        } else {
+            result = params[2] - dayOfWeek;
+        }
+        return result;
+    }
+
+    const getPrimeiroDomingo = (month: Date) => {
+        month.setDate(1);
+        const dayOfWeek = month.getDay();
+        let result;
+        if(dayOfWeek === 0) {
+            result = 1;
+        } else {
+            result = 8 - dayOfWeek;
+        }
+        return result;
+    }
+
+    const getUltimoDomingo = (month: Date) => {
+        const newMonth = month.getMonth() + 1
+        const lastDay = new Date(calendar.ano, newMonth, 0);
+        return lastDay.getDate() - lastDay.getDay();
+    }
+
+    const getSerieAlaba = (day: number, month: number) => {
+        const primeiroAlaba = new Date(calendar.ano, month, day - 3);
+        const ts = primeiroAlaba.getTime();
+        const serie = Array.from({length: 7}, (_, i) => {
+            let newTS = ts + (i * 24 * 60 * 60 * 1000);
+            return new Date(newTS)
+        });
+        return serie;
+    }
+
+    const arrayAlaba = [getSerieAlaba(calendar.janeiro, 0), getSerieAlaba(calendar.fevereiro, 1), getSerieAlaba(calendar.marco, 2), getSerieAlaba(calendar.abril, 3), getSerieAlaba(calendar.maio, 4), getSerieAlaba(calendar.junho, 5), getSerieAlaba(calendar.julho, 6), getSerieAlaba(calendar.agosto, 7), getSerieAlaba(calendar.setembro, 8), getSerieAlaba(calendar.outubro, 9), getSerieAlaba(calendar.novembro, 10), getSerieAlaba(calendar.dezembro, 11),]
+
+    const alabaGetDay = (index: number, position: number) => arrayAlaba[index][position].getDate().toString().padStart(2, '0');
+
+    const calendarioTitle: Content = {
+        text: `ATIVIDADES DOUTRINÁRIAS PARA O ANO DE ${calendar.ano}`,
+        fontSize: 16,
+        alignment: 'center',
+        bold: true, 
+        margin: [0, 0, 0, 30]
+    }
+
+    const calendarioTable: Content = {
+        style: {
+            alignment: 'center',
+            fontSize: 14
+        },
+        table: {
+            headerRows: 1,
+            widths: [120, '*', '*', 200, '*', '*'],
+            heights: 20,
+            body: [
+                [
+                    {text: 'MESES', bold: true, margin: [0, 8, 0, 0]},
+                    {text: 'ANGICAL', bold: true, margin: [0, 8, 0, 0]},
+                    {text: 'SESSÃO BRANCA', bold: true, margin: [0, 0, 0, 0]},
+                    {text: 'ALABÁ', bold: true, margin: [0, 8, 0, 0]},
+                    {text: 'BÊNÇÃO DO MINISTRO', bold: true, margin: [0, 0, 0, 0]},
+                    {text: 'BATIZADO', bold: true, margin: [0, 8, 0, 0]}
+                ],
+                ...arrayDatas.map((item: Date, index: number) => {
+                    return [
+                        {text: formatMonth.format(item).toUpperCase(), bold: true},
+                        {text: getTrabalho('Angical' ,item)},
+                        {text: getTrabalho('Sessão Branca' ,item)},
+                        {text: [
+                            `${alabaGetDay(index, 0)} - ${alabaGetDay(index, 1)} - ${alabaGetDay(index, 2)} - `,
+                            {text: alabaGetDay(index, 3), bold: true},
+                            ` - ${alabaGetDay(index, 4)} - ${alabaGetDay(index, 5)} - ${alabaGetDay(index, 6)}`
+                        ]},
+                        {text: getPrimeiroDomingo(item).toString().padStart(2, '0')},
+                        {text: getUltimoDomingo(item)}
+                    ]
+                })
+            ]
+        }
+    }
+
+    const calendarioSignature: Content = {
+        text: [
+            '_____________________________________\n',
+            'Adjunto Uranor\n',
+            'Mestre Vasconcelos\n'
+        ],
+        alignment: 'center',
+        fontSize: 12,
+        margin: [0, 30, 0, 0]
+    }
+
+    const calendarioFooter = (currentPage: number, pageCount: number): Content => docFooter(currentPage, pageCount);
+
+    const calendarioDefinitions: TDocumentDefinitions = {
+        info: {
+            title: `ATIVIDADES_DOUTRINARIAS_${calendar.ano}`
+        },
+        pageSize: 'A4',
+        pageOrientation: 'landscape',
+        content: [docHeader, calendarioTitle, calendarioTable, calendarioSignature],
+        footer: calendarioFooter,
+        defaultStyle: {
+            font: 'Times'
+        }
+    }
+
+    pdfMake.createPdf(calendarioDefinitions).open({}, window.open(`ATIVIDADES_DOUTRINARIAS_${calendar.ano}.pdf`, '_blank'));
 }
 
 export const generateReportAllCons = (listIniciacao: Array<IConsagracao>, listElevacao: Array<IConsagracao>, listCenturia: Array<IConsagracao>, listMudanca: Array<IConsagracao>,) => {    

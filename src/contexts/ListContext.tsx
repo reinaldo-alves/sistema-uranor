@@ -1,6 +1,6 @@
 import { createContext, useState } from "react";
 import api from "src/api";
-import { IAdjunto, ICavaleiro, IConsagracao, IEstado, IFalange, IMentor, ITemplo, ITurno } from "src/types/types";
+import { IAdjunto, ICalendario, ICavaleiro, IConsagracao, IEstado, IFalange, IMentor, ITemplo, ITurno } from "src/types/types";
 import { IAdjuntoAPI, ICavaleiroAPI, IConsagracaoAPI, IFalangeAPI, IGuiaAPI, IMediumAPI, IMinistroAPI, ITemploAPI } from "src/types/typesAPI";
 import { defaultConsagracao } from "src/utilities/default";
 
@@ -17,6 +17,7 @@ export const ListStore = ({ children }: any) => {
     const [listElevacao, setListElevacao] = useState([] as Array<IConsagracao>);
     const [listCenturia, setListCenturia] = useState([] as Array<IConsagracao>);
     const [listMudanca, setListMudanca] = useState([] as Array<IConsagracao>);
+    const [calendario, setCalendario] = useState({} as ICalendario);
 
     const estados = [
         {abrev: 'PE', state: 'Pernambuco'}, {abrev: 'AC', state: 'Acre'},
@@ -33,15 +34,6 @@ export const ListStore = ({ children }: any) => {
         {abrev: 'RR', state: 'Roraima'}, {abrev: 'SC', state: 'Santa Catarina'}, 
         {abrev: 'SP', state: 'São Paulo'}, {abrev: 'SE', state: 'Sergipe'}, 
         {abrev: 'TO', state: 'Tocantins'}
-    ]
-
-    const users = [
-        {id: 1, name: 'Reinaldo Alves', level: 'Administrador', medium_id: 10},
-        {id: 2, name: 'Lúcio Costa', level: 'Administrador', medium_id: 11},
-        {id: 3, name: 'Marina Sousa', level: 'Devas', medium_id: 12},
-        {id: 4, name: 'Juliana Rios', level: 'Devas', medium_id: 13},
-        {id: 5, name: 'Rômulo Andrade', level: 'Devas Aspirante', medium_id: 14},
-        {id: 6, name: 'Alexandre Albuquerque', level: 'Devas Aspirante', medium_id: 15},
     ]
 
     const coletes = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
@@ -215,6 +207,19 @@ export const ListStore = ({ children }: any) => {
         return result
     }
 
+    const loadCalendario = async (token: string) => {
+        try {
+            const { data } = await api.get('/calendar/get', {headers:{Authorization: token}})
+            const calendar = JSON.parse(data.calendar[0].text);
+            Object.keys(calendar).forEach(key => {
+                calendar[key] = Number(calendar[key]);
+            });
+            setCalendario(calendar);
+        } catch (error) {
+            console.log('Erro ao carregar as informações do calendário', error);
+        }
+    }
+
     const getData = async (token: string) => {
         await loadMinistro(token);
         await loadGuia(token);
@@ -223,10 +228,11 @@ export const ListStore = ({ children }: any) => {
         await loadAdjunto(token);
         await loadTemplo(token);
         await loadConsagracao(token);
+        await loadCalendario(token);
     };
 
     return (
-        <ListContext.Provider value={{templos, estados, users, adjuntos, coletes, classMest, falMest, falMiss, povos, turnoL, turnoT, ministros, cavaleiros, guias, estrelas, princesas, classificacao, listIniciacao, listElevacao, listCenturia, listMudanca, searchMediumInCons, getData, loadMinistro, loadCavaleiro, loadGuia, loadFalMiss, loadAdjunto, loadTemplo, loadConsagracao}} >
+        <ListContext.Provider value={{templos, estados, adjuntos, coletes, classMest, falMest, falMiss, povos, turnoL, turnoT, ministros, cavaleiros, guias, estrelas, princesas, classificacao, listIniciacao, listElevacao, listCenturia, listMudanca, calendario, searchMediumInCons, getData, loadMinistro, loadCavaleiro, loadGuia, loadFalMiss, loadAdjunto, loadTemplo, loadConsagracao, loadCalendario}} >
             { children }
         </ListContext.Provider>
     )
