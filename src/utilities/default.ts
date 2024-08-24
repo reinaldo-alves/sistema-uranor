@@ -81,6 +81,15 @@ export const defaultCalendario = {
     dezembro: 1,
 }
 
+export const defaultFrequencia = [{
+    medium: 0,
+    dia1: '-',
+    dia2: '-',
+    dia3: '-',
+    dia4: '-',
+    dia5: '-'
+}]
+
 export const defaultMedium: IMedium = {
     medium_id: 0,
     nome: '',

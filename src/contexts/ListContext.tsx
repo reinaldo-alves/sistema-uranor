@@ -1,8 +1,8 @@
 import { createContext, useState } from "react";
 import api from "src/api";
-import { IAdjunto, ICalendario, ICavaleiro, IConsagracao, IEstado, IFalange, IMentor, ITemplo, ITurno } from "src/types/types";
+import { IAdjunto, ICalendario, ICavaleiro, IConsagracao, IDesenvolvimento, IEstado, IFalange, IMentor, ITemplo, ITurno } from "src/types/types";
 import { IAdjuntoAPI, ICavaleiroAPI, IConsagracaoAPI, IFalangeAPI, IGuiaAPI, IMediumAPI, IMinistroAPI, ITemploAPI } from "src/types/typesAPI";
-import { defaultConsagracao } from "src/utilities/default";
+import { defaultConsagracao, defaultFrequencia } from "src/utilities/default";
 
 export const ListContext = createContext({} as any);
 
@@ -18,6 +18,7 @@ export const ListStore = ({ children }: any) => {
     const [listCenturia, setListCenturia] = useState([] as Array<IConsagracao>);
     const [listMudanca, setListMudanca] = useState([] as Array<IConsagracao>);
     const [calendario, setCalendario] = useState({} as ICalendario);
+    const [allFrequencia, setAllFrequencia] = useState([] as Array<IDesenvolvimento>)
 
     const estados = [
         {abrev: 'PE', state: 'Pernambuco'}, {abrev: 'AC', state: 'Acre'},
@@ -220,6 +221,19 @@ export const ListStore = ({ children }: any) => {
         }
     }
 
+    const loadDesenvolvimento = async (token: string) => {
+        try {
+            const { data } = await api.get('/desenvolvimento/get-desenvolvimento', {headers:{Authorization: token}})
+            const list = data.list.map((item: {desenv_id: number, mes: string, freq: string}) => {
+                const freq = JSON.parse(item.freq);
+                return {mes: item.mes, frequencia: freq.frequencia && freq.frequencia.length ? freq.frequencia : defaultFrequencia};
+            });
+            setAllFrequencia(list);
+        } catch (error) {
+            console.log('Erro ao carregar a lista de frequencias do desenvolvimento', error);
+        }
+    }
+
     const getData = async (token: string) => {
         await loadMinistro(token);
         await loadGuia(token);
@@ -229,10 +243,11 @@ export const ListStore = ({ children }: any) => {
         await loadTemplo(token);
         await loadConsagracao(token);
         await loadCalendario(token);
+        await loadDesenvolvimento(token);
     };
 
     return (
-        <ListContext.Provider value={{templos, estados, adjuntos, coletes, classMest, falMest, falMiss, povos, turnoL, turnoT, ministros, cavaleiros, guias, estrelas, princesas, classificacao, listIniciacao, listElevacao, listCenturia, listMudanca, calendario, searchMediumInCons, getData, loadMinistro, loadCavaleiro, loadGuia, loadFalMiss, loadAdjunto, loadTemplo, loadConsagracao, loadCalendario}} >
+        <ListContext.Provider value={{templos, estados, adjuntos, coletes, classMest, falMest, falMiss, povos, turnoL, turnoT, ministros, cavaleiros, guias, estrelas, princesas, classificacao, listIniciacao, listElevacao, listCenturia, listMudanca, calendario, allFrequencia, searchMediumInCons, getData, loadMinistro, loadCavaleiro, loadGuia, loadFalMiss, loadAdjunto, loadTemplo, loadConsagracao, loadCalendario, loadDesenvolvimento}} >
             { children }
         </ListContext.Provider>
     )

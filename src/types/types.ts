@@ -101,6 +101,20 @@ export interface ICalendario {
     dezembro: number,
 }
 
+export interface IFrequencia {
+    medium: number,
+    dia1: 'P' | 'F' | 'N' | '-',
+    dia2: 'P' | 'F' | 'N' | '-',
+    dia3: 'P' | 'F' | 'N' | '-', 
+    dia4: 'P' | 'F' | 'N' | '-',
+    dia5: 'P' | 'F' | 'N' | '-'
+}
+
+export interface IDesenvolvimento {
+    mes: string,
+    frequencia: Array<IFrequencia>
+}
+
 export interface IMedium {
     medium_id: number,
     nome: string,
