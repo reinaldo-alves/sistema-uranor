@@ -2,10 +2,10 @@ import SubMenu from "src/components/SubMenu/SubMenu";
 import Header from "../../../components/header/header";
 import SideMenu from "src/components/SideMenu/SideMenu";
 import { ButtonContainer, ConsagracaoCard, InputContainer, ModalMediumContent, MudancaObs, MudancaWarning, NavigateButton, PageSubTitle, PhotoContainer, Results, ResultsData, ResultsDetails, ResultsPanel, ResultsTable, ResultsTitle } from "../styles";
-import { alphabeticOrder, countMedium, handleEnterPress, setSituation } from "src/utilities/functions";
+import { alphabeticOrder, consagracaoDetails, countMedium, handleEnterPress } from "src/utilities/functions";
 import { useContext, useEffect, useState } from "react";
 import { ListContext } from "src/contexts/ListContext";
-import { IConsagracao, IMedium, ITemplo } from "src/types/types";
+import { IConsagracao, IMedium } from "src/types/types";
 import { Alert, Confirm } from "src/utilities/popups";
 import { MediumContext } from "src/contexts/MediumContext";
 import { UserContext } from "src/contexts/UserContext";
@@ -16,12 +16,14 @@ import { useNavigate } from "react-router-dom";
 import { generateAutorizacao, generateConsReport, generateProtocolo, generateTermo } from "src/utilities/createDocs";
 import { Modal, ModalButton, ModalSubTitle, ModalTitle } from "src/components/Modal/modal";
 import MainContainer from "src/components/MainContainer/MainContainer";
+import Loading from "src/utilities/Loading";
 
 function Elevacao() {
     const { templos, adjuntos, ministros, falMest, listElevacao, listMudanca, loadConsagracao, searchMediumInCons } = useContext(ListContext);
     const { uploadImage, mediuns } = useContext(MediumContext);
     const { user, token } = useContext(UserContext);
 
+    const [loading, setLoading] = useState(true);
     const [columnData, setColumnData] = useState(['auto 25% 15% 15%', 'auto 25%', true])
     const [showModalMedium, setShowModalMedium] = useState(false);
     const [selectModal, setSelectModal] = useState('')
@@ -178,6 +180,16 @@ function Elevacao() {
         {title: 'Centúria', click: '/consagracoes/centuria'},
         {title: 'Reclassificação', click: '/consagracoes/reclassificacao'},
     ]
+
+    useEffect(() => {
+        if(mediuns.length) {
+            setLoading(false);
+        }
+    }, [mediuns])
+
+    if(loading) {
+        return <Loading />
+    }
    
     return (
         <>
@@ -197,7 +209,7 @@ function Elevacao() {
                                 <Results columns={columnData[0] as string} key={index} onClick={() => handleClickMedium(item)}>
                                     <ResultsData align="left">
                                         {listMudanca.some((el: IConsagracao) => el.medium === item.medium)? `${item.nome} *` : item.nome}
-                                        <ResultsDetails>Templo: {templos.filter((temp: ITemplo) => temp.templo_id === item.templo)[0]?.cidade} - {templos.filter((temp: ITemplo) => temp.templo_id === item.templo)[0]?.estado.abrev} - Telefone: {mediuns.find((m: IMedium) => m.medium_id === item.medium)?.telefone1}{mediuns.find((m: IMedium) => m.medium_id === item.medium)?.telefone1 && mediuns.find((m: IMedium) => m.medium_id === item.medium)?.telefone2 ? ' / ' : ''}{mediuns.find((m: IMedium) => m.medium_id === item.medium)?.telefone2}</ResultsDetails>
+                                        <ResultsDetails>{consagracaoDetails(item, mediuns, templos)}</ResultsDetails>
                                     </ResultsData>
                                     <ResultsData>{columnData[2]? item.med : item.med[0]}</ResultsData>
                                     <ResultsData isNegative={!item.termo}>{item.termo ? 'Sim' : 'Não'}</ResultsData>

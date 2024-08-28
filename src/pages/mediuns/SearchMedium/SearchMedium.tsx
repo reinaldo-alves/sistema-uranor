@@ -8,7 +8,7 @@ import SideMenu from "src/components/SideMenu/SideMenu";
 import SubMenu from "src/components/SubMenu/SubMenu";
 import Header from "src/components/header/header";
 import { UserContext } from "src/contexts/UserContext";
-import { removeDiacritics, setSituation } from "src/utilities/functions";
+import { removeDiacritics, setSituation, showTemplo } from "src/utilities/functions";
 import Loading from "src/utilities/Loading";
 import MainContainer from "src/components/MainContainer/MainContainer";
 
@@ -96,10 +96,10 @@ function SearchMedium() {
                             {mediuns
                                 .filter((item: IMedium) => removeDiacritics(item.nome).includes(removeDiacritics(searchName)))
                                 .filter(searchTemp === '' ? (item: IMedium) => item.nome !== '' : (item: IMedium) => item.templo === Number(searchTemp))
-                                .map((item: any, index: number) => (
+                                .map((item: IMedium, index: number) => (
                                     <Results key={index} onClick={() => setSelected(item)}>
                                         <ResultsTitle>{item.nome}</ResultsTitle>
-                                        <ResultsDetails>{item.med} - {templos.filter((temp: ITemplo) => temp.templo_id === item.templo)[0]?.cidade} - {templos.filter((temp: ITemplo) => temp.templo_id === item.templo)[0]?.estado.abrev}</ResultsDetails>
+                                        <ResultsDetails>{item.med} - {showTemplo(item, templos)}</ResultsDetails>
                                     </Results>
                                 ))
                             }
@@ -124,7 +124,7 @@ function SearchMedium() {
                                         <MediumInfo>Mediunidade: <span>{selected.med}</span></MediumInfo>
                                         <MediumInfo>Sexo: <span>{selected.sex}</span></MediumInfo>
                                         <MediumInfo>Situação: <span>{setSituation(selected)}</span></MediumInfo>
-                                        <MediumInfo>Templo: <span>{templos.filter((temp: ITemplo) => temp.templo_id === selected.templo)[0].cidade} - {templos.filter((temp: ITemplo) => temp.templo_id === selected.templo)[0].estado.abrev}</span></MediumInfo>
+                                        <MediumInfo>Templo: <span>{showTemplo(selected, templos)}</span></MediumInfo>
                                         <MediumInfo>Condição Atual: <span>{selected.condicao}</span></MediumInfo>
                                     </TextContainer>
                                 </InfoContent>

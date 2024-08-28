@@ -62,15 +62,8 @@ VERSÃO 1.3.0
 - Exibição de templo e telefones dos médiuns nas listas de consagrações.
 - Geração de calendário de atividades doutrinárias na seção Documentos Úteis e configuração de ano e dias de lua cheia através da seção Manutenção.
 - Criação da seção Desenvolvimento, com mecanismos para registro de frequencia, atualização de mentores, emplacamento e desistências.
+- Inclusão de estado de carregamento nas páginas de consagrações.
 
 O QUE FAZER
-- Função de desistente, que adiciona evento na linha do tempo do médium e muda condição para afastado
 - Ao adicionar médium afastado na chamada, mudar condição para ativo e inserir evento com data de retorno.
-- atribuir selects aos objetos IFrequencia de cada medium
-- Quando não tiver dados, adicionar botão para importar não liberados e não desistentes do mês anterior
-- Arrumar um jeito de colocar na ordem alfabética
-- Arrumar um jeito de colocar o templo do médium
 - Verificar questão da mediunidade, para adicionar aquela que o médium tinha na época do desenvolvimento, baseando nas datas de teste e emplacamento atuais e old.
-- Adicionar funções para emplacar e atualizar mentores
-- Adicionar função para remover médium da lista
-- Verificar a necessidade dos atributos show e hide em COnsagracaoCard e ResultsTable

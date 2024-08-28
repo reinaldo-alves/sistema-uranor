@@ -2,7 +2,7 @@ import { createContext, useState } from "react";
 import api from "src/api";
 import { IAdjunto, ICalendario, ICavaleiro, IConsagracao, IDesenvolvimento, IEstado, IFalange, IMentor, ITemplo, ITurno } from "src/types/types";
 import { IAdjuntoAPI, ICavaleiroAPI, IConsagracaoAPI, IFalangeAPI, IGuiaAPI, IMediumAPI, IMinistroAPI, ITemploAPI } from "src/types/typesAPI";
-import { defaultConsagracao, defaultFrequencia } from "src/utilities/default";
+import { defaultConsagracao } from "src/utilities/default";
 
 export const ListContext = createContext({} as any);
 
@@ -226,7 +226,7 @@ export const ListStore = ({ children }: any) => {
             const { data } = await api.get('/desenvolvimento/get-desenvolvimento', {headers:{Authorization: token}})
             const list = data.list.map((item: {desenv_id: number, mes: string, freq: string}) => {
                 const freq = JSON.parse(item.freq);
-                return {mes: item.mes, frequencia: freq.frequencia && freq.frequencia.length ? freq.frequencia : defaultFrequencia};
+                return {mes: item.mes, frequencia: freq.frequencia};
             });
             setAllFrequencia(list);
         } catch (error) {

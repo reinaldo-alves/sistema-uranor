@@ -81,15 +81,6 @@ export const defaultCalendario = {
     dezembro: 1,
 }
 
-export const defaultFrequencia = [{
-    medium: 0,
-    dia1: '-',
-    dia2: '-',
-    dia3: '-',
-    dia4: '-',
-    dia5: '-'
-}]
-
 export const defaultMedium: IMedium = {
     medium_id: 0,
     nome: '',
@@ -185,6 +176,7 @@ export const eventTypes = [
     {event: 'Mudança de Adjunto de Origem', prior: 6, auto: false},
     {event: 'Mudança de Turno', prior: 6, auto: false},
     {event: 'Outras Consagrações', prior: 5, auto: false},
+    {event: 'Desistente do Desenvolvimento', prior: 5, auto: false},
     {event: 'Entregou as Armas', prior: 7, auto: false},
     {event: 'Retornou à Doutrina', prior: 1, auto: false},
     {event: 'Desencarnou', prior: 8, auto: false},

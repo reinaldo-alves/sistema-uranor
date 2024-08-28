@@ -1,5 +1,5 @@
 import api from "src/api";
-import { ICavaleiro, IConsagracao, IEvento, IMedium, IMentor, ITurno } from "src/types/types";
+import { ICavaleiro, IConsagracao, IEvento, IMedium, IMentor, ITemplo, ITurno } from "src/types/types";
 import { IEventoAPI } from "src/types/typesAPI";
 import { eventTypes } from "./default";
 
@@ -265,4 +265,21 @@ export function handleCapsLock(state: React.Dispatch<React.SetStateAction<boolea
             state(false);
         }
     }
+}
+
+//Exibe o nome do templo do médium, no formato Cidade - UF
+export function showTemplo(medium: IMedium, templos: Array<ITemplo>) {
+    const cidade = templos.find((item: ITemplo) => item.templo_id === medium.templo)?.cidade;
+    const uf = templos.find((item: ITemplo) => item.templo_id === medium.templo)?.estado.abrev;
+    return `${cidade} - ${uf}`
+}
+
+//Exibe os detalhes do médium (templo e telefones) nas tabelas de consagrações
+export function consagracaoDetails(item: IConsagracao, mediuns: Array<IMedium>, templos: Array<ITemplo>) {
+    const cidade = templos.find((temp: ITemplo) => temp.templo_id === item.templo)?.cidade;
+    const uf = templos.find((temp: ITemplo) => temp.templo_id === item.templo)?.estado.abrev;
+    const telefone1 = mediuns.find((m: IMedium) => m.medium_id === item.medium)?.telefone1;
+    const telefone2 = mediuns.find((m: IMedium) => m.medium_id === item.medium)?.telefone2;
+    const divider = telefone1 && telefone2 ? ' / ' : '';   
+    return `Templo: ${cidade} - ${uf} - Telefone: ${telefone1}${divider}${telefone2}`
 }

@@ -1,12 +1,12 @@
 import styled from "styled-components";
 
-export const ConsagracaoCard = styled.div<{hide?: boolean}>`
+export const DesenvCard = styled.div`
     width: 90%;
     max-width: 1400px;
     border-radius: 10px;
     padding: 20px;
     background-color: ${(props) => {return props.theme.color.mediumColorTr}};
-    display: ${({hide}) => hide? 'none' : 'flex'};
+    display: flex;
     flex-direction: column;
     align-items: center;
     gap: 20px;
@@ -52,10 +52,10 @@ export const NavigateButton = styled.button<{width?: string, color?: string}>`
     }
 `;
 
-export const ResultsTable = styled.div<{show: number}>`
+export const ResultsTable = styled.div`
     width: 100%;
     overflow-y: auto;
-    display: ${({show}) => show? 'flex' : 'none'};
+    display: flex;
     flex-direction: column;
 `;
 
@@ -159,16 +159,6 @@ export const DesenvLegend = styled.span`
     margin-top: -10px;
 `;
 
-export const MudancaWarning = styled.span<{show: boolean}>`
-    display: ${({show}) => show? 'block' : 'none'};
-    font-size: 14px;
-    font-weight: bold;
-    color: white;
-    background-color: red;
-    text-align: center;
-    padding: 5px;
-`;
-
 export const ButtonContainer = styled.div<{hide?: boolean}>`
     display: ${({hide}) => hide? 'none' : 'flex'};
     flex-wrap: wrap;
@@ -233,39 +223,6 @@ export const InputContainer = styled.div<{box?: boolean}>`
         border: solid 1px ${(props) => {return props.theme.color.darkerColor}};
         display: block;
     }
-`;
-
-export const PhotoContainer = styled.div<{photo: string | null}>`
-    height: 182px;
-    aspect-ratio: 3 / 4;
-    border-radius: 10px;
-    border: 2px solid ${(props) => {return props.theme.color.lighterColor}};
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    color: ${(props) => {return props.theme.color.darkerColor}};
-    text-align: center;
-    font-weight: bold;
-    padding: 15px;
-    position: relative;
-    background-image: ${({ photo }) => photo? `url(${photo})` : 'none'};
-    background-size: cover;
-    background-position: 50% 50%;
-    
-    input {
-        position: absolute;
-        top: 0;
-        height: 100%;
-        width: 100%;
-        opacity: 0;
-        cursor: pointer;
-        
-    }
-
-    @media (max-width: 800px) {
-        width: 136px
-    }
-
 `;
 
 export const MonthNameContainer = styled.div`

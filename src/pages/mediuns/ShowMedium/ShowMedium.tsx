@@ -7,7 +7,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { MediumContext } from "src/contexts/MediumContext";
 import { IAdjunto, ICavaleiro, IFalange, IMedium, IMentor, ITemplo } from "src/types/types";
 import { UserContext } from "src/contexts/UserContext";
-import { convertDate, handleEnterPress, positionsAndFunctions, setSituation } from "src/utilities/functions";
+import { convertDate, handleEnterPress, positionsAndFunctions, setSituation, showTemplo } from "src/utilities/functions";
 import { ListContext } from "src/contexts/ListContext";
 import PageNotFound from "src/pages/PageNotFound/PageNotFound";
 import Loading from "src/utilities/Loading";
@@ -140,7 +140,7 @@ function ShowMedium() {
                             </PhotoContainer>
                             <MediumMainInfo>Mediunidade: <span>{medium.med}</span></MediumMainInfo>
                             <MediumMainInfo>Sexo: <span>{medium.sex}</span></MediumMainInfo>
-                            <MediumMainInfo>Templo: <span>{templos.filter((item: ITemplo) => item.templo_id === medium.templo)[0].cidade} - {templos.filter((item: ITemplo) => item.templo_id === medium.templo)[0].estado.abrev}</span></MediumMainInfo>
+                            <MediumMainInfo>Templo: <span>{showTemplo(medium, templos)}</span></MediumMainInfo>
                             <MediumMainInfo>Situação: <span>{setSituation(medium)}</span></MediumMainInfo>
                             <MediumMainInfo>Condição Atual: <span>{medium.condicao}</span></MediumMainInfo>
                             <MediumButton disabled={!medium.dtCenturia && !medium.falMiss} onClick={() => validateEmissao(medium, mediuns, adjuntos, turnoL, turnoT, () => generateEmissao(medium, user, emissaoText(medium, mediuns, ministros, cavaleiros, guias, adjuntos, templos, falMiss) as string))} color="green">Gerar Emissão</MediumButton>
@@ -188,7 +188,7 @@ function ShowMedium() {
                             <SectionTitle>Dados Mediúnicos</SectionTitle>
                             <InfoContainer>
                                 <MediumInfo>Adjunto de Origem: <span>{medium.adjOrigem ? ministros.filter((item: IMentor) => item.id === adjuntos.filter((ad: IAdjunto) => ad.adjunto_id === medium.adjOrigem)[0].ministro)[0]? ministros.filter((item: IMentor) => item.id === adjuntos.filter((ad: IAdjunto) => ad.adjunto_id === medium.adjOrigem)[0].ministro)[0].nome : '' : ''} {medium.adjOrigem ? '- Mestre' : ''} {adjuntos.filter((item: IAdjunto) => item.adjunto_id === medium.adjOrigem)[0]? adjuntos.filter((item: IAdjunto) => item.adjunto_id === medium.adjOrigem)[0].nome : ''}</span></MediumInfo>
-                                <MediumInfo>Templo de Origem: <span>{medium.temploOrigem ? `${templos.filter((item: ITemplo) => item.templo_id === medium.temploOrigem)[0].cidade} - ${templos.filter((item: ITemplo) => item.templo_id === medium.temploOrigem)[0].estado.abrev}` : ''}</span></MediumInfo>
+                                <MediumInfo>Templo de Origem: <span>{medium.temploOrigem ? `${templos.find((item: ITemplo) => item.templo_id === medium.temploOrigem)?.cidade} - ${templos.find((item: ITemplo) => item.templo_id === medium.temploOrigem)?.estado.abrev}` : ''}</span></MediumInfo>
                                 <MediumInfo>Colete nº: <span>{medium.colete ? medium.colete : ''}</span></MediumInfo>
                                 <MediumInfo>Classificação: <span>{medium.classMest}</span></MediumInfo>
                                 <MediumInfo>Falange de Mestrado: <span>{medium.falMest}</span></MediumInfo>
