@@ -63,7 +63,9 @@ VERSÃO 1.3.0
 - Geração de calendário de atividades doutrinárias na seção Documentos Úteis e configuração de ano e dias de lua cheia através da seção Manutenção.
 - Criação da seção Desenvolvimento, com mecanismos para registro de frequencia, atualização de mentores, emplacamento e desistências.
 - Inclusão de estado de carregamento nas páginas de consagrações.
+- Inclusão de evento de classificação na linha do tempo do médium ao atualizar sua classificação através da seção Atualizar Centúria.
 
 O QUE FAZER
-- Ao adicionar médium afastado na chamada, mudar condição para ativo e inserir evento com data de retorno.
 - Verificar questão da mediunidade, para adicionar aquela que o médium tinha na época do desenvolvimento, baseando nas datas de teste e emplacamento atuais e old.
+- Ao excluir um médium na seção ShowMedium, remover primeiro todos os registros no desenvolvimento.
+- Na seção ShowMedium, adicionar um botão Frequencia, que abre um modal com as datas e status de frequencia do desenvolvimento. Este botão deve ser desabilitado caso não haja nenhuma ocorrência do médium em allFrequencia.

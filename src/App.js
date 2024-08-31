@@ -45,6 +45,7 @@ import Cartas from './pages/biblioteca/cartas';
 import PequenasHistorias from './pages/biblioteca/pequenashistorias';
 import InstrucoesPraticas from './pages/biblioteca/instrucoespraticas';
 import Calendar from './pages/maintenance/calendar/calendar';
+import AddAspirante from './pages/desenvolvimento/AddAspirante';
 
 function App() {
   const [mainContainer, setMainContainer] = useState('199')
@@ -118,7 +119,8 @@ function App() {
               <Route path='/mediuns/cadastro' element={<AddMedium />} />
               <Route path='/mediuns/menor' element={<YoungMedium />} />
               <Route path='/cantosechaves' element={<CantosChaves />} />
-              <Route path='/desenvolvimento' element={<Desenvolvimento />} />
+              <Route path='/desenvolvimento/frequencia' element={<Desenvolvimento />} />
+              <Route path='/desenvolvimento/cadastro' element={<AddAspirante />} />
               <Route path='/cursos' element={<Cursos />} />
               <Route path='/consagracoes' element={<Consagracoes />} />
               <Route path='/consagracoes/iniciacao' element={<Iniciacao />} />

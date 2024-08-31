@@ -1,7 +1,6 @@
 import SubMenu from "src/components/SubMenu/SubMenu";
 import Header from "../../../components/header/header";
 import SideMenu from "src/components/SideMenu/SideMenu";
-import MainTitle from "src/components/MainContainer/MainContainer";
 import { ButtonContainer, CheckboxContainer, ConsagracaoCard, NavigateButton, ResultsData, ResultsTable, ResultsUpdate, SelectContainer, UpdateInputContainer } from "../styles";
 import { useContext, useEffect, useState } from "react";
 import { ListContext } from "src/contexts/ListContext";
@@ -113,6 +112,16 @@ function UpdateCenturia() {
                     if (!item.naoCenturiou) {
                         if (item.medium.sex === 'Masculino') {
                             await api.put('/medium/update', {medium_id: item.medium.medium, dtCenturia: dateCenturia, povo: item.povo, turnoLeg: item.turnoLeg, classif: item.classifEstrela, dtClassif: dateCenturia}, {headers:{Authorization: token}});
+                            if (item.classifEstrela) {
+                                const newEvento = {
+                                    medium: item.medium.medium,
+                                    data: dateCenturia,
+                                    mensagem: `Classificação de ${item.classifEstrela}`,
+                                    tipo: 'Classificações',
+                                    observ: ''
+                                };
+                                await api.post('/evento/create', newEvento, {headers:{Authorization: token}}); 
+                            }
                         }
                         if (item.medium.sex === 'Feminino'){
                             await api.put('/medium/update', {medium_id: item.medium.medium, dtCenturia: dateCenturia, povo: item.povo, turnoLeg: item.turnoLeg, estrela: item.classifEstrela}, {headers:{Authorization: token}});

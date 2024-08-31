@@ -92,6 +92,7 @@ function Desenvolvimento() {
         setCaboclo('');
         setMedico('');
         setDtEmplac('');
+        setDesistencia('');
     }
 
     const updateDesenvolvimento = async (token: string, frequencia: IDesenvolvimento) => {
@@ -229,6 +230,26 @@ function Desenvolvimento() {
         }                
     }
 
+    const handleRetorno = async (token: string) => {
+        try {
+            const newEvento = {
+                medium: dropMedium.medium_id,
+                data: desistencia,
+                mensagem: 'Retornou ao Desenvolvimento',
+                tipo: 'Retornou à Doutrina',
+                observ: ''
+            };
+            await api.put('/medium/update', {medium_id: dropMedium.medium_id, condicao: 'Ativo'}, {headers:{Authorization: token}});
+            await api.post('/evento/create', newEvento, {headers:{Authorization: token}});
+            await addMediumInDesenv(dropMedium);
+            await loadMedium(token);
+            await loadDesenvolvimento(token);
+        } catch (error) {
+            console.log('Não foi possível marcar o retorno do médium ao desenvolvimento', error);
+            Alert('Não foi possível marcar o retorno do médium ao desenvolvimento', 'error');
+        }                
+    }
+
     const importPreviousMonth = async (month: Date, token: string) => {
         const previousMonth = new Date(month.getFullYear(), month.getMonth() - 1);
         const stringPreviousMonth = `${previousMonth.getFullYear()}-${String(previousMonth.getMonth() + 1).padStart(2, '0')}`;
@@ -276,9 +297,9 @@ function Desenvolvimento() {
     
     const listSubMenu = [
         {title: 'Página Inicial', click: '/'},
-        {title: 'Frequência', click: '/desenvolvimento'},
-        {title: 'Cadastrar Aspirante', click: '/desenvolvimento'},
-        {title: 'Documentos', click: '/desenvolvimento'}
+        {title: 'Frequência', click: '/desenvolvimento/frequencia'},
+        {title: 'Cadastrar Aspirante', click: '/desenvolvimento/cadastro'},
+        {title: 'Documentos', click: '/desenvolvimento/documentos'}
     ]
 
     if(loading) {
@@ -381,17 +402,18 @@ function Desenvolvimento() {
                             label={(option) => option.medium_id ? `${option.nome} (${option.medium_id.toString().padStart(5, '0')})` : ''}
                             default={defaultMedium}
                             options={mediuns.filter((item: IMedium) => item.condicao !== 'Desencarnado')}
+                            disabledOptions={(option) => frequencia.frequencia.some(item => item?.medium === option?.medium_id)}
                             equality={(option, value) => option.medium_id === value.medium_id}
                             value={dropMedium}
                             setValue={setDropMedium}
                             inputValue={searchMedium}
                             setInputValue={setSearchMedium}
-                            onKeyUp={async () => await addMediumInDesenv(dropMedium)}
+                            onKeyUp={dropMedium.condicao === 'Ativo' ? async () => await addMediumInDesenv(dropMedium) : () => Confirm('O médium selecionado está afastado. Deseja marcá-lo como ativo?', 'question', 'Cancelar', 'Confirmar', () => setSelectModal('Retorno'))}
                         />
                     </InputContainer>
                     <div style={{display: 'flex', gap: '20px'}}>
                         <ModalButton color="red" onClick={() => closeModal()}>Cancelar</ModalButton>
-                        <ModalButton color='green' disabled={dropMedium === defaultMedium} onClick={async () => await addMediumInDesenv(dropMedium)}>Salvar</ModalButton>
+                        <ModalButton color='green' disabled={dropMedium === defaultMedium} onClick={dropMedium.condicao === 'Ativo' ? async () => await addMediumInDesenv(dropMedium) : () => Confirm('O médium selecionado está afastado. Deseja marcá-lo como ativo?', 'question', 'Cancelar', 'Confirmar', () => setSelectModal('Retorno'))}>Salvar</ModalButton>
                     </div>
                 </ModalMediumContent>
                 <ModalMediumContent vis={selectModal === 'mentor'}>
@@ -457,26 +479,14 @@ function Desenvolvimento() {
                 </ModalMediumContent>
                 <ModalMediumContent vis={selectModal === 'Desistência' || selectModal === 'Retorno'}>
                     <ModalTitle>{`${selectModal} do Médium`}</ModalTitle>
-                    <ModalSubTitle>{selectedMedium.nome}</ModalSubTitle>
+                    <ModalSubTitle>{selectedMedium.nome || dropMedium.nome}</ModalSubTitle>
                     <InputContainer>
                         <label>{`Data de ${selectModal}`}</label>
-                        <input type="date" max={`${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`} value={desistencia} onKeyUp={(e) => handleEnterPress(e, () => {
-                            if (selectModal === 'Desistência') {
-                                handleDesistente(token)
-                            } else {
-                                console.log('continua')
-                            }
-                        })} onChange={(e) => setDesistencia(e.target.value)} />
+                        <input type="date" max={`${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`} value={desistencia} onKeyUp={(e) => handleEnterPress(e, selectModal === 'Desistência' ? () => handleDesistente(token) : () => handleRetorno(token))} onChange={(e) => setDesistencia(e.target.value)} />
                     </InputContainer>
                     <div style={{display: 'flex', gap: '20px'}}>
                         <ModalButton color="red" onClick={() => closeModal()}>Cancelar</ModalButton>
-                        <ModalButton color='green' disabled={!desistencia} onClick={() => {
-                            if (selectModal === 'Desistência') {
-                                handleDesistente(token)
-                            } else {
-                                console.log('continua')
-                            }
-                        }}>OK</ModalButton>
+                        <ModalButton color='green' disabled={!desistencia} onClick={selectModal === 'Desistência' ? () => handleDesistente(token) : () => handleRetorno(token)}>OK</ModalButton>
                     </div>
                 </ModalMediumContent>
             </Modal>

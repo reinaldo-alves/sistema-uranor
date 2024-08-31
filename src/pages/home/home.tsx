@@ -26,7 +26,7 @@ function Home() {
     const menu = [
         {title: 'Médiuns', image: Med, link: 'mediuns/consulta'},
         {title: 'Cantos e Chaves', image: Can, link: 'cantosechaves'},
-        {title: 'Desenvolvimento', image: Des, link: 'desenvolvimento'},
+        {title: 'Desenvolvimento', image: Des, link: 'desenvolvimento/frequencia'},
         {title: 'Cursos', image: Cur, link: 'cursos'},
         {title: 'Consagrações', image: Con, link: 'consagracoes'},
         {title: 'Relatórios', image: Rel, link: 'relatorios'},

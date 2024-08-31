@@ -79,6 +79,44 @@ export const validateMedium = (medium: IMedium, action: () => void) => {
 
 }
 
+export const validateAspirante = (medium: IMedium, date: string, action: () => void) => {
+    if (!medium.nome) {
+        Alert('Insira o nome do médium', 'error');
+        return;
+    }
+    if (!medium.med) {
+        Alert('Selecione a mediunidade', 'error');
+        return;
+    }
+    if (!medium.sex) {
+        Alert('Selecione o sexo', 'error');
+        return;
+    }
+    if (!medium.templo) {
+        Alert('Selecione o templo do médium', 'error');
+        return;
+    }
+    if (!medium.dtNasc) {
+        Alert('Insira a data de nascimento do médium', 'error');
+        return;
+    }
+    if (!medium.mae) {
+        Alert('Insira o nome da mãe do médium', 'error');
+        return;
+    }
+    if (!medium.dtIngresso) {
+        Alert('Insira a data de ingresso', 'error');
+        return;
+    }
+    if (!date) {
+        Alert('Selecione um mês para adicionar o médium na frequência do desenvolvimento', 'error');
+        return;
+    }
+
+    action()
+
+}
+
 export const validateEmissao = (medium: IMedium, mediuns: Array<IMedium>, adjuntos: Array<IAdjunto>, turnoL: ITurno, turnoT: ITurno, action: () => void) => {
     if (!medium.adjOrigem) {
         Alert('Selecione um adjunto de origem', 'error');
