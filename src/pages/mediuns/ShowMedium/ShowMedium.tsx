@@ -1,13 +1,13 @@
 import { useContext, useEffect, useState } from "react";
 import Header from "src/components/header/header";
-import { Divider, GridContainer, InfoContainer, InputContainer, MainInfoContainer, MediumButton, MediumInfo, MediumMainInfo, MediumText, NameAndId, PersonalCard, PhotoContainer, SectionTitle } from "./styles";
+import { Divider, FrequenciaData, GridContainer, InfoContainer, InputContainer, MainInfoContainer, MediumButton, MediumInfo, MediumMainInfo, MediumText, ModalMediumContent, NameAndId, PersonalCard, PhotoContainer, SectionTitle } from "./styles";
 import SubMenu from "src/components/SubMenu/SubMenu";
 import SideMenu from "src/components/SideMenu/SideMenu";
 import { useNavigate, useParams } from "react-router-dom";
 import { MediumContext } from "src/contexts/MediumContext";
-import { IAdjunto, ICavaleiro, IFalange, IMedium, IMentor, ITemplo } from "src/types/types";
+import { IAdjunto, ICavaleiro, IDesenvolvimento, IFalange, IFrequencia, IMedium, IMentor, ITemplo } from "src/types/types";
 import { UserContext } from "src/contexts/UserContext";
-import { convertDate, handleEnterPress, positionsAndFunctions, setSituation, showTemplo } from "src/utilities/functions";
+import { convertDate, formatMonthYear, handleEnterPress, positionsAndFunctions, setSituation, showTemplo } from "src/utilities/functions";
 import { ListContext } from "src/contexts/ListContext";
 import PageNotFound from "src/pages/PageNotFound/PageNotFound";
 import Loading from "src/utilities/Loading";
@@ -17,7 +17,7 @@ import { validateEmissao } from "src/utilities/validations";
 import { emissaoText } from "src/reports/emissao";
 import { defaultConsagracao } from "src/utilities/default";
 import api from "src/api";
-import { Modal, ModalButton, ModalContent, ModalTitle } from "src/components/Modal/modal";
+import { Modal, ModalButton, ModalTitle } from "src/components/Modal/modal";
 import { IEventoAPI } from "src/types/typesAPI";
 import MainContainer from "src/components/MainContainer/MainContainer";
 
@@ -25,11 +25,12 @@ function ShowMedium() {
     const [loading, setLoading] = useState(true);
     const [medium, setMedium] = useState({} as IMedium);
     const [showModal, setShowModal] = useState(false);
+    const [selectModal, setSelectModal] = useState('');
     const [testDate, setTestDate] = useState('');
     
     const { token, getUser, user } = useContext(UserContext);
     const { mediuns, loadMedium, changeMed, removeComponentes } = useContext(MediumContext);
-    const { ministros, cavaleiros, guias, adjuntos, templos, falMiss, getData, turnoL, turnoT, searchMediumInCons } = useContext(ListContext);
+    const { ministros, cavaleiros, guias, adjuntos, templos, falMiss, getData, turnoL, turnoT, searchMediumInCons, allFrequencia, loadDesenvolvimento } = useContext(ListContext);
     const params = useParams();
     const navigate = useNavigate();
     
@@ -81,11 +82,15 @@ function ShowMedium() {
     }
     
     const confirmChangeMed = async () => {
-        await Confirm(`O médium será cadastrado como ${medium.med === 'Doutrinador' ? 'Apará' : medium.med === 'Apará' ? 'Doutrinador' : ''}. Continuar?`, 'warning', 'Não', 'Sim', () => setShowModal(true));
+        await Confirm(`O médium será cadastrado como ${medium.med === 'Doutrinador' ? 'Apará' : medium.med === 'Apará' ? 'Doutrinador' : ''}. Continuar?`, 'warning', 'Não', 'Sim', () => {
+            setShowModal(true);
+            setSelectModal('mudanca');
+        });
     }
 
     const closeModal = () => {
         setShowModal(false);
+        setSelectModal('');
         setTestDate('');
     }
 
@@ -101,11 +106,30 @@ function ShowMedium() {
         }
     }
 
+    const removeMediumInDesenv = async (medium: IMedium, token: string) => {
+        const newAllFrequencia = allFrequencia.map((item: IDesenvolvimento) => ({
+            mes: item.mes,
+            frequencia: item.frequencia.filter((f: IFrequencia) => f.medium !== medium.medium_id)
+        }))
+        try {
+            await newAllFrequencia.forEach(async (item: IDesenvolvimento) => {
+                const month = item.mes;
+                const text = JSON.stringify({frequencia: item.frequencia})
+                await api.post('/desenvolvimento/update', {mes: month, freq: text}, {headers:{Authorization: token}});
+                console.log(`Frequencia ${month} atualizada`);
+                await loadDesenvolvimento(token);
+            })
+        } catch (error) {
+            console.log('Não foi possível excluir médium da frequência do desenvolvimento', error);
+        }
+    }
+
     const deleteMedium = async () => {
         await Confirm('ATENÇÃO! Todos os dados do médium serão perdidos e não poderão ser recuperados. Continuar?', 'warning', 'Cancelar', 'Excluir', async () => {
             try {
                 await removeComponentes(medium, token);
                 await deleteMediumEvents(medium, token);
+                await removeMediumInDesenv(medium, token);
                 await api.delete(`/medium/delete?medium_id=${medium.medium_id}`, {headers:{Authorization: token}})
                 navigate('/mediuns/consulta');
                 Alert('Médium excluído com sucesso', 'success');
@@ -114,6 +138,33 @@ function ShowMedium() {
                 Alert('Erro ao excluir médium', 'error');
             }
         });
+    }
+
+    const convertStringToLongDate = (date: string) => {
+        const [year, month] = date.split('-');
+        const dateObj = new Date(Number(year), Number(month) - 1);
+        const result = formatMonthYear.format(dateObj);
+        return result.charAt(0).toUpperCase() + result.slice(1);
+    }
+
+    const getSundays = (date: string) => {
+        const [year, month] = date.split('-');
+        const sundays = [];
+        const newDate = new Date(Number(year), Number(month) - 1, 1);
+        while(newDate.getMonth() === Number(month) - 1) {
+            if (newDate.getDay() === 0) {
+                sundays.push(newDate.getDate());
+            }
+            newDate.setDate(newDate.getDate() + 1);
+        }
+        return sundays;
+    }
+
+    const convertFreqToText = (freq: string) => {
+        if (freq === 'P') {return 'Presente'}
+        else if (freq === 'F') {return 'Faltou'}
+        else if (freq === 'N') {return 'Não teve aula'}
+        else {return freq}
     }
 
     const listSubMenu = [
@@ -146,6 +197,10 @@ function ShowMedium() {
                             <MediumButton disabled={!medium.dtCenturia && !medium.falMiss} onClick={() => validateEmissao(medium, mediuns, adjuntos, turnoL, turnoT, () => generateEmissao(medium, user, emissaoText(medium, mediuns, ministros, cavaleiros, guias, adjuntos, templos, falMiss) as string))} color="green">Gerar Emissão</MediumButton>
                             <MediumButton onClick={() => navigate(`/mediuns/editar/${medium.medium_id}`)} color="green">Editar</MediumButton>
                             <MediumButton color="green" onClick={() => generateFichaMedium(medium, adjuntos, ministros, cavaleiros, guias, falMiss, mediuns, token)}>Gerar Ficha</MediumButton>
+                            <MediumButton color="green" disabled={!allFrequencia.some((item: IDesenvolvimento) => item.frequencia.some((el: IFrequencia) => el.medium === medium.medium_id && !(el.dia1 === '-' && el.dia2 === '-' && el.dia3 === '-' && el.dia4 === '-' && el.dia5 === '-')))} onClick={() => {
+                                setShowModal(true);
+                                setSelectModal('frequencia');
+                            }}>Frequência</MediumButton>
                             <MediumButton color="green" disabled={searchMediumInCons(medium.medium_id) === defaultConsagracao} onClick={() => generateAutorizacao([searchMediumInCons(medium.medium_id)], templos, adjuntos, ministros, searchMediumInCons(medium.medium_id).consagracao)}>Autorização</MediumButton>
                             <MediumButton color="green" disabled={!medium.dtCenturia || medium.sex !== 'Masculino'} onClick={() => generateReclass(medium, adjuntos, ministros, cavaleiros, user)}>Reclassificação</MediumButton>
                             <MediumButton onClick={() => navigate(`/mediuns/historico/${medium.medium_id}`)} color="green">Linha do Tempo</MediumButton>
@@ -309,7 +364,7 @@ function ShowMedium() {
             </MainContainer>
             <SideMenu list={listSubMenu} />
             <Modal vis={showModal}>
-                <ModalContent>
+                <ModalMediumContent vis={selectModal === 'mudanca'}>
                     <ModalTitle>Mudança de Mediunidade</ModalTitle>
                     <InputContainer>
                         <label>{medium.oldDtTest ? 'Data da mudança de mediunidade' : `Data do teste como ${medium.med === 'Doutrinador' ? 'Apará' : medium.med === 'Apará' ? 'Doutrinador' : ''}`}</label>
@@ -319,7 +374,40 @@ function ShowMedium() {
                         <ModalButton color="red" onClick={closeModal}>Cancelar</ModalButton>
                         <ModalButton color='green' onClick={async () => await handleChangeMed(testDate)}>Salvar</ModalButton>
                     </div>
-                </ModalContent>
+                </ModalMediumContent>
+                <ModalMediumContent vis={selectModal === 'frequencia'}>
+                    <ModalTitle>Frequencia - Desenvolvimento</ModalTitle>
+                    {allFrequencia
+                        .sort((a: IDesenvolvimento, b: IDesenvolvimento) => {
+                            const mesA = a.mes || '';
+                            const mesB = b.mes || '';
+                            if (mesA < mesB) return -1;
+                            if (mesA > mesB) return 1;
+                            return 0
+                        })
+                        .filter((item: IDesenvolvimento) => item.frequencia.some((el: IFrequencia) => el.medium === medium.medium_id && !(el.dia1 === '-' && el.dia2 === '-' && el.dia3 === '-' && el.dia4 === '-' && el.dia5 === '-')))
+                        .map((item: IDesenvolvimento) => (
+                            <InputContainer key={item.mes}>
+                                <label>{convertStringToLongDate(item.mes)}</label>
+                                {getSundays(item.mes).map((dia: number, index: number) => {
+                                    if (item.frequencia.filter((el: IFrequencia) => el.medium === medium.medium_id)[0]?.[`dia${index + 1 as 1 | 2 | 3 | 4 | 5}`] !== '-') {
+                                        return (
+                                            <FrequenciaData key={index}>
+                                                <p>Dia {String(dia).padStart(2, '0')}</p>
+                                                <p>{convertFreqToText(item.frequencia
+                                                .filter((el: IFrequencia) => el.medium === medium.medium_id)[0]?.[`dia${index + 1 as 1 | 2 | 3 | 4 | 5}`])}</p>
+                                            </FrequenciaData>
+                                        )
+                                    }
+                                    return null
+                                })}
+                            </InputContainer>
+                        ))
+                    }
+                    <div style={{display: 'flex', gap: '20px', marginTop: '10px'}}>
+                        <ModalButton color="red" onClick={closeModal}>Fechar</ModalButton>
+                    </div>
+                </ModalMediumContent>
             </Modal>
         </>
         

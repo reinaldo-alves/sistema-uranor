@@ -1,16 +1,6 @@
 MÉDIUM
 - Médium menor
 
-DESENVOLVIMENTO
-- Cadastrar médium
-- Consultar médium
-- Frequência
-- Atualizar mentores
-- Atualizar emplacamento
-- Desistentes
-- Imprimir cartão do desenvolvimento
-- Imprimir chaves para doutrinadores e aparás
-
 CURSOS
 - Cadastro de cursos (iniciação, elevação, centúria, sétimo)
 - Cadastro de instrutores

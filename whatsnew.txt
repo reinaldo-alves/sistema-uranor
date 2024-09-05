@@ -61,11 +61,12 @@ VERSÃO 1.3.0
 - Configuração de inputs de textos da seção Manutenção para exibir apenas as iniciais maiúsculas.
 - Exibição de templo e telefones dos médiuns nas listas de consagrações.
 - Geração de calendário de atividades doutrinárias na seção Documentos Úteis e configuração de ano e dias de lua cheia através da seção Manutenção.
-- Criação da seção Desenvolvimento, com mecanismos para registro de frequencia, atualização de mentores, emplacamento e desistências.
+- Criação da seção Desenvolvimento, com mecanismos para registro de frequencia, atualização de mentores, emplacamento e desistências, além da geração de chaves e cartões do desenvolvimento.
+- Criação de página para cadastro de médium na seção Desenvolvimento, com informações mediúnicas simplificadas.
 - Inclusão de estado de carregamento nas páginas de consagrações.
 - Inclusão de evento de classificação na linha do tempo do médium ao atualizar sua classificação através da seção Atualizar Centúria.
+- Inclusão de filtro por eventos nos relatórios, com opção de selecionar o tipo e um intervalo de datas. 
+- Inclusão de botão Frequencia na página de consulta do médium, que mostra a frequencia do médium durante todo o desenvolvimento.
 
 O QUE FAZER
-- Verificar questão da mediunidade, para adicionar aquela que o médium tinha na época do desenvolvimento, baseando nas datas de teste e emplacamento atuais e old.
-- Ao excluir um médium na seção ShowMedium, remover primeiro todos os registros no desenvolvimento.
-- Na seção ShowMedium, adicionar um botão Frequencia, que abre um modal com as datas e status de frequencia do desenvolvimento. Este botão deve ser desabilitado caso não haja nenhuma ocorrência do médium em allFrequencia.
+- Melhorar a exibição da mediunidade no desenvolvimento, para levar em consideração os eventos de mudança de mediunidade.

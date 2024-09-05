@@ -171,7 +171,7 @@ function AddAspirante() {
                                     ))}
                                 </select>
                                 <label>Condição Atual: </label>
-                                <select value={newMedium.condicao}>
+                                <select value={newMedium.condicao} onChange={(e) => updateProps('condicao', e.target.value)}>
                                     <option value={'Ativo'}>Ativo</option>
                                 </select>
                             </GridContainer>

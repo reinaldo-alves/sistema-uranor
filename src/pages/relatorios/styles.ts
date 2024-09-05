@@ -153,6 +153,28 @@ export const DatesContainer = styled.div`
     gap: 20px 10px;
 `;
 
+export const GridEventContainer = styled.div`
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+    gap: 20px;
+
+    @media (max-width: 670px) {
+        grid-template-columns: 1fr;
+
+    }
+`;
+
+export const EventContainer = styled.div`
+    display: flex;
+    align-items: center;
+    gap: 20px 10px;
+
+    label {
+        width: auto;
+    }
+`;
+
 export const FieldContainer = styled.div<{width?: string}>`
     display: flex;
     align-items: center;

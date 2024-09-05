@@ -3,18 +3,18 @@ import Header from "../../components/header/header";
 import SideMenu from "src/components/SideMenu/SideMenu";
 import MainContainer from "src/components/MainContainer/MainContainer";
 import { useContext, useEffect, useState } from "react";
-import { defaultAdj, defaultCavaleiro, defaultMedium, defaultMentor } from "src/utilities/default";
-import { IEstado, IFalange, IMedium, IMentor, ITemplo } from "src/types/types";
+import { defaultAdj, defaultCavaleiro, defaultMedium, defaultMentor, eventTypes } from "src/utilities/default";
+import { IEstado, IEvento, IFalange, IMedium, IMentor, ITemplo } from "src/types/types";
 import { MediumContext } from "src/contexts/MediumContext";
 import { ListContext } from "src/contexts/ListContext";
-import { CheckboxContainer, DatesContainer, Divider, FieldContainer, FieldContainerBox, GridContainer, GridDatesContainer, InputContainer, MainContent, MainInfoContainer, MixedContainer, PersonalCard, ReportButton, SectionTitle } from "./styles";
+import { CheckboxContainer, DatesContainer, Divider, EventContainer, FieldContainer, FieldContainerBox, GridContainer, GridDatesContainer, GridEventContainer, InputContainer, MainContent, MainInfoContainer, MixedContainer, PersonalCard, ReportButton, SectionTitle } from "./styles";
 import { oppositeTurno, removeDiacritics, setSituation } from "src/utilities/functions";
 import AutocompleteInput from "src/components/AutocompleteInput/AutocompleteInput";
 import { generateReport } from "src/utilities/createDocs";
 import { Alert } from "src/utilities/popups";
 
 function Relatorios() {
-    const { templos, estados, adjuntos, coletes, classMest, falMest, povos, falMiss, turnoL, turnoT, ministros, cavaleiros, guias, estrelas, princesas, classificacao } = useContext(ListContext);
+    const { templos, estados, adjuntos, coletes, classMest, falMest, povos, falMiss, turnoL, turnoT, ministros, cavaleiros, guias, estrelas, princesas, classificacao, eventos } = useContext(ListContext);
     const { mediuns } = useContext(MediumContext);
 
     const [reportFilter, setReportFilter] = useState(defaultMedium);
@@ -31,6 +31,8 @@ function Relatorios() {
     const [searchMin, setSearchMin] = useState('');
     const [searchCav, setSearchCav] = useState('');
     const [searchGuia, setSearchGuia] = useState('');
+    const [event, setEvent] = useState('');
+    const [eventDate, setEventDate] = useState('');
 
     const now = new Date().toISOString().split('T')[0];
 
@@ -94,6 +96,8 @@ function Relatorios() {
         setSearchCav('');
         setSearchGuia('');
         setSearchPres('');
+        setEvent('');
+        setEventDate('');
     }
 
     const handleDateChange = (property: string, index: number, date: string) => {
@@ -107,7 +111,15 @@ function Relatorios() {
             }
         })
     };
-    
+
+    const handleEventDateChange = (index: number, date: string) => {
+        setEventDate((prevData: any) => {
+            const oldDates = prevData.split('/');
+            oldDates[index] = date;
+            const newDates = oldDates.join('/');
+            return newDates === '/' ? '' : newDates
+        })
+    };
 
     const generateMediumList = async (mediuns: Array<IMedium>, filters: IMedium, situation: string) => {
         const mediumList = mediuns.filter((item: IMedium) => {
@@ -166,6 +178,8 @@ function Relatorios() {
             if (filters.dtSetimo && (item.dtSetimo < filters.dtSetimo.split('/')[0] || item.dtSetimo > filters.dtSetimo.split('/')[1])){return false}
             if (filters.dtMentor && (item.dtMentor < filters.dtMentor.split('/')[0] || item.dtMentor > filters.dtMentor.split('/')[1]) && (item.oldDtMentor < filters.dtMentor.split('/')[0] || item.oldDtMentor > filters.dtMentor.split('/')[1])){return false}
             if (filters.dtClassif && (item.dtClassif < filters.dtClassif.split('/')[0] || item.dtClassif > filters.dtClassif.split('/')[1])){return false}
+            if (event && !eventos.some((el: IEvento) => el.medium === item.medium_id && el.tipo === event)) {return false};
+            if (eventDate && !eventos.some((el: IEvento) => el.medium === item.medium_id && el.tipo === event && el.data >= eventDate.split('/')[0] && el.data <= eventDate.split('/')[1])) {return false};
             return true
         })
         console.log(mediumList.length, mediumList);
@@ -211,6 +225,14 @@ function Relatorios() {
         }
         if ((reportFilter.dtClassif.length && reportFilter.dtClassif.length < 21) || (reportFilter.dtClassif.split('/')[1] < reportFilter.dtClassif.split('/')[0])) {
             Alert('Preencha corretamente o intervalo de data da última classificação', 'warning')
+            return
+        }
+        if (!event && eventDate.length) {
+            Alert('Selecione um tipo de evento', 'warning')
+            return
+        }
+        if ((eventDate.length && eventDate.length < 21) || (eventDate.split('/')[1] < eventDate.split('/')[0])) {
+            Alert('Preencha corretamente o intervalo de data do evento', 'warning')
             return
         }
         const mediumList = await generateMediumList(mediuns, reportFilter, filterSituation);
@@ -666,6 +688,26 @@ function Relatorios() {
                             <input type="date" value={reportFilter.dtClassif.split('/')[1] || ''} onChange={(e) => handleDateChange('dtClassif', 1, e.target.value)} min={reportFilter.dtClassif.split('/')[0]} max={now} />
                         </DatesContainer>
                     </GridDatesContainer>
+                </PersonalCard>
+                <PersonalCard>
+                    <SectionTitle>Filtros por Eventos</SectionTitle>
+                    <GridEventContainer>
+                        <EventContainer>
+                            <label>Evento: </label>
+                            <select value={event} onChange={(e) => setEvent(e.target.value)}>
+                                <option></option>
+                                {eventTypes.map((item, index) => (
+                                    item.auto ? '' : <option key={index} value={item.event}>{item.event}</option>       
+                                ))}
+                            </select>
+                        </EventContainer>
+                        <DatesContainer>
+                            <span>de</span>
+                            <input type="date" value={eventDate.split('/')[0] || ''} onChange={(e) => handleEventDateChange(0, e.target.value)} max={now} />
+                            <span>até</span>
+                            <input type="date" value={eventDate.split('/')[1] || ''} onChange={(e) => handleEventDateChange(1, e.target.value)} min={eventDate.split('/')[0]} max={now} />
+                        </DatesContainer>
+                    </GridEventContainer>
                 </PersonalCard>
                 <div style={{width: '90%', maxWidth: '1200px', display: 'flex', justifyContent: 'space-around'}}>
                     <ReportButton color="red" onClick={() => resetReportFilter()}>Resetar Filtros</ReportButton>

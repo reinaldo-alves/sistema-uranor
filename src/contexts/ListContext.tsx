@@ -1,7 +1,7 @@
 import { createContext, useState } from "react";
 import api from "src/api";
-import { IAdjunto, ICalendario, ICavaleiro, IConsagracao, IDesenvolvimento, IEstado, IFalange, IMentor, ITemplo, ITurno } from "src/types/types";
-import { IAdjuntoAPI, ICavaleiroAPI, IConsagracaoAPI, IFalangeAPI, IGuiaAPI, IMediumAPI, IMinistroAPI, ITemploAPI } from "src/types/typesAPI";
+import { IAdjunto, ICalendario, ICavaleiro, IConsagracao, IDesenvolvimento, IEstado, IEvento, IFalange, IMentor, ITemplo, ITurno } from "src/types/types";
+import { IAdjuntoAPI, ICavaleiroAPI, IConsagracaoAPI, IEventoAPI, IFalangeAPI, IGuiaAPI, IMediumAPI, IMinistroAPI, ITemploAPI } from "src/types/typesAPI";
 import { defaultConsagracao } from "src/utilities/default";
 
 export const ListContext = createContext({} as any);
@@ -13,6 +13,7 @@ export const ListStore = ({ children }: any) => {
     const [falMiss, setFalMiss] = useState([] as Array<IFalange>);
     const [adjuntos, setAdjuntos] = useState([] as Array<IAdjunto>);
     const [templos, setTemplos] = useState([] as Array<ITemplo>);
+    const [eventos, setEventos] = useState([] as Array<IEvento>);
     const [listIniciacao, setListIniciacao] = useState([] as Array<IConsagracao>);
     const [listElevacao, setListElevacao] = useState([] as Array<IConsagracao>);
     const [listCenturia, setListCenturia] = useState([] as Array<IConsagracao>);
@@ -152,6 +153,22 @@ export const ListStore = ({ children }: any) => {
         }
     }
 
+    const loadEvento = async (token: string) => {
+        try {
+            const { data } = await api.get('/evento/get-eventos', {headers:{Authorization: token}})
+            const evento = data.evento.map((item: IEventoAPI) => ({
+                ...item,
+                data: item.data.toString().split('T')[0],
+                mensagem: item.mensagem === null ? '' : item.mensagem,
+                tipo: item.tipo === null ? '' : item.tipo,
+                observ: item.observ === null ? '' : item.observ
+            }))
+            setEventos(evento)
+        } catch (error) {
+            console.log('Erro ao carregar a lista de eventos', error);
+        }
+    }
+
     const loadConsagracao = async (token: string) => {
         const configList = async (array: Array<IConsagracaoAPI>, cons: number) => {
             const modifiedArray = await Promise.all(array.filter((item: IConsagracaoAPI) => item.consagracao === cons).map(async (item: IConsagracaoAPI) => {
@@ -241,13 +258,14 @@ export const ListStore = ({ children }: any) => {
         await loadFalMiss(token);
         await loadAdjunto(token);
         await loadTemplo(token);
+        await loadEvento(token);
         await loadConsagracao(token);
         await loadCalendario(token);
         await loadDesenvolvimento(token);
     };
 
     return (
-        <ListContext.Provider value={{templos, estados, adjuntos, coletes, classMest, falMest, falMiss, povos, turnoL, turnoT, ministros, cavaleiros, guias, estrelas, princesas, classificacao, listIniciacao, listElevacao, listCenturia, listMudanca, calendario, allFrequencia, searchMediumInCons, getData, loadMinistro, loadCavaleiro, loadGuia, loadFalMiss, loadAdjunto, loadTemplo, loadConsagracao, loadCalendario, loadDesenvolvimento}} >
+        <ListContext.Provider value={{templos, estados, adjuntos, coletes, classMest, falMest, falMiss, povos, turnoL, turnoT, ministros, cavaleiros, guias, estrelas, princesas, classificacao, listIniciacao, listElevacao, listCenturia, listMudanca, calendario, allFrequencia, eventos, searchMediumInCons, getData, loadMinistro, loadCavaleiro, loadGuia, loadFalMiss, loadAdjunto, loadTemplo, loadEvento, loadConsagracao, loadCalendario, loadDesenvolvimento}} >
             { children }
         </ListContext.Provider>
     )

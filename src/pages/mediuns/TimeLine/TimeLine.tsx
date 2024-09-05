@@ -45,7 +45,7 @@ function TimeLine() {
 
     const loadEventosMedium = async (medium: IMedium, token: string) => {
         try {
-            const evento = await generateListEventos(medium, token, mediuns, ministros, cavaleiros, guias);
+            const evento = await generateListEventos(medium, token, ministros, cavaleiros, guias);
             setEventos(evento);
         } catch (error) {
             console.error('Erro ao carregar a lista de eventos da linha do tempo do médium', error);

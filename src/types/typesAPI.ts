@@ -50,7 +50,7 @@ export interface IConsagracaoAPI {
 export interface IEventoAPI {
     evento_id: number,
     medium: number,
-    data: Date,
+    data: string,
     mensagem: string | null, 
     tipo: string | null,
     observ: string | null,

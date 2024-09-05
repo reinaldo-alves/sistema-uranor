@@ -2346,7 +2346,7 @@ export const generateFichaMedium = async (medium: IMedium, adjuntos: Array<IAdju
     const cavGuia = medium.sex === 'Masculino' ? cavaleiros.find((item: ICavaleiro) => item.id === medium.cavaleiro)?.nome : medium.sex === 'Feminino' ? guias.find((item: IMentor) => item.id === medium.guia)?.nome : ''
     const falMiss = falanges.find((item: IFalange) => item.falange_id === medium.falMiss)?.nome
     const base64String = await imageToBase64(medium.foto);
-    const events = await generateListEventos(medium, token, mediuns, ministros, cavaleiros, guias)
+    const events = await generateListEventos(medium, token, ministros, cavaleiros, guias)
     
     const personalData = async () => {
         return [

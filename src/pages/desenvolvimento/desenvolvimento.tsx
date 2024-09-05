@@ -158,7 +158,6 @@ function Desenvolvimento() {
         }
         try {
             await Confirm(confirmText, 'question', 'Cancelar', 'Confirmar', async () => {
-                await api.delete(`/consagracao/delete?consagracao_id=${selectedMedium.medium_id}`, {headers:{Authorization: token}})
                 setFrequencia(newFrequencia);
                 await updateDesenvolvimento(token, newFrequencia);
                 Alert('Médium removido com sucesso', 'success');
@@ -322,7 +321,7 @@ function Desenvolvimento() {
                     {formatMonthYear.format(selectedMonth).charAt(0).toUpperCase() + formatMonthYear.format(selectedMonth).slice(1)}
                 </h2>
                 <svg width="30" height="30" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 30 30">
-                    <MonthArrow disabled={selectedMonth.getMonth() === now.getMonth()} points="0,0 25,15 0,30" onClick={() => toNextMonth()}/>
+                    <MonthArrow disabled={selectedMonth.getMonth() === now.getMonth() && selectedMonth.getFullYear() === now.getFullYear()} points="0,0 25,15 0,30" onClick={() => toNextMonth()}/>
                 </svg>
             </MonthNameContainer>                
                 <DesenvCard>
@@ -408,12 +407,12 @@ function Desenvolvimento() {
                             setValue={setDropMedium}
                             inputValue={searchMedium}
                             setInputValue={setSearchMedium}
-                            onKeyUp={dropMedium.condicao === 'Ativo' ? async () => await addMediumInDesenv(dropMedium) : () => Confirm('O médium selecionado está afastado. Deseja marcá-lo como ativo?', 'question', 'Cancelar', 'Confirmar', () => setSelectModal('Retorno'))}
+                            onKeyUp={dropMedium && dropMedium.condicao === 'Ativo' ? async () => await addMediumInDesenv(dropMedium) : () => Confirm('O médium selecionado está afastado. Deseja marcá-lo como ativo?', 'question', 'Cancelar', 'Confirmar', () => setSelectModal('Retorno'))}
                         />
                     </InputContainer>
                     <div style={{display: 'flex', gap: '20px'}}>
                         <ModalButton color="red" onClick={() => closeModal()}>Cancelar</ModalButton>
-                        <ModalButton color='green' disabled={dropMedium === defaultMedium} onClick={dropMedium.condicao === 'Ativo' ? async () => await addMediumInDesenv(dropMedium) : () => Confirm('O médium selecionado está afastado. Deseja marcá-lo como ativo?', 'question', 'Cancelar', 'Confirmar', () => setSelectModal('Retorno'))}>Salvar</ModalButton>
+                        <ModalButton color='green' disabled={dropMedium === defaultMedium} onClick={dropMedium && dropMedium.condicao === 'Ativo' ? async () => await addMediumInDesenv(dropMedium) : () => Confirm('O médium selecionado está afastado. Deseja marcá-lo como ativo?', 'question', 'Cancelar', 'Confirmar', () => setSelectModal('Retorno'))}>Salvar</ModalButton>
                     </div>
                 </ModalMediumContent>
                 <ModalMediumContent vis={selectModal === 'mentor'}>
@@ -479,7 +478,7 @@ function Desenvolvimento() {
                 </ModalMediumContent>
                 <ModalMediumContent vis={selectModal === 'Desistência' || selectModal === 'Retorno'}>
                     <ModalTitle>{`${selectModal} do Médium`}</ModalTitle>
-                    <ModalSubTitle>{selectedMedium.nome || dropMedium.nome}</ModalSubTitle>
+                    <ModalSubTitle>{selectedMedium.nome || dropMedium?.nome }</ModalSubTitle>
                     <InputContainer>
                         <label>{`Data de ${selectModal}`}</label>
                         <input type="date" max={`${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`} value={desistencia} onKeyUp={(e) => handleEnterPress(e, selectModal === 'Desistência' ? () => handleDesistente(token) : () => handleRetorno(token))} onChange={(e) => setDesistencia(e.target.value)} />

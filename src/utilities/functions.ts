@@ -151,7 +151,7 @@ export function positionsAndFunctions(medium: IMedium) {
 }
 
 //Retorna um array com todos os eventos associados ao médium selecionado
-export async function generateListEventos(medium: IMedium, token: string, mediuns: Array<IMedium>, ministros: Array<IMentor>, cavaleiros: Array<ICavaleiro>, guias: Array<IMentor>) {
+export async function generateListEventos(medium: IMedium, token: string, ministros: Array<IMentor>, cavaleiros: Array<ICavaleiro>, guias: Array<IMentor>) {
     try {
         const { data } = await api.get(`/evento/get?medium=${medium?.medium_id}`, {headers:{Authorization: token}})
         const evento = data.evento.map((item: IEventoAPI) => ({
@@ -283,3 +283,6 @@ export function consagracaoDetails(item: IConsagracao, mediuns: Array<IMedium>, 
     const divider = telefone1 && telefone2 ? ' / ' : '';   
     return `Templo: ${cidade} - ${uf} - Telefone: ${telefone1}${divider}${telefone2}`
 }
+
+//Formata um objeto Date em uma string com mês por extenso e ano com 4 dígitos
+export const formatMonthYear = new Intl.DateTimeFormat('pt-BR', {month: 'long', year: 'numeric'});

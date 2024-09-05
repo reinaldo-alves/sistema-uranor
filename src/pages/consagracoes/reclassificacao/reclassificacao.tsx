@@ -9,7 +9,6 @@ import { ListContext } from "src/contexts/ListContext";
 import { MediumContext } from "src/contexts/MediumContext";
 import { IMedium } from "src/types/types";
 import { generateReclass, generateTrinoDevas } from "src/utilities/createDocs";
-import { alphabeticOrder } from "src/utilities/functions";
 import { UserContext } from "src/contexts/UserContext";
 import { Modal, ModalButton, ModalTitle } from "src/components/Modal/modal";
 import MainContainer from "src/components/MainContainer/MainContainer";
