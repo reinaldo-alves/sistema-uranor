@@ -8,7 +8,6 @@ CURSOS
 
 RELATÓRIOS
 - Relatório médium menor
-- Relatório desenvolvimento (testes, desistentes)
 
 DOCUMENTOS ÚTEIS
 - Escala dos Devas

@@ -10,7 +10,6 @@ import api from "src/api";
 import { Alert } from "src/utilities/popups";
 import { Modal, ModalButton, ModalContent, ModalInputContainer, ModalTitle } from "src/components/Modal/modal";
 import { handleCapsLock, handleEnterPress } from "src/utilities/functions";
-import { LoginCapsLock } from "src/pages/login/styles";
 
 function ChangePassword() {
     const { user, userChangePassword, loadUser, token } = useContext(UserContext)

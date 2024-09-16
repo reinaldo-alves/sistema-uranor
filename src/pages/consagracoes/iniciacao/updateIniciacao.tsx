@@ -85,7 +85,8 @@ function UpdateIniciacao() {
             if (item.medium.medium === id) {
                 return {
                     ...item,
-                    naoIniciou: status
+                    naoIniciou: status,
+                    moverElevacao: status ? false : item.moverElevacao
                 };
             }
             return item;
@@ -199,7 +200,7 @@ function UpdateIniciacao() {
             Alert('Insira a data de iniciação', 'warning');
         } else if (listMudanca.length && !dateElevacao) {
             Alert('Insira a data de elevação', 'warning');
-        } else if (dateElevacao <= dateIniciacao) {
+        } else if (dateElevacao && dateElevacao <= dateIniciacao) {
             Alert('A data da elevação deve ser após a data de iniciação', 'warning')
         } else if (!listUpdateIniciacao.some((item: IIniciacao) => item.naoIniciou === false) && !listUpdateMudanca.some((item: IMudanca) => item.naoIniciou === false)) {
             Alert('Nenhum médium iniciou', 'error');
@@ -264,7 +265,7 @@ function UpdateIniciacao() {
                                             </UpdateInputContainer>
                                             <UpdateInputContainer box>
                                                 <label>Mover para Elevação?</label>
-                                                <input type="checkbox" checked={item.moverElevacao} onChange={(e) => changeMoveElevacao(item.medium.medium, listUpdateIniciacao, e.target.checked)} />
+                                                <input type="checkbox" checked={item.moverElevacao} disabled={item.naoIniciou} onChange={(e) => changeMoveElevacao(item.medium.medium, listUpdateIniciacao, e.target.checked)} />
                                             </UpdateInputContainer>
                                         </CheckboxContainer>
                                     </ResultsUpdate>

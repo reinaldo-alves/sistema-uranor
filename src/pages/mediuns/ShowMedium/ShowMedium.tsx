@@ -7,7 +7,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { MediumContext } from "src/contexts/MediumContext";
 import { IAdjunto, ICavaleiro, IDesenvolvimento, IFalange, IFrequencia, IMedium, IMentor, ITemplo } from "src/types/types";
 import { UserContext } from "src/contexts/UserContext";
-import { convertDate, formatMonthYear, handleEnterPress, positionsAndFunctions, setSituation, showTemplo } from "src/utilities/functions";
+import { convertDate, formatMonthYear, handleEnterPress, positionsAndFunctions, setSituation, showMedDesenv, showTemplo } from "src/utilities/functions";
 import { ListContext } from "src/contexts/ListContext";
 import PageNotFound from "src/pages/PageNotFound/PageNotFound";
 import Loading from "src/utilities/Loading";
@@ -376,7 +376,7 @@ function ShowMedium() {
                     </div>
                 </ModalMediumContent>
                 <ModalMediumContent vis={selectModal === 'frequencia'}>
-                    <ModalTitle>Frequencia - Desenvolvimento</ModalTitle>
+                    <ModalTitle>Frequência - Desenvolvimento</ModalTitle>
                     {allFrequencia
                         .sort((a: IDesenvolvimento, b: IDesenvolvimento) => {
                             const mesA = a.mes || '';
@@ -388,7 +388,7 @@ function ShowMedium() {
                         .filter((item: IDesenvolvimento) => item.frequencia.some((el: IFrequencia) => el.medium === medium.medium_id && !(el.dia1 === '-' && el.dia2 === '-' && el.dia3 === '-' && el.dia4 === '-' && el.dia5 === '-')))
                         .map((item: IDesenvolvimento) => (
                             <InputContainer key={item.mes}>
-                                <label>{convertStringToLongDate(item.mes)}</label>
+                                <label>{convertStringToLongDate(item.mes)} <span style={{fontSize: '12px'}}>({showMedDesenv(item.frequencia.filter((el: IFrequencia) => el.medium === medium.medium_id)[0], mediuns)})</span></label>
                                 {getSundays(item.mes).map((dia: number, index: number) => {
                                     if (item.frequencia.filter((el: IFrequencia) => el.medium === medium.medium_id)[0]?.[`dia${index + 1 as 1 | 2 | 3 | 4 | 5}`] !== '-') {
                                         return (

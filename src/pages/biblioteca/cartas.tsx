@@ -11,6 +11,13 @@ import El2 from "src/assets/pdf/CartaElevacao2-OQueEAngical.pdf";
 import El3 from "src/assets/pdf/CartaElevacao3-PequenosDetalhes.pdf";
 import El4 from "src/assets/pdf/CartaElevacao4-MicroMapa.pdf";
 import El6 from "src/assets/pdf/CartaElevacao4-CartaDasForcas.pdf";
+import Ca1 from "src/assets/pdf/carta_aberta_01.pdf";
+import Ca2 from "src/assets/pdf/carta_aberta_02.pdf";
+import Ca3 from "src/assets/pdf/carta_aberta_03.pdf";
+import Ca4 from "src/assets/pdf/carta_aberta_04.pdf";
+import Ca5 from "src/assets/pdf/carta_aberta_05.pdf";
+import Ca6 from "src/assets/pdf/carta_aberta_06.pdf";
+import Ca7 from "src/assets/pdf/carta_aberta_07.pdf";
 import Cti from "src/assets/pdf/CartaTrinoIramar.pdf";
 import Ctj from "src/assets/pdf/CartaTrinoJurema.pdf";
 
@@ -25,6 +32,13 @@ function Cartas() {
         {name: 'Elevação 3ª Aula - Pequenos Detalhes', pdf: El3},
         {name: 'Elevação 4ª Aula - Micro Mapa', pdf: El4},
         {name: 'Elevação 4ª Aula - Carta das Forças', pdf: El6},
+        {name: 'Centúria 1ª Aula - Carta Aberta n° 01', pdf: Ca1},
+        {name: 'Centúria 2ª Aula - Carta Aberta n° 02', pdf: Ca2},
+        {name: 'Centúria 3ª Aula - Carta Aberta n° 03', pdf: Ca3},
+        {name: 'Centúria 4ª Aula - Carta Aberta n° 04', pdf: Ca4},
+        {name: 'Centúria 5ª Aula - Carta Aberta n° 05', pdf: Ca5},
+        {name: 'Centúria 6ª Aula - Carta Aberta n° 06', pdf: Ca6},
+        {name: 'Centúria 7ª Aula - Carta Aberta n° 07', pdf: Ca7},
         {name: 'Trino Iramar', pdf: Cti},
         {name: 'Trino Juremá', pdf: Ctj},
     ]

@@ -3,7 +3,7 @@ import Header from "../../components/header/header";
 import SideMenu from "src/components/SideMenu/SideMenu";
 import MainContainer from "src/components/MainContainer/MainContainer";
 import { ButtonContainer, DesenvCard, DesenvLegend, InputContainer, ModalMediumContent, MonthArrow, MonthNameContainer, NavigateButton, Results, ResultsData, ResultsDetails, ResultsName, ResultsTable, ResultsTitle } from "./styles";
-import { formatInputText, handleEnterPress, showTemplo } from "src/utilities/functions";
+import { formatInputText, handleEnterPress, showMedDesenv, showTemplo } from "src/utilities/functions";
 import { useContext, useEffect, useState } from "react";
 import { ListContext } from "src/contexts/ListContext";
 import { IDesenvolvimento, IFrequencia, IMedium } from "src/types/types";
@@ -113,7 +113,7 @@ function Desenvolvimento() {
                 ...frequencia,
                 frequencia: [
                     ...frequencia.frequencia,
-                    {medium: medium.medium_id, dia1: '-', dia2: '-', dia3: '-', dia4: '-', dia5: '-'}
+                    {medium: medium.medium_id, med: medium.med.charAt(0), dia1: '-', dia2: '-', dia3: '-', dia4: '-', dia5: '-'}
                 ]
             }
             setFrequencia(newFrequencia);
@@ -258,7 +258,7 @@ function Desenvolvimento() {
             previousFrequencia.frequencia.forEach((item: IFrequencia) => {
                 const medium = mediuns.find((m: IMedium) => m.medium_id === item.medium);
                 if (!medium.dtEmplac && medium.condicao === 'Ativo') {
-                    newFrequencia.push({medium: medium.medium_id, dia1: '-', dia2: '-', dia3: '-', dia4: '-', dia5: '-'});
+                    newFrequencia.push({medium: medium.medium_id, med: medium.med.charAt(0), dia1: '-', dia2: '-', dia3: '-', dia4: '-', dia5: '-'});
                 }
             })
             if (newFrequencia.length > 0) {
@@ -338,15 +338,13 @@ function Desenvolvimento() {
                                     .sort((a: IFrequencia, b: IFrequencia) => {
                                         const nomeA = mediuns.find((m: IMedium) => m.medium_id === a.medium)?.nome?.toLowerCase() || '';
                                         const nomeB = mediuns.find((m: IMedium) => m.medium_id === b.medium)?.nome?.toLowerCase() || '';
-                                        if (nomeA < nomeB) return -1;
-                                        if (nomeA > nomeB) return 1;
-                                        return 0
+                                        return nomeA.localeCompare(nomeB, 'pt-BR');
                                     })
                                     .map((item: IFrequencia, index: number) => (
                                         <Results columns={sundays.length} key={index}>
                                             <ResultsName onClick={() => handleClickMedium(item.medium)}>
                                                 {mediuns.find((m: IMedium) => m.medium_id === item.medium)?.nome}
-                                                <ResultsDetails>{mediuns.find((m: IMedium) => m.medium_id === item.medium)?.med} - {showTemplo(mediuns.find((m: IMedium) => m.medium_id === item.medium), templos)}</ResultsDetails>
+                                                <ResultsDetails>{showMedDesenv(item, mediuns)} - {showTemplo(mediuns.find((m: IMedium) => m.medium_id === item.medium), templos)}</ResultsDetails>
                                             </ResultsName>
                                             {sundays.map((dia: number, index: number) => {
                                                 const diaNumber = (index + 1) as 1 | 2 | 3 | 4 | 5
@@ -478,7 +476,7 @@ function Desenvolvimento() {
                 </ModalMediumContent>
                 <ModalMediumContent vis={selectModal === 'Desistência' || selectModal === 'Retorno'}>
                     <ModalTitle>{`${selectModal} do Médium`}</ModalTitle>
-                    <ModalSubTitle>{selectedMedium.nome || dropMedium?.nome }</ModalSubTitle>
+                    <ModalSubTitle>{selectedMedium.nome || dropMedium?.nome}</ModalSubTitle>
                     <InputContainer>
                         <label>{`Data de ${selectModal}`}</label>
                         <input type="date" max={`${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`} value={desistencia} onKeyUp={(e) => handleEnterPress(e, selectModal === 'Desistência' ? () => handleDesistente(token) : () => handleRetorno(token))} onChange={(e) => setDesistencia(e.target.value)} />

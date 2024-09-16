@@ -15,13 +15,17 @@ function Backup() {
 
     const [file, setFile] = useState<File | null>(null);
     const [showModal, setShowModal] = useState(false);
+    const [wait, setWait] = useState(false);
 
     const createBackup = async () => {
+        setWait(true);
         try {
             const { data } = await api.get('/backup/create', {headers:{Authorization: token}});
+            setWait(false);
             Alert(data.message, 'success')
         } catch (error) {
             console.error('Erro ao criar backup', error);
+            setWait(false);
             Alert('Erro ao criar backup', 'error');
         }
     }
@@ -30,15 +34,18 @@ function Backup() {
         if (file) {
             const formData = new FormData();
             formData.append('backupFile', file);
+            setWait(true);
             try {
                 const { data } = await api.post('/backup/restore', formData, {headers: {
                     'Authorization': token,
                     'Content-Type': 'multipart/form-data'
-                  }});
+                }});
+                setWait(false);
                 Alert(`${data.message}. Faça login novamente.`, 'success');
                 logOut();
             } catch (error) {
                 console.error('Erro ao restaurar backup', error);
+                setWait(false);
                 Alert('Erro ao restaurar backup', 'error');
             }
         }
@@ -86,6 +93,11 @@ function Backup() {
                             Confirm('Essa ação pode resultar na perda ou sobrescrita de dados existentes. Continuar?', 'warning', 'Cancelar', 'Continuar', () => restoreBackup());
                         }}>Restaurar</ModalButton>
                     </div>
+                </ModalContent>
+            </Modal>
+            <Modal vis={wait}>
+                <ModalContent>
+                    <ModalTitle>Aguarde...</ModalTitle>
                 </ModalContent>
             </Modal>
         </>

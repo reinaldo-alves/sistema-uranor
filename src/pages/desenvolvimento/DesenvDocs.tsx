@@ -13,8 +13,8 @@ function DesenvDocs() {
     const docs = [
         {name: 'Chaves - Apará ', pdf: Cha},
         {name: 'Chaves - Doutrinador', pdf: Chd},
-        {name: 'Cartão do Desenvolvimento - Apará', pdf: Cda},
-        {name: 'Cartão do Desenvolvimento - Doutrinador', pdf: Cdd}
+        {name: 'Cartão Desenvolvimento - Apará', pdf: Cda},
+        {name: 'Cartão Desenvolvimento - Doutrinador', pdf: Cdd}
     ]
     
     const listSubMenu = [

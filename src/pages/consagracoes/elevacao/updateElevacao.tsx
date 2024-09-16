@@ -119,6 +119,7 @@ function UpdateElevacao() {
                 return {
                     ...item,
                     naoElevou: status,
+                    moverCenturia: status ? false : item.moverCenturia,
                     classMest: '',
                     falMest: ''
                 };
@@ -270,7 +271,7 @@ function UpdateElevacao() {
                                             </UpdateInputContainer>
                                             <UpdateInputContainer box>
                                                 <label>Mover para Centúria?</label>
-                                                <input type="checkbox" checked={item.moverCenturia} onChange={(e) => updatePropsElevacao(item.medium.medium, 'moverCenturia', e.target.checked)} />
+                                                <input type="checkbox" checked={item.moverCenturia} disabled={item.naoElevou} onChange={(e) => updatePropsElevacao(item.medium.medium, 'moverCenturia', e.target.checked)} />
                                             </UpdateInputContainer>
                                         </CheckboxContainer>
                                         <SelectContainer>

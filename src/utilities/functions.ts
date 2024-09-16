@@ -1,5 +1,5 @@
 import api from "src/api";
-import { ICavaleiro, IConsagracao, IEvento, IMedium, IMentor, ITemplo, ITurno } from "src/types/types";
+import { ICavaleiro, IConsagracao, IEvento, IFrequencia, IMedium, IMentor, ITemplo, ITurno } from "src/types/types";
 import { IEventoAPI } from "src/types/typesAPI";
 import { eventTypes } from "./default";
 
@@ -286,3 +286,10 @@ export function consagracaoDetails(item: IConsagracao, mediuns: Array<IMedium>, 
 
 //Formata um objeto Date em uma string com mês por extenso e ano com 4 dígitos
 export const formatMonthYear = new Intl.DateTimeFormat('pt-BR', {month: 'long', year: 'numeric'});
+
+//Mostra a mediunidade correspondente a um registro de frequência de um médium no desenvolvimento
+export const showMedDesenv = (frequencia: IFrequencia, mediuns: Array<IMedium>) => {
+    const currentMed = mediuns.find((m: IMedium) => m.medium_id === frequencia.medium)?.med;
+    const result = frequencia?.med === 'A' ? 'Apará' : frequencia?.med === 'D' ? 'Doutrinador' : currentMed;
+    return result;
+}

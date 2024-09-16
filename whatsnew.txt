@@ -68,5 +68,13 @@ VERSÃO 1.3.0
 - Inclusão de filtro por eventos nos relatórios, com opção de selecionar o tipo e um intervalo de datas. 
 - Inclusão de botão Frequencia na página de consulta do médium, que mostra a frequencia do médium durante todo o desenvolvimento.
 
+VERSÃO 1.3.1
+- Inclusão de campo de mediunidade na frequência do desenvolvimento, para que mostre sempre a mediunidade no mês em questão.
+- Alteração do texto "Cartão do Desenvolvimento" para "Cartão Desenvolvimento" nos botões da seção Documentos do Desenvolvimento, para se ajustar melhor ao layout.
+- Nas páginas Atualizar Iniciação/Elevação, a opção Mover para Elevação/Centúria passa a ser desmarcada e desabilitada ao marcar Não Iniciou/Elevou.
+- Correção de erro ao atualizar Iniciação quando não havia mudança de mediunidade, que exibia mensagem de data de elevação anterior à data de iniciação.
+- Exibição da mensagem 'Aguarde...' na tela enquando backups estão sendo gerados ou restaurados.
+- Disponibilização dos documentos pdf para Cartas Abertas 01 a 07.
+
 O QUE FAZER
-- Melhorar a exibição da mediunidade no desenvolvimento, para levar em consideração os eventos de mudança de mediunidade.
+- Atualizar o banco de dados do desenvolvimento, adicionando mediunidade a todos os registros.

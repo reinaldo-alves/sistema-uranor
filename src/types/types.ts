@@ -103,6 +103,7 @@ export interface ICalendario {
 
 export interface IFrequencia {
     medium: number,
+    med?: string,
     dia1: 'P' | 'F' | 'N' | '-',
     dia2: 'P' | 'F' | 'N' | '-',
     dia3: 'P' | 'F' | 'N' | '-', 
