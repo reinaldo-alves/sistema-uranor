@@ -3,7 +3,7 @@ import { ButtonContainer, EditObs, InputContainer, MediumButton, Results, Result
 import SubMenu from "src/components/SubMenu/SubMenu";
 import SideMenu from "src/components/SideMenu/SideMenu";
 import { useNavigate, useParams } from "react-router-dom";
-import { useContext, useEffect, useState } from "react";
+import { useCallback, useContext, useEffect, useState } from "react";
 import { defaultEvento, defaultMedium, eventTypes } from "src/utilities/default";
 import { MediumContext } from "src/contexts/MediumContext";
 import { IEvento, IMedium } from "src/types/types";
@@ -43,14 +43,14 @@ function TimeLine() {
         console.log(edited);
     }, [edited])
 
-    const loadEventosMedium = async (medium: IMedium, token: string) => {
+    const loadEventosMedium = useCallback(async (medium: IMedium, token: string) => {
         try {
             const evento = await generateListEventos(medium, token, ministros, cavaleiros, guias);
             setEventos(evento);
         } catch (error) {
             console.error('Erro ao carregar a lista de eventos da linha do tempo do médium', error);
         }
-    }
+    }, [cavaleiros, guias, ministros])
 
     const addEvento = async (evento: IEvento, token: string) => {
         if(!evento.data) {
@@ -117,14 +117,17 @@ function TimeLine() {
         });
     }
 
-    const getInfo = async () => {
+    const getInfo = useCallback(async () => {
         await getUser(token);
         await loadMedium(token);
         await getData(token);
-    }
-    
+    }, [getUser, loadMedium, getData, token]);
+
     useEffect(() => {
         getInfo();
+    }, [getInfo])
+    
+    useEffect(() => {
         window.scrollTo({top: 0});
     }, [])
     
@@ -138,7 +141,7 @@ function TimeLine() {
                 })
             }
         }
-    }, [mediuns, params.id])
+    }, [mediuns, params.id, loadEventosMedium, token])
     
     if(loading) {
         return <Loading />

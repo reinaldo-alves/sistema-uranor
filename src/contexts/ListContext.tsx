@@ -1,4 +1,4 @@
-import { createContext, useState } from "react";
+import { createContext, useCallback, useMemo, useState } from "react";
 import api from "src/api";
 import { IAdjunto, ICalendario, ICavaleiro, IConsagracao, IDesenvolvimento, IEstado, IEvento, IFalange, IMentor, ITemplo, ITurno } from "src/types/types";
 import { IAdjuntoAPI, ICavaleiroAPI, IConsagracaoAPI, IEventoAPI, IFalangeAPI, IGuiaAPI, IMediumAPI, IMinistroAPI, ITemploAPI } from "src/types/typesAPI";
@@ -21,7 +21,7 @@ export const ListStore = ({ children }: any) => {
     const [calendario, setCalendario] = useState({} as ICalendario);
     const [allFrequencia, setAllFrequencia] = useState([] as Array<IDesenvolvimento>)
 
-    const estados = [
+    const estados = useMemo(() => [
         {abrev: 'PE', state: 'Pernambuco'}, {abrev: 'AC', state: 'Acre'},
         {abrev: 'AL', state: 'Alagoas'}, {abrev: 'AM', state: 'Amazonas'},
         {abrev: 'AP', state: 'Amapá'}, {abrev: 'BA', state: 'Bahia'}, 
@@ -36,7 +36,7 @@ export const ListStore = ({ children }: any) => {
         {abrev: 'RR', state: 'Roraima'}, {abrev: 'SC', state: 'Santa Catarina'}, 
         {abrev: 'SP', state: 'São Paulo'}, {abrev: 'SE', state: 'Sergipe'}, 
         {abrev: 'TO', state: 'Tocantins'}
-    ]
+    ], []);
 
     const coletes = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
 
@@ -140,7 +140,7 @@ export const ListStore = ({ children }: any) => {
         }
     }
 
-    const loadTemplo = async (token: string) => {
+    const loadTemplo = useCallback(async (token: string) => {
         try {
             const { data } = await api.get('/templo/get-templos', {headers:{Authorization: token}})
             const templo = data.templo.map((item: ITemploAPI) => ({
@@ -151,7 +151,7 @@ export const ListStore = ({ children }: any) => {
         } catch (error) {
             console.log('Erro ao carregar a lista de templos', error);
         }
-    }
+    }, [estados]);
 
     const loadEvento = async (token: string) => {
         try {
@@ -169,7 +169,7 @@ export const ListStore = ({ children }: any) => {
         }
     }
 
-    const loadConsagracao = async (token: string) => {
+    const loadConsagracao = useCallback(async (token: string) => {
         const configList = async (array: Array<IConsagracaoAPI>, cons: number) => {
             const modifiedArray = await Promise.all(array.filter((item: IConsagracaoAPI) => item.consagracao === cons).map(async (item: IConsagracaoAPI) => {
                 try {
@@ -210,10 +210,12 @@ export const ListStore = ({ children }: any) => {
             setListElevacao(elevacao);
             setListCenturia(centuria);
             setListMudanca(mudanca);
+            return { iniciacao, elevacao, centuria, mudanca };
         } catch (error) {
             console.log('Erro ao carregar a lista de médiuns para consagrações', error);
+            return { iniciacao: [], elevacao: [], centuria: [], mudanca: [] };
         }
-    }
+    }, []);
 
     const searchMediumInCons = (id: number) => {
         const isIniciacao = listIniciacao.find((item: IConsagracao) => item.medium === id);
@@ -225,7 +227,7 @@ export const ListStore = ({ children }: any) => {
         return result
     }
 
-    const loadCalendario = async (token: string) => {
+    const loadCalendario = useCallback(async (token: string) => {
         try {
             const { data } = await api.get('/calendar/get', {headers:{Authorization: token}})
             const calendar = JSON.parse(data.calendar[0].text);
@@ -236,9 +238,9 @@ export const ListStore = ({ children }: any) => {
         } catch (error) {
             console.log('Erro ao carregar as informações do calendário', error);
         }
-    }
+    }, []);
 
-    const loadDesenvolvimento = async (token: string) => {
+    const loadDesenvolvimento = useCallback(async (token: string) => {
         try {
             const { data } = await api.get('/desenvolvimento/get-desenvolvimento', {headers:{Authorization: token}})
             const list = data.list.map((item: {desenv_id: number, mes: string, freq: string}) => {
@@ -249,9 +251,9 @@ export const ListStore = ({ children }: any) => {
         } catch (error) {
             console.log('Erro ao carregar a lista de frequencias do desenvolvimento', error);
         }
-    }
+    }, []);
 
-    const getData = async (token: string) => {
+    const getData = useCallback(async (token: string) => {
         await loadMinistro(token);
         await loadGuia(token);
         await loadCavaleiro(token);
@@ -262,7 +264,7 @@ export const ListStore = ({ children }: any) => {
         await loadConsagracao(token);
         await loadCalendario(token);
         await loadDesenvolvimento(token);
-    };
+    }, [loadTemplo, loadCalendario, loadDesenvolvimento, loadConsagracao]);
 
     return (
         <ListContext.Provider value={{templos, estados, adjuntos, coletes, classMest, falMest, falMiss, povos, turnoL, turnoT, ministros, cavaleiros, guias, estrelas, princesas, classificacao, listIniciacao, listElevacao, listCenturia, listMudanca, calendario, allFrequencia, eventos, searchMediumInCons, getData, loadMinistro, loadCavaleiro, loadGuia, loadFalMiss, loadAdjunto, loadTemplo, loadEvento, loadConsagracao, loadCalendario, loadDesenvolvimento}} >

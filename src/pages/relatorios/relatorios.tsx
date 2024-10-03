@@ -147,14 +147,14 @@ function Relatorios() {
             if ((filters.trinoSol && filters.trinoSol !== item.trinoSol) && !(filters.trinoSol === 'Todos' && item.trinoSol)){return false};
             if (filters.classif && filters.classif !== item.classif){return false};
             if (filters.princesa && filters.princesa !== item.princesa){return false};
-            if (filters.pretovelho && filters.pretovelho !== item.pretovelho){return false};
-            if (filters.caboclo && filters.caboclo !== item.caboclo){return false};
-            if (filters.medico && filters.medico !== item.medico){return false};
-            if (filters.natur && filters.natur !== item.natur){return false};
+            if (filters.pretovelho && !removeDiacritics(item.pretovelho).includes(removeDiacritics(filters.pretovelho))) {return false};
+            if (filters.caboclo && !removeDiacritics(item.caboclo).includes(removeDiacritics(filters.caboclo))) {return false};
+            if (filters.medico && !removeDiacritics(item.medico).includes(removeDiacritics(filters.medico))) {return false};
+            if (filters.natur && removeDiacritics(filters.natur) !== removeDiacritics(item.natur)){return false};
             if (filters.naturUF && filters.naturUF !== item.naturUF){return false};
             if (filters.estCivil && filters.estCivil !== item.estCivil){return false};
-            if (filters.endBairro && filters.endBairro !== item.endBairro){return false};
-            if (filters.endCidade && filters.endCidade !== item.endCidade){return false};
+            if (filters.endBairro && removeDiacritics(filters.endBairro) !== removeDiacritics(item.endBairro)){return false};
+            if (filters.endCidade && removeDiacritics(filters.endCidade) !== removeDiacritics(item.endCidade)){return false};
             if (filters.endUF && filters.endUF !== item.endUF){return false};
             if ((filters.comando && filters.comando !== item.comando) && !(filters.comando === 'Todos' && item.comando)){return false};
             if (filters.presidente && filters.presidente !== item.presidente){return false};
@@ -356,7 +356,7 @@ function Relatorios() {
                             ))}
                         </select>
                         <label>Colete Nº: </label>
-                        <select value={reportFilter.colete} onChange={(e) => updateProps('colete', e.target.value)}>
+                        <select value={reportFilter.colete} onChange={(e) => updateProps('colete', Number(e.target.value))}>
                             <option value={0}></option>
                             {coletes.map((item: number, index: number) => (
                                 <option key={index} value={item}>{item}</option>

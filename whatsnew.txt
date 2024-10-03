@@ -75,6 +75,16 @@ VERSÃO 1.3.1
 - Correção de erro ao atualizar Iniciação quando não havia mudança de mediunidade, que exibia mensagem de data de elevação anterior à data de iniciação.
 - Exibição da mensagem 'Aguarde...' na tela enquando backups estão sendo gerados ou restaurados.
 - Disponibilização dos documentos pdf para Cartas Abertas 01 a 07.
+- Correção nos filtros de relatórios para: coletes (que não funcionavam), mentores de aparás (que agora reconhece também parte dos nomes dos mentores) cidades e bairros (que não consideram mais letras maiúsculas e acentos).
+- Adição de botão para mudar a mediunidade do médium na frequência do desenvolvimento, habilitado apenas para administradores.
+- Ao adicionar novo aspirante pela seção Desenvolvimento, a data de teste é configurada com a data de ingresso.
+- Limitação da data de mudança de mediunidade à data atual.
+- Corrigido erro ao gerar evento de Consagração de Trino Solitário e Trino Sardyos ao editar médium.
+- Corrigido erro ao gerar emissões de Ninfas Sol da Falange de Estrela Candente.
+- Adição de animação nas telas de Carregando... e na tela de Aguarde... ao gerar/carregar backups.
+- Geração de Escala dos Devas na seção Documentos Úteis.
+- Adição de mecanismo para mover sempre ao topo da tela ao acessar páginas das seções Biblioteca e Manutenção, principalmente em telas menores.
+- Melhoria na apresentação da página Consultar Médium em telas menores de 720px de largura.
 
 O QUE FAZER
 - Atualizar o banco de dados do desenvolvimento, adicionando mediunidade a todos os registros.

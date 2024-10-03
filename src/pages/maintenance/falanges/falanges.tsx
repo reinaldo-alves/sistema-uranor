@@ -1,4 +1,4 @@
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect } from "react";
 import { InfoCard, InputContainer, InfoContent, Results, ResultsCard, ResultsTable, ResultsTitle, SearchCard, SearchContainer } from "./styles";
 import { ListContext } from "src/contexts/ListContext";
 import SideMenu from "src/components/SideMenu/SideMenu";
@@ -74,6 +74,10 @@ function Falanges() {
             Alert('Não foi feita nenhuma alteração na falange missionária', 'info')
         }
     }
+
+    useEffect(() => {
+        window.scrollTo({top: 0});
+    }, [])
 
     return (
         <>

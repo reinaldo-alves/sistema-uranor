@@ -13,6 +13,10 @@ export const MainTitle = styled.h1`
     color: ${(props) => {return props.theme.color.lighterColor}};
     margin: 32px;
     text-align: center;
+
+    @media (max-width: 720px) {
+        margin-top: 0;
+    }
 `;
 
 export const SubTitle = styled.h2`

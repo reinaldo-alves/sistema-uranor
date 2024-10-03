@@ -2868,3 +2868,79 @@ export const generateFichaMedium = async (medium: IMedium, adjuntos: Array<IAdju
 
     pdfMake.createPdf(termoDefinitions).open({}, window.open(`Ficha_${medium.medium_id.toString().padStart(5, '0')}_${medium.nome.replace(/ /g, '_')}.pdf`, '_blank'));
 }
+
+export const generateEscalaDevas = async () => {    
+    const escalaTitle = () => {
+        return {
+            stack: [
+                { text: ['TEMPLO URANOR DO AMANHECER\n', 'CASTELO DOS DEVAS\n'], bold: true, margin: [0, 0, 0, 15] },
+                { text: 'ESCALA DOS DEVAS', bold: true, margin: [0, 0, 0, 10] },
+                { text: 'MÊS: _____________________     ANO: _______', margin: [0, 0, 0, 20] },
+            ],
+            alignment: 'center',
+            fontSize: 16
+        } as Content
+    };
+
+    const escalaTable = (title: string, rows: number) => {
+        const arrayBody = [
+            [{text: title, bold: true, colSpan: 2, fillColor: '#dddddd'}, {}],
+            [
+                {text: 'DATA', bold: true},
+                {text: 'DEVAS', bold: true}
+            ],
+        ]
+
+        for(let i = 0; i < rows; i++) {
+            arrayBody.push([
+                {text: 'DIA _____', bold: false},
+                {text: '', bold: false}
+            ])
+        }
+        
+        return {
+            table: {
+                headerRows: 2,
+                widths: [120, '*'],
+                heights: 12,
+                body: arrayBody
+            },
+            margin: [0, 0, 0, 15],
+            fontSize: 12,
+            alignment: 'center'
+        } as Content
+    };
+
+    const contentArray = async () => {
+        const array = () => {
+            const arr: Array<Content> = [];
+            arr.push(escalaTitle());
+            arr.push(escalaTable('CASTELO DOS DEVAS - SÁBADO', 5));
+            arr.push(escalaTable('CASTELO DOS DEVAS - 1º DOMINGO', 1));
+            arr.push(escalaTable('IMANTRAÇÃO INTERNA - SÁBADO', 5));
+            arr.push(escalaTable('IMANTRAÇÃO EXTERNA - DOMINGO', 1));
+            return arr;
+        };
+
+        const columnPair: Content = [{
+            columns: [array(), array()],
+            columnGap: 50,
+        }];
+        return columnPair;
+    }
+   
+    const escalaDefinitions: TDocumentDefinitions = {
+        info: {
+            title: 'Escala_Devas'
+        },
+        pageMargins: [25, 25, 25, 10],
+        pageSize: 'A4',
+        pageOrientation: 'landscape',
+        content: await contentArray(),
+        defaultStyle: {
+            font: 'Times'
+        }
+    }
+
+    pdfMake.createPdf(escalaDefinitions).open({}, window.open('Escala_Devas.pdf', '_blank'));
+}

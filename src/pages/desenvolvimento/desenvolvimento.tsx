@@ -20,7 +20,7 @@ import Loading from "src/utilities/Loading";
 function Desenvolvimento() {
     const { loadDesenvolvimento, allFrequencia, princesas, templos } = useContext(ListContext);
     const { mediuns, loadMedium } = useContext(MediumContext);
-    const { token } = useContext(UserContext);
+    const { user, token } = useContext(UserContext);
 
     const [loading, setLoading] = useState(true);
     const [showModalMedium, setShowModalMedium] = useState(false);
@@ -144,6 +144,32 @@ function Desenvolvimento() {
             try {
                 setFrequencia(newFrequencia);
                 await updateDesenvolvimento(token, newFrequencia);
+            } catch (error) {
+                console.log('Não foi possível atualizar a frequencia do dia', error);
+            }
+        }
+    };
+
+    const changeMedFrequencia = async (medium: number) => {
+        const selectedData = frequencia.frequencia.find((item: IFrequencia) => item.medium === medium);
+        const newMed = selectedData?.med === 'A' ? 'D' : selectedData?.med === 'D' ? 'A' : mediuns.find((m: IMedium) => m.medium_id === medium)?.med.charAt(0) === 'A' ? 'D' : mediuns.find((m: IMedium) => m.medium_id === medium)?.med.charAt(0) === 'D' ? 'A' : '';
+        if (selectedData) {
+            selectedData.med = newMed;
+            const removeOldData : IDesenvolvimento = {
+                ...frequencia,
+                frequencia: frequencia.frequencia.filter((item: IFrequencia) => item.medium !== medium)
+            };
+            const newFrequencia : IDesenvolvimento = {
+                ...removeOldData,
+                frequencia: [
+                    ...removeOldData.frequencia,
+                    selectedData
+                ]
+            } 
+            try {
+                setFrequencia(newFrequencia);
+                await updateDesenvolvimento(token, newFrequencia);
+                Alert(`Mediunidade alterada para ${newMed === 'D' ? 'Doutrinador' : newMed === 'A' ? 'Apará' : '?'}`, 'success');
             } catch (error) {
                 console.log('Não foi possível atualizar a frequencia do dia', error);
             }
@@ -275,7 +301,7 @@ function Desenvolvimento() {
 
     useEffect(() => {
         loadDesenvolvimento(token);
-    }, []);
+    }, [loadDesenvolvimento, token]);
 
     useEffect(() => {
         console.log(frequencia);
@@ -386,6 +412,7 @@ function Desenvolvimento() {
                     <NavigateButton style={{marginBottom: '20px'}} width="230px" onClick={() => navigate(`/mediuns/consulta/${selectedMedium.medium_id}`)}>Ver ficha</NavigateButton>
                     <NavigateButton width="230px" onClick={() => setSelectModal('mentor')}>Atualizar {selectedMedium.med === 'Apará' ? 'Mentores' : 'Mentor'}</NavigateButton>
                     <NavigateButton width="230px" onClick={() => setSelectModal('Desistência')}>Marcar como Desistente</NavigateButton>
+                    <NavigateButton width="230px" style={{display: `${user.level === 'Administrador' ? 'block' : 'none'}`}} onClick={() => changeMedFrequencia(selectedMedium.medium_id)}>Mudar Med. Frequência</NavigateButton>
                     <NavigateButton width="230px" disabled={Boolean(selectedMedium.dtEmplac)} onClick={() => setSelectModal('emplacamento')}>Emplacar</NavigateButton>
                     <NavigateButton width="230px" color="red" onClick={() => removeMediumInDesenv(selectedMedium)}>Remover</NavigateButton>
                     <NavigateButton style={{marginTop: '20px'}} width="230px" color="red" onClick={() => closeModal()}>Fechar</NavigateButton>

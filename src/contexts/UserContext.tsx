@@ -1,5 +1,5 @@
 import jwtDecode from "jwt-decode";
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useCallback, useContext, useEffect, useState } from "react";
 import api from '../api';
 import { IUser } from "src/types/types";
 import { ListContext } from "./ListContext";
@@ -28,19 +28,17 @@ export const UserStore = ({ children }: any) => {
     const { getData } = useContext(ListContext);
     const { loadMedium } = useContext(MediumContext);
     
-    const getUser = async (token: string) => {
+    const getUser = useCallback(async (token: string) => {
         try {
             const { data } = await api.get('/user/get', {headers: {Authorization: token}})
             setUser(data.user);
             setLogin(true);
             setLoading(false);
         } catch (error) {
-            console.log('Usuário não autenticado', error);
-            if(login) {
-                Alert('Usuário não autenticado', 'error');
-            }
+            console.error('Usuário não autenticado', error);
+            setLogin(false);
         }
-    }
+    }, []);
 
     const tokenValidation = (token: string) => {
         if(!token) {
@@ -50,14 +48,18 @@ export const UserStore = ({ children }: any) => {
         try {
             const decodedToken: IToken = jwtDecode(token);
             const currentTime = Date.now() / 1000;
-            setLogin(decodedToken.exp > currentTime);
+            if (decodedToken.exp > currentTime) {
+                setLogin(true);
+            } else {
+                setLogin(false);
+            }
         } catch(error) {
             setLogin(false);
-            return;
+            console.error('Erro na validação do token', error);
         }
     }
     
-    const getInfo = async () => {
+    const getInfo = useCallback(async () => {
         try {
             await getUser(token);
             await getData(token);
@@ -65,16 +67,16 @@ export const UserStore = ({ children }: any) => {
             setLoading(false);
         } catch (error) {
             console.error('Erro ao carregar dados do sistema', error);
-            if(login) {
-                Alert('Erro ao carregar dados do sistema', 'error')
-            }
         }
-    }
+    }, [getUser, getData, loadMedium, token])
 
     useEffect(() => {
         tokenValidation(token);
-        getInfo();
     }, [token])
+
+    useEffect(() => {
+        getInfo();
+    }, [getInfo]);
 
     const handleLogin = async (name: string, password: string) => {
         try {
@@ -99,7 +101,7 @@ export const UserStore = ({ children }: any) => {
         setUser({} as IUser);
     }
 
-    const loadUser = async (token: string) => {
+    const loadUser = useCallback(async (token: string) => {
         try {
             const { data } = await api.get('/user/get-users', {headers:{Authorization: token}})
             const userList = data.user.map((item: IUser) => ({...item}))
@@ -108,7 +110,7 @@ export const UserStore = ({ children }: any) => {
             console.log('Erro ao carregar a lista de usuários', error);
             Alert('Erro ao carregar a lista de usuários', 'error');
         }
-    }
+    }, []);
 
     return (
         <UserContext.Provider value={{login, user, users, token, getUser, handleLogin, logOut, loadUser, errorMessage, setErrorMessage, userChangePassword, setUserChangePassword}} >

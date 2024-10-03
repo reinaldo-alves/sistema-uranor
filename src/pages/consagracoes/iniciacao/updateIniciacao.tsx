@@ -2,7 +2,7 @@ import SubMenu from "src/components/SubMenu/SubMenu";
 import Header from "../../../components/header/header";
 import SideMenu from "src/components/SideMenu/SideMenu";
 import { ButtonContainer, CheckboxContainer, ConsagracaoCard, NavigateButton, PageSubTitle, ResultsData, ResultsTable, ResultsUpdate, SelectContainer, UpdateInputContainer } from "../styles";
-import { useContext, useEffect, useState } from "react";
+import { useCallback, useContext, useEffect, useState } from "react";
 import { ListContext } from "src/contexts/ListContext";
 import { IConsagracao } from "src/types/types";
 import { UserContext } from "src/contexts/UserContext";
@@ -47,17 +47,17 @@ function UpdateIniciacao() {
         return array
     }
 
-    const generateIniciacaoList = () => {
-        const array = listIniciacao.map((item: IConsagracao) => ({
+    const generateIniciacaoList = useCallback(async (list: Array<IConsagracao>) => {
+        const array = list.map((item: IConsagracao) => ({
             medium: item,
             naoIniciou: false,
             moverElevacao: true,
         }));
         setListUpdateIniciacao(array);
-    }
+    }, [])
 
-    const generateMudancaList = () => {
-        const array = listMudanca.map((item: IConsagracao) => ({
+    const generateMudancaList = useCallback(async (list: Array<IConsagracao>) => {
+        const array = list.map((item: IConsagracao) => ({
             medium: item,
             naoIniciou: false,
             naoElevou: false,
@@ -65,7 +65,7 @@ function UpdateIniciacao() {
             falMest: ''
         }));
         setListUpdateMudanca(array);
-    }
+    }, [])
 
     const updatePropsMudanca = (id: number, property: string, newValue: any) => {
         const newArray = listUpdateMudanca.map((item: IMudanca) => {
@@ -218,16 +218,16 @@ function UpdateIniciacao() {
         }
     }
 
-    const loadConsData = async () => {
-        await loadConsagracao(token);
-        generateIniciacaoList();
-        generateMudancaList();
+    const loadConsData = useCallback(async () => {
+        const { iniciacao, mudanca } = await loadConsagracao(token);
+        await generateIniciacaoList(iniciacao);
+        await generateMudancaList(mudanca);
         setLoading(false);
-    }
+    }, [loadConsagracao, generateIniciacaoList, generateMudancaList, token]);
 
     useEffect(() => {
         loadConsData();
-    }, [loading]);
+    }, [loadConsData])
 
     const listSubMenu = [
         {title: 'Página Inicial', click: '/'},
@@ -253,25 +253,23 @@ function UpdateIniciacao() {
                 </UpdateInputContainer>
                 <ConsagracaoCard style={{maxWidth: '800px'}} hide={!listUpdateIniciacao.length}>
                     <ResultsTable show={listUpdateIniciacao.length}>
-                        <tbody>
-                            {alphabeticOrder(listUpdateIniciacao)
-                                .map((item: IIniciacao, index: number) => (
-                                    <ResultsUpdate key={index}>
-                                        <ResultsData>{`${item.medium.nome} - ${item.medium.med}`}</ResultsData>
-                                        <CheckboxContainer>
-                                            <UpdateInputContainer box>
-                                                <label>Não iniciou</label>
-                                                <input type="checkbox" checked={item.naoIniciou} onChange={(e) => changeNaoIniciou(item.medium.medium, listUpdateIniciacao, e.target.checked)} />
-                                            </UpdateInputContainer>
-                                            <UpdateInputContainer box>
-                                                <label>Mover para Elevação?</label>
-                                                <input type="checkbox" checked={item.moverElevacao} disabled={item.naoIniciou} onChange={(e) => changeMoveElevacao(item.medium.medium, listUpdateIniciacao, e.target.checked)} />
-                                            </UpdateInputContainer>
-                                        </CheckboxContainer>
-                                    </ResultsUpdate>
-                                ))
-                            }
-                        </tbody>
+                        {alphabeticOrder(listUpdateIniciacao)
+                            .map((item: IIniciacao, index: number) => (
+                                <ResultsUpdate key={index}>
+                                    <ResultsData>{`${item.medium.nome} - ${item.medium.med}`}</ResultsData>
+                                    <CheckboxContainer>
+                                        <UpdateInputContainer box>
+                                            <label>Não iniciou</label>
+                                            <input type="checkbox" checked={item.naoIniciou} onChange={(e) => changeNaoIniciou(item.medium.medium, listUpdateIniciacao, e.target.checked)} />
+                                        </UpdateInputContainer>
+                                        <UpdateInputContainer box>
+                                            <label>Mover para Elevação?</label>
+                                            <input type="checkbox" checked={item.moverElevacao} disabled={item.naoIniciou} onChange={(e) => changeMoveElevacao(item.medium.medium, listUpdateIniciacao, e.target.checked)} />
+                                        </UpdateInputContainer>
+                                    </CheckboxContainer>
+                                </ResultsUpdate>
+                            ))
+                        }
                     </ResultsTable>
                 </ConsagracaoCard>
                 <PageSubTitle hide={!listUpdateMudanca.length}>Mudança de Mediunidade</PageSubTitle>
@@ -281,45 +279,43 @@ function UpdateIniciacao() {
                 </UpdateInputContainer>
                 <ConsagracaoCard style={{maxWidth: '800px'}} hide={!listUpdateMudanca.length}>
                     <ResultsTable show={listUpdateMudanca.length}>
-                        <tbody>
-                            {alphabeticOrder(listUpdateMudanca)
-                                .map((item: IMudanca, index: number) => (
-                                    <ResultsUpdate key={index}>
-                                        <ResultsData>{`${item.medium.nome} - ${item.medium.med}`}</ResultsData>
-                                        <CheckboxContainer>
-                                            <UpdateInputContainer box>
-                                                <label>Não iniciou</label>
-                                                <input type="checkbox" checked={item.naoIniciou} onChange={(e) => changeNaoIniciouMud(item.medium.medium, e.target.checked)} />
-                                            </UpdateInputContainer>
-                                            <UpdateInputContainer box>
-                                                <label>Não elevou</label>
-                                                <input type="checkbox" disabled={item.naoIniciou} checked={item.naoElevou} onChange={(e) => changeNaoElevou(item.medium.medium, e.target.checked)} />
-                                            </UpdateInputContainer>
-                                        </CheckboxContainer>
-                                        <SelectContainer>
-                                            <UpdateInputContainer box>
-                                                <label>Classificação</label>
-                                                <select value={item.classMest} disabled={item.naoElevou} onChange={(e) => updatePropsMudanca(item.medium.medium, 'classMest', e.target.value)}>
-                                                    <option value={''}></option>
-                                                    {listClassMest(item.medium).map((item: string, index: number) => (
-                                                        <option key={index} value={item}>{item}</option>
-                                                    ))}
-                                                </select>
-                                            </UpdateInputContainer>
-                                            <UpdateInputContainer box>
-                                                <label>Falange de Mestrado</label>
-                                                <select value={item.falMest} disabled={item.naoElevou} onChange={(e) => updatePropsMudanca(item.medium.medium, 'falMest', e.target.value)}>
-                                                    <option value={''}></option>
-                                                    {falMest.completo.map((item: string, index: number) => (
-                                                        <option key={index} value={item}>{item}</option>
-                                                    ))}
-                                                </select>
-                                            </UpdateInputContainer>
-                                        </SelectContainer>
-                                    </ResultsUpdate>
-                                ))
-                            }
-                        </tbody>
+                        {alphabeticOrder(listUpdateMudanca)
+                            .map((item: IMudanca, index: number) => (
+                                <ResultsUpdate key={index}>
+                                    <ResultsData>{`${item.medium.nome} - ${item.medium.med}`}</ResultsData>
+                                    <CheckboxContainer>
+                                        <UpdateInputContainer box>
+                                            <label>Não iniciou</label>
+                                            <input type="checkbox" checked={item.naoIniciou} onChange={(e) => changeNaoIniciouMud(item.medium.medium, e.target.checked)} />
+                                        </UpdateInputContainer>
+                                        <UpdateInputContainer box>
+                                            <label>Não elevou</label>
+                                            <input type="checkbox" disabled={item.naoIniciou} checked={item.naoElevou} onChange={(e) => changeNaoElevou(item.medium.medium, e.target.checked)} />
+                                        </UpdateInputContainer>
+                                    </CheckboxContainer>
+                                    <SelectContainer>
+                                        <UpdateInputContainer box>
+                                            <label>Classificação</label>
+                                            <select value={item.classMest} disabled={item.naoElevou} onChange={(e) => updatePropsMudanca(item.medium.medium, 'classMest', e.target.value)}>
+                                                <option value={''}></option>
+                                                {listClassMest(item.medium).map((item: string, index: number) => (
+                                                    <option key={index} value={item}>{item}</option>
+                                                ))}
+                                            </select>
+                                        </UpdateInputContainer>
+                                        <UpdateInputContainer box>
+                                            <label>Falange de Mestrado</label>
+                                            <select value={item.falMest} disabled={item.naoElevou} onChange={(e) => updatePropsMudanca(item.medium.medium, 'falMest', e.target.value)}>
+                                                <option value={''}></option>
+                                                {falMest.completo.map((item: string, index: number) => (
+                                                    <option key={index} value={item}>{item}</option>
+                                                ))}
+                                            </select>
+                                        </UpdateInputContainer>
+                                    </SelectContainer>
+                                </ResultsUpdate>
+                            ))
+                        }
                     </ResultsTable>
                 </ConsagracaoCard>
                 <ButtonContainer>

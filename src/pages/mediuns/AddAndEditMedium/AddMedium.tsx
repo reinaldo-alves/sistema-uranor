@@ -89,7 +89,7 @@ function AddMedium() {
                 setListTurnoL([]);
                 setListTurnoT([]);
         }
-    }, [newMedium.sex, falMiss])
+    }, [newMedium.sex, falMiss, turnoL, turnoT])
 
     useEffect(() => {
         switch (newMedium.sex.concat(newMedium.med)) {
@@ -131,65 +131,67 @@ function AddMedium() {
                 setOldListClassMest([]);
                 setOldListEst([]);
         }
-    }, [newMedium.med, newMedium.sex])
+    }, [newMedium.med, newMedium.sex, cavaleiros, classMest, classificacao, estrelas])
 
-    useEffect(() => {
+    const updateFalMiss = (value: number) => {
+        updateProps('falMiss', value);
         if(newMedium.classMest) {
             if(newMedium.sex.concat(newMedium.med) === 'MasculinoDoutrinador') {
                 if(newMedium.classMest.includes('Mestre Sol')) {
-                    if(newMedium.falMiss === 6) {updateProps('classMest', 'Mestre Sol Mago')}
-                    else if(newMedium.falMiss === 7) {updateProps('classMest', 'Mestre Sol Príncipe Maya')}
+                    if(value === 6) {updateProps('classMest', 'Mestre Sol Mago')}
+                    else if(value === 7) {updateProps('classMest', 'Mestre Sol Príncipe Maya')}
                     else {updateProps('classMest', 'Mestre Sol')}
                 }
                 if(newMedium.classMest.includes('Mestre Luz')) {
-                    if(newMedium.falMiss === 6) {updateProps('classMest', 'Mestre Luz Mago')}
-                    else if(newMedium.falMiss === 7) {updateProps('classMest', 'Mestre Luz Príncipe Maya')}
+                    if(value === 6) {updateProps('classMest', 'Mestre Luz Mago')}
+                    else if(value === 7) {updateProps('classMest', 'Mestre Luz Príncipe Maya')}
                     else {updateProps('classMest', 'Mestre Luz')}
                 }
             }
             if(newMedium.sex.concat(newMedium.med) === 'MasculinoApará') {
-                if(newMedium.falMiss === 6) {updateProps('classMest', 'Mestre Lua Mago')}
-                else if(newMedium.falMiss === 7) {updateProps('classMest', 'Mestre Lua Príncipe Maya')}
+                if(value === 6) {updateProps('classMest', 'Mestre Lua Mago')}
+                else if(value === 7) {updateProps('classMest', 'Mestre Lua Príncipe Maya')}
                 else {updateProps('classMest', 'Mestre Lua')}
             }
             if(newMedium.sex.concat(newMedium.med) === 'FemininoDoutrinador') {
-                if(newMedium.falMiss === 1 || newMedium.falMiss === 2) {updateProps('classMest', 'Ninfa Sol Nityama')}
-                else if(newMedium.falMiss === 4) {updateProps('classMest', 'Ninfa Sol Grega')}
-                else if(newMedium.falMiss === 5) {updateProps('classMest', 'Ninfa Sol Maya')}
+                if(value === 1 || value === 2) {updateProps('classMest', 'Ninfa Sol Nityama')}
+                else if(value === 4) {updateProps('classMest', 'Ninfa Sol Grega')}
+                else if(value === 5) {updateProps('classMest', 'Ninfa Sol Maya')}
                 else {updateProps('classMest', 'Ninfa Sol')}
             }
             if(newMedium.sex.concat(newMedium.med) === 'FemininoApará') {
-                if(newMedium.falMiss === 1 || newMedium.falMiss === 2) {updateProps('classMest', 'Ninfa Lua Nityama')}
-                else if(newMedium.falMiss === 4) {updateProps('classMest', 'Ninfa Lua Grega')}
-                else if(newMedium.falMiss === 5) {updateProps('classMest', 'Ninfa Lua Maya')}
+                if(value === 1 || value === 2) {updateProps('classMest', 'Ninfa Lua Nityama')}
+                else if(value === 4) {updateProps('classMest', 'Ninfa Lua Grega')}
+                else if(value === 5) {updateProps('classMest', 'Ninfa Lua Maya')}
                 else {updateProps('classMest', 'Ninfa Lua')}
             }
         }
-    }, [newMedium.falMiss])
+    }
 
-    useEffect(() => {
-        if(newMedium.classMest === 'Mestre Sol' || newMedium.classMest === 'Mestre Luz' || newMedium.classMest === 'Mestre Lua') {
+    const updateClassMest = (value: string) => {
+        updateProps('classMest', value);
+        if(value === 'Mestre Sol' || value === 'Mestre Luz' || value === 'Mestre Lua') {
             updateProps('falMiss', 0);
         }
-        if((newMedium.classMest === 'Ninfa Sol' || newMedium.classMest === 'Ninfa Lua') && [1, 2, 4, 5].includes(newMedium.falMiss)) {
+        if((value === 'Ninfa Sol' || value === 'Ninfa Lua') && [1, 2, 4, 5].includes(newMedium.falMiss)) {
             updateProps('falMiss', 0);
         }
-        if(newMedium.classMest === 'Ninfa Sol Nityama' || newMedium.classMest === 'Ninfa Lua Nityama') {
+        if(value === 'Ninfa Sol Nityama' || value === 'Ninfa Lua Nityama') {
             updateProps('falMiss', 1);
         }
-        if(newMedium.classMest === 'Ninfa Sol Grega' || newMedium.classMest === 'Ninfa Lua Grega') {
+        if(value === 'Ninfa Sol Grega' || value === 'Ninfa Lua Grega') {
             updateProps('falMiss', 4);
         }
-        if(newMedium.classMest === 'Ninfa Sol Maya' || newMedium.classMest === 'Ninfa Lua Maya') {
+        if(value === 'Ninfa Sol Maya' || value === 'Ninfa Lua Maya') {
             updateProps('falMiss', 5);
         }
-        if(newMedium.classMest === 'Mestre Sol Mago' || newMedium.classMest === 'Mestre Luz Mago' || newMedium.classMest === 'Mestre Lua Mago') {
+        if(value === 'Mestre Sol Mago' || value === 'Mestre Luz Mago' || value === 'Mestre Lua Mago') {
             updateProps('falMiss', 6);
         }
-        if(newMedium.classMest === 'Mestre Sol Príncipe Maya' || newMedium.classMest === 'Mestre Luz Príncipe Maya' || newMedium.classMest === 'Mestre Lua Príncipe Maya') {
+        if(value === 'Mestre Sol Príncipe Maya' || value === 'Mestre Luz Príncipe Maya' || value === 'Mestre Lua Príncipe Maya') {
             updateProps('falMiss', 7);
         }
-    }, [newMedium.classMest])
+    };
 
     const imageUpdate = (event: React.ChangeEvent<HTMLInputElement>) => {
         if (event.target.files && event.target.files[0]) {
@@ -259,7 +261,7 @@ function AddMedium() {
         } else {
             updateProps('mestre', 0)
         }
-    }, [dropMes])
+    }, [dropMes, newMedium.sex])
 
     useEffect(() => {
         if(dropNin) {
@@ -334,6 +336,17 @@ function AddMedium() {
         setSearchPad('');
         setSearchMad('');
         setSearchAfi('');
+        setSearchPres('');
+        setDropPres(defaultAdj);
+        setDropMin(defaultMentor);
+        setDropCav(defaultCavaleiro);
+        setDropOldCav(defaultCavaleiro);
+        setDropGuia(defaultMentor);
+        setDropMes(defaultMedium);
+        setDropNin(defaultMedium);
+        setDropPad(defaultMedium);
+        setDropMad(defaultMedium);
+        setDropAfi(defaultMedium);
         setPhoto(null);
         setPreview(null);
     }
@@ -426,7 +439,7 @@ function AddMedium() {
     }
 
     const handleAddMedium = async (newMedium: IMedium, token: string) => {
-        if (newMedium.devas || newMedium.janda) {
+        if (newMedium.devas || newMedium.janda || newMedium.trinoSol || newMedium.trinoSar) {
             setShowModal(true);
         } else {
             await addMedium(newMedium, token);
@@ -593,7 +606,7 @@ function AddMedium() {
                         <label>Telefone 2: </label>
                         <input type="tel" maxLength={15} value={newMedium.telefone2} onChange={(e) => updateProps('telefone2', formatPhoneNumber(e.target.value))}/>
                         <label>E-mail: </label>
-                        <input type="text" value={newMedium.email} onChange={(e) => updateProps('email', e.target.value.toLowerCase())}/>
+                        <input type="email" value={newMedium.email} onChange={(e) => updateProps('email', e.target.value.toLowerCase())}/>
                     </GridContainer>
                 </PersonalCard>
                 <PersonalCard>
@@ -642,7 +655,7 @@ function AddMedium() {
                             ))}
                         </select>
                         <label>Classificação: </label>
-                        <select value={newMedium.classMest} disabled={!newMedium.dtElevacao} onChange={(e) => updateProps('classMest', e.target.value)}>
+                        <select value={newMedium.classMest} disabled={!newMedium.dtElevacao} onChange={(e) => updateClassMest(e.target.value)}>
                             <option value={''}></option>
                             {listClassMest.map((item: string, index: number) => (
                                 <option key={index} value={item}>{item}</option>
@@ -666,9 +679,12 @@ function AddMedium() {
                         <select
                             value={newMedium.falMiss}
                             onChange={(e) => {
-                                updateProps('falMiss', parseInt(e.target.value))
-                                if(parseInt(e.target.value) === 0){
+                                updateFalMiss(Number(e.target.value))
+                                if(Number(e.target.value) === 0){
                                     updateProps('regente', false);
+                                }
+                                if(Number(e.target.value) !== 8 || Number(e.target.value) !== 23) {
+                                    updateProps('janda', false);
                                 }
                             }}
                         >

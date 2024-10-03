@@ -1,7 +1,7 @@
 import SubMenu from "src/components/SubMenu/SubMenu";
 import Header from "../../components/header/header";
 import SideMenu from "src/components/SideMenu/SideMenu";
-import { generateCalendario, generateChamadaOficial, generateFicha, generatePrefixos, generateTurnos } from "src/utilities/createDocs";
+import { generateCalendario, generateChamadaOficial, generateEscalaDevas, generateFicha, generatePrefixos, generateTurnos } from "src/utilities/createDocs";
 import { useContext } from "react";
 import { ListContext } from "src/contexts/ListContext";
 import MainContainer from "src/components/MainContainer/MainContainer";
@@ -16,7 +16,7 @@ function DocumentosUteis() {
         {name: 'Prefixos das Falanges Missionárias', link: () => generatePrefixos(falMiss)},
         {name: 'Relação de Turnos de Trabalho', link: () => generateTurnos()},
         {name: 'Calendário de Atividades Doutrinárias', link: () => generateCalendario(calendario)},
-        {name: 'Escala dos Devas', link: null},
+        {name: 'Escala dos Devas', link: () => generateEscalaDevas()},
         {name: 'Formulário para Ficha Mediúnica', link: () => generateFicha()}
     ]
     

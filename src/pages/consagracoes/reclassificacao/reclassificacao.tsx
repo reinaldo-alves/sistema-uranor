@@ -162,7 +162,7 @@ function Reclassificacao() {
                     : ''}
                     <div style={{display: 'flex', gap: '20px'}}>
                         <ModalButton color="red" onClick={() => closeModal()}>Cancelar</ModalButton>
-                        <ModalButton color='green' disabled={dropMedium.some(item => item === defaultMedium)} onClick={() => {
+                        <ModalButton color='green' disabled={dropMedium.some(item => item === defaultMedium) || adjuntoPai === defaultMedium} onClick={() => {
                             generateTrinoDevas(dropMedium, showModal, adjuntoPai, ministros);
                             closeModal();
                         }}>Gerar</ModalButton>

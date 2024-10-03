@@ -18,7 +18,11 @@ function Calendar() {
 
     useEffect(() => {
         loadCalendario(token);
-    },[])
+    },[loadCalendario, token])
+
+    useEffect(() => {
+        window.scrollTo({top: 0});
+    }, [])
 
     useEffect(() => {
         if (calendario && Object.keys(calendario).length > 0) {

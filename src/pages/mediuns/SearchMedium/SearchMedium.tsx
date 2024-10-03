@@ -31,6 +31,9 @@ function SearchMedium() {
    
     useEffect(() => {
         loadMedium(token);
+    }, [loadMedium, token])
+
+    useEffect(() => {
         if (templos.length) {
             setLoading(false);
         }

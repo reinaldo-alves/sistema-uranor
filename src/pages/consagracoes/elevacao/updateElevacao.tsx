@@ -2,7 +2,7 @@ import SubMenu from "src/components/SubMenu/SubMenu";
 import Header from "../../../components/header/header";
 import SideMenu from "src/components/SideMenu/SideMenu";
 import { ButtonContainer, CheckboxContainer, ConsagracaoCard, NavigateButton, PageSubTitle, ResultsData, ResultsTable, ResultsUpdate, SelectContainer, UpdateInputContainer } from "../styles";
-import { useContext, useEffect, useState } from "react";
+import { useCallback, useContext, useEffect, useState } from "react";
 import { ListContext } from "src/contexts/ListContext";
 import { IConsagracao } from "src/types/types";
 import { UserContext } from "src/contexts/UserContext";
@@ -49,8 +49,8 @@ function UpdateElevacao() {
         return array
     }
 
-    const generateElevacaoList = () => {
-        const array = listElevacao.map((item: IConsagracao) => ({
+    const generateElevacaoList = useCallback(async (list: Array<IConsagracao>) => {
+        const array = list.map((item: IConsagracao) => ({
             medium: item,
             naoElevou: false,
             moverCenturia: true,
@@ -58,10 +58,10 @@ function UpdateElevacao() {
             falMest: ''
         }));
         setListUpdateElevacao(array);
-    }
+    }, [])
 
-    const generateMudancaList = () => {
-        const array = listMudanca.map((item: IConsagracao) => ({
+    const generateMudancaList = useCallback(async (list: Array<IConsagracao>) => {
+        const array = list.map((item: IConsagracao) => ({
             medium: item,
             naoIniciou: false,
             naoElevou: false,
@@ -69,7 +69,7 @@ function UpdateElevacao() {
             falMest: ''
         }));
         setListUpdateMudanca(array);
-    }
+    }, [])
 
     const updatePropsElevacao = (id: number, property: string, newValue: any) => {
         const newArray = listUpdateElevacao.map((item: IElevacao) => {
@@ -224,16 +224,16 @@ function UpdateElevacao() {
         }
     }
 
-    const loadConsData = async () => {
-        await loadConsagracao(token);
-        generateElevacaoList();
-        generateMudancaList();
+    const loadConsData = useCallback(async () => {
+        const { elevacao, mudanca } = await loadConsagracao(token);
+        await generateElevacaoList(elevacao);
+        await generateMudancaList(mudanca);
         setLoading(false);
-    }
+    }, [loadConsagracao, generateElevacaoList, generateMudancaList, token]);
 
     useEffect(() => {
         loadConsData();
-    }, [loading]);
+    }, [loadConsData]);
 
     const listSubMenu = [
         {title: 'Página Inicial', click: '/'},
@@ -259,45 +259,43 @@ function UpdateElevacao() {
                 </UpdateInputContainer>
                 <ConsagracaoCard style={{maxWidth: '800px'}} hide={!listUpdateElevacao.length}>
                     <ResultsTable show={listUpdateElevacao.length}>
-                        <tbody>
-                            {alphabeticOrder(listUpdateElevacao)
-                                .map((item: IElevacao, index: number) => (
-                                    <ResultsUpdate key={index}>
-                                        <ResultsData>{`${item.medium.nome} - ${item.medium.med}`}</ResultsData>
-                                        <CheckboxContainer>
-                                            <UpdateInputContainer box>
-                                                <label>Não elevou</label>
-                                                <input type="checkbox" checked={item.naoElevou} onChange={(e) => changeNaoElevou(item.medium.medium, e.target.checked)} />
-                                            </UpdateInputContainer>
-                                            <UpdateInputContainer box>
-                                                <label>Mover para Centúria?</label>
-                                                <input type="checkbox" checked={item.moverCenturia} disabled={item.naoElevou} onChange={(e) => updatePropsElevacao(item.medium.medium, 'moverCenturia', e.target.checked)} />
-                                            </UpdateInputContainer>
-                                        </CheckboxContainer>
-                                        <SelectContainer>
-                                            <UpdateInputContainer box>
-                                                <label>Classificação</label>
-                                                <select value={item.classMest} disabled={item.naoElevou} onChange={(e) => updatePropsElevacao(item.medium.medium, 'classMest', e.target.value)}>
-                                                    <option value={''}></option>
-                                                    {listClassMest(item.medium).map((item: string, index: number) => (
-                                                        <option key={index} value={item}>{item}</option>
-                                                    ))}
-                                                </select>
-                                            </UpdateInputContainer>
-                                            <UpdateInputContainer box>
-                                                <label>Falange de Mestrado</label>
-                                                <select value={item.falMest} disabled={item.naoElevou} onChange={(e) => updatePropsElevacao(item.medium.medium, 'falMest', e.target.value)}>
-                                                    <option value={''}></option>
-                                                    {falMest.completo.map((item: string, index: number) => (
-                                                        <option key={index} value={item}>{item}</option>
-                                                    ))}
-                                                </select>
-                                            </UpdateInputContainer>
-                                        </SelectContainer>
-                                    </ResultsUpdate>
-                                ))
-                            }
-                        </tbody>
+                        {alphabeticOrder(listUpdateElevacao)
+                            .map((item: IElevacao, index: number) => (
+                                <ResultsUpdate key={index}>
+                                    <ResultsData>{`${item.medium.nome} - ${item.medium.med}`}</ResultsData>
+                                    <CheckboxContainer>
+                                        <UpdateInputContainer box>
+                                            <label>Não elevou</label>
+                                            <input type="checkbox" checked={item.naoElevou} onChange={(e) => changeNaoElevou(item.medium.medium, e.target.checked)} />
+                                        </UpdateInputContainer>
+                                        <UpdateInputContainer box>
+                                            <label>Mover para Centúria?</label>
+                                            <input type="checkbox" checked={item.moverCenturia} disabled={item.naoElevou} onChange={(e) => updatePropsElevacao(item.medium.medium, 'moverCenturia', e.target.checked)} />
+                                        </UpdateInputContainer>
+                                    </CheckboxContainer>
+                                    <SelectContainer>
+                                        <UpdateInputContainer box>
+                                            <label>Classificação</label>
+                                            <select value={item.classMest} disabled={item.naoElevou} onChange={(e) => updatePropsElevacao(item.medium.medium, 'classMest', e.target.value)}>
+                                                <option value={''}></option>
+                                                {listClassMest(item.medium).map((item: string, index: number) => (
+                                                    <option key={index} value={item}>{item}</option>
+                                                ))}
+                                            </select>
+                                        </UpdateInputContainer>
+                                        <UpdateInputContainer box>
+                                            <label>Falange de Mestrado</label>
+                                            <select value={item.falMest} disabled={item.naoElevou} onChange={(e) => updatePropsElevacao(item.medium.medium, 'falMest', e.target.value)}>
+                                                <option value={''}></option>
+                                                {falMest.completo.map((item: string, index: number) => (
+                                                    <option key={index} value={item}>{item}</option>
+                                                ))}
+                                            </select>
+                                        </UpdateInputContainer>
+                                    </SelectContainer>
+                                </ResultsUpdate>
+                            ))
+                        }
                     </ResultsTable>
                 </ConsagracaoCard>
                 <PageSubTitle hide={!listUpdateMudanca.length}>Mudança de Mediunidade</PageSubTitle>
@@ -307,45 +305,43 @@ function UpdateElevacao() {
                 </UpdateInputContainer>
                 <ConsagracaoCard style={{maxWidth: '800px'}} hide={!listUpdateMudanca.length}>
                     <ResultsTable show={listUpdateMudanca.length}>
-                        <tbody>
-                            {alphabeticOrder(listUpdateMudanca)
-                                .map((item: IMudanca, index: number) => (
-                                    <ResultsUpdate key={index}>
-                                        <ResultsData>{`${item.medium.nome} - ${item.medium.med}`}</ResultsData>
-                                        <CheckboxContainer>
-                                            <UpdateInputContainer box>
-                                                <label>Não iniciou</label>
-                                                <input type="checkbox" checked={item.naoIniciou} onChange={(e) => changeNaoIniciou(item.medium.medium, e.target.checked)} />
-                                            </UpdateInputContainer>
-                                            <UpdateInputContainer box>
-                                                <label>Não elevou</label>
-                                                <input type="checkbox" disabled={item.naoIniciou} checked={item.naoElevou} onChange={(e) => changeNaoElevouMud(item.medium.medium, e.target.checked)} />
-                                            </UpdateInputContainer>
-                                        </CheckboxContainer>
-                                        <SelectContainer>
-                                            <UpdateInputContainer box>
-                                                <label>Classificação</label>
-                                                <select value={item.classMest} disabled={item.naoElevou} onChange={(e) => updatePropsMudanca(item.medium.medium, 'classMest', e.target.value)}>
-                                                    <option value={''}></option>
-                                                    {listClassMest(item.medium).map((item: string, index: number) => (
-                                                        <option key={index} value={item}>{item}</option>
-                                                    ))}
-                                                </select>
-                                            </UpdateInputContainer>
-                                            <UpdateInputContainer box>
-                                                <label>Falange de Mestrado</label>
-                                                <select value={item.falMest} disabled={item.naoElevou} onChange={(e) => updatePropsMudanca(item.medium.medium, 'falMest', e.target.value)}>
-                                                    <option value={''}></option>
-                                                    {falMest.completo.map((item: string, index: number) => (
-                                                        <option key={index} value={item}>{item}</option>
-                                                    ))}
-                                                </select>
-                                            </UpdateInputContainer>
-                                        </SelectContainer>
-                                    </ResultsUpdate>
-                                ))
-                            }
-                        </tbody>
+                        {alphabeticOrder(listUpdateMudanca)
+                            .map((item: IMudanca, index: number) => (
+                                <ResultsUpdate key={index}>
+                                    <ResultsData>{`${item.medium.nome} - ${item.medium.med}`}</ResultsData>
+                                    <CheckboxContainer>
+                                        <UpdateInputContainer box>
+                                            <label>Não iniciou</label>
+                                            <input type="checkbox" checked={item.naoIniciou} onChange={(e) => changeNaoIniciou(item.medium.medium, e.target.checked)} />
+                                        </UpdateInputContainer>
+                                        <UpdateInputContainer box>
+                                            <label>Não elevou</label>
+                                            <input type="checkbox" disabled={item.naoIniciou} checked={item.naoElevou} onChange={(e) => changeNaoElevouMud(item.medium.medium, e.target.checked)} />
+                                        </UpdateInputContainer>
+                                    </CheckboxContainer>
+                                    <SelectContainer>
+                                        <UpdateInputContainer box>
+                                            <label>Classificação</label>
+                                            <select value={item.classMest} disabled={item.naoElevou} onChange={(e) => updatePropsMudanca(item.medium.medium, 'classMest', e.target.value)}>
+                                                <option value={''}></option>
+                                                {listClassMest(item.medium).map((item: string, index: number) => (
+                                                    <option key={index} value={item}>{item}</option>
+                                                ))}
+                                            </select>
+                                        </UpdateInputContainer>
+                                        <UpdateInputContainer box>
+                                            <label>Falange de Mestrado</label>
+                                            <select value={item.falMest} disabled={item.naoElevou} onChange={(e) => updatePropsMudanca(item.medium.medium, 'falMest', e.target.value)}>
+                                                <option value={''}></option>
+                                                {falMest.completo.map((item: string, index: number) => (
+                                                    <option key={index} value={item}>{item}</option>
+                                                ))}
+                                            </select>
+                                        </UpdateInputContainer>
+                                    </SelectContainer>
+                                </ResultsUpdate>
+                            ))
+                        }
                     </ResultsTable>
                 </ConsagracaoCard>
                 <ButtonContainer>

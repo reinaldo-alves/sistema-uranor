@@ -249,7 +249,10 @@ function AddAspirante() {
                     <SectionTitle>Dados Mediúnicos</SectionTitle>
                     <GridContainer>
                         <label>Data Ingresso: </label>
-                        <input type="date" value={newMedium.dtIngresso} onChange={(e) => updateProps('dtIngresso', e.target.value)} min={newMedium.dtNasc}  max={now} />
+                        <input type="date" value={newMedium.dtIngresso} onChange={(e) => {
+                            updateProps('dtIngresso', e.target.value);
+                            updateProps('dtTest', e.target.value);
+                        }} min={newMedium.dtNasc}  max={now} />
                         <label>Adjunto Origem.: </label>
                         <AutocompleteInput 
                             label={(option) => option === defaultAdj ? '' : `Adj. ${ministros.filter((min: IMentor) => min.id === option.ministro)[0].nome} - Mestre ${option.nome}` }

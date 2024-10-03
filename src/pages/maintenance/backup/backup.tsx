@@ -4,7 +4,7 @@ import SubMenu from "src/components/SubMenu/SubMenu";
 import SideMenu from "src/components/SideMenu/SideMenu";
 import MainContainer from "src/components/MainContainer/MainContainer";
 import api from "src/api";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { UserContext } from "src/contexts/UserContext";
 import { Alert, Confirm } from "src/utilities/popups";
 import { Modal, ModalButton, ModalContent, ModalTitle } from "src/components/Modal/modal";
@@ -66,6 +66,10 @@ function Backup() {
         {name: 'Restaurar Backup', link: () => setShowModal(true)}
     ]
 
+    useEffect(() => {
+        window.scrollTo({top: 0});
+    }, [])
+
     return (
         <>
             <Header />
@@ -97,6 +101,7 @@ function Backup() {
             </Modal>
             <Modal vis={wait}>
                 <ModalContent>
+                    <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200' width='60' height='60'><linearGradient id='a11'><stop offset='0' stop-color='#002776' stop-opacity='0'></stop><stop offset='1' stop-color='#002776'></stop></linearGradient><circle fill='none' stroke='url(#a11)' stroke-width='30' stroke-linecap='round' stroke-dasharray='0 44 0 44 0 44 0 44 0 360' cx='100' cy='100' r='70' transform-origin='center'><animateTransform type='rotate' attributeName='transform' calcMode='discrete' dur='2' values='360;324;288;252;216;180;144;108;72;36' repeatCount='indefinite'></animateTransform></circle></svg>
                     <ModalTitle>Aguarde...</ModalTitle>
                 </ModalContent>
             </Modal>

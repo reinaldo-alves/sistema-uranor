@@ -1,0 +1,50 @@
+Funções do sistema para teste
+
+AUTENTICAÇÃO
+- Login
+- Logout
+- Teste com senha errada
+- Teste com administrador e com Devas
+- Teste com servidor offline
+
+MEDIUNS
+- Criar medium
+- Consultar medium, filtrando por templo e por nome
+- Gerar emissão (Todos os tipos)
+- Gerar ficha
+- Navegar entre mediuns usando o id
+
+CANTOS E CHAVES
+- Abrir todos os cantos e chaves
+
+DESENVOLVIMENTO
+- Adicionar médium
+- Atualizar frequencia
+- Importar do mês anterior
+- Testar botões individuais
+- Cadastrar médium aspirante
+- Gerar todos os documentos
+
+CONSAGRAÇÕES
+- Cadastrar médium na iniciação, elevação, centúria e mudança
+- Remover médium na iniciação, elevação, centúria e mudança
+- Testar todos os botões de ação individuais
+- Gerar relatório geral
+- Gerar autorizações, protocolos e relatórios por consagrações
+- Gerar termos de compromisso
+- Gerar autorizações de Devas, Trino Solitário, Trino Sardyos e formulários de reclassificação, como mais de um nome, quando aplicável.
+
+
+RELATÓRIOS
+- Testar títulos
+- Testar tipos de relatórios
+- Testar todos os filtros
+- Colocar muitos filtros para não exibir dados
+
+DOCUMENTOS ÚTEIS
+- Abrir todos os documentos
+
+BIBLIOTECA
+- Abrir todos os documentos
+
+

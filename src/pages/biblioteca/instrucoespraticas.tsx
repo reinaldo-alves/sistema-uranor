@@ -10,6 +10,7 @@ import F4 from "src/assets/pdf/Instrucoes4.pdf";
 import F5 from "src/assets/pdf/Instrucoes5.pdf";
 import F6 from "src/assets/pdf/Instrucoes6.pdf";
 import F7 from "src/assets/pdf/Instrucoes7.pdf";
+import { useEffect } from "react";
 
 function InstrucoesPraticas() {
     
@@ -27,6 +28,10 @@ function InstrucoesPraticas() {
         {title: 'Página Inicial', click: '/'},
         {title: 'Voltar para Biblioteca', click: '/biblioteca'},
     ]
+
+    useEffect(() => {
+        window.scrollTo({top: 0});
+    }, [])
     
     return (
         <>

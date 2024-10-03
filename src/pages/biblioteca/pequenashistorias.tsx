@@ -18,6 +18,7 @@ import PH12 from "src/assets/pdf/PH12-TiaozinhoJustininha.pdf";
 import PH13 from "src/assets/pdf/PH13-AlmasGemeas.pdf";
 import PH14 from "src/assets/pdf/PH14-AsVidasLenhador.pdf";
 import Tab from "src/assets/pdf/TabelaLivros.pdf";
+import { useEffect } from "react";
 
 function PequenasHistorias() {
     
@@ -44,6 +45,10 @@ function PequenasHistorias() {
         {title: 'Página Inicial', click: '/'},
         {title: 'Voltar para Biblioteca', click: '/biblioteca'},
     ]
+
+    useEffect(() => {
+        window.scrollTo({top: 0});
+    }, [])
     
     return (
         <>

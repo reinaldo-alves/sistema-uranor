@@ -44,7 +44,11 @@ function Adjuntos() {
     useEffect(() => {
         const ministroObject = ministros.find((item: IMentor) => item?.id === dropMinistro?.id);
         updateProps('ministro', ministroObject? ministroObject.id : 0);
-    }, [dropMinistro])
+    }, [dropMinistro, ministros])
+
+    useEffect(() => {
+        window.scrollTo({top: 0});
+    }, [])
 
     const modalAddAdj = () => {
         setEdit(false);

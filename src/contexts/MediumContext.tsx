@@ -1,4 +1,4 @@
-import { createContext, useState } from "react";
+import { createContext, useCallback, useState } from "react";
 import api from "src/api";
 import { IMedium } from "src/types/types";
 import { IMediumAPI } from "src/types/typesAPI";
@@ -9,7 +9,7 @@ export const MediumContext = createContext({} as any);
 export const MediumStore = ({ children }: any) => {
     const [mediuns, setMediuns] = useState([] as Array<IMedium>);
 
-    const loadMedium = async (token: string) => {
+    const loadMedium = useCallback(async (token: string) => {
         try {
             const { data } = await api.get('/medium/get-mediuns', {headers:{Authorization: token}})
             const medium = data.medium.map((item: IMediumAPI) => ({
@@ -98,7 +98,7 @@ export const MediumStore = ({ children }: any) => {
         } catch (error) {
             console.log('Erro ao carregar a lista de médiuns', error);
         }
-    }
+    }, [])
 
     const convertMediumToSend = (medium: IMedium) => {
         const mediumObj = {

@@ -1,4 +1,4 @@
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect } from "react";
 import { InfoCard, InputContainer, InfoContent, Results, ResultsCard, ResultsTable, ResultsTitle, SearchButton, SearchCard, SearchContainer } from "./styles";
 import { ListContext } from "src/contexts/ListContext";
 import SideMenu from "src/components/SideMenu/SideMenu";
@@ -108,7 +108,11 @@ function Guias() {
         const nomeA = guiaA.nome.toLowerCase();
         const nomeB = guiaB.nome.toLowerCase();
         return nomeA.localeCompare(nomeB, 'pt-BR');
-      });      
+    });
+
+    useEffect(() => {
+        window.scrollTo({top: 0});
+    }, [])
 
     return (
         <>

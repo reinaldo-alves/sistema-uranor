@@ -14,6 +14,7 @@ import Uni from "../../assets/bib-unificacao.jpg";
 import Tcl from "src/assets/pdf/TerceiroSetimoCavaleirosLuz.pdf"
 import Cta from "src/assets/pdf/ContagemTrinoArakem.pdf"
 import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
 
 function Biblioteca() {
     const navigate = useNavigate();
@@ -30,6 +31,10 @@ function Biblioteca() {
     ]
 
     const menuList = [{title: 'Página Inicial', click: '/'}];
+
+    useEffect(() => {
+        window.scrollTo({top: 0});
+    }, [])
     
     return (
         <>

@@ -20,6 +20,7 @@ import Ca6 from "src/assets/pdf/carta_aberta_06.pdf";
 import Ca7 from "src/assets/pdf/carta_aberta_07.pdf";
 import Cti from "src/assets/pdf/CartaTrinoIramar.pdf";
 import Ctj from "src/assets/pdf/CartaTrinoJurema.pdf";
+import { useEffect } from "react";
 
 function Cartas() {
     
@@ -47,6 +48,10 @@ function Cartas() {
         {title: 'Página Inicial', click: '/'},
         {title: 'Voltar para Biblioteca', click: '/biblioteca'},
     ]
+
+    useEffect(() => {
+        window.scrollTo({top: 0});
+    }, [])
     
     return (
         <>

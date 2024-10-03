@@ -39,7 +39,7 @@ function Login() {
             navigate('/')
         }
         setErrorMessage('');
-    }, [])
+    }, [login, navigate, setErrorMessage])
     
     return (
         <>

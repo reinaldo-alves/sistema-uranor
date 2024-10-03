@@ -43,6 +43,7 @@ import L37 from "../../assets/pdf/LivroLeis-TronoMilenar.pdf"
 import L38 from "../../assets/pdf/LivroLeis-Tronos.pdf"
 import L39 from "../../assets/pdf/LivroLeis-Turigano.pdf"
 import L40 from "../../assets/pdf/LivroLeis-Unificacao.pdf"
+import { useEffect } from "react";
 
 function LivroDeLeis() {
     
@@ -93,6 +94,10 @@ function LivroDeLeis() {
         {title: 'Página Inicial', click: '/'},
         {title: 'Voltar para Biblioteca', click: '/biblioteca'},
     ]
+
+    useEffect(() => {
+        window.scrollTo({top: 0});
+    }, [])
     
     return (
         <>

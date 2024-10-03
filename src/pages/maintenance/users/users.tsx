@@ -39,12 +39,16 @@ function Users() {
 
     useEffect(() => {
         loadUser(token)
-    },[])
+    },[loadUser, token])
 
     useEffect(() => {
         const mediumObject = mediuns.find((item: IMedium) => item?.medium_id === dropMedium?.medium_id);
         updateProps('medium_id', mediumObject? mediumObject.medium_id : 0);
-    }, [dropMedium])
+    }, [dropMedium, mediuns])
+
+    useEffect(() => {
+        window.scrollTo({top: 0});
+    }, [])
     
     const listSubMenu = [
         {title: 'Página Inicial', click: '/'},

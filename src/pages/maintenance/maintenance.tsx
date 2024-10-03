@@ -4,6 +4,7 @@ import SideMenu from "src/components/SideMenu/SideMenu";
 import { useNavigate } from "react-router-dom";
 import MainContainer from "src/components/MainContainer/MainContainer";
 import GridButton from "src/components/GridButton/GridButton";
+import { useEffect } from "react";
 
 function Maintenance() {
     const navigate = useNavigate();
@@ -21,6 +22,10 @@ function Maintenance() {
     ]
     
     const menuList = [{title: 'Página Inicial', click: '/'}]
+
+    useEffect(() => {
+        window.scrollTo({top: 0});
+    }, [])
     
     return (
         <>

@@ -45,7 +45,11 @@ function Templos() {
     useEffect(() => {
         const presObject = adjuntos.find((item: IAdjunto) => item?.adjunto_id === dropPres?.adjunto_id);
         updateProps('presidente', presObject? presObject.adjunto_id : 0);
-    }, [dropPres])
+    }, [dropPres, adjuntos])
+
+    useEffect(() => {
+        window.scrollTo({top: 0});
+    }, [])
 
     const modalAddTemp = () => {
         setEdit(false);

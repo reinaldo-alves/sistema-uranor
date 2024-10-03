@@ -2,7 +2,7 @@ import SubMenu from "src/components/SubMenu/SubMenu";
 import Header from "../../../components/header/header";
 import SideMenu from "src/components/SideMenu/SideMenu";
 import { ButtonContainer, CheckboxContainer, ConsagracaoCard, NavigateButton, ResultsData, ResultsTable, ResultsUpdate, SelectContainer, UpdateInputContainer } from "../styles";
-import { useContext, useEffect, useState } from "react";
+import { useCallback, useContext, useEffect, useState } from "react";
 import { ListContext } from "src/contexts/ListContext";
 import { IConsagracao } from "src/types/types";
 import { UserContext } from "src/contexts/UserContext";
@@ -21,7 +21,7 @@ interface ICenturia {
 }
 
 function UpdateCenturia() {
-    const { listCenturia, povos, turnoL, estrelas, classificacao, loadConsagracao } = useContext(ListContext);
+    const { povos, turnoL, estrelas, classificacao, loadConsagracao } = useContext(ListContext);
     const { token } = useContext(UserContext);
 
     const [loading, setLoading] = useState(true);
@@ -39,8 +39,8 @@ function UpdateCenturia() {
         return array
     }
 
-    const generateCenturiaList = () => {
-        const array = listCenturia.map((item: IConsagracao) => ({
+    const generateCenturiaList = useCallback(async (list: Array<IConsagracao>) => {
+        const array = list.map((item: IConsagracao) => ({
             medium: item,
             naoCenturiou: false,
             povo: '',
@@ -48,7 +48,7 @@ function UpdateCenturia() {
             classifEstrela: ''
         }));
         setListUpdateCenturia(array);
-    }
+    }, [])
 
     const updatePropsCenturia = (id: number, property: string, newValue: any) => {
         const newArray = listUpdateCenturia.map((item: ICenturia) => {
@@ -152,15 +152,15 @@ function UpdateCenturia() {
         }
     }
 
-    const loadConsData = async () => {
-        await loadConsagracao(token);
-        generateCenturiaList();
+    const loadConsData = useCallback(async () => {
+        const { centuria } = await loadConsagracao(token);
+        await generateCenturiaList(centuria);
         setLoading(false);
-    }
+    }, [loadConsagracao, generateCenturiaList, token]);
 
     useEffect(() => {
         loadConsData();
-    }, [loading]);
+    }, [loadConsData]);
 
     if(loading) {
         return <Loading />
@@ -186,52 +186,50 @@ function UpdateCenturia() {
                 </UpdateInputContainer>
                 <ConsagracaoCard style={{maxWidth: '800px'}} hide={!listUpdateCenturia.length}>
                     <ResultsTable show={listUpdateCenturia.length}>
-                        <tbody>
-                            {alphabeticOrder(listUpdateCenturia)
-                                .map((item: ICenturia, index: number) => (
-                                    <ResultsUpdate key={index}>
-                                        <ResultsData>{`${item.medium.nome} - ${item.medium.med}`}</ResultsData>
-                                        <CheckboxContainer>
-                                            <UpdateInputContainer box>
-                                                <label>Não fez centúria</label>
-                                                <input type="checkbox" checked={item.naoCenturiou} onChange={(e) => changeNaoCenturiou(item.medium.medium, e.target.checked)} />
-                                            </UpdateInputContainer>
-                                        </CheckboxContainer>
-                                        <SelectContainer>
-                                            <UpdateInputContainer box>
-                                                <label>Povo</label>
-                                                <select value={item.povo} disabled={item.naoCenturiou} onChange={(e) => updatePropsCenturia(item.medium.medium, 'povo', e.target.value)}>
-                                                    <option value={''}></option>
-                                                    {povos.map((item: string, index: number) => (
-                                                        <option key={index} value={item}>{item}</option>
-                                                    ))}
-                                                </select>
-                                            </UpdateInputContainer>
-                                            <UpdateInputContainer box>
-                                                <label>Turno de Legião</label>
-                                                <select value={item.turnoLeg} disabled={item.naoCenturiou} onChange={(e) => updatePropsCenturia(item.medium.medium, 'turnoLeg', e.target.value)}>
-                                                    <option value={''}></option>
-                                                    {listTurnoLeg(item.medium).map((item: string, index: number) => (
-                                                        <option key={index} value={item}>{item}</option>
-                                                    ))}
-                                                </select>
-                                            </UpdateInputContainer>
-                                        </SelectContainer>
-                                        <SelectContainer>
-                                            <UpdateInputContainer box extend={item.medium.sex === 'Masculino'}>
-                                                <label>{item.medium.sex === 'Masculino' ? 'Classificação' : item.medium.sex === 'Feminino' ? 'Estrela' : ''}</label>
-                                                <select value={item.classifEstrela} disabled={item.naoCenturiou} onChange={(e) => updatePropsCenturia(item.medium.medium, 'classifEstrela', e.target.value)}>
-                                                    <option value={''}></option>
-                                                    {listClassifEstrela(item.medium).map((item: string, index: number) => (
-                                                        <option key={index} value={item}>{item}</option>
-                                                    ))}
-                                                </select>
-                                            </UpdateInputContainer>
-                                        </SelectContainer>
-                                    </ResultsUpdate>
-                                ))
-                            }
-                        </tbody>
+                        {alphabeticOrder(listUpdateCenturia)
+                            .map((item: ICenturia, index: number) => (
+                                <ResultsUpdate key={index}>
+                                    <ResultsData>{`${item.medium.nome} - ${item.medium.med}`}</ResultsData>
+                                    <CheckboxContainer>
+                                        <UpdateInputContainer box>
+                                            <label>Não fez centúria</label>
+                                            <input type="checkbox" checked={item.naoCenturiou} onChange={(e) => changeNaoCenturiou(item.medium.medium, e.target.checked)} />
+                                        </UpdateInputContainer>
+                                    </CheckboxContainer>
+                                    <SelectContainer>
+                                        <UpdateInputContainer box>
+                                            <label>Povo</label>
+                                            <select value={item.povo} disabled={item.naoCenturiou} onChange={(e) => updatePropsCenturia(item.medium.medium, 'povo', e.target.value)}>
+                                                <option value={''}></option>
+                                                {povos.map((item: string, index: number) => (
+                                                    <option key={index} value={item}>{item}</option>
+                                                ))}
+                                            </select>
+                                        </UpdateInputContainer>
+                                        <UpdateInputContainer box>
+                                            <label>Turno de Legião</label>
+                                            <select value={item.turnoLeg} disabled={item.naoCenturiou} onChange={(e) => updatePropsCenturia(item.medium.medium, 'turnoLeg', e.target.value)}>
+                                                <option value={''}></option>
+                                                {listTurnoLeg(item.medium).map((item: string, index: number) => (
+                                                    <option key={index} value={item}>{item}</option>
+                                                ))}
+                                            </select>
+                                        </UpdateInputContainer>
+                                    </SelectContainer>
+                                    <SelectContainer>
+                                        <UpdateInputContainer box extend={item.medium.sex === 'Masculino'}>
+                                            <label>{item.medium.sex === 'Masculino' ? 'Classificação' : item.medium.sex === 'Feminino' ? 'Estrela' : ''}</label>
+                                            <select value={item.classifEstrela} disabled={item.naoCenturiou} onChange={(e) => updatePropsCenturia(item.medium.medium, 'classifEstrela', e.target.value)}>
+                                                <option value={''}></option>
+                                                {listClassifEstrela(item.medium).map((item: string, index: number) => (
+                                                    <option key={index} value={item}>{item}</option>
+                                                ))}
+                                            </select>
+                                        </UpdateInputContainer>
+                                    </SelectContainer>
+                                </ResultsUpdate>
+                            ))
+                        }
                     </ResultsTable>
                 </ConsagracaoCard>
                 <ButtonContainer>

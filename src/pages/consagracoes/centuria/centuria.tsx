@@ -3,7 +3,7 @@ import Header from "../../../components/header/header";
 import SideMenu from "src/components/SideMenu/SideMenu";
 import { ButtonContainer, ConsagracaoCard, InputContainer, ModalMediumContent, NavigateButton, PageSubTitle, Results, ResultsData, ResultsDetails, ResultsPanel, ResultsTable, ResultsTitle } from "../styles";
 import { alphabeticOrder, consagracaoDetails, countMedium, handleEnterPress } from "src/utilities/functions";
-import { useContext, useEffect, useState } from "react";
+import { useCallback, useContext, useEffect, useState } from "react";
 import { ListContext } from "src/contexts/ListContext";
 import { IConsagracao, IMedium } from "src/types/types";
 import { Alert, Confirm } from "src/utilities/popups";
@@ -88,7 +88,6 @@ function Centuria() {
     }
 
     useEffect(() => {
-        loadConsagracao(token);
         handleResize();
         const handleResizeEvent = () => {
             handleResize();
@@ -108,11 +107,16 @@ function Centuria() {
         {title: 'Reclassificação', click: '/consagracoes/reclassificacao'},
     ]
 
-    useEffect(() => {
+    const loadConsData = useCallback(async () => {
+        await loadConsagracao(token);
         if(mediuns.length) {
             setLoading(false);
         }
-    }, [mediuns])
+    }, [loadConsagracao, token, mediuns]);
+
+    useEffect(() => {
+        loadConsData();
+    }, [loadConsData])
 
     if(loading) {
         return <Loading />

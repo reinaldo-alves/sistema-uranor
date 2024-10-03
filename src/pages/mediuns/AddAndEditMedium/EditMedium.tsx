@@ -1,4 +1,4 @@
-import { useContext, useState, useEffect } from "react";
+import { useContext, useState, useEffect, useCallback } from "react";
 import { ListContext } from "src/contexts/ListContext";
 import { Divider, FieldContainer, FieldContainerBox, GridContainer, GridDatesContainer, InputContainer, MainContent, MainInfoContainer, MediumButton, Observations, PersonalCard, PhotoContainer, PhotoPosition, SectionTitle } from "./styles";
 import { IAdjunto, ICavaleiro, IEstado, IEvento, IFalange, IMedium, IMentor, ITemplo } from "src/types/types";
@@ -76,7 +76,7 @@ function EditMedium() {
 
     const now = new Date().toISOString().split('T')[0];
 
-    const defineMedium = () => {
+    const defineMedium = useCallback(() => {
         const foundMedium: IMedium = mediuns.find((item: IMedium) => item.medium_id === Number(params.id));
         const pres = adjuntos.find((item: IAdjunto) => item.adjunto_id === foundMedium.adjOrigem);
         const min = ministros.find((item: IMentor) => item.id === foundMedium.ministro);
@@ -102,9 +102,9 @@ function EditMedium() {
         setDropMad(mad? mad : defaultMedium);
         setDropAfi(afi? afi : defaultMedium);
         setTSol(foundMedium.trinoSol? true : false);
-    }
+    }, [adjuntos, cavaleiros, guias, mediuns, ministros, params.id]);
     
-    const getInfo = async () => {
+    const getInfo = useCallback(async () => {
         try {
             await loadMedium(token);
             await getData(token);
@@ -113,22 +113,25 @@ function EditMedium() {
             console.error('Erro ao buscar informações', error);
             Alert('Erro ao buscar informações', 'error');
         }
-    }
+    }, [loadMedium, getData, getUser, token])
+
+    useEffect(() => {
+        window.scrollTo({top: 0});
+    }, [])
     
     useEffect(() => {
         getInfo();
-        window.scrollTo({top: 0});
-    }, [])
+    }, [getInfo])
     
     useEffect(() => {
         if(mediuns.length > 0){
             defineMedium();
         }
-    }, [mediuns, params.id])
+    }, [mediuns, params.id, defineMedium])
     
     useEffect(() => {
         console.log(medium)
-        if(medium !== defaultMedium) {
+        if(medium.medium_id) {
             setLoading(false);
         }
     }, [medium])
@@ -150,7 +153,7 @@ function EditMedium() {
                 setListTurnoL([]);
                 setListTurnoT([]);
         }
-    }, [medium.sex, falMiss])
+    }, [medium.sex, falMiss, turnoL, turnoT])
 
     useEffect(() => {
         switch (medium.sex.concat(medium.med)) {
@@ -192,65 +195,67 @@ function EditMedium() {
                 setOldListClassMest([]);
                 setOldListEst([]);
         }
-    }, [medium.med, medium.sex])
+    }, [medium.med, medium.sex, cavaleiros, classMest, classificacao, estrelas])
 
-    useEffect(() => {
+    const updateFalMiss = (value: number) => {
+        updateProps('falMiss', value);
         if(medium.classMest) {
             if(medium.sex.concat(medium.med) === 'MasculinoDoutrinador') {
                 if(medium.classMest.includes('Mestre Sol')) {
-                    if(medium.falMiss === 6) {updateProps('classMest', 'Mestre Sol Mago')}
-                    else if(medium.falMiss === 7) {updateProps('classMest', 'Mestre Sol Príncipe Maya')}
+                    if(value === 6) {updateProps('classMest', 'Mestre Sol Mago')}
+                    else if(value === 7) {updateProps('classMest', 'Mestre Sol Príncipe Maya')}
                     else {updateProps('classMest', 'Mestre Sol')}
                 }
                 if(medium.classMest.includes('Mestre Luz')) {
-                    if(medium.falMiss === 6) {updateProps('classMest', 'Mestre Luz Mago')}
-                    else if(medium.falMiss === 7) {updateProps('classMest', 'Mestre Luz Príncipe Maya')}
+                    if(value === 6) {updateProps('classMest', 'Mestre Luz Mago')}
+                    else if(value === 7) {updateProps('classMest', 'Mestre Luz Príncipe Maya')}
                     else {updateProps('classMest', 'Mestre Luz')}
                 }
             }
             if(medium.sex.concat(medium.med) === 'MasculinoApará') {
-                if(medium.falMiss === 6) {updateProps('classMest', 'Mestre Lua Mago')}
-                else if(medium.falMiss === 7) {updateProps('classMest', 'Mestre Lua Príncipe Maya')}
+                if(value === 6) {updateProps('classMest', 'Mestre Lua Mago')}
+                else if(value === 7) {updateProps('classMest', 'Mestre Lua Príncipe Maya')}
                 else {updateProps('classMest', 'Mestre Lua')}
             }
             if(medium.sex.concat(medium.med) === 'FemininoDoutrinador') {
-                if(medium.falMiss === 1 || medium.falMiss === 2) {updateProps('classMest', 'Ninfa Sol Nityama')}
-                else if(medium.falMiss === 4) {updateProps('classMest', 'Ninfa Sol Grega')}
-                else if(medium.falMiss === 5) {updateProps('classMest', 'Ninfa Sol Maya')}
+                if(value === 1 || value === 2) {updateProps('classMest', 'Ninfa Sol Nityama')}
+                else if(value === 4) {updateProps('classMest', 'Ninfa Sol Grega')}
+                else if(value === 5) {updateProps('classMest', 'Ninfa Sol Maya')}
                 else {updateProps('classMest', 'Ninfa Sol')}
             }
             if(medium.sex.concat(medium.med) === 'FemininoApará') {
-                if(medium.falMiss === 1 || medium.falMiss === 2) {updateProps('classMest', 'Ninfa Lua Nityama')}
-                else if(medium.falMiss === 4) {updateProps('classMest', 'Ninfa Lua Grega')}
-                else if(medium.falMiss === 5) {updateProps('classMest', 'Ninfa Lua Maya')}
+                if(value === 1 || value === 2) {updateProps('classMest', 'Ninfa Lua Nityama')}
+                else if(value === 4) {updateProps('classMest', 'Ninfa Lua Grega')}
+                else if(value === 5) {updateProps('classMest', 'Ninfa Lua Maya')}
                 else {updateProps('classMest', 'Ninfa Lua')}
             }
         }
-    }, [medium.falMiss])
+    }
 
-    useEffect(() => {
-        if(medium.classMest === 'Mestre Sol' || medium.classMest === 'Mestre Luz' || medium.classMest === 'Mestre Lua') {
+    const updateClassMest = (value: string) => {
+        updateProps('classMest', value);
+        if(value === 'Mestre Sol' || value === 'Mestre Luz' || value === 'Mestre Lua') {
             updateProps('falMiss', 0);
         }
-        if((medium.classMest === 'Ninfa Sol' || medium.classMest === 'Ninfa Lua') && [1, 2, 4, 5].includes(medium.falMiss)) {
+        if((value === 'Ninfa Sol' || value === 'Ninfa Lua') && [1, 2, 4, 5].includes(medium.falMiss)) {
             updateProps('falMiss', 0);
         }
-        if(medium.classMest === 'Ninfa Sol Nityama' || medium.classMest === 'Ninfa Lua Nityama') {
+        if(value === 'Ninfa Sol Nityama' || value === 'Ninfa Lua Nityama') {
             updateProps('falMiss', 1);
         }
-        if(medium.classMest === 'Ninfa Sol Grega' || medium.classMest === 'Ninfa Lua Grega') {
+        if(value === 'Ninfa Sol Grega' || value === 'Ninfa Lua Grega') {
             updateProps('falMiss', 4);
         }
-        if(medium.classMest === 'Ninfa Sol Maya' || medium.classMest === 'Ninfa Lua Maya') {
+        if(value === 'Ninfa Sol Maya' || value === 'Ninfa Lua Maya') {
             updateProps('falMiss', 5);
         }
-        if(medium.classMest === 'Mestre Sol Mago' || medium.classMest === 'Mestre Luz Mago' || medium.classMest === 'Mestre Lua Mago') {
+        if(value === 'Mestre Sol Mago' || value === 'Mestre Luz Mago' || value === 'Mestre Lua Mago') {
             updateProps('falMiss', 6);
         }
-        if(medium.classMest === 'Mestre Sol Príncipe Maya' || medium.classMest === 'Mestre Luz Príncipe Maya' || medium.classMest === 'Mestre Lua Príncipe Maya') {
+        if(value === 'Mestre Sol Príncipe Maya' || value === 'Mestre Luz Príncipe Maya' || value === 'Mestre Lua Príncipe Maya') {
             updateProps('falMiss', 7);
         }
-    }, [medium.classMest])
+    };
 
     const imageUpdate = (event: React.ChangeEvent<HTMLInputElement>) => {
         if (event.target.files && event.target.files[0]) {
@@ -334,7 +339,7 @@ function EditMedium() {
         } else {
             updateProps('mestre', 0)
         }
-    }, [dropMes])
+    }, [dropMes, medium.sex])
 
     useEffect(() => {
         if(dropNin) {
@@ -450,8 +455,8 @@ function EditMedium() {
                 await api.post('/evento/create', newEvento, {headers:{Authorization: token}});
             }
             if (dataTransf) {
-                const oldTemplo = templos.find((item: ITemplo) => item.templo_id == oldMedium.templo);
-                const newTemplo = templos.find((item: ITemplo) => item.templo_id == newMedium.templo);
+                const oldTemplo = templos.find((item: ITemplo) => item.templo_id === oldMedium.templo);
+                const newTemplo = templos.find((item: ITemplo) => item.templo_id === newMedium.templo);
                 const newEvento = {
                     medium: newMedium.medium_id,
                     data: dataTransf,
@@ -584,7 +589,7 @@ function EditMedium() {
     }
 
     const handleEditMedium = async (newMedium: IMedium, oldMedium: IMedium, token: string) => {
-        if ((newMedium.devas && !oldMedium.devas) || (newMedium.janda && !oldMedium.janda) || (newMedium.condicao !== oldMedium.condicao && newMedium.condicao !== 'Afastado') || (newMedium.templo !== oldMedium.templo)) {
+        if ((newMedium.devas && !oldMedium.devas) || (newMedium.janda && !oldMedium.janda) || (newMedium.condicao !== oldMedium.condicao && newMedium.condicao !== 'Afastado') || (newMedium.templo !== oldMedium.templo) || (newMedium.trinoSol && newMedium.trinoSol !== oldMedium.trinoSol) || (newMedium.trinoSar && !oldMedium.trinoSar)) {
             setShowModal(true);
         } else {
             await editMedium(newMedium, oldMedium, token);
@@ -630,7 +635,7 @@ function EditMedium() {
                                 <label>Mediunidade: </label>
                                 <span>{medium.med}</span>
                                 <label>Templo: </label>
-                                <select value={medium.templo} onChange={(e) => updateProps('templo', e.target.value)}>
+                                <select value={medium.templo} onChange={(e) => updateProps('templo', Number(e.target.value))}>
                                     <option value={0}></option>
                                     {templos.map((item: ITemplo, index: number) => (
                                         <option key={index} value={item.templo_id}>{item.cidade} - {item.estado.abrev}</option>
@@ -718,7 +723,7 @@ function EditMedium() {
                         <label>Telefone 2: </label>
                         <input type="tel" maxLength={15} value={medium.telefone2} onChange={(e) => updateProps('telefone2', formatPhoneNumber(e.target.value))}/>
                         <label>E-mail: </label>
-                        <input type="text" value={medium.email} onChange={(e) => updateProps('email', e.target.value.toLowerCase())}/>
+                        <input type="email" value={medium.email} onChange={(e) => updateProps('email', e.target.value.toLowerCase())}/>
                     </GridContainer>
                 </PersonalCard>
                 <PersonalCard>
@@ -767,7 +772,7 @@ function EditMedium() {
                             ))}
                         </select>
                         <label>Classificação: </label>
-                        <select value={medium.classMest} disabled={!medium.dtElevacao} onChange={(e) => updateProps('classMest', e.target.value)}>
+                        <select value={medium.classMest} disabled={!medium.dtElevacao} onChange={(e) => updateClassMest(e.target.value)}>
                             <option value={''}></option>
                             {listClassMest.map((item: string, index: number) => (
                                 <option key={index} value={item}>{item}</option>
@@ -791,9 +796,12 @@ function EditMedium() {
                         <select
                             value={medium.falMiss}
                             onChange={(e) => {
-                                updateProps('falMiss', parseInt(e.target.value))
-                                if(parseInt(e.target.value) === 0){
+                                updateFalMiss(Number(e.target.value))
+                                if(Number(e.target.value) === 0){
                                     updateProps('regente', false);
+                                }
+                                if(Number(e.target.value) !== 8 || Number(e.target.value) !== 23) {
+                                    updateProps('janda', false);
                                 }
                             }}
                         >
@@ -1112,7 +1120,12 @@ function EditMedium() {
                                 </FieldContainerBox>
                                 <div style={{display: 'flex', gap: '10px'}}>
                                     <FieldContainerBox>
-                                        <input type="checkBox" checked={tSol} disabled={medium.classif !== 'Adjunto Koatay 108 Herdeiro Triada Harpásios Raio Adjuração Rama 2000' || medium.presidente === 'Presidente'} onChange={(e) => setTSol(e.target.checked)}/>
+                                        <input type="checkBox" checked={tSol} disabled={medium.classif !== 'Adjunto Koatay 108 Herdeiro Triada Harpásios Raio Adjuração Rama 2000' || medium.presidente === 'Presidente'} onChange={(e) => {
+                                            setTSol(e.target.checked);
+                                            if (!e.target.checked) {
+                                                updateProps('trinoSol', '');
+                                            }
+                                        }}/>
                                         <label>Trino Solitário</label>
                                     </FieldContainerBox> 
                                     <FieldContainer width="100px">
@@ -1129,7 +1142,15 @@ function EditMedium() {
                                     <Divider></Divider>
                                     <InputContainer herdeiro>
                                         <FieldContainerBox>
-                                            <input type="checkBox" checked={medium.trinoSar} onChange={(e) => updateProps('trinoSar', e.target.checked)} />
+                                            <input type="checkBox" checked={medium.trinoSar} onChange={(e) => {
+                                                updateProps('trinoSar', e.target.checked)
+                                                if(!e.target.checked) {
+                                                    updateProps('herdeiro', 0);
+                                                    updateProps('filho', false);
+                                                    setDropMes(defaultMedium);
+                                                    setSearchMes('');
+                                                }
+                                            }} />
                                             <label>Trino Sardyos</label>
                                         </FieldContainerBox>
                                         <div style={{display: 'flex', gap: '10px', width: '100%'}}>
@@ -1175,7 +1196,15 @@ function EditMedium() {
                             <Divider></Divider>
                             <InputContainer herdeiro> 
                                 <FieldContainerBox>
-                                    <input type="checkBox" checked={medium.trinoSar} onChange={(e) => updateProps('trinoSar', e.target.checked)} />
+                                    <input type="checkBox" checked={medium.trinoSar} onChange={(e) => {
+                                        updateProps('trinoSar', e.target.checked)
+                                        if(!e.target.checked) {
+                                            updateProps('herdeiro', 0);
+                                            updateProps('filho', false);
+                                            setDropMes(defaultMedium);
+                                            setSearchMes('');
+                                        }
+                                    }} />
                                     <label>Trino Sardyos</label>
                                 </FieldContainerBox>
                                 <div style={{display: 'flex', gap: '10px', width: '100%'}}>

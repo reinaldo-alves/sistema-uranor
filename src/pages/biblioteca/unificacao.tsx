@@ -38,6 +38,7 @@ import Sud from "src/assets/pdf/Unificacao-Sudalio.pdf";
 import Tes from "src/assets/pdf/Unificacao-TesteMediunico.pdf";
 import Tri from "src/assets/pdf/Unificacao-Triagem.pdf";
 import Tro from "src/assets/pdf/Unificacao-Tronos.pdf";
+import { useEffect } from "react";
 
 function Unificacao() {
     
@@ -83,6 +84,10 @@ function Unificacao() {
         {title: 'Página Inicial', click: '/'},
         {title: 'Voltar para Biblioteca', click: '/biblioteca'},
     ]
+
+    useEffect(() => {
+        window.scrollTo({top: 0});
+    }, [])
     
     return (
         <>

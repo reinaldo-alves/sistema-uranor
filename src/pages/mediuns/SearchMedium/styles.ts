@@ -18,6 +18,10 @@ export const SearchCard = styled.div`
         flex-direction: column;
         align-items: center;
     }
+
+    @media (max-width: 720px) {
+        margin-top: 0;
+    }
 `;
 
 export const InputContainer = styled.div`
@@ -79,6 +83,10 @@ export const ResultsCard = styled.div`
         flex-direction: column;
         align-items: center;
     }
+
+    @media (max-width: 786px) {
+        min-height: 606px;
+    }
 `;
 
 export const TableContainer = styled.div`
@@ -86,6 +94,10 @@ export const TableContainer = styled.div`
     overflow-y: auto;
     max-height: calc(100vh - 390px);
     min-height: 400px;
+
+    @media (max-width: 786px) {
+        min-height: 150px;
+    }
 `;
 
 export const ResultsTable = styled.div`

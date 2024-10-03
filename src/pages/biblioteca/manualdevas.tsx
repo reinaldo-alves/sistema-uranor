@@ -17,6 +17,7 @@ import Rec from "src/assets/pdf/MANUALDEVAS-RECLASSIFICACAO.pdf";
 import Ree from "src/assets/pdf/MANUALDEVAS-RECLASSIFICACAOESPECIAL.pdf";
 import Rea from "src/assets/pdf/MANUALDEVAS-RECONSAGRACAOADJUNTOS.pdf";
 import Pma from "src/assets/pdf/MANUALDEVAS-1DEMAIO.pdf";
+import { useEffect } from "react";
 
 function ManualDevas() {
     
@@ -41,6 +42,10 @@ function ManualDevas() {
         {title: 'Página Inicial', click: '/'},
         {title: 'Voltar para Biblioteca', click: '/biblioteca'},
     ]
+
+    useEffect(() => {
+        window.scrollTo({top: 0});
+    }, [])
     
     return (
         <>

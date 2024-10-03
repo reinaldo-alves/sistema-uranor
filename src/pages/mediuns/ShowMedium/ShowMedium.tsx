@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import { useCallback, useContext, useEffect, useState } from "react";
 import Header from "src/components/header/header";
 import { Divider, FrequenciaData, GridContainer, InfoContainer, InputContainer, MainInfoContainer, MediumButton, MediumInfo, MediumMainInfo, MediumText, ModalMediumContent, NameAndId, PersonalCard, PhotoContainer, SectionTitle } from "./styles";
 import SubMenu from "src/components/SubMenu/SubMenu";
@@ -33,15 +33,16 @@ function ShowMedium() {
     const { ministros, cavaleiros, guias, adjuntos, templos, falMiss, getData, turnoL, turnoT, searchMediumInCons, allFrequencia, loadDesenvolvimento } = useContext(ListContext);
     const params = useParams();
     const navigate = useNavigate();
+
+    const now = new Date();
+    const nowString = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
     
-    const getInfo = async () => {
+    const getInfo = useCallback(async () => {
         await getUser(token);
         await loadMedium(token);
         await getData(token);
-        if(mediuns) {
-            setLoading(false);
-        }
-    }
+        setLoading(false);
+    }, [getUser, loadMedium, getData, token]);
     
     const navigateToTop = (route: string) => {
         setLoading(true)
@@ -49,12 +50,15 @@ function ShowMedium() {
         getInfo();
         window.scrollTo({top: 0});
     };
-    
+     
     useEffect(() => {
         getInfo();
+    }, [getInfo])
+
+    useEffect(() => {
         window.scrollTo({top: 0});
     }, [])
-
+    
     useEffect(() => {
         const foundMedium = mediuns.find((item: IMedium) => item.medium_id === Number(params.id));
         setMedium(foundMedium);
@@ -242,7 +246,7 @@ function ShowMedium() {
                         <PersonalCard>
                             <SectionTitle>Dados Mediúnicos</SectionTitle>
                             <InfoContainer>
-                                <MediumInfo>Adjunto de Origem: <span>{medium.adjOrigem ? ministros.filter((item: IMentor) => item.id === adjuntos.filter((ad: IAdjunto) => ad.adjunto_id === medium.adjOrigem)[0].ministro)[0]? ministros.filter((item: IMentor) => item.id === adjuntos.filter((ad: IAdjunto) => ad.adjunto_id === medium.adjOrigem)[0].ministro)[0].nome : '' : ''} {medium.adjOrigem ? '- Mestre' : ''} {adjuntos.filter((item: IAdjunto) => item.adjunto_id === medium.adjOrigem)[0]? adjuntos.filter((item: IAdjunto) => item.adjunto_id === medium.adjOrigem)[0].nome : ''}</span></MediumInfo>
+                                <MediumInfo>Adjunto de Origem: <span>{medium.adjOrigem ? ministros.filter((item: IMentor) => item.id === adjuntos.filter((ad: IAdjunto) => ad.adjunto_id === medium.adjOrigem)[0]?.ministro)[0]? ministros.filter((item: IMentor) => item.id === adjuntos.filter((ad: IAdjunto) => ad.adjunto_id === medium.adjOrigem)[0]?.ministro)[0].nome : '' : ''} {medium.adjOrigem ? '- Mestre' : ''} {adjuntos.filter((item: IAdjunto) => item.adjunto_id === medium.adjOrigem)[0]? adjuntos.filter((item: IAdjunto) => item.adjunto_id === medium.adjOrigem)[0].nome : ''}</span></MediumInfo>
                                 <MediumInfo>Templo de Origem: <span>{medium.temploOrigem ? `${templos.find((item: ITemplo) => item.templo_id === medium.temploOrigem)?.cidade} - ${templos.find((item: ITemplo) => item.templo_id === medium.temploOrigem)?.estado.abrev}` : ''}</span></MediumInfo>
                                 <MediumInfo>Colete nº: <span>{medium.colete ? medium.colete : ''}</span></MediumInfo>
                                 <MediumInfo>Classificação: <span>{medium.classMest}</span></MediumInfo>
@@ -368,7 +372,7 @@ function ShowMedium() {
                     <ModalTitle>Mudança de Mediunidade</ModalTitle>
                     <InputContainer>
                         <label>{medium.oldDtTest ? 'Data da mudança de mediunidade' : `Data do teste como ${medium.med === 'Doutrinador' ? 'Apará' : medium.med === 'Apará' ? 'Doutrinador' : ''}`}</label>
-                        <input type="date" value={testDate} onKeyUp={(e) => handleEnterPress(e, async () => await handleChangeMed(testDate))} onChange={(e) => setTestDate(e.target.value)} />
+                        <input type="date" value={testDate} max={nowString} onKeyUp={(e) => handleEnterPress(e, async () => await handleChangeMed(testDate))} onChange={(e) => setTestDate(e.target.value)} />
                     </InputContainer>
                     <div style={{display: 'flex', gap: '20px'}}>
                         <ModalButton color="red" onClick={closeModal}>Cancelar</ModalButton>
