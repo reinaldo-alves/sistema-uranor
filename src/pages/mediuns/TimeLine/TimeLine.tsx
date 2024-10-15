@@ -1,5 +1,5 @@
 import Header from "src/components/header/header";
-import { ButtonContainer, EditObs, InputContainer, MediumButton, Results, ResultsCard, ResultsDetails, ResultsTable, ResultsTitle, YearTitle } from "./styles";
+import { ButtonContainer, EditObs, InputContainer, Results, ResultsCard, ResultsDetails, ResultsTable, ResultsTitle, YearTitle } from "./styles";
 import SubMenu from "src/components/SubMenu/SubMenu";
 import SideMenu from "src/components/SideMenu/SideMenu";
 import { useNavigate, useParams } from "react-router-dom";
@@ -16,6 +16,7 @@ import { Modal, ModalButton, ModalContent, ModalTitle } from "src/components/Mod
 import api from "src/api";
 import { Alert, Confirm } from "src/utilities/popups";
 import MainContainer from "src/components/MainContainer/MainContainer";
+import { NavigateButton } from "src/components/buttons/buttons";
 
 function TimeLine() {
     const [medium, setMedium] = useState(defaultMedium);
@@ -215,8 +216,8 @@ function TimeLine() {
             <SubMenu list={listSubMenu}/>
             <MainContainer title='Linha do Tempo' subtitle={`${medium.nome} - ID ${medium.medium_id.toString().padStart(5, '0')}`}>
                 <ButtonContainer>
-                    <MediumButton onClick={() => navigate(`/mediuns/consulta/${params.id}`)}>{'< Voltar'}</MediumButton>
-                    <MediumButton onClick={() => modalAddEvento()}>Adicionar Evento</MediumButton>
+                    <NavigateButton width="200px" height="45px" onClick={() => navigate(`/mediuns/consulta/${params.id}`)}>{'< Voltar'}</NavigateButton>
+                    <NavigateButton width="200px" height="45px" onClick={() => modalAddEvento()}>Adicionar Evento</NavigateButton>
                 </ButtonContainer>
                 <EditObs>Clique sobre um evento para editar ou adicionar observações</EditObs>
                 {arrayCards}

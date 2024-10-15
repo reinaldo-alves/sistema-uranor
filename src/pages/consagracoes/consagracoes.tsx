@@ -1,6 +1,6 @@
 import SubMenu from "src/components/SubMenu/SubMenu";
 import Header from "../../components/header/header";
-import { ButtonContainer, ConsagracaoCard, ConsagracaoHeader, ConsagracaoTitle, MudancaObs, NavigateButton, ResultsPanel, ResultsData, ResultsTable, ResultsTitle } from "./styles";
+import { ButtonContainer, ConsagracaoCard, ConsagracaoHeader, ConsagracaoTitle, MudancaObs, ResultsPanel, ResultsData, ResultsTable, ResultsTitle } from "./styles";
 import SideMenu from "src/components/SideMenu/SideMenu";
 import { useNavigate } from "react-router-dom";
 import { useCallback, useContext, useEffect, useState } from "react";
@@ -11,6 +11,7 @@ import { UserContext } from "src/contexts/UserContext";
 import { generateReportAllCons } from "src/utilities/createDocs";
 import MainContainer from "src/components/MainContainer/MainContainer";
 import Loading from "src/utilities/Loading";
+import { NavigateButton } from "src/components/buttons/buttons";
 
 function Consagracoes() {
     const { listIniciacao, listElevacao, listCenturia, listMudanca, loadConsagracao } = useContext(ListContext);

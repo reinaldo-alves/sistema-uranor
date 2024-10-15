@@ -1,4 +1,4 @@
-import { IAdjunto, IMedium, ITurno } from "src/types/types";
+import { IMedium, IMenor, ITurno } from "src/types/types";
 import { Alert } from "./popups";
 import { oppositeTurno } from "./functions";
 
@@ -117,7 +117,45 @@ export const validateAspirante = (medium: IMedium, date: string, action: () => v
 
 }
 
-export const validateEmissao = (medium: IMedium, mediuns: Array<IMedium>, adjuntos: Array<IAdjunto>, turnoL: ITurno, turnoT: ITurno, action: () => void) => {
+export const validateMenor = (menor: IMenor, action: () => void) => {
+    if (!menor.nome) {
+        Alert('Insira o nome do médium menor', 'error');
+        return;
+    }
+    if (!menor.sex) {
+        Alert('Selecione o sexo', 'error');
+        return;
+    }
+    if (!menor.templo) {
+        Alert('Selecione o templo do médium', 'error');
+        return;
+    }
+    if (!menor.dtNasc) {
+        Alert('Insira a data de nascimento do médium', 'error');
+        return;
+    }
+    if (!menor.mae) {
+        Alert('Insira o nome da mãe do médium', 'error');
+        return;
+    }
+    if (!menor.responsavel) {
+        Alert('Insira o nome do responsável pelo médium menor', 'error');
+        return;
+    }
+    if (!menor.responsavel) {
+        Alert('Insira o nome do responsável pelo médium menor', 'error');
+        return;
+    }
+    if (!menor.parentesco) {
+        Alert('Insira o parentesco do responsável pelo médium menor', 'error');
+        return;
+    }
+   
+    action()
+
+}
+
+export const validateEmissao = (medium: IMedium, mediuns: Array<IMedium>, turnoL: ITurno, turnoT: ITurno, action: () => void) => {
     if (!medium.adjOrigem) {
         Alert('Selecione um adjunto de origem', 'error');
         return;
@@ -227,3 +265,14 @@ export const validateEmissao = (medium: IMedium, mediuns: Array<IMedium>, adjunt
     action();
 }
 
+export const validateEmissaoMenor = (menor: IMenor, action: () => void) => {
+    if (!menor.nomeEmissao) {
+        Alert('Informe o nome que o médium usa na emissão', 'error');
+        return;
+    }
+    if (menor.falMiss && !menor.adjDevas) {
+        Alert('Selecione um Adjunto Devas', 'error');
+        return
+    }
+    action();
+}

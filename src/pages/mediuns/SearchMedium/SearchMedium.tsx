@@ -1,5 +1,5 @@
 import { useState, useContext, useEffect } from "react";
-import { ButtonContainer, InfoCard, InfoContainer, InfoContent, InputContainer, MediumButton, MediumInfo, MediumName, MediumPhoto, MessageNull, Results, ResultsCard, ResultsDetails, ResultsTable, ResultsTitle, SearchCard, TableContainer, TextContainer } from "./styles";
+import { ButtonContainer, InfoCard, InfoContainer, InfoContent, InputContainer, MediumInfo, MediumName, MediumPhoto, MessageNull, Results, ResultsCard, ResultsDetails, ResultsTable, ResultsTitle, SearchCard, TableContainer, TextContainer } from "./styles";
 import { ListContext } from "src/contexts/ListContext";
 import { useNavigate } from "react-router-dom";
 import { MediumContext } from "src/contexts/MediumContext";
@@ -11,6 +11,7 @@ import { UserContext } from "src/contexts/UserContext";
 import { removeDiacritics, setSituation, showTemplo } from "src/utilities/functions";
 import Loading from "src/utilities/Loading";
 import MainContainer from "src/components/MainContainer/MainContainer";
+import { NavigateButton } from "src/components/buttons/buttons";
 
 function SearchMedium() {
     
@@ -119,8 +120,8 @@ function SearchMedium() {
                                         <MediumPhoto image={selected.foto}>{selected.foto? '' : 'SEM FOTO'}</MediumPhoto>
                                         <ButtonContainer>
                                             <MediumInfo>ID: <span>{selected.medium_id.toString().padStart(5, '0')}</span></MediumInfo>
-                                            <MediumButton onClick={() => navigate(`/mediuns/consulta/${selected.medium_id}`)}>Exibir</MediumButton>
-                                            <MediumButton onClick={() => navigate(`/mediuns/editar/${selected.medium_id}`)}>Editar</MediumButton>
+                                            <NavigateButton width="100px" height="30px" style={{margin: "15px 0"}} onClick={() => navigate(`/mediuns/consulta/${selected.medium_id}`)}>Exibir</NavigateButton>
+                                            <NavigateButton width="100px" height="30px" style={{margin: "15px 0"}} onClick={() => navigate(`/mediuns/editar/${selected.medium_id}`)}>Editar</NavigateButton>
                                         </ButtonContainer>
                                     </InfoContainer>
                                     <TextContainer>

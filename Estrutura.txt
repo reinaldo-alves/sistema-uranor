@@ -1,6 +1,3 @@
-MÉDIUM
-- Médium menor
-
 CURSOS
 - Cadastro de cursos (iniciação, elevação, centúria, sétimo)
 - Cadastro de instrutores
@@ -9,10 +6,6 @@ CURSOS
 RELATÓRIOS
 - Relatório médium menor
 
-DOCUMENTOS ÚTEIS
-- Escala dos Devas
-
 OUTROS
 - Emissão de crachá
 - Histórico de Atualizações
-

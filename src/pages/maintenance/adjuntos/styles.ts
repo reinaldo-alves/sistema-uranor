@@ -65,30 +65,6 @@ export const InputContainer = styled.div<{box?: boolean}>`
     }
 `;
 
-export const SearchButton = styled.button`
-    font-weight: bold;
-    border: solid 1px ${(props) => {return props.theme.color.darkerColor}};
-    border-radius: 8px;
-    width: 100%;
-    background-color: green;
-    color: ${(props) => {return props.theme.color.lighterColor}};
-    text-align: center;
-    height: 35px;
-    font-size: 20px;
-    align-self: flex-end;
-
-    :hover {
-        cursor: pointer;
-        transform: scale(1.02);
-    }
-
-    :active {
-        color: white;
-        background-color: ${(props) => {return props.theme.color.darkerColor}};
-        border: solid ${(props) => {return props.theme.color.lighterColor}};
-    }
-`;
-
 export const ResultsCard = styled.div`
     width: 90%;
     max-width: 1400px;

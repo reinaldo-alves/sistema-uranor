@@ -243,27 +243,3 @@ export const ButtonContainer = styled.div`
     justify-content: space-around;
     align-items: center;
 `;
-
-export const MediumButton = styled.button`
-    font-weight: bold;
-    border: solid 1px ${(props) => {return props.theme.color.darkerColor}};
-    border-radius: 8px;
-    margin: 15px 0;
-    width: 100px;
-    background-color: green;
-    color: ${(props) => {return props.theme.color.lighterColor}};
-    text-align: center;
-    height: 30px;
-    font-size: 20px;
-
-    :hover {
-        cursor: pointer;
-        transform: scale(1.05);
-    }
-
-    :active {
-        color: white;
-        background-color: ${(props) => {return props.theme.color.darkerColor}};
-        border: solid ${(props) => {return props.theme.color.lighterColor}};
-    }
-`;

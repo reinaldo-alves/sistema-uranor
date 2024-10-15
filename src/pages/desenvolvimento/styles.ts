@@ -14,44 +14,6 @@ export const DesenvCard = styled.div`
     margin-bottom: 30px;
 `;
 
-export const NavigateButton = styled.button<{width?: string, color?: string}>`
-    font-weight: bold;
-    border: solid 1px ${(props) => {return props.theme.color.darkerColor}};
-    border-radius: 8px;
-    width: ${({width}) => width? width : '180px'};
-    background-color: ${({color}) => color? color : 'green'};
-    color: ${(props) => {return props.theme.color.lighterColor}};
-    text-align: center;
-    height: 35px;
-    font-size: 20px;
-
-    :hover {
-        cursor: pointer;
-        transform: scale(1.02);
-    }
-
-    :active {
-        color: white;
-        background-color: ${(props) => {return props.theme.color.darkerColor}};
-        border: solid ${(props) => {return props.theme.color.lighterColor}};
-    }
-
-    :disabled {
-        border-color: gray;
-        background-color: gray;
-
-        :hover {
-            cursor: not-allowed;
-            transform: scale(1);
-        }
-
-        :active {
-            border-color: gray;
-            background-color: gray;
-        }
-    }
-`;
-
 export const ResultsTable = styled.div`
     width: 100%;
     overflow-y: auto;
@@ -436,29 +398,5 @@ export const Observations = styled.textarea`
 
     @media (max-width: 500px) {
         height: 200px;
-    }
-`;
-
-export const MediumButton = styled.button<{color: string}>`
-    font-weight: bold;
-    border: solid 1px ${(props) => {return props.theme.color.darkerColor}};
-    border-radius: 8px;
-    margin-top: 30px;
-    width: 150px;
-    background-color: ${({color}) => {return color}};
-    color: ${(props) => {return props.theme.color.lighterColor}};
-    text-align: center;
-    height: 45px;
-    font-size: 20px;
-
-    :hover {
-        cursor: pointer;
-        transform: scale(1.05);
-    }
-
-    :active {
-        color: white;
-        background-color: ${(props) => {return props.theme.color.darkerColor}};
-        border: solid ${(props) => {return props.theme.color.lighterColor}};
     }
 `;

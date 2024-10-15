@@ -1,5 +1,5 @@
 import api from "src/api";
-import { ICavaleiro, IConsagracao, IEvento, IFrequencia, IMedium, IMentor, ITemplo, ITurno } from "src/types/types";
+import { ICavaleiro, IConsagracao, IEvento, IFrequencia, IMedium, IMenor, IMentor, ITemplo, ITurno } from "src/types/types";
 import { IEventoAPI } from "src/types/typesAPI";
 import { eventTypes } from "./default";
 
@@ -268,7 +268,7 @@ export function handleCapsLock(state: React.Dispatch<React.SetStateAction<boolea
 }
 
 //Exibe o nome do templo do médium, no formato Cidade - UF
-export function showTemplo(medium: IMedium, templos: Array<ITemplo>) {
+export function showTemplo(medium: IMedium | IMenor, templos: Array<ITemplo>) {
     const cidade = templos.find((item: ITemplo) => item.templo_id === medium.templo)?.cidade;
     const uf = templos.find((item: ITemplo) => item.templo_id === medium.templo)?.estado.abrev;
     return `${cidade} - ${uf}`

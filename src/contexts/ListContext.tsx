@@ -1,7 +1,7 @@
 import { createContext, useCallback, useMemo, useState } from "react";
 import api from "src/api";
-import { IAdjunto, ICalendario, ICavaleiro, IConsagracao, IDesenvolvimento, IEstado, IEvento, IFalange, IMentor, ITemplo, ITurno } from "src/types/types";
-import { IAdjuntoAPI, ICavaleiroAPI, IConsagracaoAPI, IEventoAPI, IFalangeAPI, IGuiaAPI, IMediumAPI, IMinistroAPI, ITemploAPI } from "src/types/typesAPI";
+import { IAdjunto, ICalendario, ICavaleiro, IConsagracao, IDesenvolvimento, IEstado, IEvento, IFalange, IMenor, IMentor, ITemplo, ITurno } from "src/types/types";
+import { IAdjuntoAPI, ICavaleiroAPI, IConsagracaoAPI, IEventoAPI, IFalangeAPI, IGuiaAPI, IMediumAPI, IMenorAPI, IMinistroAPI, ITemploAPI } from "src/types/typesAPI";
 import { defaultConsagracao } from "src/utilities/default";
 
 export const ListContext = createContext({} as any);
@@ -14,6 +14,7 @@ export const ListStore = ({ children }: any) => {
     const [adjuntos, setAdjuntos] = useState([] as Array<IAdjunto>);
     const [templos, setTemplos] = useState([] as Array<ITemplo>);
     const [eventos, setEventos] = useState([] as Array<IEvento>);
+    const [menores, setMenores] = useState([] as Array<IMenor>);
     const [listIniciacao, setListIniciacao] = useState([] as Array<IConsagracao>);
     const [listElevacao, setListElevacao] = useState([] as Array<IConsagracao>);
     const [listCenturia, setListCenturia] = useState([] as Array<IConsagracao>);
@@ -253,6 +254,80 @@ export const ListStore = ({ children }: any) => {
         }
     }, []);
 
+    const loadMenor = useCallback(async (token: string) => {
+        try {
+            const { data } = await api.get('/menor/get-menor', {headers:{Authorization: token}})
+            const menor = data.menor.map((item: IMenorAPI) => ({
+                ...item,
+                condicao: item.condicao === null ? '' : item.condicao,
+                dtNasc: item.dtNasc === null ? '' : item.dtNasc.toString().split('T')[0],
+                rg: item.rg === null ? '' : item.rg,
+                cpf: item.cpf === null ? '' : item.cpf,
+                pai: item.pai === null ? '' : item.pai,
+                natur: item.natur === null ? '' : item.natur,
+                naturUF: item.naturUF === null ? '' : item.naturUF,
+                profissao: item.profissao === null ? '' : item.profissao,
+                estCivil: item.estCivil === null ? '' : item.estCivil,
+                conjuge: item.conjuge === null ? '' : item.conjuge,
+                cep: item.cep === null ? '' : item.cep,
+                endereco: item.endereco === null ? '' : item.endereco,
+                endNumero: item.endNumero === null ? '' : item.endNumero,
+                endCompl: item.endCompl === null ? '' : item.endCompl,
+                endBairro: item.endBairro === null ? '' : item.endBairro,
+                endCidade: item.endCidade === null ? '' : item.endCidade,
+                endUF: item.endUF === null ? '' : item.endUF,
+                telefone1: item.telefone1 === null ? '' : item.telefone1,
+                telefone2: item.telefone2 === null ? '' : item.telefone2,
+                email: item.email === null ? '' : item.email,
+                temploOrigem: item.temploOrigem === null ? '' : item.temploOrigem,
+                falMiss: item.falMiss === null ? '' : item.falMiss,
+                adjDevas: item.adjDevas === null ? '' : item.adjDevas,
+                nomeEmissao: item.nomeEmissao === null ? '' : item.nomeEmissao,
+                observ: item.observ === null ? '' : item.observ,
+                responsavel: item.responsavel === null ? '' : item.responsavel,
+                parentesco: item.parentesco === null ? '' : item.parentesco,
+                contatoResp: item.contatoResp === null ? '' : item.contatoResp
+            }))
+            setMenores(menor)
+        } catch (error) {
+            console.log('Erro ao carregar a lista de médiuns menores', error);
+        }
+    }, [])
+
+    const convertMenorToSend = (menor: IMenor) => {
+        const menorObj = {
+            ...menor,
+            dtNasc: menor.dtNasc === '' ? null : menor.dtNasc,
+            rg: menor.rg === '' ? null : menor.rg,
+            cpf: menor.cpf === '' ? null : menor.cpf,
+            pai: menor.pai === '' ? null : menor.pai,
+            natur: menor.natur === '' ? null : menor.natur,
+            naturUF: menor.naturUF === '' ? null : menor.naturUF,
+            profissao: menor.profissao === '' ? null : menor.profissao,
+            estCivil: menor.estCivil === '' ? null : menor.estCivil,
+            conjuge: menor.conjuge === '' ? null : menor.conjuge,
+            cep: menor.cep === '' ? null : menor.cep,
+            endereco: menor.endereco === '' ? null : menor.endereco,
+            endNumero: menor.endNumero === '' ? null : menor.endNumero,
+            endCompl: menor.endCompl === '' ? null : menor.endCompl,
+            endBairro: menor.endBairro === '' ? null : menor.endBairro,
+            endCidade: menor.endCidade === '' ? null : menor.endCidade,
+            endUF: menor.endUF === '' ? null : menor.endUF,
+            telefone1: menor.telefone1 === '' ? null : menor.telefone1,
+            telefone2: menor.telefone2 === '' ? null : menor.telefone2,
+            email: menor.email === '' ? null : menor.email,
+            temploOrigem: menor.temploOrigem === 0 ? null : menor.temploOrigem,
+            falMiss: menor.falMiss === 0 ? null : menor.falMiss,
+            adjDevas: menor.adjDevas === '' ? null : menor.adjDevas,
+            nomeEmissao: menor.nomeEmissao === '' ? null : menor.nomeEmissao,
+            observ: menor.observ === '' ? null : menor.observ,
+            responsavel: menor.responsavel === '' ? null : menor.responsavel,
+            parentesco: menor.parentesco === '' ? null : menor.parentesco,
+            contatoResp: menor.contatoResp === '' ? null : menor.contatoResp
+        };
+        return menorObj
+    }
+
     const getData = useCallback(async (token: string) => {
         await loadMinistro(token);
         await loadGuia(token);
@@ -264,10 +339,11 @@ export const ListStore = ({ children }: any) => {
         await loadConsagracao(token);
         await loadCalendario(token);
         await loadDesenvolvimento(token);
-    }, [loadTemplo, loadCalendario, loadDesenvolvimento, loadConsagracao]);
+        await loadMenor(token);
+    }, [loadTemplo, loadCalendario, loadDesenvolvimento, loadConsagracao, loadMenor]);
 
     return (
-        <ListContext.Provider value={{templos, estados, adjuntos, coletes, classMest, falMest, falMiss, povos, turnoL, turnoT, ministros, cavaleiros, guias, estrelas, princesas, classificacao, listIniciacao, listElevacao, listCenturia, listMudanca, calendario, allFrequencia, eventos, searchMediumInCons, getData, loadMinistro, loadCavaleiro, loadGuia, loadFalMiss, loadAdjunto, loadTemplo, loadEvento, loadConsagracao, loadCalendario, loadDesenvolvimento}} >
+        <ListContext.Provider value={{templos, estados, adjuntos, coletes, classMest, falMest, falMiss, povos, turnoL, turnoT, ministros, cavaleiros, guias, estrelas, princesas, classificacao, listIniciacao, listElevacao, listCenturia, listMudanca, calendario, allFrequencia, eventos, menores, searchMediumInCons, getData, loadMinistro, loadCavaleiro, loadGuia, loadFalMiss, loadAdjunto, loadTemplo, loadEvento, loadConsagracao, loadCalendario, loadDesenvolvimento, loadMenor, convertMenorToSend}} >
             { children }
         </ListContext.Provider>
     )

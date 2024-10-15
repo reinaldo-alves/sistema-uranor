@@ -76,24 +76,3 @@ export const UserContainer = styled.div`
 export const HeaderButtonContainer = styled.div`
     margin-top: 5px;
 `;
-
-export const HeaderButton = styled.button`
-    font-size: 12px;
-    font-weight: bold;
-    padding: 2px 6px;
-    color: ${(props) => {return props.theme.color.lighterColor}};
-    border: solid 2px ${(props) => {return props.theme.color.lighterColor}};
-    background-color: transparent;
-    margin-left: 10px;
-    border-radius: 8px;
-
-    :hover {
-        cursor: pointer;
-        transform: scale(1.05);
-    }
-
-    :active {
-        background-color: red;
-    }
-`;
-

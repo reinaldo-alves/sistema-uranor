@@ -459,7 +459,7 @@ export const MediumStore = ({ children }: any) => {
         }
     }
 
-    const uploadImage = async (medium_id: number,token: string, photo: File | null) => {
+    const uploadImage = async (medium_id: number, med: string, token: string, photo: File | null) => {
         if(photo){
             const formData = new FormData();
             formData.append('image', photo);
@@ -470,7 +470,7 @@ export const MediumStore = ({ children }: any) => {
                 }
             }
             try {
-                const { data } = await api.post(`/medium/upload-image?medium_id=${medium_id}`, formData, headers)
+                const { data } = await api.post(`/medium/upload-image?medium_id=${medium_id}&med=${med}`, formData, headers)
                 console.log(`Foto ${data.filename} adicionada ao banco de dados`);
             } catch (error) {
                 console.log('Erro ao fazer upload da imagem', error);

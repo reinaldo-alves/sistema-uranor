@@ -1,4 +1,4 @@
-import { IAdjunto, ICavaleiro, IFalange, IMedium, IMentor, ITemplo } from "src/types/types";
+import { IAdjunto, ICavaleiro, IFalange, IMedium, IMenor, IMentor, ITemplo } from "src/types/types";
 
 export const emissaoText = (medium: IMedium, mediuns: Array<IMedium>, ministros: Array<IMentor>, cavaleiros: Array<ICavaleiro>, guias: Array<IMentor>, adjuntos: Array<IAdjunto>, templos: Array<ITemplo>, falMiss: Array<IFalange>) => {
     
@@ -232,6 +232,68 @@ export const emissaoText = (medium: IMedium, mediuns: Array<IMedium>, ministros:
     } else if (medium.falMiss === 6) {
         return magoMenor    
     } else if (medium.falMiss === 7) {
+        return principeMenor
+    } else {
+        return ''
+    }
+}
+
+export const emissaoMenorText = (menor: IMenor, ministros: Array<IMentor>, adjuntos: Array<IAdjunto>, templos: Array<ITemplo>, falMiss: Array<IFalange>) => {
+    
+    //INFORMAÇÕES PARA TODOS OS MÉDIUNS
+
+    //Armazena o nome da falange missionária
+    const falMissNome = falMiss.find((item: IFalange) => item.falange_id === menor.falMiss)?.nome;
+    
+    //Armazena o nome do Adjunto Devas, Barros ou Fróes
+    const adjDevasNome = menor.adjDevas === 'Alufã' ? 'BARROS' : menor.adjDevas === 'Adejã' ? 'FRÓES' : '';
+
+    //Armazena o objeto adjunto correspondente ao presidente do templo atual que o médium faz parte
+    const presidente = adjuntos.find((item: IAdjunto) => item.adjunto_id === templos.find((item: ITemplo) => item.templo_id === menor.templo)?.presidente)
+
+    //Armazena o nome do ministro do adjunto de origem
+    const adjOrigemMin = ministros.find((min: IMentor) => min.id === presidente?.ministro)?.nome;
+
+    //Armazena o nome do adjunto de origem
+    const adjOrigemNome = presidente?.nome;
+    
+    // INFORMAÇÕES PARA TODAS AS NINFAS 
+
+    //Retorna o termo da emissão correspondente à falange, após o povo
+    const termoFalangeNinfa = menor.falMiss ? `${falMissNome} MISSIONÁRIA DO ADJUNTO ${menor.adjDevas} KOATAY 108 MESTRE ${adjDevasNome}. ` : '';
+    
+    //Se a ninfa for Nityama Madruxa, retorna 'Nityama', caso contrário, retorna o nome da falange 
+    const falMissNomeP = menor.falMiss === 2? 'Nityama' : menor.falMiss === 12? 'Ariana' : falMiss.find((item: IFalange) => item.falange_id === menor.falMiss)?.nome;
+
+    //Armazena nome da primeira da falange
+    const falMissPrimeira = falMiss.find((item: IFalange) => item.falange_id === menor.falMiss)?.primeira;
+    
+    //Armazena a classificação do adjunto de apoio da falange
+    const falMissAdjMin = falMiss.find((item: IFalange) => item.falange_id === menor.falMiss)?.adjMin;
+    
+    //Armazena o nome do adjunto de apoio da falange
+    const falMissAdjNome = falMiss.find((item: IFalange) => item.falange_id === menor.falMiss)?.adjNome;
+    
+    //Retorna o termo da primeira da falange
+    const termoPrimeira = menor.falMiss? `NA ORDEM DA 1ª ${falMissNomeP} ${falMissPrimeira}${falMissAdjMin ? `, NA REGÊNCIA DO ${falMissAdjMin} KOATAY 108 MESTRE ${falMissAdjNome}. ` : '. '}` : '';
+
+    //EMISSÕES
+
+    //Emissão da ninfa não centuriã de falange missionária
+    const ninfaMenor = `EU, NINFA SOL DA FALANGE DE SUBLIMAÇÃO, ${termoFalangeNinfa} NO ADJUNTO ${adjOrigemMin} KOATAY 108 MESTRE ${adjOrigemNome}. ${termoPrimeira}EU, ${menor.nomeEmissao}, PARTO COM – 0 – // EM CRISTO JESUS.`
+
+    //Emissão do mago não elevado
+    const magoMenor = `EU, MAGO MISSIONÁRIO DO ADJUNTO ${menor.adjDevas} KOATAY 108 MESTRE ${adjDevasNome}, NO ADJUNTO ${adjOrigemMin} KOATAY 108 MESTRE ${adjOrigemNome}. EU, MESTRE ${menor.nomeEmissao}, PARTO COM – 0 – // EM CRISTO JESUS.`;
+
+    //Emissão do príncipe maya não elevado
+    const principeMenor = `EU, PRÍNCIPE MAYA DESTE AMANHECER, DO ADJUNTO ${menor.adjDevas} KOATAY 108 MESTRE ${adjDevasNome}, NA REGÊNCIA DO MINISTRO YURICY, NO ADJUNTO ${adjOrigemMin} KOATAY 108 MESTRE ${adjOrigemNome}. AFILHADO DE KOATAY 108 MINHA MÃE CLARIVIDENTE EM CRISTO JESUS. EU, ${menor.nomeEmissao}, PARTO COM – 0 – // EM CRISTO JESUS.`;
+
+    //Validações para escolher o tipo de emissão a ser usada
+    if (menor.falMiss === 1 || menor.falMiss === 2 || menor.falMiss === 4 || menor.falMiss === 5) {
+        return ninfaMenor
+    } else if (menor.falMiss === 6) {
+        return magoMenor    
+    } else if (menor.falMiss === 7) {
         return principeMenor
     } else {
         return ''

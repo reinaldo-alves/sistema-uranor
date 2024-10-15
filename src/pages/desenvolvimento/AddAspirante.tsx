@@ -1,6 +1,6 @@
 import { useContext, useState, useEffect } from "react";
 import { ListContext } from "src/contexts/ListContext";
-import { FieldContainer, GridContainer, MainContent, MainInfoContainer, MediumButton, Observations, PersonalCard, PhotoContainer, SectionTitle } from "./styles";
+import { FieldContainer, GridContainer, MainContent, MainInfoContainer, Observations, PersonalCard, PhotoContainer, SectionTitle } from "./styles";
 import { IDesenvolvimento, IEstado, IMedium, IMentor, ITemplo } from "src/types/types";
 import SideMenu from "src/components/SideMenu/SideMenu";
 import SubMenu from "src/components/SubMenu/SubMenu";
@@ -16,6 +16,7 @@ import AutocompleteInput from "src/components/AutocompleteInput/AutocompleteInpu
 import { defaultAdj, defaultMedium } from "src/utilities/default";
 import { useNavigate } from "react-router-dom";
 import MainContainer from "src/components/MainContainer/MainContainer";
+import { NavigateButton } from "src/components/buttons/buttons";
 
 function AddAspirante() {
     const { templos, estados, adjuntos, ministros, princesas, loadDesenvolvimento, allFrequencia } = useContext(ListContext);
@@ -125,7 +126,7 @@ function AddAspirante() {
         try {
             const response = await api.post('/medium/create', newMediumObj, {headers:{Authorization: token}})
             const { medium_id } = response.data;
-            await uploadImage(medium_id, token, photo);
+            await uploadImage(medium_id, newMediumObj.med, token, photo);
             await loadMedium(token);
             await addMediumInDesenv(medium_id);
             Alert('Médium adicionado com sucesso', 'success');
@@ -304,9 +305,9 @@ function AddAspirante() {
                     <SectionTitle>Observações</SectionTitle>
                     <Observations value={newMedium.observ} onChange={(e) => updateProps('observ', e.target.value)}/>
                 </PersonalCard>
-                <div style={{width: '90%', maxWidth: '1200px', display: 'flex', justifyContent: 'space-around'}}>
-                    <MediumButton color="red" onClick={() => resetNewMedium()}>Cancelar</MediumButton>
-                    <MediumButton color="green" onClick={() => validateAspirante(newMedium, selectedMonth, async () => await addMedium(newMedium, token))}>Cadastrar</MediumButton>
+                <div style={{width: '90%', maxWidth: '1200px', display: 'flex', justifyContent: 'space-around', marginTop: '30px'}}>
+                    <NavigateButton width="150px" height="45px" color="red" onClick={() => resetNewMedium()}>Cancelar</NavigateButton>
+                    <NavigateButton width="150px" height="45px" onClick={() => validateAspirante(newMedium, selectedMonth, async () => await addMedium(newMedium, token))}>Cadastrar</NavigateButton>
                 </div>
             </MainContainer>
             <SideMenu list={listSubMenu} />

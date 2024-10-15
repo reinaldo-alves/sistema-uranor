@@ -3,7 +3,7 @@ import pdfTimes from 'pdfmake/build/vfs_fonts'
 import { timesRegular, timesBold, timesItalic, timesBI } from 'src/assets/encodedFiles/TimesFont';
 import { arialBI, arialBold, arialItalic, arialRegular } from 'src/assets/encodedFiles/ArialFont';
 import { Content, TDocumentDefinitions } from 'pdfmake/interfaces';
-import { IAdjunto, ICalendario, ICanto, ICavaleiro, IConsagracao, IEvento, IFalange, IMedium, IMentor, ITemplo, IUser } from "src/types/types";
+import { IAdjunto, ICalendario, ICanto, ICavaleiro, IConsagracao, IEvento, IFalange, IMedium, IMenor, IMentor, ITemplo, IUser } from "src/types/types";
 import { assTiaNeiva } from '../assets/encodedFiles/signature';
 import { alphabeticOrder, convertDate, generateListEventos, getCurrentDate, imageToBase64, positionsAndFunctions, reduceClassFalMest } from './functions';
 import { jaguarImage } from 'src/assets/encodedFiles/jaguar';
@@ -70,7 +70,7 @@ const docFooter = (current: number, total: number): Content => {
     ]
 };
 
-export const generateEmissao = (medium: IMedium, user: IUser, text: string) => {    
+export const generateEmissao = (medium: IMedium | IMenor, user: IUser, text: string) => {    
     const emissaoTitle: Content = {
         text: `EMISSÃO DO MÉDIUM ${medium.nome.toUpperCase()}`,
         fontSize: 14,
@@ -94,84 +94,100 @@ export const generateEmissao = (medium: IMedium, user: IUser, text: string) => {
         }
     ]
 
-    const emissaoInfo: Content = [
-        {
-            text: '_____________________________________________________________________________________',
-            alignment: 'center'
-        },
-        {
-            text: 'Observações:',
-            alignment: 'left',
-            italics: true,
-            fontSize: 11,
-            margin: [0, 0, 0, 10]
-        },
-        {
-            text: 'Quando em qualquer trabalho o mestre ou ninfa estiverem a serviço de um Adjunto na posição de 1º Presidente ou Reino Central, emitirão "EM MISSÃO ESPECIAL DO ADJUNTO (...) MESTRE (...)" no final das suas emissões.',
-            alignment: 'justify',
-            fontSize: 11,
-            margin: [0, 0, 0, 20]
-        },
-        {
-            text: 'SALVE DEUS!',
-            fontSize: 11,
-            alignment: 'left',
-            margin: [0, 0, 0, 5]
-        },
-        {
-            text: 'MEUS FILHOS JAGUARES, O MESTRE QUE ALTERAR A SUA EMISSÃO, TERÁ SOBRE SI A RESPONSABILIDADE DE NÃO ULTRAPASSAR O NEUTRÔN E CONSEQUENTEMENTE NÃO SERÁ OUVIDO E NEM REGISTRADO PELOS PLANOS ESPIRITUAIS.',
-            alignment: 'justify',
-            fontSize: 11,
-            margin: [10, 0, 0, 5]
-        },
-        {
-            text: 'COM CARINHO A MÃE EM CRISTO JESUS,',
-            fontSize: 11,
-            alignment: 'right',
-        },
-        {
-            columns: [
-                {
-                    text: [
-                        '_____________________________________\n',
-                        {
-                            text: `${user.level === 'Devas Aspirante' ? '' : user.name.toUpperCase()}\n`,
-                            bold: true
-                        },
-                        `${user.sex === 'Feminino' && user.level !== 'Devas Aspirante' ? 'FILHA' : 'FILHO'} DE DEVAS\n`,
-                        '\n',
-                        getCurrentDate()
-                    ],
-                    alignment: 'center',
-                    width: '*',
-                    fontSize: 10,
-                    margin: [0, 30, 0, 0]
-                },
-                {
-                    image: assTiaNeiva,
-                    width: 150,
-                    margin: [0, 15, 0, 0]
-                },
-            ],
-            columnGap: 150
+    const emissaoInfo = (medium: IMedium | IMenor) => {
+        const emissaoInfoContent: Content = [
+            {
+                text: '_____________________________________________________________________________________',
+                alignment: 'center'
+            },
+            {
+                text: 'Observações:',
+                alignment: 'left',
+                italics: true,
+                fontSize: 11,
+                margin: [0, 0, 0, 10]
+            },
+            {
+                text: 'Quando em qualquer trabalho o mestre ou ninfa estiverem a serviço de um Adjunto na posição de 1º Presidente ou Reino Central, emitirão "EM MISSÃO ESPECIAL DO ADJUNTO (...) MESTRE (...)" no final das suas emissões.',
+                alignment: 'justify',
+                fontSize: 11,
+                margin: [0, 0, 0, 20]
+            },
+            {
+                text: 'SALVE DEUS!',
+                fontSize: 11,
+                alignment: 'left',
+                margin: [0, 0, 0, 5]
+            },
+            {
+                text: 'MEUS FILHOS JAGUARES, O MESTRE QUE ALTERAR A SUA EMISSÃO, TERÁ SOBRE SI A RESPONSABILIDADE DE NÃO ULTRAPASSAR O NEUTRÔN E CONSEQUENTEMENTE NÃO SERÁ OUVIDO E NEM REGISTRADO PELOS PLANOS ESPIRITUAIS.',
+                alignment: 'justify',
+                fontSize: 11,
+                margin: [10, 0, 0, 5]
+            },
+            {
+                text: 'COM CARINHO A MÃE EM CRISTO JESUS,',
+                fontSize: 11,
+                alignment: 'right',
+            },
+            {
+                columns: [
+                    {
+                        text: [
+                            '_____________________________________\n',
+                            {
+                                text: `${user.level === 'Devas Aspirante' ? '' : user.name.toUpperCase()}\n`,
+                                bold: true
+                            },
+                            `${user.sex === 'Feminino' && user.level !== 'Devas Aspirante' ? 'FILHA' : 'FILHO'} DE DEVAS\n`,
+                            '\n',
+                            getCurrentDate()
+                        ],
+                        alignment: 'center',
+                        width: '*',
+                        fontSize: 10,
+                        margin: [0, 30, 0, 0]
+                    },
+                    {
+                        image: assTiaNeiva,
+                        width: 150,
+                        margin: [0, 15, 0, 0]
+                    },
+                ],
+                columnGap: 150
+            }
+        ];
+        if ('medium_id' in medium) {
+            return emissaoInfoContent;
+        } else {
+            return [emissaoInfoContent[0], emissaoInfoContent[3], emissaoInfoContent[4], emissaoInfoContent[5], emissaoInfoContent[6]];
         }
-    ];
+    }
+
 
     const emissaoFooter = (currentPage: number, pageCount: number): Content => docFooter(currentPage, pageCount)
 
+    const emissaoDocTitle = (medium: IMedium | IMenor) => {
+        if ('medium_id' in medium) {
+            return `Emissao_${medium.medium_id.toString().padStart(5, '0')}_${medium.nome.replace(/ /g, '_')}`;
+        } else {
+            return `Emissao_${medium.nome.replace(/ /g, '_')}`;
+        }
+    }
+
     const emissaoDefinitions: TDocumentDefinitions = {
         info: {
-            title: `Emissao_${medium.medium_id.toString().padStart(5, '0')}_${medium.nome.replace(/ /g, '_')}`
+            title: emissaoDocTitle(medium),
         },
         pageSize: 'A4',
-        content: [docHeader, emissaoTitle, emissaoBody, emissaoInfo],
+        content: [docHeader, emissaoTitle, emissaoBody, emissaoInfo(medium)],
         footer: emissaoFooter,
         defaultStyle: {
             font: 'Times'
         }
     }
 
-    pdfMake.createPdf(emissaoDefinitions).open({}, window.open(`Emissao_${medium.medium_id.toString().padStart(5, '0')}_${medium.nome.replace(/ /g, '_')}.pdf`, '_blank'));
+    pdfMake.createPdf(emissaoDefinitions).open({}, window.open(`${emissaoDocTitle(medium)}.pdf`, '_blank'));
 }
 
 export const generateAutorizacao = (mediuns: Array<IConsagracao>, templos: Array<ITemplo>, adjuntos: Array<IAdjunto>, ministros: Array<IMentor>, cons: number) => {    

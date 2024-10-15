@@ -65,25 +65,6 @@ export const HeaderButtonContainer = styled.div`
     gap: 10px;
 `;
 
-export const HeaderButton = styled.button`
-    font-size: 12px;
-    font-weight: bold;
-    padding: 2px 6px;
-    color: ${(props) => {return props.theme.color.lighterColor}};
-    border: solid 2px ${(props) => {return props.theme.color.lighterColor}};
-    background-color: transparent;
-    border-radius: 8px;
-
-    :hover {
-        cursor: pointer;
-        transform: scale(1.05);
-    }
-
-    :active {
-        background-color: red;
-    }
-`;
-
 export const SideMenuContent = styled.ul`
     width: 100%;
     font-weight: bold;

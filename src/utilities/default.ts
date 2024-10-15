@@ -1,4 +1,4 @@
-import { IAdjunto, ICavaleiro, IConsagracao, IEvento, IMedium, IMentor, ITemplo, IUser } from "src/types/types"
+import { IAdjunto, ICavaleiro, IConsagracao, IEvento, IMedium, IMenor, IMentor, ITemplo, IUser } from "src/types/types"
 
 export const defaultAdj: IAdjunto = {
     adjunto_id: 0,
@@ -79,6 +79,42 @@ export const defaultCalendario = {
     outubro: 1,
     novembro: 1,
     dezembro: 1,
+}
+
+export const defaultMenor : IMenor = {
+    menor_id: 0,
+    nome: '',
+    sex: '',
+    condicao: '',
+    templo: 0,
+    dtNasc: '',
+    rg: '',
+    cpf: '',
+    mae: '',
+    pai: '',
+    natur: '',
+    naturUF: '',
+    profissao: '',
+    estCivil: '',
+    conjuge: '',
+    cep: '',
+    endereco: '',
+    endNumero: '',
+    endCompl: '',
+    endBairro: '',
+    endCidade: '',
+    endUF: '',
+    telefone1: '',
+    telefone2: '',
+    email: '',
+    temploOrigem: 0,
+    falMiss: 0,
+    adjDevas: '',
+    nomeEmissao: '',
+    observ: '',
+    responsavel: '',
+    parentesco: '',
+    contatoResp: ''
 }
 
 export const defaultMedium: IMedium = {

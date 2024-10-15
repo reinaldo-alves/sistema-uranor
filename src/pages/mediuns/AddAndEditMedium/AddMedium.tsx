@@ -1,6 +1,6 @@
 import { useContext, useState, useEffect } from "react";
 import { ListContext } from "src/contexts/ListContext";
-import { Divider, FieldContainer, FieldContainerBox, GridContainer, GridDatesContainer, InputContainer, MainContent, MainInfoContainer, MediumButton, Observations, PersonalCard, PhotoContainer, SectionTitle } from "./styles";
+import { Divider, FieldContainer, FieldContainerBox, GridContainer, GridDatesContainer, InputContainer, MainContent, MainInfoContainer, Observations, PersonalCard, PhotoContainer, SectionTitle } from "./styles";
 import { ICavaleiro, IEstado, IFalange, IMedium, IMentor, ITemplo } from "src/types/types";
 import SideMenu from "src/components/SideMenu/SideMenu";
 import SubMenu from "src/components/SubMenu/SubMenu";
@@ -17,6 +17,7 @@ import { defaultAdj, defaultCavaleiro, defaultMedium, defaultMentor } from "src/
 import { useNavigate } from "react-router-dom";
 import { Modal, ModalButton, ModalContent, ModalInputContainer, ModalTitle } from "src/components/Modal/modal";
 import MainContainer from "src/components/MainContainer/MainContainer";
+import { NavigateButton } from "src/components/buttons/buttons";
 
 function AddMedium() {
     const { templos, estados, adjuntos, coletes, classMest, falMest, povos, falMiss, turnoL, turnoT, ministros, cavaleiros, guias, estrelas, princesas, classificacao } = useContext(ListContext);
@@ -425,7 +426,7 @@ function AddMedium() {
         try {
             const response = await api.post('/medium/create', newMediumObj, {headers:{Authorization: token}})
             const { medium_id } = response.data;
-            await uploadImage(medium_id, token, photo);
+            await uploadImage(medium_id, newMediumObj.med, token, photo);
             await setComponentes({...medium, medium_id}, token);
             await generateEvents(medium, medium_id, token);
             Alert('Médium adicionado com sucesso', 'success');
@@ -525,7 +526,7 @@ function AddMedium() {
                                     <option value={'Doutrinador'}>Doutrinador</option>
                                 </select>
                                 <label>Templo: </label>
-                                <select value={newMedium.templo} onChange={(e) => updateProps('templo', e.target.value)}>
+                                <select value={newMedium.templo} onChange={(e) => updateProps('templo', Number(e.target.value))}>
                                     <option value={0}></option>
                                     {templos.map((item: ITemplo, index: number) => (
                                         <option key={index} value={item.templo_id}>{item.cidade} - {item.estado.abrev}</option>
@@ -641,14 +642,14 @@ function AddMedium() {
                             setInputValue={setSearchPres}
                         />
                         <label>Templo Origem: </label>
-                        <select value={newMedium.temploOrigem} onChange={(e) => updateProps('temploOrigem', e.target.value)}>
+                        <select value={newMedium.temploOrigem} onChange={(e) => updateProps('temploOrigem', Number(e.target.value))}>
                             <option value={0}></option>
                             {templos.map((item: ITemplo, index: number) => (
                                 <option key={index} value={item.templo_id}>{item.cidade} - {item.estado.abrev}</option>
                             ))}
                         </select>
                         <label>Colete Nº: </label>
-                        <select value={newMedium.colete} onChange={(e) => updateProps('colete', e.target.value)}>
+                        <select value={newMedium.colete} onChange={(e) => updateProps('colete', Number(e.target.value))}>
                             <option value={0}></option>
                             {coletes.map((item: number, index: number) => (
                                 <option key={index} value={item}>{item}</option>
@@ -1233,9 +1234,9 @@ function AddMedium() {
                     <SectionTitle>Observações</SectionTitle>
                     <Observations value={newMedium.observ} onChange={(e) => updateProps('observ', e.target.value)}/>
                 </PersonalCard>
-                <div style={{width: '90%', maxWidth: '1200px', display: 'flex', justifyContent: 'space-around'}}>
-                    <MediumButton color="red" onClick={() => resetNewMedium()}>Cancelar</MediumButton>
-                    <MediumButton color="green" onClick={() => validateMedium(newMedium, async () => await handleAddMedium(newMedium, token))}>Cadastrar</MediumButton>
+                <div style={{width: '90%', maxWidth: '1200px', display: 'flex', justifyContent: 'space-around', marginTop: '30px'}}>
+                    <NavigateButton width="150px" height="45px" color="red" onClick={() => resetNewMedium()}>Cancelar</NavigateButton>
+                    <NavigateButton width="150px" height="45px" onClick={() => validateMedium(newMedium, async () => await handleAddMedium(newMedium, token))}>Cadastrar</NavigateButton>
                 </div>
             </MainContainer>
             <SideMenu list={listSubMenu} />

@@ -1,6 +1,6 @@
 import { useCallback, useContext, useEffect, useState } from "react";
 import Header from "src/components/header/header";
-import { Divider, FrequenciaData, GridContainer, InfoContainer, InputContainer, MainInfoContainer, MediumButton, MediumInfo, MediumMainInfo, MediumText, ModalMediumContent, NameAndId, PersonalCard, PhotoContainer, SectionTitle } from "./styles";
+import { Divider, FrequenciaData, GridContainer, InfoContainer, InputContainer, MainInfoContainer, MediumInfo, MediumMainInfo, MediumText, ModalMediumContent, NameAndId, PersonalCard, PhotoContainer, SectionTitle } from "./styles";
 import SubMenu from "src/components/SubMenu/SubMenu";
 import SideMenu from "src/components/SideMenu/SideMenu";
 import { useNavigate, useParams } from "react-router-dom";
@@ -20,6 +20,7 @@ import api from "src/api";
 import { Modal, ModalButton, ModalTitle } from "src/components/Modal/modal";
 import { IEventoAPI } from "src/types/typesAPI";
 import MainContainer from "src/components/MainContainer/MainContainer";
+import { NavigateButton } from "src/components/buttons/buttons";
 
 function ShowMedium() {
     const [loading, setLoading] = useState(true);
@@ -198,18 +199,18 @@ function ShowMedium() {
                             <MediumMainInfo>Templo: <span>{showTemplo(medium, templos)}</span></MediumMainInfo>
                             <MediumMainInfo>Situação: <span>{setSituation(medium)}</span></MediumMainInfo>
                             <MediumMainInfo>Condição Atual: <span>{medium.condicao}</span></MediumMainInfo>
-                            <MediumButton disabled={!medium.dtCenturia && !medium.falMiss} onClick={() => validateEmissao(medium, mediuns, adjuntos, turnoL, turnoT, () => generateEmissao(medium, user, emissaoText(medium, mediuns, ministros, cavaleiros, guias, adjuntos, templos, falMiss) as string))} color="green">Gerar Emissão</MediumButton>
-                            <MediumButton onClick={() => navigate(`/mediuns/editar/${medium.medium_id}`)} color="green">Editar</MediumButton>
-                            <MediumButton color="green" onClick={() => generateFichaMedium(medium, adjuntos, ministros, cavaleiros, guias, falMiss, mediuns, token)}>Gerar Ficha</MediumButton>
-                            <MediumButton color="green" disabled={!allFrequencia.some((item: IDesenvolvimento) => item.frequencia.some((el: IFrequencia) => el.medium === medium.medium_id && !(el.dia1 === '-' && el.dia2 === '-' && el.dia3 === '-' && el.dia4 === '-' && el.dia5 === '-')))} onClick={() => {
+                            <NavigateButton width="150px" disabled={!medium.dtCenturia && !medium.falMiss} onClick={() => validateEmissao(medium, mediuns, turnoL, turnoT, () => generateEmissao(medium, user, emissaoText(medium, mediuns, ministros, cavaleiros, guias, adjuntos, templos, falMiss) as string))} color="green">Gerar Emissão</NavigateButton>
+                            <NavigateButton width="150px" onClick={() => navigate(`/mediuns/editar/${medium.medium_id}`)} color="green">Editar</NavigateButton>
+                            <NavigateButton width="150px" color="green" onClick={() => generateFichaMedium(medium, adjuntos, ministros, cavaleiros, guias, falMiss, mediuns, token)}>Gerar Ficha</NavigateButton>
+                            <NavigateButton width="150px" color="green" disabled={!allFrequencia.some((item: IDesenvolvimento) => item.frequencia.some((el: IFrequencia) => el.medium === medium.medium_id && !(el.dia1 === '-' && el.dia2 === '-' && el.dia3 === '-' && el.dia4 === '-' && el.dia5 === '-')))} onClick={() => {
                                 setShowModal(true);
                                 setSelectModal('frequencia');
-                            }}>Frequência</MediumButton>
-                            <MediumButton color="green" disabled={searchMediumInCons(medium.medium_id) === defaultConsagracao} onClick={() => generateAutorizacao([searchMediumInCons(medium.medium_id)], templos, adjuntos, ministros, searchMediumInCons(medium.medium_id).consagracao)}>Autorização</MediumButton>
-                            <MediumButton color="green" disabled={!medium.dtCenturia || medium.sex !== 'Masculino'} onClick={() => generateReclass(medium, adjuntos, ministros, cavaleiros, user)}>Reclassificação</MediumButton>
-                            <MediumButton onClick={() => navigate(`/mediuns/historico/${medium.medium_id}`)} color="green">Linha do Tempo</MediumButton>
-                            <MediumButton onClick={confirmChangeMed} color="red">Mudar Med.</MediumButton>
-                            <MediumButton style={{display: `${user.level === 'Administrador' ? 'block' : 'none'}`}} onClick={deleteMedium} color="red">Excluir</MediumButton>
+                            }}>Frequência</NavigateButton>
+                            <NavigateButton width="150px" color="green" disabled={searchMediumInCons(medium.medium_id) === defaultConsagracao} onClick={() => generateAutorizacao([searchMediumInCons(medium.medium_id)], templos, adjuntos, ministros, searchMediumInCons(medium.medium_id).consagracao)}>Autorização</NavigateButton>
+                            <NavigateButton width="150px" color="green" disabled={!medium.dtCenturia || medium.sex !== 'Masculino'} onClick={() => generateReclass(medium, adjuntos, ministros, cavaleiros, user)}>Reclassificação</NavigateButton>
+                            <NavigateButton width="150px" onClick={() => navigate(`/mediuns/historico/${medium.medium_id}`)} color="green">Linha do Tempo</NavigateButton>
+                            <NavigateButton width="150px" onClick={confirmChangeMed} color="red">Mudar Med.</NavigateButton>
+                            <NavigateButton width="150px" style={{display: `${user.level === 'Administrador' ? 'block' : 'none'}`}} onClick={deleteMedium} color="red">Excluir</NavigateButton>
                         </MainInfoContainer>
                     </PersonalCard>
                     <div>

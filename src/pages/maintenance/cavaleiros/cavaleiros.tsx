@@ -1,5 +1,5 @@
 import { useState, useContext, useEffect } from "react";
-import { InfoCard, InputContainer, InfoContent, Results, ResultsCard, ResultsTable, ResultsTitle, SearchButton, SearchCard, SearchContainer, ResultsDetails } from "./styles";
+import { InfoCard, InputContainer, InfoContent, Results, ResultsCard, ResultsTable, ResultsTitle, SearchCard, SearchContainer, ResultsDetails } from "./styles";
 import { ListContext } from "src/contexts/ListContext";
 import SideMenu from "src/components/SideMenu/SideMenu";
 import Header from "src/components/header/header";
@@ -13,6 +13,7 @@ import { defaultCavaleiro } from "src/utilities/default";
 import { Modal, ModalButton, ModalContent, ModalTitle } from "src/components/Modal/modal";
 import { formatInputText, handleEnterPress, removeDiacritics } from "src/utilities/functions";
 import { MediumContext } from "src/contexts/MediumContext";
+import { SearchButton } from "src/components/buttons/buttons";
 
 function Cavaleiros() {
     const [search, setSearch] = useState('');

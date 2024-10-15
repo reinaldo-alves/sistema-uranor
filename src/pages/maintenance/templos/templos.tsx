@@ -1,5 +1,5 @@
 import { useState, useContext, useEffect } from "react";
-import { InfoCard, InputContainer, InfoContent, Results, ResultsCard, ResultsDetails, ResultsTable, ResultsTitle, SearchButton, SearchCard, SearchContainer } from "./styles";
+import { InfoCard, InputContainer, InfoContent, Results, ResultsCard, ResultsDetails, ResultsTable, ResultsTitle, SearchCard, SearchContainer } from "./styles";
 import { ListContext } from "src/contexts/ListContext";
 import SideMenu from "src/components/SideMenu/SideMenu";
 import Header from "src/components/header/header";
@@ -14,6 +14,7 @@ import AutocompleteInput from "src/components/AutocompleteInput/AutocompleteInpu
 import { formatInputText, handleEnterPress, removeDiacritics } from "src/utilities/functions";
 import { Modal, ModalButton, ModalContent, ModalTitle } from "src/components/Modal/modal";
 import { MediumContext } from "src/contexts/MediumContext";
+import { SearchButton } from "src/components/buttons/buttons";
 
 function Templos() {
     const [searchName, setSearchName] = useState('');

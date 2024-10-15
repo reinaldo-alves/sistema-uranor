@@ -116,6 +116,42 @@ export interface IDesenvolvimento {
     frequencia: Array<IFrequencia>
 }
 
+export interface IMenor {
+    menor_id: number,
+    nome: string,
+    sex: string,
+    condicao: string,
+    templo: number,
+    dtNasc: string,
+    rg: string,
+    cpf: string,
+    mae: string,
+    pai: string,
+    natur: string,
+    naturUF: string,
+    profissao: string,
+    estCivil: string,
+    conjuge: string,
+    cep: string,
+    endereco: string,
+    endNumero: string,
+    endCompl: string,
+    endBairro: string,
+    endCidade: string,
+    endUF: string,
+    telefone1: string,
+    telefone2: string,
+    email: string,
+    temploOrigem: number,
+    falMiss: number,
+    adjDevas: string,
+    nomeEmissao: string,
+    observ: string,
+    responsavel: string,
+    parentesco: string,
+    contatoResp: string
+}
+
 export interface IMedium {
     medium_id: number,
     nome: string,

@@ -1,7 +1,7 @@
 import SubMenu from "src/components/SubMenu/SubMenu";
 import Header from "../../../components/header/header";
 import SideMenu from "src/components/SideMenu/SideMenu";
-import { ButtonContainer, ConsagracaoCard, InputContainer, ModalMediumContent, NavigateButton, PageSubTitle, Results, ResultsData, ResultsDetails, ResultsPanel, ResultsTable, ResultsTitle } from "../styles";
+import { ButtonContainer, ConsagracaoCard, InputContainer, ModalMediumContent, PageSubTitle, Results, ResultsData, ResultsDetails, ResultsPanel, ResultsTable, ResultsTitle } from "../styles";
 import { alphabeticOrder, consagracaoDetails, countMedium, handleEnterPress } from "src/utilities/functions";
 import { useCallback, useContext, useEffect, useState } from "react";
 import { ListContext } from "src/contexts/ListContext";
@@ -17,6 +17,7 @@ import { generateAutorizacao, generateConsReport, generateProtocolo } from "src/
 import { Modal, ModalButton, ModalSubTitle, ModalTitle } from "src/components/Modal/modal";
 import MainContainer from "src/components/MainContainer/MainContainer";
 import Loading from "src/utilities/Loading";
+import { NavigateButton } from "src/components/buttons/buttons";
 
 function Centuria() {
     const { templos, adjuntos, ministros, falMest, listCenturia, loadConsagracao, searchMediumInCons } = useContext(ListContext);

@@ -1,7 +1,7 @@
 import SubMenu from "src/components/SubMenu/SubMenu";
 import Header from "../../../components/header/header";
 import SideMenu from "src/components/SideMenu/SideMenu";
-import { ButtonContainer, CheckboxContainer, ConsagracaoCard, NavigateButton, PageSubTitle, ResultsData, ResultsTable, ResultsUpdate, SelectContainer, UpdateInputContainer } from "../styles";
+import { ButtonContainer, CheckboxContainer, ConsagracaoCard, PageSubTitle, ResultsData, ResultsTable, ResultsUpdate, SelectContainer, UpdateInputContainer } from "../styles";
 import { useCallback, useContext, useEffect, useState } from "react";
 import { ListContext } from "src/contexts/ListContext";
 import { IConsagracao } from "src/types/types";
@@ -11,6 +11,7 @@ import { Alert, Confirm } from "src/utilities/popups";
 import api from "src/api";
 import Loading from "src/utilities/Loading";
 import MainContainer from "src/components/MainContainer/MainContainer";
+import { NavigateButton } from "src/components/buttons/buttons";
 
 interface IIniciacao {
     medium: IConsagracao,

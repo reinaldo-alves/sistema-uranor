@@ -1,5 +1,5 @@
 import { useState, useContext, useEffect } from "react";
-import { InfoContent, InputContainer, ResultsCard, ResultsTable, SearchButton } from "./styles";
+import { InfoContent, InputContainer, ResultsCard, ResultsTable } from "./styles";
 import SideMenu from "src/components/SideMenu/SideMenu";
 import Header from "src/components/header/header";
 import SubMenu from "src/components/SubMenu/SubMenu";
@@ -9,6 +9,7 @@ import { Alert } from "src/utilities/popups";
 import { defaultCalendario } from "src/utilities/default";
 import MainContainer from "src/components/MainContainer/MainContainer";
 import { ListContext } from "src/contexts/ListContext";
+import { SearchButton } from "src/components/buttons/buttons";
 
 function Calendar() {
     const [edited, setEdited] = useState(defaultCalendario);
@@ -120,7 +121,7 @@ function Calendar() {
                         </InputContainer>
                     </ResultsTable>
                 </ResultsCard>
-                <SearchButton onClick={() => sendCalendar(token)}>Salvar</SearchButton>
+                <SearchButton width="200px" style={{alignSelf: 'center'}} onClick={() => sendCalendar(token)}>Salvar</SearchButton>
             </MainContainer>
             <SideMenu list={listSubMenu} />
         </>

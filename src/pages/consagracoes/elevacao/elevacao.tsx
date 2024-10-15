@@ -1,7 +1,7 @@
 import SubMenu from "src/components/SubMenu/SubMenu";
 import Header from "../../../components/header/header";
 import SideMenu from "src/components/SideMenu/SideMenu";
-import { ButtonContainer, ConsagracaoCard, InputContainer, ModalMediumContent, MudancaObs, MudancaWarning, NavigateButton, PageSubTitle, PhotoContainer, Results, ResultsData, ResultsDetails, ResultsPanel, ResultsTable, ResultsTitle } from "../styles";
+import { ButtonContainer, ConsagracaoCard, InputContainer, ModalMediumContent, MudancaObs, MudancaWarning, PageSubTitle, PhotoContainer, Results, ResultsData, ResultsDetails, ResultsPanel, ResultsTable, ResultsTitle } from "../styles";
 import { alphabeticOrder, consagracaoDetails, countMedium, handleEnterPress } from "src/utilities/functions";
 import { useCallback, useContext, useEffect, useState } from "react";
 import { ListContext } from "src/contexts/ListContext";
@@ -17,6 +17,7 @@ import { generateAutorizacao, generateConsReport, generateProtocolo, generateTer
 import { Modal, ModalButton, ModalSubTitle, ModalTitle } from "src/components/Modal/modal";
 import MainContainer from "src/components/MainContainer/MainContainer";
 import Loading from "src/utilities/Loading";
+import { NavigateButton } from "src/components/buttons/buttons";
 
 function Elevacao() {
     const { templos, adjuntos, ministros, falMest, listElevacao, listMudanca, loadConsagracao, searchMediumInCons } = useContext(ListContext);
@@ -81,7 +82,7 @@ function Elevacao() {
             if (photo) {
                 try {
                     await Confirm('Tem certeza que quer atualizar a foto deste médium?', 'question', 'Cancelar', 'Confirmar', async () => {
-                        await uploadImage(selected.medium, token, photo)
+                        await uploadImage(selected.medium, selected.med, token, photo)
                         console.log('foto editada')
                         Alert('Foto atualizada com sucesso', 'success');
                         await loadConsagracao(token);

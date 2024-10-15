@@ -216,30 +216,6 @@ export const FieldContainerBox = styled.div`
     }
 `;
 
-export const ReportButton = styled.button<{color: string}>`
-    font-weight: bold;
-    border: solid 1px ${(props) => {return props.theme.color.darkerColor}};
-    border-radius: 8px;
-    margin-top: 30px;
-    width: 165px;
-    background-color: ${({color}) => {return color}};
-    color: ${(props) => {return props.theme.color.lighterColor}};
-    text-align: center;
-    height: 45px;
-    font-size: 20px;
-
-    :hover {
-        cursor: pointer;
-        transform: scale(1.05);
-    }
-
-    :active {
-        color: white;
-        background-color: ${(props) => {return props.theme.color.darkerColor}};
-        border: solid ${(props) => {return props.theme.color.lighterColor}};
-    }
-`;
-
 export const Divider = styled.div`
     width: 100%;
     height: 1px;

@@ -2,7 +2,7 @@ import SubMenu from "src/components/SubMenu/SubMenu";
 import Header from "../../components/header/header";
 import SideMenu from "src/components/SideMenu/SideMenu";
 import MainContainer from "src/components/MainContainer/MainContainer";
-import { ButtonContainer, DesenvCard, DesenvLegend, InputContainer, ModalMediumContent, MonthArrow, MonthNameContainer, NavigateButton, Results, ResultsData, ResultsDetails, ResultsName, ResultsTable, ResultsTitle } from "./styles";
+import { ButtonContainer, DesenvCard, DesenvLegend, InputContainer, ModalMediumContent, MonthArrow, MonthNameContainer, Results, ResultsData, ResultsDetails, ResultsName, ResultsTable, ResultsTitle } from "./styles";
 import { formatInputText, handleEnterPress, showMedDesenv, showTemplo } from "src/utilities/functions";
 import { useContext, useEffect, useState } from "react";
 import { ListContext } from "src/contexts/ListContext";
@@ -16,6 +16,7 @@ import { defaultMedium } from "src/utilities/default";
 import { useNavigate } from "react-router-dom";
 import { Modal, ModalButton, ModalSubTitle, ModalTitle } from "src/components/Modal/modal";
 import Loading from "src/utilities/Loading";
+import { NavigateButton } from "src/components/buttons/buttons";
 
 function Desenvolvimento() {
     const { loadDesenvolvimento, allFrequencia, princesas, templos } = useContext(ListContext);

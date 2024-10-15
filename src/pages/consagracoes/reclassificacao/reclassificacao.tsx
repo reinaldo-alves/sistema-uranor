@@ -1,6 +1,6 @@
 import SubMenu from "src/components/SubMenu/SubMenu";
 import Header from "../../../components/header/header";
-import { InputContainer, ModalMediumContent, NavigateButton } from "../styles";
+import { InputContainer, ModalMediumContent } from "../styles";
 import SideMenu from "src/components/SideMenu/SideMenu";
 import AutocompleteInput from "src/components/AutocompleteInput/AutocompleteInput";
 import { defaultMedium } from "src/utilities/default";
@@ -13,6 +13,7 @@ import { UserContext } from "src/contexts/UserContext";
 import { Modal, ModalButton, ModalTitle } from "src/components/Modal/modal";
 import MainContainer from "src/components/MainContainer/MainContainer";
 import GridButton from "src/components/GridButton/GridButton";
+import { NavigateButton } from "src/components/buttons/buttons";
 
 function Reclassificacao() {
     const { adjuntos, ministros, cavaleiros } = useContext(ListContext);

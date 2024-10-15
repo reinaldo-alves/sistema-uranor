@@ -56,6 +56,42 @@ export interface IEventoAPI {
     observ: string | null,
 }
 
+export interface IMenorAPI {
+    menor_id: number,
+    nome: string,
+    sex: string,
+    condicao: string | null,
+    templo: number,
+    dtNasc: Date | null,
+    rg: string | null,
+    cpf: string | null,
+    mae: string,
+    pai: string | null,
+    natur: string | null,
+    naturUF: string | null,
+    profissao: string | null,
+    estCivil: string | null,
+    conjuge: string | null,
+    cep: string | null,
+    endereco: string | null,
+    endNumero: string | null,
+    endCompl: string | null,
+    endBairro: string | null,
+    endCidade: string | null,
+    endUF: string | null,
+    telefone1: string | null,
+    telefone2: string | null,
+    email: string | null,
+    temploOrigem: number | null,
+    falMiss: number | null,
+    adjDevas: string | null,
+    nomeEmissao: string | null,
+    observ: string | null,
+    responsavel: string | null,
+    parentesco: string | null,
+    contatoResp: string | null
+}
+
 export interface IMediumAPI {
     medium_id: number,
     nome: string,

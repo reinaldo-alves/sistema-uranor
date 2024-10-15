@@ -7,11 +7,12 @@ import { defaultAdj, defaultCavaleiro, defaultMedium, defaultMentor, eventTypes 
 import { IEstado, IEvento, IFalange, IMedium, IMentor, ITemplo } from "src/types/types";
 import { MediumContext } from "src/contexts/MediumContext";
 import { ListContext } from "src/contexts/ListContext";
-import { CheckboxContainer, DatesContainer, Divider, EventContainer, FieldContainer, FieldContainerBox, GridContainer, GridDatesContainer, GridEventContainer, InputContainer, MainContent, MainInfoContainer, MixedContainer, PersonalCard, ReportButton, SectionTitle } from "./styles";
+import { CheckboxContainer, DatesContainer, Divider, EventContainer, FieldContainer, FieldContainerBox, GridContainer, GridDatesContainer, GridEventContainer, InputContainer, MainContent, MainInfoContainer, MixedContainer, PersonalCard, SectionTitle } from "./styles";
 import { oppositeTurno, removeDiacritics, setSituation } from "src/utilities/functions";
 import AutocompleteInput from "src/components/AutocompleteInput/AutocompleteInput";
 import { generateReport } from "src/utilities/createDocs";
 import { Alert } from "src/utilities/popups";
+import { NavigateButton } from "src/components/buttons/buttons";
 
 function Relatorios() {
     const { templos, estados, adjuntos, coletes, classMest, falMest, povos, falMiss, turnoL, turnoT, ministros, cavaleiros, guias, estrelas, princesas, classificacao, eventos } = useContext(ListContext);
@@ -287,9 +288,9 @@ function Relatorios() {
                         </MainInfoContainer>
                     </MainContent>
                 </PersonalCard>
-                <div style={{width: '90%', maxWidth: '1200px', display: 'flex', justifyContent: 'space-around'}}>
-                    <ReportButton color="red" onClick={() => resetReportFilter()}>Resetar Filtros</ReportButton>
-                    <ReportButton color="green" onClick={async () => await handleGenerateReport()}>Gerar Relatório</ReportButton>
+                <div style={{width: '90%', maxWidth: '1200px', display: 'flex', justifyContent: 'space-around', marginTop: '30px'}}>
+                    <NavigateButton height="45px" width="165px" color="red" onClick={() => resetReportFilter()}>Resetar Filtros</NavigateButton>
+                    <NavigateButton height="45px" width="165px" onClick={async () => await handleGenerateReport()}>Gerar Relatório</NavigateButton>
                 </div>
                 <PersonalCard>
                     <SectionTitle>Configurar Filtros</SectionTitle>
@@ -709,9 +710,9 @@ function Relatorios() {
                         </DatesContainer>
                     </GridEventContainer>
                 </PersonalCard>
-                <div style={{width: '90%', maxWidth: '1200px', display: 'flex', justifyContent: 'space-around'}}>
-                    <ReportButton color="red" onClick={() => resetReportFilter()}>Resetar Filtros</ReportButton>
-                    <ReportButton color="green" onClick={async () => await handleGenerateReport()}>Gerar Relatório</ReportButton>
+                <div style={{width: '90%', maxWidth: '1200px', display: 'flex', justifyContent: 'space-around', marginTop: '30px'}}>
+                    <NavigateButton height="45px" width="165px" color="red" onClick={() => resetReportFilter()}>Resetar Filtros</NavigateButton>
+                    <NavigateButton height="45px" width="165px" onClick={async () => await handleGenerateReport()}>Gerar Relatório</NavigateButton>
                 </div>
             </MainContainer>
             <SideMenu list={listSubMenu} />

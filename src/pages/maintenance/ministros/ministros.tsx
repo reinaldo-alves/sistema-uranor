@@ -1,5 +1,5 @@
 import { useState, useContext, useEffect } from "react";
-import { InfoCard, InputContainer, InfoContent, Results, ResultsCard, ResultsTable, ResultsTitle, SearchButton, SearchCard, SearchContainer } from "./styles";
+import { InfoCard, InputContainer, InfoContent, Results, ResultsCard, ResultsTable, ResultsTitle, SearchCard, SearchContainer } from "./styles";
 import { ListContext } from "src/contexts/ListContext";
 import SideMenu from "src/components/SideMenu/SideMenu";
 import Header from "src/components/header/header";
@@ -12,6 +12,7 @@ import { Alert, Confirm } from "src/utilities/popups";
 import { Modal, ModalButton, ModalContent, ModalTitle } from "src/components/Modal/modal";
 import { formatInputText, handleEnterPress, removeDiacritics } from "src/utilities/functions";
 import { MediumContext } from "src/contexts/MediumContext";
+import { SearchButton } from "src/components/buttons/buttons";
 
 function Ministros() {
     const [search, setSearch] = useState('');

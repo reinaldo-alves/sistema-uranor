@@ -1,9 +1,10 @@
 import { useContext } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { HamburgerIcon, HeaderButton, HeaderButtonContainer, Overlay, SideMenuContainer, SideMenuContent, SideMenuItem, UserContainer } from './styles'
+import { HamburgerIcon, HeaderButtonContainer, Overlay, SideMenuContainer, SideMenuContent, SideMenuItem, UserContainer } from './styles'
 import { UserContext } from 'src/contexts/UserContext'
 import { MenuContext } from 'src/contexts/MenuContext'
 import exit from '../../assets/marca-cruzada.png'
+import { HeaderButton } from '../buttons/buttons'
 
 interface IProps {
     list: Array<{
@@ -29,11 +30,11 @@ function SideMenu(props: IProps) {
                     <p>Usuário: {user.name}</p>
                     <p>Nível: {user.level}</p>
                     <HeaderButtonContainer>
-                        <HeaderButton onClick={() => {
+                        <HeaderButton margin='0px' onClick={() => {
                             clickButton();
                             setOpenMenu(false);
                         }}>{titleButton}</HeaderButton>
-                        <HeaderButton
+                        <HeaderButton margin='0px'
                             onClick={() => {
                                 logOut();
                                 setOpenMenu(false);

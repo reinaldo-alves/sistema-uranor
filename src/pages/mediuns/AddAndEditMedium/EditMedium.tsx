@@ -1,6 +1,6 @@
 import { useContext, useState, useEffect, useCallback } from "react";
 import { ListContext } from "src/contexts/ListContext";
-import { Divider, FieldContainer, FieldContainerBox, GridContainer, GridDatesContainer, InputContainer, MainContent, MainInfoContainer, MediumButton, Observations, PersonalCard, PhotoContainer, PhotoPosition, SectionTitle } from "./styles";
+import { Divider, FieldContainer, FieldContainerBox, GridContainer, GridDatesContainer, InputContainer, MainContent, MainInfoContainer, Observations, PersonalCard, PhotoContainer, PhotoPosition, SectionTitle } from "./styles";
 import { IAdjunto, ICavaleiro, IEstado, IEvento, IFalange, IMedium, IMentor, ITemplo } from "src/types/types";
 import SideMenu from "src/components/SideMenu/SideMenu";
 import SubMenu from "src/components/SubMenu/SubMenu";
@@ -20,6 +20,7 @@ import { defaultAdj, defaultCavaleiro, defaultMedium, defaultMentor } from "src/
 import { Modal, ModalButton, ModalContent, ModalInputContainer, ModalTitle } from "src/components/Modal/modal";
 import { IEventoAPI } from "src/types/typesAPI";
 import MainContainer from "src/components/MainContainer/MainContainer";
+import { NavigateButton } from "src/components/buttons/buttons";
 
 function EditMedium() {
     const { templos, estados, adjuntos, coletes, classMest, falMest, povos, falMiss, turnoL, turnoT, ministros, cavaleiros, guias, estrelas, princesas, classificacao, getData } = useContext(ListContext);
@@ -544,7 +545,7 @@ function EditMedium() {
                     await generateEvents(newMedium, oldMedium, token);
                     await api.put('/medium/update', {medium_id: oldMediumObj.medium_id, ...changedFields}, {headers:{Authorization: token}})
                     if (newMediumObj.foto && newMediumObj.foto !== oldMediumObj.foto) {
-                        await uploadImage(oldMediumObj.medium_id, token, photo);
+                        await uploadImage(oldMediumObj.medium_id, newMediumObj.med, token, photo);
                         console.log('foto editada')
                     }
                     if (newMediumObj.mestre !== oldMediumObj.mestre || newMediumObj.ninfa !== oldMediumObj.ninfa || newMediumObj.padrinho !== oldMediumObj.padrinho || newMediumObj.madrinha !== oldMediumObj.madrinha || newMediumObj.afilhado !== oldMediumObj.afilhado) {
@@ -558,7 +559,7 @@ function EditMedium() {
                         }
                     }
                     if (updatePhoto && photo) {
-                        await uploadImage(oldMediumObj.medium_id, token, photo)
+                        await uploadImage(oldMediumObj.medium_id, newMediumObj.med, token, photo)
                     }
                     Alert('Médium editado com sucesso', 'success');
                     await loadMedium(token);
@@ -572,7 +573,7 @@ function EditMedium() {
             if (photo) {
                 try {
                     await Confirm('Tem certeza que quer editar este médium?', 'question', 'Cancelar', 'Confirmar', async () => {
-                        await uploadImage(oldMediumObj.medium_id, token, photo)
+                        await uploadImage(oldMediumObj.medium_id, newMediumObj.med, token, photo)
                         console.log('foto editada')
                         Alert('Médium editado com sucesso', 'success');
                         await loadMedium(token);
@@ -659,9 +660,9 @@ function EditMedium() {
                         </PhotoPosition>
                     </MainContent>
                 </PersonalCard>
-                <div style={{width: '90%', maxWidth: '1200px', display: 'flex', justifyContent: 'space-around'}}>
-                    <MediumButton color="red" onClick={() => navigate(`/mediuns/consulta/${params.id}`)}>Cancelar</MediumButton>
-                    <MediumButton color="green" onClick={() => validateMedium(medium, async () => await handleEditMedium(medium, selected, token))}>Salvar</MediumButton>
+                <div style={{width: '90%', maxWidth: '1200px', display: 'flex', justifyContent: 'space-around', marginTop: '30px'}}>
+                    <NavigateButton width="150px" height="45px" color="red" onClick={() => navigate(`/mediuns/consulta/${params.id}`)}>Cancelar</NavigateButton>
+                    <NavigateButton width="150px" height="45px" onClick={() => validateMedium(medium, async () => await handleEditMedium(medium, selected, token))}>Salvar</NavigateButton>
                 </div>
                 <PersonalCard>
                     <SectionTitle>Dados Pessoais</SectionTitle>
@@ -758,14 +759,14 @@ function EditMedium() {
                             setInputValue={setSearchPres}
                         />
                         <label>Templo Origem: </label>
-                        <select value={medium.temploOrigem} disabled={user.level !== 'Administrador' && Boolean(medium.temploOrigem)} onChange={(e) => updateProps('temploOrigem', e.target.value)}>
+                        <select value={medium.temploOrigem} disabled={user.level !== 'Administrador' && Boolean(medium.temploOrigem)} onChange={(e) => updateProps('temploOrigem', Number(e.target.value))}>
                             <option value={0}></option>
                             {templos.map((item: ITemplo, index: number) => (
                                 <option key={index} value={item.templo_id}>{item.cidade} - {item.estado.abrev}</option>
                             ))}
                         </select>
                         <label>Colete Nº: </label>
-                        <select value={medium.colete} onChange={(e) => updateProps('colete', e.target.value)}>
+                        <select value={medium.colete} onChange={(e) => updateProps('colete', Number(e.target.value))}>
                             <option value={0}></option>
                             {coletes.map((item: number, index: number) => (
                                 <option key={index} value={item}>{item}</option>
@@ -1371,9 +1372,9 @@ function EditMedium() {
                     <SectionTitle>Observações</SectionTitle>
                     <Observations value={medium.observ} onChange={(e) => updateProps('observ', e.target.value)}/>
                 </PersonalCard>
-                <div style={{width: '90%', maxWidth: '1200px', display: 'flex', justifyContent: 'space-around'}}>
-                    <MediumButton color="red" onClick={() => navigate(`/mediuns/consulta/${params.id}`)}>Cancelar</MediumButton>
-                    <MediumButton color="green" onClick={() => validateMedium(medium, async () => await handleEditMedium(medium, selected, token))}>Salvar</MediumButton>
+                <div style={{width: '90%', maxWidth: '1200px', display: 'flex', justifyContent: 'space-around', marginTop: '30px'}}>
+                    <NavigateButton width="150px" height="45px" color="red" onClick={() => navigate(`/mediuns/consulta/${params.id}`)}>Cancelar</NavigateButton>
+                    <NavigateButton width="150px" height="45px" onClick={() => validateMedium(medium, async () => await handleEditMedium(medium, selected, token))}>Salvar</NavigateButton>
                 </div>
             </MainContainer>
             <SideMenu list={listSubMenu} />

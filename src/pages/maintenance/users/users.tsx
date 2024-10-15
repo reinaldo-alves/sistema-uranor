@@ -1,5 +1,5 @@
 import { useState, useContext, useEffect, useRef } from "react";
-import { InfoCard, InputContainer, InfoContent, Results, ResultsCard, ResultsDetails, ResultsTable, ResultsTitle, SearchButton, SearchCard, SearchContainer, UserCapsLock } from "./styles";
+import { InfoCard, InputContainer, InfoContent, Results, ResultsCard, ResultsDetails, ResultsTable, ResultsTitle, SearchCard, SearchContainer, UserCapsLock } from "./styles";
 import SideMenu from "src/components/SideMenu/SideMenu";
 import Header from "src/components/header/header";
 import SubMenu from "src/components/SubMenu/SubMenu";
@@ -14,6 +14,7 @@ import AutocompleteInput from "src/components/AutocompleteInput/AutocompleteInpu
 import { formatInputText, handleCapsLock, handleEnterPress, removeDiacritics } from "src/utilities/functions";
 import { Modal, ModalButton, ModalContent, ModalTitle } from "src/components/Modal/modal";
 import MainContainer from "src/components/MainContainer/MainContainer";
+import { SearchButton } from "src/components/buttons/buttons";
 
 function Users() {
     const [searchName, setSearchName] = useState('');

@@ -47,6 +47,9 @@ import InstrucoesPraticas from './pages/biblioteca/instrucoespraticas';
 import Calendar from './pages/maintenance/calendar/calendar';
 import AddAspirante from './pages/desenvolvimento/AddAspirante';
 import DesenvDocs from './pages/desenvolvimento/DesenvDocs';
+import AddYoungMedium from './pages/mediuns/YoungMedium/AddYoungMedium';
+import EditYoungMedium from './pages/mediuns/YoungMedium/EditYoungMedium';
+import ShowYoungMedium from './pages/mediuns/YoungMedium/ShowYoungMedium';
 
 function App() {
   const [mainContainer, setMainContainer] = useState('199')
@@ -119,6 +122,9 @@ function App() {
               <Route path='/mediuns/historico/:id' element={<TimeLine />} />
               <Route path='/mediuns/cadastro' element={<AddMedium />} />
               <Route path='/mediuns/menor' element={<YoungMedium />} />
+              <Route path='/mediuns/menor/:id' element={<ShowYoungMedium />} />
+              <Route path='/mediuns/menor/editar/:id' element={<EditYoungMedium />} />
+              <Route path='/mediuns/menor/cadastro' element={<AddYoungMedium />} />
               <Route path='/cantosechaves' element={<CantosChaves />} />
               <Route path='/desenvolvimento/frequencia' element={<Desenvolvimento />} />
               <Route path='/desenvolvimento/cadastro' element={<AddAspirante />} />
@@ -143,7 +149,7 @@ function App() {
             <Route path='/login' element={!login? <Login /> : <Navigate to='/' />} />
           </Routes>
         </BrowserRouter>
-        <Footer>Sistema Uranor - v.1.3.1 - ©2024 Uranor do Amanhecer. Todos os direitos reservados.</Footer>
+        <Footer>Sistema Uranor - v.1.4.0 - ©2024 Uranor do Amanhecer. Todos os direitos reservados.</Footer>
       </Background>
     </ThemeProvider>
   );
