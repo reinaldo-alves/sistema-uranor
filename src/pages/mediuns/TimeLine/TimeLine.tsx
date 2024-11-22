@@ -1,5 +1,5 @@
 import Header from "src/components/header/header";
-import { ButtonContainer, EditObs, InputContainer, Results, ResultsCard, ResultsDetails, ResultsTable, ResultsTitle, YearTitle } from "./styles";
+import { ButtonContainer, EditObs, EventDetails, EventTable, EventTitle, YearCard, YearTitle } from "./styles";
 import SubMenu from "src/components/SubMenu/SubMenu";
 import SideMenu from "src/components/SideMenu/SideMenu";
 import { useNavigate, useParams } from "react-router-dom";
@@ -17,6 +17,7 @@ import api from "src/api";
 import { Alert, Confirm } from "src/utilities/popups";
 import MainContainer from "src/components/MainContainer/MainContainer";
 import { NavigateButton } from "src/components/buttons/buttons";
+import { InputContainer } from "src/components/cardsContainers/cardsContainers";
 
 function TimeLine() {
     const [medium, setMedium] = useState(defaultMedium);
@@ -193,20 +194,20 @@ function TimeLine() {
 
     for(let i = new Date().getFullYear(); i >= new Date(medium.dtIngresso).getFullYear(); i--) {
         arrayCards.push(
-            <ResultsCard key={i} show={eventos.filter((item: IEvento) => new Date(item.data).getFullYear() === i).length > 0}>
+            <YearCard key={i} show={eventos.filter((item: IEvento) => new Date(item.data).getFullYear() === i).length > 0}>
                 <YearTitle>{i}</YearTitle>
-                <ResultsTable>
+                <EventTable>
                     {eventos
                         .filter((item: IEvento) => new Date(item.data).getFullYear() === i)
                         .map((item: IEvento, index: number) => (
-                            <Results key={index}>
-                                <ResultsTitle onClick={() => modalEditEvento(item)}>{convertDate(item.data)} - {item.mensagem}</ResultsTitle>
-                                <ResultsDetails>{item.observ}</ResultsDetails>
-                            </Results>
+                            <div style={{display: 'flex', flexDirection: 'column'}} key={index}>
+                                <EventTitle onClick={() => modalEditEvento(item)}>{convertDate(item.data)} - {item.mensagem}</EventTitle>
+                                <EventDetails>{item.observ}</EventDetails>
+                            </div>
                         ))
                     }
-                </ResultsTable>
-            </ResultsCard>
+                </EventTable>
+            </YearCard>
         )
     }
 

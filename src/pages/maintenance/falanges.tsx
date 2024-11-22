@@ -1,5 +1,5 @@
 import { useState, useContext, useEffect } from "react";
-import { InfoCard, InputContainer, InfoContent, Results, ResultsCard, ResultsTable, ResultsTitle, SearchCard, SearchContainer } from "./styles";
+import { ThreeColTable } from "./styles";
 import { ListContext } from "src/contexts/ListContext";
 import SideMenu from "src/components/SideMenu/SideMenu";
 import Header from "src/components/header/header";
@@ -11,6 +11,8 @@ import api from "src/api";
 import { Alert } from "src/utilities/popups";
 import { Modal, ModalButton, ModalContent, ModalSubTitle, ModalTitle } from "src/components/Modal/modal";
 import { formatInputText, handleEnterPress, removeDiacritics } from "src/utilities/functions";
+import { InfoCard, InputContainer, Results, ResultsCard, SearchCard, SearchContainer } from "src/components/cardsContainers/cardsContainers";
+import { InfoContent, ResultsTitle } from "src/components/texts/texts";
 
 function Falanges() {   
     const [search, setSearch] = useState('');
@@ -85,19 +87,19 @@ function Falanges() {
             <SubMenu list={listSubMenu}/>
             <MainContainer title="Falanges Missionárias - Manutenção">
                 <SearchCard>
-                    <SearchContainer>
+                    <SearchContainer template="1fr 280px" align="flex-end">
                         <InputContainer>
                             <label>Falange Missionária</label>
                             <input type="text" value={search} onChange={(e) => setSearch(e.target.value)} />
                         </InputContainer>
-                        <InfoCard>
+                        <InfoCard falange>
                             <InfoContent>Clique sobre uma falange para EDITAR</InfoContent>
                             <InfoContent>Resultados encontrados: {falMiss.filter((item: IFalange) => removeDiacritics(item.nome).includes(removeDiacritics(search))).length}</InfoContent>
                         </InfoCard>
                     </SearchContainer>
                 </SearchCard>
                 <ResultsCard>
-                    <ResultsTable>
+                    <ThreeColTable>
                         {falMiss
                             .filter((item: IFalange) => removeDiacritics(item.nome).includes(removeDiacritics(search)))
                             .map((item: IFalange, index: number) => (
@@ -106,7 +108,7 @@ function Falanges() {
                                 </Results>
                             ))
                         }
-                    </ResultsTable>
+                    </ThreeColTable>
                 </ResultsCard>
             </MainContainer>
             <SideMenu list={listSubMenu} />

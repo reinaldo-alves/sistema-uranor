@@ -7,74 +7,6 @@ export const MainInfoContainer = styled.div`
     gap: 15px;
 `;
 
-export const PersonalCard = styled.div`
-    margin-top: 30px;
-    width: 90%;
-    max-width: 1200px;
-    border-radius: 10px;
-    padding: 15px;
-    background-color: ${(props) => {return props.theme.color.mediumColorTr}};
-    border: solid 1px ${(props) => {return props.theme.color.darkerColor}};
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-
-    label {
-        width: 100%;
-        font-weight: bold;
-        font-size: 18px;
-        color: ${(props) => {return props.theme.color.darkerColor}};
-        white-space: nowrap;
-        text-align: right;
-        
-        @media (max-width: 1000px) {
-            font-size: 14px;
-        }
-    }
-
-    input {
-        width: 100%;
-        height: 35px;
-        padding: 6px;
-        font-size: 18px;
-        font-weight: bold;
-        border-radius: 8px;
-        border: solid 1px ${(props) => {return props.theme.color.darkerColor}};
-        display: block;
-        
-        @media (max-width: 1000px) {
-            font-size: 14px;
-        }
-    }
-
-    select {
-        width: 100%;
-        height: 35px;
-        padding: 6px;
-        font-size: 18px;
-        font-weight: bold;
-        border-radius: 8px;
-        border: solid 1px ${(props) => {return props.theme.color.darkerColor}};
-        display: block;
-
-        @media (max-width: 1000px) {
-            font-size: 14px;
-        }
-    }
-
-    span {
-        font-weight: bold;
-        font-size: 18px;
-        color: ${(props) => {return props.theme.color.darkerColor}};
-        white-space: nowrap;
-        
-        @media (max-width: 1000px) {
-            font-size: 14px;
-        }
-    }
-
-`;
-
 export const MainContent = styled.div`
     display: flex;
     gap: 30px;
@@ -83,30 +15,6 @@ export const MainContent = styled.div`
     @media (max-width: 800px) {
         flex-direction: column;
         align-items: center;
-    }
-`;
-
-export const SectionTitle = styled.h2`
-    color: ${(props) => {return props.theme.color.darkerColor}};
-    margin-bottom: 5px;
-    width: 100%;
-    text-align: center;
-`;
-
-export const InputContainer = styled.div`
-    width: 100%;
-    display: flex;
-    justify-content: flex-start;
-    align-items: center;
-    gap: 20px;
-
-    @media (max-width: 800px) {
-        flex-direction: column;
-        align-items: flex-start;
-    }
-
-    @media (max-width: 520px) {
-        flex-direction: column;
     }
 `;
 
@@ -151,6 +59,10 @@ export const DatesContainer = styled.div`
     justify-content: flex-start;
     align-items: center;
     gap: 20px 10px;
+
+    span {
+        text-decoration: none;
+    }
 `;
 
 export const GridEventContainer = styled.div`
@@ -182,7 +94,7 @@ export const FieldContainer = styled.div<{width?: string}>`
     min-width: ${({ width }) => width? width : '150px'};
 
     label {
-        width: auto;
+        width: auto !important;
         padding-right: 10px;
     }
 

@@ -89,7 +89,10 @@ VERSÃO 1.3.1
 VERSÃO 1.4.0
 - Criação da subseção Médium Menor, com mecanismos para cadastrar, editar, excluir, mover para o cadastro geral e gerar emissão.
 - Alteração no nome do arquivo da imagem, substituindo a hash aleatória pela inicial da mediunidade.
+- Melhoria no estado de carregamento da página principal e da página Exibir Médium.
+- Suporte para versão online
 
 O QUE FAZER
 - Incluir médiuns menores nos relatórios.
 - Atualizar o banco de dados do desenvolvimento, adicionando mediunidade a todos os registros.
+- Para a versão online, criar um repositório de fotos online.

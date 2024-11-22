@@ -2,7 +2,7 @@ import SubMenu from "src/components/SubMenu/SubMenu";
 import Header from "../../components/header/header";
 import SideMenu from "src/components/SideMenu/SideMenu";
 import MainContainer from "src/components/MainContainer/MainContainer";
-import { ButtonContainer, DesenvCard, DesenvLegend, InputContainer, ModalMediumContent, MonthArrow, MonthNameContainer, Results, ResultsData, ResultsDetails, ResultsName, ResultsTable, ResultsTitle } from "./styles";
+import { ButtonContainer, DesenvCard, DesenvLegend, ModalMediumContent, MonthArrow, MonthNameContainer, Results, ResultsData, ResultsName, ResultsTable } from "./styles";
 import { formatInputText, handleEnterPress, showMedDesenv, showTemplo } from "src/utilities/functions";
 import { useContext, useEffect, useState } from "react";
 import { ListContext } from "src/contexts/ListContext";
@@ -17,6 +17,8 @@ import { useNavigate } from "react-router-dom";
 import { Modal, ModalButton, ModalSubTitle, ModalTitle } from "src/components/Modal/modal";
 import Loading from "src/utilities/Loading";
 import { NavigateButton } from "src/components/buttons/buttons";
+import { InputContainer } from "src/components/cardsContainers/cardsContainers";
+import { ColumnTitle, ResultsDetails } from "src/components/texts/texts";
 
 function Desenvolvimento() {
     const { loadDesenvolvimento, allFrequencia, princesas, templos } = useContext(ListContext);
@@ -356,9 +358,9 @@ function Desenvolvimento() {
                         <>
                             <ResultsTable>
                                 <Results columns={sundays.length}>
-                                    <ResultsTitle align="left">Médium</ResultsTitle>
+                                    <ColumnTitle align="left">Médium</ColumnTitle>
                                     {sundays.map(dia => (
-                                        <ResultsTitle key={dia}>Dia {String(dia).padStart(2, '0')}</ResultsTitle>
+                                        <ColumnTitle key={dia}>Dia {String(dia).padStart(2, '0')}</ColumnTitle>
                                     ))}
                                 </Results>
                                 {frequencia.frequencia
@@ -371,7 +373,7 @@ function Desenvolvimento() {
                                         <Results columns={sundays.length} key={index}>
                                             <ResultsName onClick={() => handleClickMedium(item.medium)}>
                                                 {mediuns.find((m: IMedium) => m.medium_id === item.medium)?.nome}
-                                                <ResultsDetails>{showMedDesenv(item, mediuns)} - {showTemplo(mediuns.find((m: IMedium) => m.medium_id === item.medium), templos)}</ResultsDetails>
+                                                <ResultsDetails resize>{showMedDesenv(item, mediuns)} - {showTemplo(mediuns.find((m: IMedium) => m.medium_id === item.medium), templos)}</ResultsDetails>
                                             </ResultsName>
                                             {sundays.map((dia: number, index: number) => {
                                                 const diaNumber = (index + 1) as 1 | 2 | 3 | 4 | 5
@@ -394,7 +396,7 @@ function Desenvolvimento() {
                         </>
                     : 
                         <>
-                            <ResultsTitle>Nenhum Médium</ResultsTitle>
+                            <ColumnTitle>Nenhum Médium</ColumnTitle>
                             <NavigateButton width="250px" onClick={() => importPreviousMonth(selectedMonth, token)}>Importar do mês anterior</NavigateButton>
                         </>
                     }
@@ -421,7 +423,7 @@ function Desenvolvimento() {
                 <ModalMediumContent vis={selectModal === 'adicionar'}>
                     <ModalTitle>Adicionar Médium no Desenvolvimento</ModalTitle>
                     <ModalSubTitle>Mês: {formatMonthYear.format(selectedMonth)}</ModalSubTitle>
-                    <InputContainer>
+                    <InputContainer labelWidth="auto">
                         <label>Nome do Médium</label>
                         <AutocompleteInput 
                             label={(option) => option.medium_id ? `${option.nome} (${option.medium_id.toString().padStart(5, '0')})` : ''}
@@ -445,7 +447,7 @@ function Desenvolvimento() {
                     <ModalTitle>Atualizar {selectedMedium.med === 'Apará' ? 'Mentores' : 'Mentor'}</ModalTitle>
                     <ModalSubTitle>Médium: {selectedMedium.nome}</ModalSubTitle>
                     {selectedMedium.med === 'Doutrinador' ? 
-                        <InputContainer>
+                        <InputContainer labelWidth="auto">
                             <label>Princesa</label>
                             <select value={princesa} onKeyUp={(e) => handleEnterPress(e, () => updateMentor(token))} onChange={(e) => setPrincesa(e.target.value)}>
                                 <option value={''}></option>
@@ -455,11 +457,11 @@ function Desenvolvimento() {
                             </select>
                         </InputContainer>
                     : selectedMedium.med === 'Apará' ?
-                        <InputContainer>
+                        <InputContainer labelWidth="auto">
                             <label>Preto Velho</label>
-                            <input type="text" value={pretoVelho} onKeyUp={(e) => handleEnterPress(e, () => updateMentor(token))} onChange={(e) => setPretoVelho(formatInputText(e.target.value))}/>
+                            <input style={{marginBottom: '12px'}} type="text" value={pretoVelho} onKeyUp={(e) => handleEnterPress(e, () => updateMentor(token))} onChange={(e) => setPretoVelho(formatInputText(e.target.value))}/>
                             <label>Caboclo</label>
-                            <input type="text" value={caboclo} onKeyUp={(e) => handleEnterPress(e, () => updateMentor(token))} onChange={(e) => setCaboclo(formatInputText(e.target.value))}/>
+                            <input style={{marginBottom: '12px'}} type="text" value={caboclo} onKeyUp={(e) => handleEnterPress(e, () => updateMentor(token))} onChange={(e) => setCaboclo(formatInputText(e.target.value))}/>
                             <label>Médico</label>
                             <input type="text" value={medico} onKeyUp={(e) => handleEnterPress(e, () => updateMentor(token))} onChange={(e) => setMedico(formatInputText(e.target.value))}/>
                         </InputContainer>
@@ -471,7 +473,7 @@ function Desenvolvimento() {
                 </ModalMediumContent>
                 <ModalMediumContent vis={selectModal === 'data'}>
                     <ModalTitle>Consultar Frequência</ModalTitle>
-                    <InputContainer>
+                    <InputContainer labelWidth="auto">
                         <label>Selecione um mês</label>
                         <input type="month" max={`${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`} value={inputMonth} onKeyUp={(e) => handleEnterPress(e, () => {
                             const [year, month] = inputMonth.split('-');
@@ -493,7 +495,7 @@ function Desenvolvimento() {
                 <ModalMediumContent vis={selectModal === 'emplacamento'}>
                     <ModalTitle>Emplacar Médium</ModalTitle>
                     <ModalSubTitle>{selectedMedium.nome}</ModalSubTitle>
-                    <InputContainer>
+                    <InputContainer labelWidth="auto">
                         <label>Data de Emplacamento</label>
                         <input type="date" max={`${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`} value={dtEmplac} onKeyUp={(e) => handleEnterPress(e, () => updateEmplac(token))} onChange={(e) => setDtEmplac(e.target.value)} />
                     </InputContainer>
@@ -505,7 +507,7 @@ function Desenvolvimento() {
                 <ModalMediumContent vis={selectModal === 'Desistência' || selectModal === 'Retorno'}>
                     <ModalTitle>{`${selectModal} do Médium`}</ModalTitle>
                     <ModalSubTitle>{selectedMedium.nome || dropMedium?.nome}</ModalSubTitle>
-                    <InputContainer>
+                    <InputContainer labelWidth="auto">
                         <label>{`Data de ${selectModal}`}</label>
                         <input type="date" max={`${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`} value={desistencia} onKeyUp={(e) => handleEnterPress(e, selectModal === 'Desistência' ? () => handleDesistente(token) : () => handleRetorno(token))} onChange={(e) => setDesistencia(e.target.value)} />
                     </InputContainer>

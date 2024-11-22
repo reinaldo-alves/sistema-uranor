@@ -1,6 +1,6 @@
 import { useContext, useState, useEffect } from "react";
 import { ListContext } from "src/contexts/ListContext";
-import { Divider, FieldContainer, FieldContainerBox, GridContainer, GridDatesContainer, InputContainer, MainContent, MainInfoContainer, Observations, PersonalCard, PhotoContainer, SectionTitle } from "./styles";
+import { Divider, FieldContainer, FieldContainerBox, FieldWrapper, GridContainer, GridDatesContainer, MainContent, MainInfoContainer, PhotoContainer } from "./styles";
 import { ICavaleiro, IEstado, IFalange, IMedium, IMentor, ITemplo } from "src/types/types";
 import SideMenu from "src/components/SideMenu/SideMenu";
 import SubMenu from "src/components/SubMenu/SubMenu";
@@ -18,6 +18,8 @@ import { useNavigate } from "react-router-dom";
 import { Modal, ModalButton, ModalContent, ModalInputContainer, ModalTitle } from "src/components/Modal/modal";
 import MainContainer from "src/components/MainContainer/MainContainer";
 import { NavigateButton } from "src/components/buttons/buttons";
+import { PersonalCard } from "src/components/cardsContainers/cardsContainers";
+import { Observations, SectionTitle } from "src/components/texts/texts";
 
 function AddMedium() {
     const { templos, estados, adjuntos, coletes, classMest, falMest, povos, falMiss, turnoL, turnoT, ministros, cavaleiros, guias, estrelas, princesas, classificacao } = useContext(ListContext);
@@ -761,7 +763,7 @@ function AddMedium() {
                                     : <option value={''}></option>}
                                 </select>
                             </GridContainer>
-                            <InputContainer>
+                            <FieldWrapper>
                                 <FieldContainer>
                                     <label>Classificação Atual: </label>
                                     <select value={newMedium.classif} onChange={(e) => {
@@ -785,7 +787,7 @@ function AddMedium() {
                                     <label>Data: </label>
                                     <input type="date" value={newMedium.dtClassif} onChange={(e) => updateProps('dtClassif', e.target.value)} min={newMedium.dtCenturia}  max={now} />
                                 </FieldContainer>
-                            </InputContainer>
+                            </FieldWrapper>
                         </>
                     : newMedium.sex==='Feminino' && newMedium.dtCenturia?
                         <>
@@ -956,39 +958,35 @@ function AddMedium() {
                     <SectionTitle>Cargos e Funções</SectionTitle>
                     {newMedium.sex.concat(newMedium.med)==='MasculinoDoutrinador'?
                         <>
-                            <InputContainer>
-                                <FieldContainer>
-                                    <label>Comando: </label>
-                                    <select value={newMedium.comando} onChange={(e) => updateProps('comando', e.target.value)}>
-                                        <option value={''}></option>
-                                        <option value={'Comandante'}>Comandante</option>
-                                        <option value={'Janatã'}>Comandante Janatã</option>
-                                        <option value={'Lança'}>Lança Vermelha</option>
-                                        <option value={'JanatãLança'}>Comandante Janatã / Lança Vermelha</option>
-                                    </select>
-                                </FieldContainer>
-                                <FieldContainer>        
-                                    <label>Presidência: </label>
-                                    <select value={newMedium.presidente} disabled={!newMedium.classif.includes('Adjunto Koatay 108 Herdeiro Triada Harpásios')} onChange={(e) => {
-                                        updateProps('presidente', e.target.value);
-                                        if(e.target.value === 'Presidente') {
-                                            updateProps('recepcao', false);
-                                            updateProps('devas', false);
-                                            updateProps('trinoSol', '');
-                                            updateProps('trinoSar', false);
-                                            updateProps('filho', false);
-                                            updateProps('herdeiro', 0);
-                                            updateProps('turnoTrab', 'Ajouros');
-                                            updateProps('falMiss', 0);
-                                            setTSol(false);
-                                        }
-                                    }}>
-                                        <option value={''}></option>
-                                        <option value={'Presidente'}>Presidente</option>
-                                        <option value={'Vice'}>Vice-presidente</option>
-                                    </select>
-                                </FieldContainer>
-                            </InputContainer>
+                            <GridContainer>
+                                <label>Comando: </label>
+                                <select value={newMedium.comando} onChange={(e) => updateProps('comando', e.target.value)}>
+                                    <option value={''}></option>
+                                    <option value={'Comandante'}>Comandante</option>
+                                    <option value={'Janatã'}>Comandante Janatã</option>
+                                    <option value={'Lança'}>Lança Vermelha</option>
+                                    <option value={'JanatãLança'}>Comandante Janatã / Lança Vermelha</option>
+                                </select>
+                                <label>Presidência: </label>
+                                <select value={newMedium.presidente} disabled={!newMedium.classif.includes('Adjunto Koatay 108 Herdeiro Triada Harpásios')} onChange={(e) => {
+                                    updateProps('presidente', e.target.value);
+                                    if(e.target.value === 'Presidente') {
+                                        updateProps('recepcao', false);
+                                        updateProps('devas', false);
+                                        updateProps('trinoSol', '');
+                                        updateProps('trinoSar', false);
+                                        updateProps('filho', false);
+                                        updateProps('herdeiro', 0);
+                                        updateProps('turnoTrab', 'Ajouros');
+                                        updateProps('falMiss', 0);
+                                        setTSol(false);
+                                    }
+                                }}>
+                                    <option value={''}></option>
+                                    <option value={'Presidente'}>Presidente</option>
+                                    <option value={'Vice'}>Vice-presidente</option>
+                                </select>
+                            </GridContainer>
                             <div style={{display: 'flex', justifyContent: 'center', gap: '10px 30px', flexWrap: 'wrap'}}>
                                 <FieldContainerBox>
                                     <input type="checkBox" disabled={newMedium.devas} checked={newMedium.recepcao} onChange={(e) => updateProps('recepcao', e.target.checked)}/>
@@ -1019,7 +1017,7 @@ function AddMedium() {
                             {newMedium.classif === 'Adjunto Koatay 108 Herdeiro Triada Harpásios 7º Raio Adjuração Arcanos Rama 2000' || newMedium.presidente === 'Presidente' ? '' : 
                                 <>
                                     <Divider></Divider>
-                                    <InputContainer herdeiro>
+                                    <FieldWrapper herdeiro>
                                         <FieldContainerBox>
                                             <input type="checkBox" checked={newMedium.trinoSar} onChange={(e) => updateProps('trinoSar', e.target.checked)} />
                                             <label>Trino Sardyos</label>
@@ -1044,7 +1042,7 @@ function AddMedium() {
                                                 <label>Filho?</label>
                                             </FieldContainerBox>
                                         </div> 
-                                    </InputContainer>
+                                    </FieldWrapper>
                                 </>
                             }
                         </>
@@ -1065,7 +1063,7 @@ function AddMedium() {
                                 </FieldContainerBox>
                             </div>
                             <Divider></Divider>
-                            <InputContainer herdeiro>
+                            <FieldWrapper herdeiro>
                                 <FieldContainerBox>
                                     <input type="checkBox" checked={newMedium.trinoSar} onChange={(e) => updateProps('trinoSar', e.target.checked)} />
                                     <label>Trino Sardyos</label>
@@ -1090,7 +1088,7 @@ function AddMedium() {
                                         <label>Filho?</label>
                                     </FieldContainerBox>
                                 </div> 
-                            </InputContainer>
+                            </FieldWrapper>
                         </>
                     : newMedium.sex.concat(newMedium.med)==='FemininoDoutrinador'?
                         <div style={{display: 'flex', justifyContent:'center', gap: '10px', flexWrap: 'wrap'}}>

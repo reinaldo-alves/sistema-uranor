@@ -1,6 +1,6 @@
 import { useContext, useState, useEffect } from "react";
 import { ListContext } from "src/contexts/ListContext";
-import { FieldContainer, GridContainer, MainContent, MainInfoContainer, Observations, PersonalCard, PhotoContainer, SectionTitle } from "./styles";
+import { FieldContainer, GridContainer, MainContent, MainInfoContainer, PhotoContainer } from "./styles";
 import { IDesenvolvimento, IEstado, IMedium, IMentor, ITemplo } from "src/types/types";
 import SideMenu from "src/components/SideMenu/SideMenu";
 import SubMenu from "src/components/SubMenu/SubMenu";
@@ -17,6 +17,8 @@ import { defaultAdj, defaultMedium } from "src/utilities/default";
 import { useNavigate } from "react-router-dom";
 import MainContainer from "src/components/MainContainer/MainContainer";
 import { NavigateButton } from "src/components/buttons/buttons";
+import { PersonalCard } from "src/components/cardsContainers/cardsContainers";
+import { Observations, SectionTitle } from "src/components/texts/texts";
 
 function AddAspirante() {
     const { templos, estados, adjuntos, ministros, princesas, loadDesenvolvimento, allFrequencia } = useContext(ListContext);

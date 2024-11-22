@@ -1,5 +1,5 @@
 import { useState, useContext, useEffect } from "react";
-import { InfoContent, InputContainer, ResultsCard, ResultsTable } from "./styles";
+import { CalInputContainer, FiveColTable, ResultsCard } from "./styles";
 import SideMenu from "src/components/SideMenu/SideMenu";
 import Header from "src/components/header/header";
 import SubMenu from "src/components/SubMenu/SubMenu";
@@ -10,6 +10,7 @@ import { defaultCalendario } from "src/utilities/default";
 import MainContainer from "src/components/MainContainer/MainContainer";
 import { ListContext } from "src/contexts/ListContext";
 import { SearchButton } from "src/components/buttons/buttons";
+import { InfoContent } from "src/components/texts/texts";
 
 function Calendar() {
     const [edited, setEdited] = useState(defaultCalendario);
@@ -65,61 +66,61 @@ function Calendar() {
             <SubMenu list={listSubMenu}/>
             <MainContainer title="Calendário de Atividades Doutrinárias - Manutenção">
                 <ResultsCard>
-                    <InputContainer>
+                    <CalInputContainer>
                         <label>Ano:</label>
                         <input type="number" value={edited.ano} onChange={(e) => updateProps('ano', e.target.value)}/>
-                    </InputContainer>
-                    <InfoContent>Dias de Lua Cheia</InfoContent>
-                    <ResultsTable>
-                        <InputContainer>
+                    </CalInputContainer>
+                    <InfoContent style={{marginTop: '10px', fontSize: '20px'}}>Dias de Lua Cheia</InfoContent>
+                    <FiveColTable style={{justifyItems: 'center'}}>
+                        <CalInputContainer>
                             <label>Janeiro:</label>
                             <input type="number" value={edited.janeiro} onChange={(e) => updateProps('janeiro', e.target.value)}/>
-                        </InputContainer>
-                        <InputContainer>
+                        </CalInputContainer>
+                        <CalInputContainer>
                             <label>Fevereiro:</label>
                             <input type="number" value={edited.fevereiro} onChange={(e) => updateProps('fevereiro', e.target.value)}/>
-                        </InputContainer>
-                        <InputContainer>
+                        </CalInputContainer>
+                        <CalInputContainer>
                             <label>Março:</label>
                             <input type="number" value={edited.marco} onChange={(e) => updateProps('marco', e.target.value)}/>
-                        </InputContainer>
-                        <InputContainer>
+                        </CalInputContainer>
+                        <CalInputContainer>
                             <label>Abril:</label>
                             <input type="number" value={edited.abril} onChange={(e) => updateProps('abril', e.target.value)}/>
-                        </InputContainer>
-                        <InputContainer>
+                        </CalInputContainer>
+                        <CalInputContainer>
                             <label>Maio:</label>
                             <input type="number" value={edited.maio} onChange={(e) => updateProps('maio', e.target.value)}/>
-                        </InputContainer>
-                        <InputContainer>
+                        </CalInputContainer>
+                        <CalInputContainer>
                             <label>Junho:</label>
                             <input type="number" value={edited.junho} onChange={(e) => updateProps('junho', e.target.value)}/>
-                        </InputContainer>
-                        <InputContainer>
+                        </CalInputContainer>
+                        <CalInputContainer>
                             <label>Julho:</label>
                             <input type="number" value={edited.julho} onChange={(e) => updateProps('julho', e.target.value)}/>
-                        </InputContainer>
-                        <InputContainer>
+                        </CalInputContainer>
+                        <CalInputContainer>
                             <label>Agosto:</label>
                             <input type="number" value={edited.agosto} onChange={(e) => updateProps('agosto', e.target.value)}/>
-                        </InputContainer>
-                        <InputContainer>
+                        </CalInputContainer>
+                        <CalInputContainer>
                             <label>Setembro:</label>
                             <input type="number" value={edited.setembro} onChange={(e) => updateProps('setembro', e.target.value)}/>
-                        </InputContainer>
-                        <InputContainer>
+                        </CalInputContainer>
+                        <CalInputContainer>
                             <label>Outubro:</label>
                             <input type="number" value={edited.outubro} onChange={(e) => updateProps('outubro', e.target.value)}/>
-                        </InputContainer>
-                        <InputContainer>
+                        </CalInputContainer>
+                        <CalInputContainer>
                             <label>Novembro:</label>
                             <input type="number" value={edited.novembro} onChange={(e) => updateProps('novembro', e.target.value)}/>
-                        </InputContainer>
-                        <InputContainer>
+                        </CalInputContainer>
+                        <CalInputContainer>
                             <label>Dezembro:</label>
                             <input type="number" value={edited.dezembro} onChange={(e) => updateProps('dezembro', e.target.value)}/>
-                        </InputContainer>
-                    </ResultsTable>
+                        </CalInputContainer>
+                    </FiveColTable>
                 </ResultsCard>
                 <SearchButton width="200px" style={{alignSelf: 'center'}} onClick={() => sendCalendar(token)}>Salvar</SearchButton>
             </MainContainer>

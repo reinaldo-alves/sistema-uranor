@@ -1,5 +1,5 @@
 import { useState, useContext, useEffect } from "react";
-import { ButtonContainer, InfoCard, InfoContainer, InfoContent, InputContainer, MediumInfo, MediumName, MediumPhoto, MessageNull, Results, ResultsCard, ResultsDetails, ResultsTable, ResultsTitle, SearchCard, TableContainer, TextContainer } from "./styles";
+import { ButtonContainer, InfoCard, InfoContainer, InfoWrapper, MediumInfo, MediumName, MediumPhoto, MessageNull, ResultsCard, ResultsTable, SearchCard, TableContainer, TextContainer } from "./styles";
 import { ListContext } from "src/contexts/ListContext";
 import { useNavigate } from "react-router-dom";
 import { MediumContext } from "src/contexts/MediumContext";
@@ -12,6 +12,8 @@ import { removeDiacritics, setSituation, showTemplo } from "src/utilities/functi
 import Loading from "src/utilities/Loading";
 import MainContainer from "src/components/MainContainer/MainContainer";
 import { NavigateButton } from "src/components/buttons/buttons";
+import { InputContainer, Results } from "src/components/cardsContainers/cardsContainers";
+import { ResultsDetails, ResultsTitle } from "src/components/texts/texts";
 
 function SearchMedium() {
     
@@ -114,7 +116,7 @@ function SearchMedium() {
                             {!selected.medium_id?
                                 <MessageNull>{`Selecione um médium na lista ${textPosition}`}</MessageNull>
                             :
-                                <InfoContent>
+                                <InfoWrapper>
                                     <MediumName>{selected.nome}</MediumName>
                                     <InfoContainer>
                                         <MediumPhoto image={selected.foto}>{selected.foto? '' : 'SEM FOTO'}</MediumPhoto>
@@ -131,7 +133,7 @@ function SearchMedium() {
                                         <MediumInfo>Templo: <span>{showTemplo(selected, templos)}</span></MediumInfo>
                                         <MediumInfo>Condição Atual: <span>{selected.condicao}</span></MediumInfo>
                                     </TextContainer>
-                                </InfoContent>
+                                </InfoWrapper>
                             }
                         </InfoCard>
                         <MediumInfo>

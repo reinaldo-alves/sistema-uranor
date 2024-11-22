@@ -1,5 +1,5 @@
 import { useState, useContext, useEffect, useRef } from "react";
-import { InfoCard, InputContainer, InfoContent, Results, ResultsCard, ResultsDetails, ResultsTable, ResultsTitle, SearchCard, SearchContainer, UserCapsLock } from "./styles";
+import { FiveColTable, UserCapsLock } from "./styles";
 import SideMenu from "src/components/SideMenu/SideMenu";
 import Header from "src/components/header/header";
 import SubMenu from "src/components/SubMenu/SubMenu";
@@ -15,6 +15,8 @@ import { formatInputText, handleCapsLock, handleEnterPress, removeDiacritics } f
 import { Modal, ModalButton, ModalContent, ModalTitle } from "src/components/Modal/modal";
 import MainContainer from "src/components/MainContainer/MainContainer";
 import { SearchButton } from "src/components/buttons/buttons";
+import { InfoCard, InputContainer, Results, ResultsCard, SearchCard, SearchContainer } from "src/components/cardsContainers/cardsContainers";
+import { InfoContent, ResultsDetails, ResultsTitle } from "src/components/texts/texts";
 
 function Users() {
     const [searchName, setSearchName] = useState('');
@@ -171,7 +173,7 @@ function Users() {
             <SubMenu list={listSubMenu}/>
             <MainContainer title="Usuários - Manutenção">
                 <SearchCard>
-                    <SearchContainer>
+                    <SearchContainer template="1fr 200px 180px">
                         <InputContainer>
                             <label>Nome</label>
                             <input type="text" value={searchName} onChange={(e) => setSearchName(e.target.value)} />
@@ -198,7 +200,7 @@ function Users() {
                     </InfoCard>
                 </SearchCard>
                 <ResultsCard>
-                    <ResultsTable>
+                    <FiveColTable>
                         {users
                             .filter((item: IUser) => removeDiacritics(item.name).includes(removeDiacritics(searchName)))
                             .filter((item: IUser) => item.level.includes(searchLevel))
@@ -209,7 +211,7 @@ function Users() {
                                 </Results>
                             ))
                         }
-                    </ResultsTable>
+                    </FiveColTable>
                 </ResultsCard>
             </MainContainer>
             <SideMenu list={listSubMenu} />
@@ -257,12 +259,12 @@ function Users() {
                             <InputContainer>
                                 <label>Senha</label>
                                 <input type="password" value={password1} ref={passRef} onKeyUp={(e) => handleEnterPress(e, async () => await handleAddUser(edited.name, [password1, password2], edited.level, edited.medium_id))} onChange={(e) => setPassword1(e.target.value)} onFocus={handleCapsLock(setIsCapsLockOnPass, passRef).focus} onBlur={handleCapsLock(setIsCapsLockOnPass, passRef).blur} />
-                                <UserCapsLock>{isCapsLockOnPass ? 'Caps Lock ativo' : ''}</UserCapsLock>
+                                <UserCapsLock user>{isCapsLockOnPass ? 'Caps Lock ativo' : ''}</UserCapsLock>
                             </InputContainer>
                             <InputContainer>
                                 <label>Confirmar Senha</label>
                                 <input type="password" value={password2} ref={confRef} onKeyUp={(e) => handleEnterPress(e, async () => await handleAddUser(edited.name, [password1, password2], edited.level, edited.medium_id))} onChange={(e) => setPassword2(e.target.value)} onFocus={handleCapsLock(setIsCapsLockOnConf, confRef).focus} onBlur={handleCapsLock(setIsCapsLockOnConf, confRef).blur} />
-                                <UserCapsLock>{isCapsLockOnConf ? 'Caps Lock ativo' : ''}</UserCapsLock>
+                                <UserCapsLock user>{isCapsLockOnConf ? 'Caps Lock ativo' : ''}</UserCapsLock>
                             </InputContainer>
                         </>
                     }

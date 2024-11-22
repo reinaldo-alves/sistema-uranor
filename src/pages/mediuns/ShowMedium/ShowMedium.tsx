@@ -1,6 +1,6 @@
 import { useCallback, useContext, useEffect, useState } from "react";
 import Header from "src/components/header/header";
-import { Divider, FrequenciaData, GridContainer, InfoContainer, InputContainer, MainInfoContainer, MediumInfo, MediumMainInfo, MediumText, ModalMediumContent, NameAndId, PersonalCard, PhotoContainer, SectionTitle } from "./styles";
+import { Divider, FrequenciaData, GridContainer, InfoContainer, MainInfoContainer, MediumInfo, MediumMainInfo, MediumText, ModalMediumContent, NameAndId, PhotoContainer } from "./styles";
 import SubMenu from "src/components/SubMenu/SubMenu";
 import SideMenu from "src/components/SideMenu/SideMenu";
 import { useNavigate, useParams } from "react-router-dom";
@@ -21,6 +21,8 @@ import { Modal, ModalButton, ModalTitle } from "src/components/Modal/modal";
 import { IEventoAPI } from "src/types/typesAPI";
 import MainContainer from "src/components/MainContainer/MainContainer";
 import { NavigateButton } from "src/components/buttons/buttons";
+import { InputContainer, PersonalCard } from "src/components/cardsContainers/cardsContainers";
+import { SectionTitle } from "src/components/texts/texts";
 
 function ShowMedium() {
     const [loading, setLoading] = useState(true);
@@ -42,7 +44,6 @@ function ShowMedium() {
         await getUser(token);
         await loadMedium(token);
         await getData(token);
-        setLoading(false);
     }, [getUser, loadMedium, getData, token]);
     
     const navigateToTop = (route: string) => {
@@ -55,6 +56,12 @@ function ShowMedium() {
     useEffect(() => {
         getInfo();
     }, [getInfo])
+
+    useEffect(() => {
+        if(medium?.medium_id && ministros.length && cavaleiros.length && guias.length && adjuntos.length && templos.length && falMiss.length) {
+            setLoading(false);
+        }
+    }, [medium?.medium_id, ministros, cavaleiros, guias, adjuntos, templos, falMiss])
 
     useEffect(() => {
         window.scrollTo({top: 0});
@@ -189,7 +196,7 @@ function ShowMedium() {
                     <h3>(ID {medium.medium_id.toString().padStart(5, '0')})</h3>
                 </NameAndId>
                 <GridContainer>
-                    <PersonalCard style={{maxWidth: '252px', justifySelf: 'center'}}>
+                    <PersonalCard showMedium style={{maxWidth: '252px', justifySelf: 'center'}}>
                         <MainInfoContainer>
                             <PhotoContainer photo={medium.foto}>
                                 {medium.foto? '' : 'SEM FOTO'}
@@ -214,7 +221,7 @@ function ShowMedium() {
                         </MainInfoContainer>
                     </PersonalCard>
                     <div>
-                        <PersonalCard>
+                        <PersonalCard showMedium style={{alignItems: 'center'}}>
                             <SectionTitle>Dados Pessoais</SectionTitle>
                             <InfoContainer>
                                 <MediumInfo>Data de Nascimento: <span>{convertDate(medium.dtNasc)}</span></MediumInfo>
@@ -233,7 +240,7 @@ function ShowMedium() {
                                 <MediumInfo>Profissão: <span>{medium.profissao}</span></MediumInfo>
                             </InfoContainer>
                         </PersonalCard>
-                        <PersonalCard>
+                        <PersonalCard showMedium>
                             <SectionTitle>Datas Mediúnicas</SectionTitle>
                             <InfoContainer>
                                 <MediumInfo>Data Ingresso: <span>{convertDate(medium.dtIngresso)}</span></MediumInfo>
@@ -244,7 +251,7 @@ function ShowMedium() {
                                 <MediumInfo>Data Sétimo: <span>{convertDate(medium.dtSetimo)}</span></MediumInfo>
                             </InfoContainer>
                         </PersonalCard>
-                        <PersonalCard>
+                        <PersonalCard showMedium>
                             <SectionTitle>Dados Mediúnicos</SectionTitle>
                             <InfoContainer>
                                 <MediumInfo>Adjunto de Origem: <span>{medium.adjOrigem ? ministros.filter((item: IMentor) => item.id === adjuntos.filter((ad: IAdjunto) => ad.adjunto_id === medium.adjOrigem)[0]?.ministro)[0]? ministros.filter((item: IMentor) => item.id === adjuntos.filter((ad: IAdjunto) => ad.adjunto_id === medium.adjOrigem)[0]?.ministro)[0].nome : '' : ''} {medium.adjOrigem ? '- Mestre' : ''} {adjuntos.filter((item: IAdjunto) => item.adjunto_id === medium.adjOrigem)[0]? adjuntos.filter((item: IAdjunto) => item.adjunto_id === medium.adjOrigem)[0].nome : ''}</span></MediumInfo>
@@ -301,7 +308,7 @@ function ShowMedium() {
                                 </>
                             : ''}
                         </PersonalCard>
-                        <PersonalCard hide={medium.sex.concat(medium.med).length < 10 || !medium.dtCenturia}>
+                        <PersonalCard showMedium hide={medium.sex.concat(medium.med).length < 10 || !medium.dtCenturia}>
                             <SectionTitle>Povo</SectionTitle>
                             {medium.sex.concat(medium.med)==='MasculinoDoutrinador'?
                                 <InfoContainer>
@@ -325,13 +332,13 @@ function ShowMedium() {
                                 </InfoContainer>
                             : <div></div>}
                         </PersonalCard>
-                        <PersonalCard hide={medium.sex.concat(medium.med).length < 10 || !medium.dtCenturia || !positionsAndFunctions(medium)}>
+                        <PersonalCard showMedium hide={medium.sex.concat(medium.med).length < 10 || !medium.dtCenturia || !positionsAndFunctions(medium)}>
                             <SectionTitle>Cargos e Funções</SectionTitle>
                             <MediumText>
                                 {positionsAndFunctions(medium)}
                             </MediumText>
                         </PersonalCard>
-                        <PersonalCard hide={!medium.med}>
+                        <PersonalCard showMedium hide={!medium.med}>
                             <SectionTitle>Dados como {medium.med === 'Doutrinador' ? 'Apará' : medium.med === 'Apará' ? 'Doutrinador' : ''}</SectionTitle>
                             <InfoContainer>
                                 <MediumInfo>Data Teste: <span>{convertDate(medium.oldDtTest)}</span></MediumInfo>
@@ -360,7 +367,7 @@ function ShowMedium() {
                                 : <div></div>}
                             </InfoContainer>
                         </PersonalCard>
-                        <PersonalCard hide={!medium.observ}>
+                        <PersonalCard showMedium hide={!medium.observ}>
                             <SectionTitle>Observações</SectionTitle>
                             <MediumText>{medium.observ}</MediumText>
                         </PersonalCard>
@@ -371,7 +378,7 @@ function ShowMedium() {
             <Modal vis={showModal}>
                 <ModalMediumContent vis={selectModal === 'mudanca'}>
                     <ModalTitle>Mudança de Mediunidade</ModalTitle>
-                    <InputContainer>
+                    <InputContainer labelWidth="auto" inputWidth="180px">
                         <label>{medium.oldDtTest ? 'Data da mudança de mediunidade' : `Data do teste como ${medium.med === 'Doutrinador' ? 'Apará' : medium.med === 'Apará' ? 'Doutrinador' : ''}`}</label>
                         <input type="date" value={testDate} max={nowString} onKeyUp={(e) => handleEnterPress(e, async () => await handleChangeMed(testDate))} onChange={(e) => setTestDate(e.target.value)} />
                     </InputContainer>
@@ -392,7 +399,7 @@ function ShowMedium() {
                         })
                         .filter((item: IDesenvolvimento) => item.frequencia.some((el: IFrequencia) => el.medium === medium.medium_id && !(el.dia1 === '-' && el.dia2 === '-' && el.dia3 === '-' && el.dia4 === '-' && el.dia5 === '-')))
                         .map((item: IDesenvolvimento) => (
-                            <InputContainer key={item.mes}>
+                            <InputContainer labelWidth="auto" inputWidth="180px" key={item.mes}>
                                 <label>{convertStringToLongDate(item.mes)} <span style={{fontSize: '12px'}}>({showMedDesenv(item.frequencia.filter((el: IFrequencia) => el.medium === medium.medium_id)[0], mediuns)})</span></label>
                                 {getSundays(item.mes).map((dia: number, index: number) => {
                                     if (item.frequencia.filter((el: IFrequencia) => el.medium === medium.medium_id)[0]?.[`dia${index + 1 as 1 | 2 | 3 | 4 | 5}`] !== '-') {

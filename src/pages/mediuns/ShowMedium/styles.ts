@@ -23,22 +23,9 @@ export const MainInfoContainer = styled.div`
     gap: 15px;
 `;
 
-export const PersonalCard = styled.div<{hide?: boolean}>`
-    margin-top: 20px;
-    width: 100%;
-    max-width: 1200px;
-    border-radius: 10px;
-    padding: 15px;
-    background-color: ${(props) => {return props.theme.color.mediumColorTr}};
-    border: solid 1px ${(props) => {return props.theme.color.darkerColor}};
-    display: ${({ hide }) => hide? 'none' : 'flex'};
-    flex-direction: column;
-    align-items: center;
-    gap: 15px;
-`;
-
 export const MediumMainInfo = styled.span`
-    font-size: 14px;
+    font-size: 14px !important;
+    text-decoration: none !important;
     font-weight: bold;
     text-align: center;
     color: ${(props) => {return props.theme.color.darkerColor}};
@@ -49,7 +36,8 @@ export const MediumMainInfo = styled.span`
     text-overflow: ellipsis;
 
     span {
-        text-decoration: underline;
+        font-size: 14px !important;
+        text-decoration: underline !important;
     }
 `;
 
@@ -61,13 +49,6 @@ export const NameAndId = styled.div`
     flex-direction: column;
     align-items: center;
     margin-top: 15px;
-    text-align: center;
-`;
-
-export const SectionTitle = styled.h2`
-    color: ${(props) => {return props.theme.color.darkerColor}};
-    margin-bottom: 5px;
-    width: 100%;
     text-align: center;
 `;
 
@@ -124,7 +105,7 @@ export const MediumInfo = styled.span<{out?: boolean}>`
     text-overflow: ellipsis;
 
     span {
-        text-decoration: underline;
+        text-decoration: underline !important;
     }
 
     @media (max-width: 1100px) {
@@ -143,34 +124,6 @@ export const Divider = styled.div`
     width: 100%;
     height: 1px;
     background-color: ${(props) => {return props.theme.color.lighterColor}};
-`;
-
-export const InputContainer = styled.div`
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-
-    label {
-        font-weight: bold;
-        font-size: 20px;
-        color: ${(props) => {return props.theme.color.darkerColor}};
-        width: 100%;
-        margin-bottom: 5px; 
-        text-align: center;
-    }
-
-    input {
-        width: 180px;
-        height: 35px;
-        padding: 6px;
-        font-size: 18px;
-        font-weight: bold;
-        border-radius: 8px;
-        border: solid 1px ${(props) => {return props.theme.color.darkerColor}};
-        display: block;
-    }
 `;
 
 export const ModalMediumContent = styled.div<{vis: boolean}>`

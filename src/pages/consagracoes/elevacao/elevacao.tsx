@@ -1,7 +1,7 @@
 import SubMenu from "src/components/SubMenu/SubMenu";
 import Header from "../../../components/header/header";
 import SideMenu from "src/components/SideMenu/SideMenu";
-import { ButtonContainer, ConsagracaoCard, InputContainer, ModalMediumContent, MudancaObs, MudancaWarning, PageSubTitle, PhotoContainer, Results, ResultsData, ResultsDetails, ResultsPanel, ResultsTable, ResultsTitle } from "../styles";
+import { ButtonContainer, ConsagracaoCard, ModalMediumContent, MudancaObs, MudancaWarning, PageSubTitle, PhotoContainer, Results, ResultsData, ResultsPanel, ResultsTable } from "../styles";
 import { alphabeticOrder, consagracaoDetails, countMedium, handleEnterPress } from "src/utilities/functions";
 import { useCallback, useContext, useEffect, useState } from "react";
 import { ListContext } from "src/contexts/ListContext";
@@ -18,6 +18,8 @@ import { Modal, ModalButton, ModalSubTitle, ModalTitle } from "src/components/Mo
 import MainContainer from "src/components/MainContainer/MainContainer";
 import Loading from "src/utilities/Loading";
 import { NavigateButton } from "src/components/buttons/buttons";
+import { InputContainer } from "src/components/cardsContainers/cardsContainers";
+import { ColumnTitle, ResultsDetails } from "src/components/texts/texts";
 
 function Elevacao() {
     const { templos, adjuntos, ministros, falMest, listElevacao, listMudanca, loadConsagracao, searchMediumInCons } = useContext(ListContext);
@@ -204,17 +206,17 @@ function Elevacao() {
                 <ConsagracaoCard hide={![...listElevacao, ...listMudanca].length}>
                     <ResultsTable show={[...listElevacao, ...listMudanca].length}>
                         <ResultsPanel columns={columnData[0] as string}>
-                            <ResultsTitle align="left">{columnData[2]? 'Nome do Médium' : 'Médium'}</ResultsTitle>
-                            <ResultsTitle>{columnData[2]? 'Mediunidade' : 'Med.'}</ResultsTitle>
-                            <ResultsTitle>Termo</ResultsTitle>
-                            <ResultsTitle>Foto</ResultsTitle>
+                            <ColumnTitle align="left">{columnData[2]? 'Nome do Médium' : 'Médium'}</ColumnTitle>
+                            <ColumnTitle>{columnData[2]? 'Mediunidade' : 'Med.'}</ColumnTitle>
+                            <ColumnTitle>Termo</ColumnTitle>
+                            <ColumnTitle>Foto</ColumnTitle>
                         </ResultsPanel>
                         {alphabeticOrder([...listElevacao, ...listMudanca])
                             .map((item: IConsagracao, index: number) => (
                                 <Results columns={columnData[0] as string} key={index} onClick={() => handleClickMedium(item)}>
                                     <ResultsData align="left">
                                         {listMudanca.some((el: IConsagracao) => el.medium === item.medium)? `${item.nome} *` : item.nome}
-                                        <ResultsDetails>{consagracaoDetails(item, mediuns, templos)}</ResultsDetails>
+                                        <ResultsDetails resize>{consagracaoDetails(item, mediuns, templos)}</ResultsDetails>
                                     </ResultsData>
                                     <ResultsData>{columnData[2]? item.med : item.med[0]}</ResultsData>
                                     <ResultsData isNegative={!item.termo}>{item.termo ? 'Sim' : 'Não'}</ResultsData>
@@ -258,7 +260,7 @@ function Elevacao() {
                 <ModalMediumContent vis={selectModal === 'medium'}>
                     <ModalTitle>{selected.nome}</ModalTitle>
                     <NavigateButton style={{marginBottom: '20px'}} width="230px" onClick={() => navigate(`/mediuns/consulta/${selected.medium}`)}>Ver ficha</NavigateButton>
-                    <InputContainer box>
+                    <InputContainer box labelWidth="auto">
                         <label>Termo Assinado?</label>
                         <input type="checkbox" checked={checkTermo} onChange={(e) => editTermo(token, e.target.checked)} />
                     </InputContainer>
@@ -294,7 +296,7 @@ function Elevacao() {
                 <ModalMediumContent vis={selectModal === 'adicionar'}>
                     <ModalSubTitle>{selected.nome}</ModalSubTitle>
                     <ModalTitle>Adicionar Médium para Elevação</ModalTitle>
-                    <InputContainer>
+                    <InputContainer labelWidth="auto">
                         <label>Nome do Médium</label>
                         <AutocompleteInput 
                             label={(option) => option.medium_id ? `${option.nome} (${option.medium_id.toString().padStart(5, '0')})` : ''}
@@ -309,7 +311,7 @@ function Elevacao() {
                         />
                     </InputContainer>
                     <MudancaWarning show={Boolean(dropMedium?.dtEmplac) && !dropMedium?.dtIniciacao}>O médium selecionado não é iniciado</MudancaWarning>
-                    <InputContainer box>
+                    <InputContainer box labelWidth="auto">
                         <label>Mudança de mediunidade?</label>
                         <input type="checkbox" checked={checkMudanca} onKeyUp={(e) => handleEnterPress(e, () => addElevacao(token))} onChange={(e) => setCheckMudanca(e.target.checked)} />
                     </InputContainer>
@@ -321,7 +323,7 @@ function Elevacao() {
                 <ModalMediumContent vis={selectModal === 'Protocolo' || selectModal === 'Relatório'}>
                     <ModalSubTitle>{selected.nome}</ModalSubTitle>
                     <ModalTitle>{`Gerar ${selectModal}`}</ModalTitle>
-                    <InputContainer>
+                    <InputContainer labelWidth="auto">
                         <label>Título</label>
                         <input type="text" value={reportTitle} onKeyUp={(e) => handleEnterPress(e, () => {
                             if (selectModal === 'Protocolo') {

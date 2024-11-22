@@ -2,7 +2,7 @@ import Header from "src/components/header/header";
 import SubMenu from "src/components/SubMenu/SubMenu";
 import SideMenu from "src/components/SideMenu/SideMenu";
 import MainContainer from "src/components/MainContainer/MainContainer";
-import { InfoCard, InfoContent, InputContainer, Results, ResultsCard, ResultsDetails, ResultsTable, ResultsTitle, SearchCard, SearchContainer } from "./styles";
+import { ResultsCard, ResultsTable } from "./styles";
 import { useCallback, useContext, useEffect, useState } from "react";
 import { alphabeticOrder, removeDiacritics } from "src/utilities/functions";
 import { ListContext } from "src/contexts/ListContext";
@@ -11,6 +11,8 @@ import { UserContext } from "src/contexts/UserContext";
 import Loading from "src/utilities/Loading";
 import { useNavigate } from "react-router-dom";
 import { SearchButton } from "src/components/buttons/buttons";
+import { InfoCard, InputContainer, Results, SearchCard, SearchContainer } from "src/components/cardsContainers/cardsContainers";
+import { InfoContent, ResultsDetails, ResultsTitle } from "src/components/texts/texts";
 
 function YoungMedium() {
     const [loading, setLoading] = useState(true);
@@ -52,7 +54,7 @@ function YoungMedium() {
             <SubMenu list={listSubMenu}/>
             <MainContainer title="Médium Menor - Consulta" >
                 <SearchCard>
-                    <SearchContainer>
+                    <SearchContainer template="1fr 1fr 180px">
                         <InputContainer>
                             <label>Nome do Médium Menor</label>
                             <input type="text" value={searchName} onChange={(e) => setSearchName(e.target.value)} />

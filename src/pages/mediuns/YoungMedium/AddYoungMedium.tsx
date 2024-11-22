@@ -1,6 +1,6 @@
 import React, { useContext, useState, useEffect } from "react";
 import { ListContext } from "src/contexts/ListContext";
-import { FieldContainer, GridContainer, Observations, PersonalCard, SectionTitle } from "./styles";
+import { FieldContainer, GridContainer } from "./styles";
 import { IEstado, IFalange, IMenor, ITemplo } from "src/types/types";
 import SideMenu from "src/components/SideMenu/SideMenu";
 import SubMenu from "src/components/SubMenu/SubMenu";
@@ -15,6 +15,8 @@ import { useNavigate } from "react-router-dom";
 import MainContainer from "src/components/MainContainer/MainContainer";
 import { validateMenor } from "src/utilities/validations";
 import { NavigateButton } from "src/components/buttons/buttons";
+import { PersonalCard } from "src/components/cardsContainers/cardsContainers";
+import { Observations, SectionTitle } from "src/components/texts/texts";
 
 function AddYoungMedium() {
     const { templos, estados, falMiss, loadMenor, convertMenorToSend } = useContext(ListContext);

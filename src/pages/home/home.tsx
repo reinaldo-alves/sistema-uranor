@@ -10,8 +10,9 @@ import Rel from '../../assets/relatorios.jpg'
 import Doc from '../../assets/documentosuteis.jpg'
 import Bib from '../../assets/biblioteca.jpg'
 import SideMenu from "src/components/SideMenu/SideMenu";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import Loading from "src/utilities/Loading";
+import { UserContext } from "src/contexts/UserContext";
 
 interface IMenu {
     title: string,
@@ -21,6 +22,7 @@ interface IMenu {
 
 function Home() {
     const [loading, setLoading] = useState(true);
+    const { user } = useContext(UserContext);
     const navigate = useNavigate();
     
     const menu = [
@@ -35,8 +37,10 @@ function Home() {
     ]
 
     useEffect(() => {
-        setLoading(false)
-    }, [])
+        if (user.name) {
+            setLoading(false)
+        }
+    }, [user.name])
 
     if(loading) {
         return <Loading />

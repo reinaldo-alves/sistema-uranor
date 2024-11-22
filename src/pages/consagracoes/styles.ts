@@ -72,20 +72,6 @@ export const Results = styled.div<{columns: string}>`
     }
 `;
 
-export const ResultsTitle = styled.div<{align?: string}>`
-    font-size: 22px;
-    color: ${(props) => {return props.theme.color.darkerColor}};
-    padding: 4px;
-    font-weight: bold;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    text-align: ${({align}) => align? align : 'center'};
-
-    @media (max-width: 786px) {
-        font-size: 18px;
-    }
-`;
-
 export const ResultsData = styled.div<{align?: string, isNegative?: boolean}>`
     height: 100%;
     font-size: 18px;
@@ -102,19 +88,6 @@ export const ResultsData = styled.div<{align?: string, isNegative?: boolean}>`
 
     @media (max-width: 786px) {
         font-size: 14px;
-    }
-`;
-
-export const ResultsDetails = styled.div`
-    font-size: 12px;
-    color: ${(props) => {return props.theme.color.darkerColor}};
-    font-weight: bold;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    text-align: left;
-
-    @media (max-width: 786px) {
-        font-size: 10px;
     }
 `;
 
@@ -192,44 +165,6 @@ export const PageSubTitle = styled.h2<{hide?: boolean}>`
     text-align: center;
     margin: 20px;
     display: ${({hide}) => hide? 'none' : 'block'};
-`;
-
-export const InputContainer = styled.div<{box?: boolean}>`
-    width: 100%;
-    display: flex;
-    flex-direction: ${({box}) => box? 'row' : 'column'};
-    justify-content: center;
-    align-items: center;
-    gap: 30px;
-
-    label {
-        font-weight: bold;
-        font-size: 20px;
-        color: ${(props) => {return props.theme.color.darkerColor}};
-        margin-bottom: ${({box}) => box? '0' : '5px'}; 
-    }
-
-    input {
-        width: ${({box}) => box? '35px' : '100%'};
-        height: 35px;
-        padding: 6px;
-        font-size: 18px;
-        font-weight: bold;
-        border-radius: 8px;
-        border: solid 1px ${(props) => {return props.theme.color.darkerColor}};
-        display: block;
-    }
-
-    select {
-        width: 100%;
-        height: 35px;
-        padding: 6px;
-        font-size: 18px;
-        font-weight: bold;
-        border-radius: 8px;
-        border: solid 1px ${(props) => {return props.theme.color.darkerColor}};
-        display: block;
-    }
 `;
 
 export const UpdateInputContainer = styled.div<{box?: boolean, hide?: boolean, extend?: boolean}>`

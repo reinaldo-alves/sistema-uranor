@@ -1,6 +1,6 @@
 import SubMenu from "src/components/SubMenu/SubMenu";
 import Header from "../../components/header/header";
-import { ButtonContainer, ConsagracaoCard, ConsagracaoHeader, ConsagracaoTitle, MudancaObs, ResultsPanel, ResultsData, ResultsTable, ResultsTitle } from "./styles";
+import { ButtonContainer, ConsagracaoCard, ConsagracaoHeader, ConsagracaoTitle, MudancaObs, ResultsPanel, ResultsData, ResultsTable } from "./styles";
 import SideMenu from "src/components/SideMenu/SideMenu";
 import { useNavigate } from "react-router-dom";
 import { useCallback, useContext, useEffect, useState } from "react";
@@ -12,6 +12,7 @@ import { generateReportAllCons } from "src/utilities/createDocs";
 import MainContainer from "src/components/MainContainer/MainContainer";
 import Loading from "src/utilities/Loading";
 import { NavigateButton } from "src/components/buttons/buttons";
+import { ColumnTitle } from "src/components/texts/texts";
 
 function Consagracoes() {
     const { listIniciacao, listElevacao, listCenturia, listMudanca, loadConsagracao } = useContext(ListContext);
@@ -84,10 +85,10 @@ function Consagracoes() {
                     </ConsagracaoHeader>
                     <ResultsTable show={[...listIniciacao, ...listMudanca].length}>
                         <ResultsPanel columns={columnData[0] as string}>
-                            <ResultsTitle align="left">Nome do Médium</ResultsTitle>
-                            <ResultsTitle>{columnData[2]? 'Mediunidade' : 'Med.'}</ResultsTitle>
-                            <ResultsTitle>{columnData[2]? 'Colete nº' : 'Col.'}</ResultsTitle>
-                            <ResultsTitle>Foto</ResultsTitle>
+                            <ColumnTitle align="left">Nome do Médium</ColumnTitle>
+                            <ColumnTitle>{columnData[2]? 'Mediunidade' : 'Med.'}</ColumnTitle>
+                            <ColumnTitle>{columnData[2]? 'Colete nº' : 'Col.'}</ColumnTitle>
+                            <ColumnTitle>Foto</ColumnTitle>
                         </ResultsPanel>
                         {alphabeticOrder([...listIniciacao, ...listMudanca])
                             .map((item: IConsagracao, index: number) => (
@@ -109,10 +110,10 @@ function Consagracoes() {
                     </ConsagracaoHeader>
                     <ResultsTable show={[...listElevacao, ...listMudanca].length}>
                         <ResultsPanel columns={columnData[0] as string}>
-                            <ResultsTitle align="left">Nome do Médium</ResultsTitle>
-                            <ResultsTitle>{columnData[2]? 'Mediunidade' : 'Med.'}</ResultsTitle>
-                            <ResultsTitle>Termo</ResultsTitle>
-                            <ResultsTitle>Foto</ResultsTitle>
+                            <ColumnTitle align="left">Nome do Médium</ColumnTitle>
+                            <ColumnTitle>{columnData[2]? 'Mediunidade' : 'Med.'}</ColumnTitle>
+                            <ColumnTitle>Termo</ColumnTitle>
+                            <ColumnTitle>Foto</ColumnTitle>
                         </ResultsPanel>
                         {alphabeticOrder([...listElevacao, ...listMudanca])
                             .map((item: IConsagracao, index: number) => (
@@ -134,8 +135,8 @@ function Consagracoes() {
                     </ConsagracaoHeader>
                     <ResultsTable show={listCenturia.length}>
                         <ResultsPanel columns={columnData[1] as string}>
-                            <ResultsTitle align="left">Nome do Médium</ResultsTitle>
-                            <ResultsTitle>{columnData[2]? 'Mediunidade' : 'Med.'}</ResultsTitle>
+                            <ColumnTitle align="left">Nome do Médium</ColumnTitle>
+                            <ColumnTitle>{columnData[2]? 'Mediunidade' : 'Med.'}</ColumnTitle>
                         </ResultsPanel>
                         {alphabeticOrder(listCenturia)
                             .map((item: IConsagracao, index: number) => (

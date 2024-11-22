@@ -24,44 +24,6 @@ export const SearchCard = styled.div`
     }
 `;
 
-export const InputContainer = styled.div`
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-
-    label {
-        font-weight: bold;
-        font-size: 20px;
-        color: ${(props) => {return props.theme.color.darkerColor}};
-        width: 100%;
-        margin-bottom: 5px; 
-    }
-
-    input {
-        width: 100%;
-        height: 35px;
-        padding: 6px;
-        font-size: 18px;
-        font-weight: bold;
-        border-radius: 8px;
-        border: solid 1px ${(props) => {return props.theme.color.darkerColor}};
-        display: block;
-    }
-
-    select {
-        width: 100%;
-        height: 35px;
-        padding: 6px;
-        font-size: 18px;
-        font-weight: bold;
-        border-radius: 8px;
-        border: solid 1px ${(props) => {return props.theme.color.darkerColor}};
-        display: block;
-    }
-`;
-
 export const ResultsCard = styled.div`
     width: 90%;
     max-width: 1400px;
@@ -82,9 +44,6 @@ export const ResultsCard = styled.div`
         display: flex;
         flex-direction: column;
         align-items: center;
-    }
-
-    @media (max-width: 786px) {
         min-height: 606px;
     }
 `;
@@ -103,41 +62,6 @@ export const TableContainer = styled.div`
 export const ResultsTable = styled.div`
     width: 100%;
     border-top: 1px solid ${(props) => {return props.theme.color.lighterColor}};
-`;
-
-export const Results = styled.div`
-    border-bottom: 1px solid ${(props) => {return props.theme.color.lighterColor}};
-    display: flex;
-    flex-direction: column;
-
-    :hover {
-        background-color: ${(props) => {return props.theme.color.lighterColor}};
-        cursor: pointer;
-    }
-`;
-
-export const ResultsTitle = styled.span`
-    font-size: 18px;
-    color: ${(props) => {return props.theme.color.darkerColor}};
-    padding: 4px;
-    font-weight: bold;
-    display: -webkit-box;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 1;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    text-align: left;
-`;
-
-export const ResultsDetails = styled.span`
-    font-size: 12px;
-    color: ${(props) => {return props.theme.color.darkerColor}};
-    padding-left: 4px;
-    font-weight: bold;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    text-align: left;
 `;
 
 export const InfoCard = styled.div`
@@ -162,7 +86,7 @@ export const InfoCard = styled.div`
     }
 `;
 
-export const InfoContent = styled.div`
+export const InfoWrapper = styled.div`
     display: flex;
     flex-direction: column;
     align-items: center;

@@ -1,5 +1,5 @@
 import { useState, useContext, useEffect } from "react";
-import { InfoCard, InputContainer, InfoContent, Results, ResultsCard, ResultsDetails, ResultsTable, ResultsTitle, SearchCard, SearchContainer } from "./styles";
+import { ThreeColTable } from "./styles";
 import { ListContext } from "src/contexts/ListContext";
 import SideMenu from "src/components/SideMenu/SideMenu";
 import Header from "src/components/header/header";
@@ -15,6 +15,8 @@ import { formatInputText, handleEnterPress, removeDiacritics } from "src/utiliti
 import { Modal, ModalButton, ModalContent, ModalTitle } from "src/components/Modal/modal";
 import { MediumContext } from "src/contexts/MediumContext";
 import { SearchButton } from "src/components/buttons/buttons";
+import { InfoCard, InputContainer, Results, ResultsCard, SearchCard, SearchContainer } from "src/components/cardsContainers/cardsContainers";
+import { InfoContent, ResultsDetails, ResultsTitle } from "src/components/texts/texts";
 
 function Adjuntos() {
     const [searchMin, setSearchMin] = useState('');
@@ -154,7 +156,7 @@ function Adjuntos() {
             <SubMenu list={listSubMenu}/>
             <MainContainer title="Adjuntos - Manutenção" >
                 <SearchCard>
-                    <SearchContainer>
+                    <SearchContainer template="1fr 1fr 180px">
                         <InputContainer>
                             <label>Ministro</label>
                             <input type="text" value={searchMin} onChange={(e) => setSearchMin(e.target.value)} />
@@ -176,7 +178,7 @@ function Adjuntos() {
                     </InfoCard>
                 </SearchCard>
                 <ResultsCard>
-                    <ResultsTable>
+                    <ThreeColTable>
                         {adjuntos
                             .filter((item: IAdjunto) => removeDiacritics(ministros.filter((min: IMentor) => min.id === item.ministro)[0].nome).includes(removeDiacritics(searchMin)))
                             .filter((item: IAdjunto) => removeDiacritics(item.nome).includes(removeDiacritics(searchAdj)))
@@ -187,7 +189,7 @@ function Adjuntos() {
                                 </Results>
                             ))
                         }
-                    </ResultsTable>
+                    </ThreeColTable>
                 </ResultsCard>
             </MainContainer>
             <SideMenu list={listSubMenu} />

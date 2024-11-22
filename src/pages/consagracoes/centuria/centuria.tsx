@@ -1,7 +1,7 @@
 import SubMenu from "src/components/SubMenu/SubMenu";
 import Header from "../../../components/header/header";
 import SideMenu from "src/components/SideMenu/SideMenu";
-import { ButtonContainer, ConsagracaoCard, InputContainer, ModalMediumContent, PageSubTitle, Results, ResultsData, ResultsDetails, ResultsPanel, ResultsTable, ResultsTitle } from "../styles";
+import { ButtonContainer, ConsagracaoCard, ModalMediumContent, PageSubTitle, Results, ResultsData, ResultsPanel, ResultsTable } from "../styles";
 import { alphabeticOrder, consagracaoDetails, countMedium, handleEnterPress } from "src/utilities/functions";
 import { useCallback, useContext, useEffect, useState } from "react";
 import { ListContext } from "src/contexts/ListContext";
@@ -18,6 +18,8 @@ import { Modal, ModalButton, ModalSubTitle, ModalTitle } from "src/components/Mo
 import MainContainer from "src/components/MainContainer/MainContainer";
 import Loading from "src/utilities/Loading";
 import { NavigateButton } from "src/components/buttons/buttons";
+import { InputContainer } from "src/components/cardsContainers/cardsContainers";
+import { ColumnTitle, ResultsDetails } from "src/components/texts/texts";
 
 function Centuria() {
     const { templos, adjuntos, ministros, falMest, listCenturia, loadConsagracao, searchMediumInCons } = useContext(ListContext);
@@ -131,15 +133,15 @@ function Centuria() {
                 <ConsagracaoCard hide={!listCenturia.length}>
                     <ResultsTable show={listCenturia.length}>
                         <ResultsPanel columns={columnData[1] as string}>
-                            <ResultsTitle align="left">{columnData[2]? 'Nome do Médium' : 'Médium'}</ResultsTitle>
-                            <ResultsTitle>{columnData[2]? 'Mediunidade' : 'Med.'}</ResultsTitle>
+                            <ColumnTitle align="left">{columnData[2]? 'Nome do Médium' : 'Médium'}</ColumnTitle>
+                            <ColumnTitle>{columnData[2]? 'Mediunidade' : 'Med.'}</ColumnTitle>
                         </ResultsPanel>
                         {alphabeticOrder(listCenturia)
                             .map((item: IConsagracao, index: number) => (
                                 <Results columns={columnData[1] as string} key={index} onClick={() => handleClickMedium(item)}>
                                     <ResultsData align="left">
                                         {item.nome}
-                                        <ResultsDetails>{consagracaoDetails(item, mediuns, templos)}</ResultsDetails>
+                                        <ResultsDetails resize>{consagracaoDetails(item, mediuns, templos)}</ResultsDetails>
                                     </ResultsData>
                                     <ResultsData>{columnData[2]? item.med : item.med[0]}</ResultsData>
                                 </Results>
@@ -183,7 +185,7 @@ function Centuria() {
                 <ModalMediumContent vis={selectModal === 'adicionar'}>
                     <ModalSubTitle>{selected.nome}</ModalSubTitle>
                     <ModalTitle>Adicionar Médium para Centúria</ModalTitle>
-                    <InputContainer>
+                    <InputContainer labelWidth="auto">
                         <label>Nome do Médium</label>
                         <AutocompleteInput 
                             label={(option) => option.medium_id ? `${option.nome} (${option.medium_id.toString().padStart(5, '0')})` : ''}
@@ -205,7 +207,7 @@ function Centuria() {
                 <ModalMediumContent vis={selectModal === 'Protocolo' || selectModal === 'Relatório'}>
                     <ModalSubTitle>{selected.nome}</ModalSubTitle>
                     <ModalTitle>{`Gerar ${selectModal}`}</ModalTitle>
-                    <InputContainer>
+                    <InputContainer labelWidth="auto">
                         <label>Título</label>
                         <input type="text" value={reportTitle} onKeyUp={(e) => handleEnterPress(e, () => {
                             if (selectModal === 'Protocolo') {

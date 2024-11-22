@@ -1,7 +1,7 @@
 import SubMenu from "src/components/SubMenu/SubMenu";
 import Header from "../../../components/header/header";
 import SideMenu from "src/components/SideMenu/SideMenu";
-import { ButtonContainer, ConsagracaoCard, InputContainer, ModalMediumContent, MudancaObs, PageSubTitle, PhotoContainer, Results, ResultsData, ResultsDetails, ResultsPanel, ResultsTable, ResultsTitle } from "../styles";
+import { ButtonContainer, ConsagracaoCard, ModalMediumContent, MudancaObs, PageSubTitle, PhotoContainer, Results, ResultsData, ResultsPanel, ResultsTable } from "../styles";
 import { alphabeticOrder, consagracaoDetails, countMedium, handleEnterPress } from "src/utilities/functions";
 import { useCallback, useContext, useEffect, useState } from "react";
 import { ListContext } from "src/contexts/ListContext";
@@ -18,6 +18,8 @@ import { Modal, ModalButton, ModalSubTitle, ModalTitle } from "src/components/Mo
 import MainContainer from "src/components/MainContainer/MainContainer";
 import Loading from "src/utilities/Loading";
 import { NavigateButton } from "src/components/buttons/buttons";
+import { InputContainer } from "src/components/cardsContainers/cardsContainers";
+import { ColumnTitle, ResultsDetails } from "src/components/texts/texts";
 
 function Iniciacao() {
     const { templos, adjuntos, ministros, coletes, falMest, listIniciacao, listMudanca, loadConsagracao, searchMediumInCons } = useContext(ListContext);
@@ -208,17 +210,17 @@ function Iniciacao() {
                 <ConsagracaoCard hide={![...listIniciacao, ...listMudanca].length}>
                     <ResultsTable show={[...listIniciacao, ...listMudanca].length}>
                         <ResultsPanel columns={columnData[0] as string}>
-                            <ResultsTitle align="left">{columnData[2]? 'Nome do Médium' : 'Médium'}</ResultsTitle>
-                            <ResultsTitle>{columnData[2]? 'Mediunidade' : 'Med.'}</ResultsTitle>
-                            <ResultsTitle>{columnData[2]? 'Colete nº' : 'Col.'}</ResultsTitle>
-                            <ResultsTitle>Foto</ResultsTitle>
+                            <ColumnTitle align="left">{columnData[2]? 'Nome do Médium' : 'Médium'}</ColumnTitle>
+                            <ColumnTitle>{columnData[2]? 'Mediunidade' : 'Med.'}</ColumnTitle>
+                            <ColumnTitle>{columnData[2]? 'Colete nº' : 'Col.'}</ColumnTitle>
+                            <ColumnTitle>Foto</ColumnTitle>
                         </ResultsPanel>
                         {alphabeticOrder([...listIniciacao, ...listMudanca])
                             .map((item: IConsagracao, index: number) => (
                                 <Results columns={columnData[0] as string} key={index} onClick={() => handleClickMedium(item)}>
                                     <ResultsData align="left">
                                         {listMudanca.some((el: IConsagracao) => el.medium === item.medium)? `${item.nome} *` : item.nome}
-                                        <ResultsDetails>{consagracaoDetails(item, mediuns, templos)}</ResultsDetails>
+                                        <ResultsDetails resize>{consagracaoDetails(item, mediuns, templos)}</ResultsDetails>
                                     </ResultsData>
                                     <ResultsData>{columnData[2]? item.med : item.med[0]}</ResultsData>
                                     <ResultsData isNegative={!item.colete}>{item.colete ? item.colete : 'Não'}</ResultsData>
@@ -267,7 +269,7 @@ function Iniciacao() {
                 <ModalMediumContent vis={selectModal === 'colete'}>
                     <ModalSubTitle>{selected.nome}</ModalSubTitle>
                     <ModalTitle>Atualizar Colete</ModalTitle>
-                    <InputContainer>
+                    <InputContainer labelWidth="auto">
                         <label>Colete nº</label>
                         <select value={colete} onChange={(e) => setColete(Number(e.target.value))}>
                             <option value={0}></option>
@@ -297,7 +299,7 @@ function Iniciacao() {
                 <ModalMediumContent vis={selectModal === 'adicionar'}>
                     <ModalSubTitle>{selected.nome}</ModalSubTitle>
                     <ModalTitle>Adicionar Médium para Iniciação</ModalTitle>
-                    <InputContainer>
+                    <InputContainer labelWidth="auto">
                         <label>Nome do Médium</label>
                         <AutocompleteInput 
                             label={(option) => option.medium_id ? `${option.nome} (${option.medium_id.toString().padStart(5, '0')})` : ''}
@@ -311,7 +313,7 @@ function Iniciacao() {
                             onKeyUp={() => addIniciacao(token)}
                         />
                     </InputContainer>
-                    <InputContainer box>
+                    <InputContainer labelWidth="auto" box>
                         <label>Mudança de mediunidade?</label>
                         <input type="checkbox" checked={checkMudanca} onChange={(e) => setCheckMudanca(e.target.checked)} />
                     </InputContainer>
@@ -323,7 +325,7 @@ function Iniciacao() {
                 <ModalMediumContent vis={selectModal === 'Protocolo' || selectModal === 'Relatório'}>
                     <ModalSubTitle>{selected.nome}</ModalSubTitle>
                     <ModalTitle>{`Gerar ${selectModal}`}</ModalTitle>
-                    <InputContainer>
+                    <InputContainer labelWidth="auto">
                         <label>Título</label>
                         <input type="text" value={reportTitle} onKeyUp={(e) => handleEnterPress(e, () => {
                             if (selectModal === 'Protocolo') {

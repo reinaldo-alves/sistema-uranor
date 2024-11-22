@@ -1,6 +1,6 @@
 import SubMenu from "src/components/SubMenu/SubMenu";
 import Header from "../../../components/header/header";
-import { InputContainer, ModalMediumContent } from "../styles";
+import { ModalMediumContent } from "../styles";
 import SideMenu from "src/components/SideMenu/SideMenu";
 import AutocompleteInput from "src/components/AutocompleteInput/AutocompleteInput";
 import { defaultMedium } from "src/utilities/default";
@@ -14,6 +14,7 @@ import { Modal, ModalButton, ModalTitle } from "src/components/Modal/modal";
 import MainContainer from "src/components/MainContainer/MainContainer";
 import GridButton from "src/components/GridButton/GridButton";
 import { NavigateButton } from "src/components/buttons/buttons";
+import { InputContainer } from "src/components/cardsContainers/cardsContainers";
 
 function Reclassificacao() {
     const { adjuntos, ministros, cavaleiros } = useContext(ListContext);
@@ -93,7 +94,7 @@ function Reclassificacao() {
             <Modal vis={Boolean(showModal)}>
                 <ModalMediumContent vis={showModal === 'reclass'}>
                     <ModalTitle>Documento para reclassificação</ModalTitle>
-                    <InputContainer>
+                    <InputContainer labelWidth="auto">
                         <label>Selecione um médium</label>
                         <AutocompleteInput 
                             label={(option) => option.medium_id ? `${option.nome} (${option.medium_id.toString().padStart(5, '0')})` : ''}
@@ -120,7 +121,7 @@ function Reclassificacao() {
                 </ModalMediumContent>
                 <ModalMediumContent vis={showModal === 'Filho de Devas' || showModal === 'Trino Solitário' || showModal === 'Trino Sardyos'}>
                     <ModalTitle>Autorização - {showModal}</ModalTitle>
-                    <InputContainer style={{gap: '10px'}}>
+                    <InputContainer labelWidth="auto" style={{gap: '10px'}}>
                         <label>Selecione médiuns</label>
                         {dynamicFiels.map((fieldId: string, index: number) => (
                             <AutocompleteInput 
@@ -143,7 +144,7 @@ function Reclassificacao() {
                     </InputContainer>
                     <NavigateButton width="230px" style={{minHeight: '35px'}} disabled={dynamicFiels.length > 1 && mediumOptions(showModal).length === dynamicFiels.length} onClick={addDynamicField}>Adicionar outro médium</NavigateButton>
                     {showModal === 'Trino Sardyos' ?
-                        <InputContainer style={{gap: '10px'}}>
+                        <InputContainer labelWidth="auto" style={{gap: '10px'}}>
                             <label>Selecione o adjunto</label>
                             <AutocompleteInput 
                                 label={(option) => option.medium_id ? `${option.nome} (${option.medium_id.toString().padStart(5, '0')})` : ''}

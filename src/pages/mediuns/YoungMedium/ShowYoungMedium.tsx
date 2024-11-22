@@ -1,6 +1,6 @@
 import { useCallback, useContext, useEffect, useState } from "react";
 import Header from "src/components/header/header";
-import { ButtonContainer, InfoContainer, MainInfoContainer, MediumInfo, MediumMainInfo, MediumText, NameAndId, PersonalCard, SectionTitle } from "./styles";
+import { ButtonContainer, InfoContainer, MainInfoContainer, MediumInfo, MediumMainInfo, MediumText, NameAndId } from "./styles";
 import SubMenu from "src/components/SubMenu/SubMenu";
 import SideMenu from "src/components/SideMenu/SideMenu";
 import { useNavigate, useParams } from "react-router-dom";
@@ -19,6 +19,8 @@ import MainContainer from "src/components/MainContainer/MainContainer";
 import { Modal, ModalButton, ModalContent, ModalInputContainer, ModalSubTitle, ModalTitle } from "src/components/Modal/modal";
 import { MediumContext } from "src/contexts/MediumContext";
 import { NavigateButton } from "src/components/buttons/buttons";
+import { PersonalCard } from "src/components/cardsContainers/cardsContainers";
+import { SectionTitle } from "src/components/texts/texts";
 
 function ShowYoungMedium() {
     const [loading, setLoading] = useState(true);
@@ -39,10 +41,16 @@ function ShowYoungMedium() {
         await loadMenor(token);
         setLoading(false);
     }, [loadMenor, token]);
-     
+
     useEffect(() => {
         getInfo();
     }, [getInfo])
+     
+    useEffect(() => {
+        if(menor?.menor_id && ministros.length && adjuntos.length && templos.length && falMiss.length) {
+            setLoading(false);
+        }
+    }, [menor?.menor_id, ministros, adjuntos, templos, falMiss])
 
     useEffect(() => {
         window.scrollTo({top: 0});
@@ -186,7 +194,7 @@ function ShowYoungMedium() {
                     <NavigateButton width="150px" height="45px" onClick={() => setShowModal(true)}>Mover Cad. Geral</NavigateButton>
                     <NavigateButton width="150px" height="45px" style={{display: `${user.level === 'Administrador' ? 'block' : 'none'}`}} onClick={deleteMenor} color="red">Excluir</NavigateButton>
                 </ButtonContainer>
-                <PersonalCard>
+                <PersonalCard showMedium>
                     <SectionTitle>Dados Pessoais</SectionTitle>
                     <InfoContainer>
                         <MediumInfo>Data de Nascimento: <span>{convertDate(menor.dtNasc)}</span></MediumInfo>
@@ -205,7 +213,7 @@ function ShowYoungMedium() {
                         <MediumInfo>Profissão: <span>{menor.profissao}</span></MediumInfo>
                     </InfoContainer>
                 </PersonalCard>
-                <PersonalCard>
+                <PersonalCard showMedium>
                     <SectionTitle>Dados do Responsável</SectionTitle>
                     <InfoContainer>
                         <MediumInfo>Responsável: <span>{menor.responsavel}</span></MediumInfo>
@@ -213,7 +221,7 @@ function ShowYoungMedium() {
                         <MediumInfo>Contato Responsável: <span>{menor.contatoResp}</span></MediumInfo>
                     </InfoContainer>
                 </PersonalCard>
-                <PersonalCard>
+                <PersonalCard showMedium>
                     <SectionTitle>Dados Mediúnicos</SectionTitle>
                     <InfoContainer>
                         <MediumInfo>Templo de Origem: <span>{menor.temploOrigem ? `${templos.find((item: ITemplo) => item.templo_id === menor.temploOrigem)?.cidade} - ${templos.find((item: ITemplo) => item.templo_id === menor.temploOrigem)?.estado.abrev}` : ''}</span></MediumInfo>
@@ -222,7 +230,7 @@ function ShowYoungMedium() {
                         <MediumInfo>Adjunto Devas: <span>{menor.adjDevas}</span></MediumInfo>
                     </InfoContainer>
                 </PersonalCard>
-                <PersonalCard hide={!menor.observ}>
+                <PersonalCard showMedium hide={!menor.observ}>
                     <SectionTitle>Observações</SectionTitle>
                     <MediumText>{menor.observ}</MediumText>
                 </PersonalCard>

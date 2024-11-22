@@ -7,12 +7,14 @@ import { defaultAdj, defaultCavaleiro, defaultMedium, defaultMentor, eventTypes 
 import { IEstado, IEvento, IFalange, IMedium, IMentor, ITemplo } from "src/types/types";
 import { MediumContext } from "src/contexts/MediumContext";
 import { ListContext } from "src/contexts/ListContext";
-import { CheckboxContainer, DatesContainer, Divider, EventContainer, FieldContainer, FieldContainerBox, GridContainer, GridDatesContainer, GridEventContainer, InputContainer, MainContent, MainInfoContainer, MixedContainer, PersonalCard, SectionTitle } from "./styles";
+import { CheckboxContainer, DatesContainer, Divider, EventContainer, FieldContainer, FieldContainerBox, GridContainer, GridDatesContainer, GridEventContainer, MainContent, MainInfoContainer, MixedContainer } from "./styles";
 import { oppositeTurno, removeDiacritics, setSituation } from "src/utilities/functions";
 import AutocompleteInput from "src/components/AutocompleteInput/AutocompleteInput";
 import { generateReport } from "src/utilities/createDocs";
 import { Alert } from "src/utilities/popups";
 import { NavigateButton } from "src/components/buttons/buttons";
+import { PersonalCard } from "src/components/cardsContainers/cardsContainers";
+import { SectionTitle } from "src/components/texts/texts";
 
 function Relatorios() {
     const { templos, estados, adjuntos, coletes, classMest, falMest, povos, falMiss, turnoL, turnoT, ministros, cavaleiros, guias, estrelas, princesas, classificacao, eventos } = useContext(ListContext);
@@ -338,7 +340,7 @@ function Relatorios() {
                     </GridContainer>
                     <Divider></Divider>
                     <GridContainer>
-                        <label>Adjunto Origem.: </label>
+                        <label>Adjunto Origem: </label>
                         <AutocompleteInput 
                             label={(option) => option === defaultAdj ? '' : `Adj. ${ministros.filter((min: IMentor) => min.id === option.ministro)[0].nome} - Mestre ${option.nome}` }
                             default={defaultAdj}
@@ -478,26 +480,24 @@ function Relatorios() {
                             <option value={'Todos'}>Todos</option>
                         </select>
                     </GridContainer>
-                    <InputContainer>
-                        <FieldContainer>
-                            <label>Classificação Atual: </label>
-                            <select value={reportFilter.classif} onChange={(e) => {
-                                updateProps('classif', e.target.value)
-                                if(e.target.value === 'Adjunto Koatay 108 Herdeiro Triada Harpásios 7º Raio Adjuração Arcanos Rama 2000') {
-                                    updateProps('trinoSol', '');
-                                    updateProps('trinoSar', false);
-                                    updateProps('filho', false);
-                                    updateProps('herdeiro', 0);
-                                    updateProps('turnoTrab', 'Ajouros');
-                                }
-                            }}>
-                                <option value={''}></option>
-                                {[...classificacao.sol, ...classificacao.lua].map((item: string, index: number) => (
-                                    <option key={index} value={item}>{item}</option>
-                                ))}
-                            </select>
-                        </FieldContainer>
-                    </InputContainer>
+                    <FieldContainer>
+                        <label>Classificação Atual: </label>
+                        <select value={reportFilter.classif} onChange={(e) => {
+                            updateProps('classif', e.target.value)
+                            if(e.target.value === 'Adjunto Koatay 108 Herdeiro Triada Harpásios 7º Raio Adjuração Arcanos Rama 2000') {
+                                updateProps('trinoSol', '');
+                                updateProps('trinoSar', false);
+                                updateProps('filho', false);
+                                updateProps('herdeiro', 0);
+                                updateProps('turnoTrab', 'Ajouros');
+                            }
+                        }}>
+                            <option value={''}></option>
+                            {[...classificacao.sol, ...classificacao.lua].map((item: string, index: number) => (
+                                <option key={index} value={item}>{item}</option>
+                            ))}
+                        </select>
+                    </FieldContainer>
                     <Divider></Divider>
                     <GridContainer>
                         <label>Princesa: </label>
@@ -548,27 +548,23 @@ function Relatorios() {
                         </select>
                     </GridContainer>
                     <Divider></Divider>
-                    <InputContainer>
-                        <FieldContainer>
-                            <label>Comando: </label>
-                            <select value={reportFilter.comando} onChange={(e) => updateProps('comando', e.target.value)}>
-                                <option value={''}></option>
-                                <option value={'Todos'}>Todos os Comandantes</option>
-                                <option value={'Comandante'}>Comandante (sem ser Janatã nem Lança)</option>
-                                <option value={'Janatã'}>Comandante Janatã</option>
-                                <option value={'Lança'}>Lança Vermelha</option>
-                                <option value={'JanatãLança'}>Comandante Janatã / Lança Vermelha</option>
-                            </select>
-                        </FieldContainer>
-                        <FieldContainer>        
-                            <label>Presidência: </label>
-                            <select value={reportFilter.presidente} onChange={(e) => {updateProps('presidente', e.target.value)}}>
-                                <option value={''}></option>
-                                <option value={'Presidente'}>Presidente</option>
-                                <option value={'Vice'}>Vice-presidente</option>
-                            </select>
-                        </FieldContainer>
-                    </InputContainer>
+                    <GridContainer>
+                        <label>Comando: </label>
+                        <select value={reportFilter.comando} onChange={(e) => updateProps('comando', e.target.value)}>
+                            <option value={''}></option>
+                            <option value={'Todos'}>Todos os Comandantes</option>
+                            <option value={'Comandante'}>Comandante (sem ser Janatã nem Lança)</option>
+                            <option value={'Janatã'}>Comandante Janatã</option>
+                            <option value={'Lança'}>Lança Vermelha</option>
+                            <option value={'JanatãLança'}>Comandante Janatã / Lança Vermelha</option>
+                        </select>      
+                        <label>Presidência: </label>
+                        <select value={reportFilter.presidente} onChange={(e) => {updateProps('presidente', e.target.value)}}>
+                            <option value={''}></option>
+                            <option value={'Presidente'}>Presidente</option>
+                            <option value={'Vice'}>Vice-presidente</option>
+                        </select>
+                    </GridContainer>
                     <CheckboxContainer>
                         <FieldContainerBox>
                             <input type="checkBox" checked={reportFilter.recepcao} onChange={(e) => updateProps('recepcao', e.target.checked)}/>

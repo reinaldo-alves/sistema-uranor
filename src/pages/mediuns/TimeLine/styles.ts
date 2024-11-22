@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-export const ResultsCard = styled.div<{show: boolean}>`
+export const YearCard = styled.div<{show: boolean}>`
     width: 90%;
     max-width: 1400px;
     border-radius: 10px;
@@ -29,7 +29,7 @@ export const YearTitle = styled.span`
     }
 `;
 
-export const ResultsTable = styled.div`
+export const EventTable = styled.div`
     display: flex;
     flex-direction: column;
     gap: 20px;
@@ -42,12 +42,7 @@ export const ResultsTable = styled.div`
     }
 `;
 
-export const Results = styled.div`
-    display: flex;
-    flex-direction: column;
-`;
-
-export const ResultsTitle = styled.span`
+export const EventTitle = styled.span`
     font-size: 18px;
     color: ${(props) => {return props.theme.color.darkerColor}};
     font-weight: bold;
@@ -59,7 +54,7 @@ export const ResultsTitle = styled.span`
     }
 `;
 
-export const ResultsDetails = styled.span`
+export const EventDetails = styled.span`
     font-size: 12px;
     color: ${(props) => {return props.theme.color.darkerColor}};
     font-weight: bold;
@@ -86,55 +81,4 @@ export const EditObs = styled.span`
     color: ${(props) => {return props.theme.color.lighterColor}};
     margin-bottom: 30px;
     padding: 0 20px;
-`;
-
-export const InputContainer = styled.div`
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-
-    label {
-        font-weight: bold;
-        font-size: 20px;
-        color: ${(props) => {return props.theme.color.darkerColor}};
-        width: 100%;
-        margin-bottom: 5px; 
-    }
-
-    input {
-        width: 100%;
-        height: 35px;
-        padding: 6px;
-        font-size: 18px;
-        font-weight: bold;
-        border-radius: 8px;
-        border: solid 1px ${(props) => {return props.theme.color.darkerColor}};
-        display: block;
-    }
-
-    select {
-        width: 100%;
-        height: 35px;
-        padding: 6px;
-        font-size: 18px;
-        font-weight: bold;
-        border-radius: 8px;
-        border: solid 1px ${(props) => {return props.theme.color.darkerColor}};
-        display: block;
-    }
-
-    textarea {
-        width: 100%;
-        height: 100px;
-        padding: 6px;
-        font-size: 18px;
-        font-weight: bold;
-        border-radius: 8px;
-        border: solid 1px ${(props) => {return props.theme.color.darkerColor}};
-        display: block;
-        resize: none;
-    }
-
 `;

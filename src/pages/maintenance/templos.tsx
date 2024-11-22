@@ -1,5 +1,5 @@
 import { useState, useContext, useEffect } from "react";
-import { InfoCard, InputContainer, InfoContent, Results, ResultsCard, ResultsDetails, ResultsTable, ResultsTitle, SearchCard, SearchContainer } from "./styles";
+import { ThreeColTable } from "./styles";
 import { ListContext } from "src/contexts/ListContext";
 import SideMenu from "src/components/SideMenu/SideMenu";
 import Header from "src/components/header/header";
@@ -15,6 +15,8 @@ import { formatInputText, handleEnterPress, removeDiacritics } from "src/utiliti
 import { Modal, ModalButton, ModalContent, ModalTitle } from "src/components/Modal/modal";
 import { MediumContext } from "src/contexts/MediumContext";
 import { SearchButton } from "src/components/buttons/buttons";
+import { InfoCard, InputContainer, Results, ResultsCard, SearchCard, SearchContainer } from "src/components/cardsContainers/cardsContainers";
+import { InfoContent, ResultsDetails, ResultsTitle } from "src/components/texts/texts";
 
 function Templos() {
     const [searchName, setSearchName] = useState('');
@@ -152,7 +154,7 @@ function Templos() {
             <SubMenu list={listSubMenu}/>
             <MainContainer title="Templos - Manutenção" >
                 <SearchCard>
-                    <SearchContainer>
+                    <SearchContainer template="1fr 90px 1fr 160px">
                         <InputContainer>
                             <label>Nome do Templo</label>
                             <input type="text" value={searchName} onChange={(e) => setSearchName(e.target.value)} />
@@ -184,7 +186,7 @@ function Templos() {
                     </InfoCard>
                 </SearchCard>
                 <ResultsCard>
-                    <ResultsTable>
+                    <ThreeColTable>
                         {templos
                             .filter((item: ITemplo) => removeDiacritics(ministros.filter((min: IMentor) => min.id === adjuntos.filter((ad: IAdjunto) => ad.adjunto_id === item.presidente)[0].ministro)[0].nome).includes(removeDiacritics(searchMin)))
                             .filter((item: ITemplo) => item.estado.abrev.includes(searchState))
@@ -195,7 +197,7 @@ function Templos() {
                                     <ResultsDetails>Adj. {ministros.filter((min: IMentor) => min.id === adjuntos.filter((ad: IAdjunto) => ad.adjunto_id === item.presidente)[0].ministro)[0].nome} - Mestre {adjuntos.filter((ad: IAdjunto) => ad.adjunto_id === item.presidente)[0].nome}</ResultsDetails>
                                 </Results>
                         ))}
-                    </ResultsTable>
+                    </ThreeColTable>
                 </ResultsCard>
             </MainContainer>
             <SideMenu list={listSubMenu} />

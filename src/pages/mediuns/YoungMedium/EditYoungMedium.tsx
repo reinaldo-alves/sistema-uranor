@@ -1,6 +1,6 @@
 import { useContext, useState, useEffect, useCallback } from "react";
 import { ListContext } from "src/contexts/ListContext";
-import { FieldContainer, GridContainer, Observations, PersonalCard, SectionTitle } from "./styles";
+import { FieldContainer, GridContainer } from "./styles";
 import { IEstado, IFalange, IMenor, ITemplo } from "src/types/types";
 import SideMenu from "src/components/SideMenu/SideMenu";
 import SubMenu from "src/components/SubMenu/SubMenu";
@@ -19,6 +19,8 @@ import { defaultMenor } from "src/utilities/default";
 import { Modal, ModalButton, ModalContent, ModalInputContainer, ModalTitle } from "src/components/Modal/modal";
 import MainContainer from "src/components/MainContainer/MainContainer";
 import { NavigateButton } from "src/components/buttons/buttons";
+import { PersonalCard } from "src/components/cardsContainers/cardsContainers";
+import { Observations, SectionTitle } from "src/components/texts/texts";
 
 function EditYoungMedium() {
     const { menores, loadMenor, convertMenorToSend, templos, estados, falMiss, getData } = useContext(ListContext);

@@ -1,5 +1,5 @@
 import Header from "src/components/header/header";
-import { InputContainer, ObsContainer } from "./styles";
+import { FileInputContainer, ObsContainer } from "./styles";
 import SubMenu from "src/components/SubMenu/SubMenu";
 import SideMenu from "src/components/SideMenu/SideMenu";
 import MainContainer from "src/components/MainContainer/MainContainer";
@@ -87,10 +87,10 @@ function Backup() {
             <Modal vis={showModal}>
                 <ModalContent>
                     <ModalTitle>Restaurar Backup</ModalTitle>
-                    <InputContainer>
+                    <FileInputContainer>
                         <label className="custom-file-label">{file ? file.name : 'Selecione um arquivo .sql'}</label>
                         <input type="file" accept=".sql" onChange={(e) => setFile(e.target.files ? e.target.files[0] : null)}/>
-                    </InputContainer>
+                    </FileInputContainer>
                     <div style={{display: 'flex', gap: '20px'}}>
                         <ModalButton color="red" onClick={() => closeModal()}>Cancelar</ModalButton>
                         <ModalButton color='green' disabled={!file} onClick={() => {

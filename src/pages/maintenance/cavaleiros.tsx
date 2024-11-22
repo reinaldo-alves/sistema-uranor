@@ -1,5 +1,5 @@
 import { useState, useContext, useEffect } from "react";
-import { InfoCard, InputContainer, InfoContent, Results, ResultsCard, ResultsTable, ResultsTitle, SearchCard, SearchContainer, ResultsDetails } from "./styles";
+import { FiveColTable } from "./styles";
 import { ListContext } from "src/contexts/ListContext";
 import SideMenu from "src/components/SideMenu/SideMenu";
 import Header from "src/components/header/header";
@@ -14,6 +14,8 @@ import { Modal, ModalButton, ModalContent, ModalTitle } from "src/components/Mod
 import { formatInputText, handleEnterPress, removeDiacritics } from "src/utilities/functions";
 import { MediumContext } from "src/contexts/MediumContext";
 import { SearchButton } from "src/components/buttons/buttons";
+import { InfoCard, InputContainer, Results, ResultsCard, SearchCard, SearchContainer } from "src/components/cardsContainers/cardsContainers";
+import { InfoContent, ResultsDetails, ResultsTitle } from "src/components/texts/texts";
 
 function Cavaleiros() {
     const [search, setSearch] = useState('');
@@ -152,7 +154,7 @@ function Cavaleiros() {
                     </InfoCard>
                 </SearchCard>
                 <ResultsCard>
-                    <ResultsTable>
+                    <FiveColTable>
                         {cavaleiros
                             .filter((item: ICavaleiro) => removeDiacritics(item.nome).includes(removeDiacritics(search)))
                             .map((item: ICavaleiro, index: number) => (
@@ -162,7 +164,7 @@ function Cavaleiros() {
                                 </Results>
                             ))
                         }
-                    </ResultsTable>
+                    </FiveColTable>
                 </ResultsCard>
             </MainContainer>
             <SideMenu list={listSubMenu} />

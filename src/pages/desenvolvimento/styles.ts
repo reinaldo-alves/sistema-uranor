@@ -28,20 +28,6 @@ export const Results = styled.div<{columns: number}>`
     grid-template-columns: auto repeat(${props => props.columns}, 12%);
 `;
 
-export const ResultsTitle = styled.div<{align?: string}>`
-    font-size: 22px;
-    color: ${(props) => {return props.theme.color.darkerColor}};
-    padding: 4px;
-    font-weight: bold;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    text-align: ${({align}) => align? align : 'center'};
-
-    @media (max-width: 786px) {
-        font-size: 18px;
-    }
-`;
-
 export const ResultsData = styled.div`
     height: 100%;
     font-size: 18px;
@@ -98,19 +84,6 @@ export const ResultsName = styled.div`
     }
 `;
 
-export const ResultsDetails = styled.div`
-    font-size: 12px;
-    color: ${(props) => {return props.theme.color.darkerColor}};
-    font-weight: bold;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    text-align: left;
-
-    @media (max-width: 786px) {
-        font-size: 10px;
-    }
-`;
-
 export const DesenvLegend = styled.span`
     width: 100%;
     display: block;
@@ -147,44 +120,6 @@ export const ModalMediumContent = styled.div<{vis: boolean}>`
     gap: 20px;
     border: solid 1px ${(props) => {return props.theme.color.darkerColor}};
     overflow-y: auto;
-`;
-
-export const InputContainer = styled.div<{box?: boolean}>`
-    width: 100%;
-    display: flex;
-    flex-direction: ${({box}) => box? 'row' : 'column'};
-    justify-content: center;
-    align-items: center;
-    gap: 12px;
-
-    label {
-        font-weight: bold;
-        font-size: 20px;
-        color: ${(props) => {return props.theme.color.darkerColor}};
-        margin-bottom: ${({box}) => box? '0' : '5px'}; 
-    }
-
-    input {
-        width: ${({box}) => box? '35px' : '100%'};
-        height: 35px;
-        padding: 6px;
-        font-size: 18px;
-        font-weight: bold;
-        border-radius: 8px;
-        border: solid 1px ${(props) => {return props.theme.color.darkerColor}};
-        display: block;
-    }
-
-    select {
-        width: 100%;
-        height: 35px;
-        padding: 6px;
-        font-size: 18px;
-        font-weight: bold;
-        border-radius: 8px;
-        border: solid 1px ${(props) => {return props.theme.color.darkerColor}};
-        display: block;
-    }
 `;
 
 export const MonthNameContainer = styled.div`
@@ -225,75 +160,6 @@ export const MainInfoContainer = styled.div`
     gap: 15px;
 `;
 
-export const PersonalCard = styled.div<{hide?: boolean}>`
-    margin-top: 30px;
-    width: 90%;
-    max-width: 1200px;
-    border-radius: 10px;
-    padding: 15px;
-    background-color: ${(props) => {return props.theme.color.mediumColorTr}};
-    border: solid 1px ${(props) => {return props.theme.color.darkerColor}};
-    display: ${({ hide }) => hide? 'none' : 'flex'};
-    flex-direction: column;
-    gap: 15px;
-
-    label {
-        width: 100%;
-        font-weight: bold;
-        font-size: 18px;
-        color: ${(props) => {return props.theme.color.darkerColor}};
-        white-space: nowrap;
-        text-align: right;
-        
-        @media (max-width: 1000px) {
-            font-size: 14px;
-        }
-    }
-
-    input {
-        width: 100%;
-        height: 35px;
-        padding: 6px;
-        font-size: 18px;
-        font-weight: bold;
-        border-radius: 8px;
-        border: solid 1px ${(props) => {return props.theme.color.darkerColor}};
-        display: block;
-        
-        @media (max-width: 1000px) {
-            font-size: 14px;
-        }
-    }
-
-    select {
-        width: 100%;
-        height: 35px;
-        padding: 6px;
-        font-size: 18px;
-        font-weight: bold;
-        border-radius: 8px;
-        border: solid 1px ${(props) => {return props.theme.color.darkerColor}};
-        display: block;
-
-        @media (max-width: 1000px) {
-            font-size: 14px;
-        }
-    }
-
-    span {
-        font-weight: bold;
-        font-size: 18px;
-        color: ${(props) => {return props.theme.color.darkerColor}};
-        white-space: nowrap;
-        text-decoration: underline;
-        
-        @media (max-width: 1000px) {
-            font-size: 14px;
-        }
-    }
-
-`;
-
 export const MainContent = styled.div`
     display: flex;
     gap: 30px;
@@ -303,13 +169,6 @@ export const MainContent = styled.div`
         flex-direction: column;
         align-items: center;
     }
-`;
-
-export const SectionTitle = styled.h2`
-    color: ${(props) => {return props.theme.color.darkerColor}};
-    margin-bottom: 5px;
-    width: 100%;
-    text-align: center;
 `;
 
 export const GridContainer = styled.div<{freq?: boolean}>`
@@ -341,7 +200,7 @@ export const FieldContainer = styled.div<{width?: string}>`
     min-width: ${({ width }) => width? width : '150px'};
 
     label {
-        width: auto;
+        width: auto !important;
         padding-right: 10px;
     }
 
@@ -381,22 +240,4 @@ export const PhotoContainer = styled.div<{photo: string | null}>`
         width: 136px
     }
 
-`;
-
-export const Observations = styled.textarea`
-    border-radius: 8px;
-    border: solid 1px ${(props) => {return props.theme.color.darkerColor}};
-    padding: 6px;
-    font-size: 18px;
-    font-weight: bold;
-    resize: none;
-    height: 150px;
-    
-    @media (max-width: 1000px) {
-        font-size: 14px;
-    }
-
-    @media (max-width: 500px) {
-        height: 200px;
-    }
 `;

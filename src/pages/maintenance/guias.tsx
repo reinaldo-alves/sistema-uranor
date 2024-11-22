@@ -1,5 +1,5 @@
 import { useState, useContext, useEffect } from "react";
-import { InfoCard, InputContainer, InfoContent, Results, ResultsCard, ResultsTable, ResultsTitle, SearchCard, SearchContainer } from "./styles";
+import { FiveColTable } from "./styles";
 import { ListContext } from "src/contexts/ListContext";
 import SideMenu from "src/components/SideMenu/SideMenu";
 import Header from "src/components/header/header";
@@ -13,6 +13,8 @@ import { Modal, ModalButton, ModalContent, ModalTitle } from "src/components/Mod
 import { formatInputText, handleEnterPress, removeDiacritics } from "src/utilities/functions";
 import { MediumContext } from "src/contexts/MediumContext";
 import { SearchButton } from "src/components/buttons/buttons";
+import { InfoCard, InputContainer, Results, ResultsCard, SearchCard, SearchContainer } from "src/components/cardsContainers/cardsContainers";
+import { InfoContent, ResultsTitle } from "src/components/texts/texts";
 
 function Guias() {
     const [search, setSearch] = useState('');
@@ -134,7 +136,7 @@ function Guias() {
                     </InfoCard>
                 </SearchCard>
                 <ResultsCard>
-                    <ResultsTable>
+                    <FiveColTable>
                         {guias
                             .filter((item: IMentor) => removeDiacritics(item.nome).includes(removeDiacritics(search)))
                             .map((item: IMentor, index: number) => (
@@ -143,7 +145,7 @@ function Guias() {
                                 </Results>
                             ))
                         }
-                    </ResultsTable>
+                    </FiveColTable>
                 </ResultsCard>
             </MainContainer>
             <SideMenu list={listSubMenu} />

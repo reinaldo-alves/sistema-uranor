@@ -1,93 +1,5 @@
 import styled from "styled-components";
 
-export const SearchCard = styled.div`
-    width: 90%;
-    max-width: 1400px;
-    border-radius: 10px;
-    padding: 15px;
-    background-color: ${(props) => {return props.theme.color.mediumColorTr}};
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 20px;
-    border: solid 1px ${(props) => {return props.theme.color.darkerColor}};
-`;
-
-export const SearchContainer = styled.div`
-    width: 100%;
-    display: grid;
-    grid-template-columns: 1fr 1fr 180px;
-    align-items: center;
-    gap: 20px;
-
-    @media (max-width: 786px) {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-    }
-`;
-
-export const InputContainer = styled.div`
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-
-    label {
-        font-weight: bold;
-        font-size: 20px;
-        color: ${(props) => {return props.theme.color.darkerColor}};
-        width: 100%;
-        margin-bottom: 5px; 
-    }
-
-    input {
-        width: 100%;
-        height: 35px;
-        padding: 6px;
-        font-size: 18px;
-        font-weight: bold;
-        border-radius: 8px;
-        border: solid 1px ${(props) => {return props.theme.color.darkerColor}};
-        display: block;
-    }
-
-    select {
-        width: 100%;
-        height: 35px;
-        padding: 6px;
-        font-size: 18px;
-        font-weight: bold;
-        border-radius: 8px;
-        border: solid 1px ${(props) => {return props.theme.color.darkerColor}};
-        display: block;
-    }
-`;
-
-export const InfoCard = styled.div`
-    width: 100%;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-
-    @media (max-width: 786px) {
-        flex-direction: column;
-        gap: 15px;
-    }
-`;
-
-export const InfoContent = styled.span`
-    font-size: 16px;
-    font-weight: bold;
-    text-align: left;
-    color: ${(props) => {return props.theme.color.darkerColor}};
-    
-    @media (max-width: 786px) {
-        text-align: center;
-    }
-`;
-
 export const ResultsCard = styled.div`
     width: 90%;
     max-width: 1400px;
@@ -121,118 +33,7 @@ export const ResultsTable = styled.div`
     }
 `;
 
-export const Results = styled.div`
-    border-bottom: 1px solid ${(props) => {return props.theme.color.lighterColor}};
-    display: flex;
-    flex-direction: column;
-
-    :hover {
-        background-color: ${(props) => {return props.theme.color.lighterColor}};
-        cursor: pointer;
-    }
-`;
-
-export const ResultsTitle = styled.span`
-    font-size: 18px;
-    color: ${(props) => {return props.theme.color.darkerColor}};
-    padding: 4px;
-    font-weight: bold;
-    display: -webkit-box;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 1;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    text-align: left;
-`;
-
-export const ResultsDetails = styled.span`
-    font-size: 12px;
-    color: ${(props) => {return props.theme.color.darkerColor}};
-    padding-left: 4px;
-    font-weight: bold;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    text-align: left;
-`;
-
 //=========================================================================================================
-
-export const PersonalCard = styled.div<{hide?: boolean}>`
-    margin-top: 30px;
-    width: 90%;
-    max-width: 1200px;
-    border-radius: 10px;
-    padding: 15px;
-    background-color: ${(props) => {return props.theme.color.mediumColorTr}};
-    border: solid 1px ${(props) => {return props.theme.color.darkerColor}};
-    display: ${({ hide }) => hide? 'none' : 'flex'};
-    flex-direction: column;
-    gap: 15px;
-
-    label {
-        width: 100%;
-        font-weight: bold;
-        font-size: 18px;
-        color: ${(props) => {return props.theme.color.darkerColor}};
-        white-space: nowrap;
-        text-align: right;
-        
-        @media (max-width: 1000px) {
-            font-size: 14px;
-        }
-    }
-
-    input {
-        width: 100%;
-        height: 35px;
-        padding: 6px;
-        font-size: 18px;
-        font-weight: bold;
-        border-radius: 8px;
-        border: solid 1px ${(props) => {return props.theme.color.darkerColor}};
-        display: block;
-        
-        @media (max-width: 1000px) {
-            font-size: 14px;
-        }
-    }
-
-    select {
-        width: 100%;
-        height: 35px;
-        padding: 6px;
-        font-size: 18px;
-        font-weight: bold;
-        border-radius: 8px;
-        border: solid 1px ${(props) => {return props.theme.color.darkerColor}};
-        display: block;
-
-        @media (max-width: 1000px) {
-            font-size: 14px;
-        }
-    }
-
-    span {
-        font-weight: bold;
-        font-size: 18px;
-        color: ${(props) => {return props.theme.color.darkerColor}};
-        white-space: nowrap;
-        text-decoration: underline;
-        
-        @media (max-width: 1000px) {
-            font-size: 14px;
-        }
-    }
-
-`;
-
-export const SectionTitle = styled.h2`
-    color: ${(props) => {return props.theme.color.darkerColor}};
-    margin-bottom: 5px;
-    width: 100%;
-    text-align: center;
-`;
 
 export const GridContainer = styled.div`
     width: 100%;
@@ -268,24 +69,6 @@ export const FieldContainer = styled.div`
 
     @media (max-width: 800px) {
         grid-template-columns: auto 1fr;
-    }
-`;
-
-export const Observations = styled.textarea`
-    border-radius: 8px;
-    border: solid 1px ${(props) => {return props.theme.color.darkerColor}};
-    padding: 6px;
-    font-size: 18px;
-    font-weight: bold;
-    resize: none;
-    height: 150px;
-    
-    @media (max-width: 1000px) {
-        font-size: 14px;
-    }
-
-    @media (max-width: 500px) {
-        height: 200px;
     }
 `;
 
@@ -355,7 +138,7 @@ export const MediumInfo = styled.span<{out?: boolean}>`
     text-overflow: ellipsis;
 
     span {
-        text-decoration: underline;
+        text-decoration: underline !important;
     }
 
     @media (max-width: 1100px) {
