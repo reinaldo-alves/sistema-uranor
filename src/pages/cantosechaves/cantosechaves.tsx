@@ -7,7 +7,7 @@ import { CardsCantoContainer, GlobalContainer, MainTitle } from "./styles";
 import SideMenu from "src/components/SideMenu/SideMenu";
 import { agulhaIsmeniaCanto, aponaraCanto, arianaCanto, caycaraCanto, ciganaAganaraCanto, ciganaTaganaCanto, dharmoOxintoCanto, dharmoOxintoLeito, franciscanaCanto, gregaCanto, jacanaCanto, madalenaCanto, magoAcender, magoApagar, magoCanto, mayaCanto, muruaicyCanto, muruaicyPortões, narayamaCanto, niatraCanto, nityamaCanto, nityamaChama, nityamaTurigano, principeMayaCanto, rochanaCanto, samaritanaCanto, samaritanaTurigano, tupinambaCanto, yuricyLuaCanto, yuricySol1Canto, yuricySolCanto, yuricyTurigano } from "src/reports/cantosFalanges";
 import { cavEspecialCanto, ninfaLuaCanto, ninfaSolCanto } from "src/reports/cantosIndividualidade";
-import { abataChave, alabaChave, alabaComando, arameAdvogado, arameAjana, arameCondessa, aramePromotor, comandoOficial, comandoTapir, comandoTrabalho, curaComando, defumacaoComando, inducaoComando, juncaoComando, lancaVermelha, leitoAjana, leitoCavaleiro, leitoComando, leitoFalanges, leitoLilas, leitoNinfaLua, leitoRosea, leitoVermelha, oraculoAjana, oraculoComando, oraculoNinfaSol, randyAjana, randyComando, randyLanca, randyNinfaLua, randyNinfaSol, randySexto, sudalioComando, sudalioNinfaLua } from "src/reports/chavesTrabalhos";
+import { abataChave, alabaChave, alabaComando, arameAdvogado, arameAjana, arameCondessa, aramePromotor, comandoOficial, comandoTapir, comandoTrabalho, curaComando, defumacaoComando, inducaoComando, juncaoComando, lancaVermelha, leitoAjana, leitoCavaleiro, leitoComando, leitoFalanges, leitoLilas, leitoNinfaLua, leitoRosea, leitoVermelha, oraculoAjana, oraculoComando, oraculoNinfaSol, preceApara, randyAjana, randyComando, randyLanca, randyNinfaLua, randyNinfaSol, randySexto, sudalioComando, sudalioNinfaLua } from "src/reports/chavesTrabalhos";
 
 function CantosChaves() {
     
@@ -104,7 +104,8 @@ function CantosChaves() {
             {canto: lancaVermelha, text: 'Chave do Cavaleiro da Lança Vermelha'}
         ]},
         {name:'Cura', active: curActive, click: curClick, list: [
-            {canto: curaComando, text: 'Chave do Comandante'}
+            {canto: curaComando, text: 'Chave do Comandante'},
+            {canto: preceApara, text: 'Chave do Ajanã (Prece do Apará)'},
         ]},
         {name:'Defumação', active: defActive, click: defClick, list: [
             {canto: defumacaoComando, text: 'Chave do Comandante'}

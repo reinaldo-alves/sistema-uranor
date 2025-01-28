@@ -90,6 +90,8 @@ VERSÃO 1.4.0
 - Criação da subseção Médium Menor, com mecanismos para cadastrar, editar, excluir, mover para o cadastro geral e gerar emissão.
 - Alteração no nome do arquivo da imagem, substituindo a hash aleatória pela inicial da mediunidade.
 - Melhoria no estado de carregamento da página principal e da página Exibir Médium.
+- Atualização da chave de convite do Pai Seta Branca no Oráculo.
+- Adição da prece do apará na seção de chaves da cura.
 - Suporte para versão online
 
 O QUE FAZER
