@@ -149,7 +149,7 @@ function App() {
             <Route path='/login' element={!login? <Login /> : <Navigate to='/' />} />
           </Routes>
         </BrowserRouter>
-        <Footer>Sistema Uranor - v.1.4.0 - ©2024 Uranor do Amanhecer. Todos os direitos reservados.</Footer>
+        <Footer>Sistema Uranor - v.1.4.0 - ©2025 Uranor do Amanhecer. Todos os direitos reservados.</Footer>
       </Background>
     </ThemeProvider>
   );

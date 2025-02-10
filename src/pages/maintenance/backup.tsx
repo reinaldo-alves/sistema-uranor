@@ -18,11 +18,29 @@ function Backup() {
     const [wait, setWait] = useState(false);
 
     const createBackup = async () => {
+        const formatTime = () => {
+            const now = new Date();
+            const year = now.getFullYear();
+            const month = (now.getMonth() + 1).toString().padStart(2, '0');
+            const day = now.getDate().toString().padStart(2, '0');
+            const hour = now.getHours().toString().padStart(2, '0');
+            const minute = now.getMinutes().toString().padStart(2, '0');         
+            return `${year}${month}${day}_${hour}${minute}`
+        }
         setWait(true);
         try {
-            const { data } = await api.get('/backup/create', {headers:{Authorization: token}});
+            const { data } = await api.get('/backup/create', {headers:{Authorization: token}, responseType: 'blob'});
+            const filename = `backup_${formatTime()}.sql`;
+            const url = window.URL.createObjectURL(new Blob([data]));
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
+            window.URL.revokeObjectURL(url);
             setWait(false);
-            Alert(data.message, 'success')
+            Alert('Backup criado com sucesso', 'success')
         } catch (error) {
             console.error('Erro ao criar backup', error);
             setWait(false);
@@ -78,7 +96,6 @@ function Backup() {
                 <GridButton docs={docs} />
                 <ObsContainer>
                     <h2>Observações</h2>
-                    <p>Os arquivos de backup ficam armazenados na pasta do Sistema Uranor. Para encontrá-los, acesse /backend/public/backup</p>
                     <p>Ao transferir o backup para outro computador, copie também a pasta de fotos, que fica em /backend/public/upload/medium. Cole no mesmo lugar no computador de destino</p>
                     <p>Antes de restaurar um backup externo, recomenda-se criar um backup da base de dados atual do sistema</p>
                 </ObsContainer>
