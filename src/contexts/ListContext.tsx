@@ -184,7 +184,7 @@ export const ListStore = ({ children }: any) => {
                         nome: mediumCons ? mediumCons.nome : '',
                         med: mediumCons ? mediumCons.med : '',
                         sex: mediumCons ? mediumCons.sex : '',
-                        foto: mediumCons?.foto ? `${process.env.REACT_APP_IMAGE_URL}/${mediumCons.foto}` : '',
+                        foto: mediumCons?.foto ? `${process.env.REACT_APP_IMAGE_URL}${mediumCons.foto}` : '',
                         templo: mediumCons?.templo ? mediumCons.templo : 0,
                         colete: mediumCons ? mediumCons.colete : 0,
                         dtNasc: mediumCons ? mediumCons.dtNasc : '',

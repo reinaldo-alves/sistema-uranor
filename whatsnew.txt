@@ -94,7 +94,9 @@ VERSÃO 1.4.0
 - Adição da prece do apará na seção de chaves da cura.
 - Suporte para versão online
 
+VERSÃO 1.4.1
+- Criação de rotina para upload e carregamento de fotos do Google Drive na versão online.
+
 O QUE FAZER
 - Incluir médiuns menores nos relatórios.
-- Atualizar o banco de dados do desenvolvimento, adicionando mediunidade a todos os registros.
-- Para a versão online, criar um repositório de fotos online.
+- Criar um mecanismo para que backups locais não substitua os id das fotos remotas no banco de dados e vice-versa.

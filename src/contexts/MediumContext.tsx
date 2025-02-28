@@ -14,7 +14,7 @@ export const MediumStore = ({ children }: any) => {
             const { data } = await api.get('/medium/get-mediuns', {headers:{Authorization: token}})
             const medium = data.medium.map((item: IMediumAPI) => ({
                 ...item,
-                foto: !item.foto ? '' : `${process.env.REACT_APP_IMAGE_URL}/${item.foto}`,
+                foto: !item.foto ? '' : `${process.env.REACT_APP_IMAGE_URL}${item.foto}`,
                 condicao: item.condicao === null ? '' : item.condicao,
                 dtNasc: item.dtNasc === null ? '' : item.dtNasc.toString().split('T')[0],
                 rg: item.rg === null ? '' : item.rg,
