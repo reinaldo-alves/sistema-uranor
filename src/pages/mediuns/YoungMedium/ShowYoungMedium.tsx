@@ -207,8 +207,8 @@ function ShowYoungMedium() {
                         <MediumInfo>Cônjuge: <span>{menor.conjuge}</span></MediumInfo>
                         <MediumInfo>CEP: <span>{menor.cep}</span></MediumInfo>
                         <MediumInfo>Endereço: <span>{fullAddress}</span></MediumInfo>
-                        <MediumInfo>Telefone 1: <span>{menor.telefone1}</span></MediumInfo>
-                        <MediumInfo>Telefone 2: <span>{menor.telefone2}</span></MediumInfo>
+                        <MediumInfo>Telefone: <span>{menor.telefone1}</span></MediumInfo>
+                        <MediumInfo>Tel. Emergência: <span>{menor.telefone2}</span></MediumInfo>
                         <MediumInfo>E-mail: <span>{menor.email}</span></MediumInfo>
                         <MediumInfo>Profissão: <span>{menor.profissao}</span></MediumInfo>
                     </InfoContainer>

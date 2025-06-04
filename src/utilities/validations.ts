@@ -2,13 +2,20 @@ import { IMedium, IMenor, ITurno } from "src/types/types";
 import { Alert } from "./popups";
 import { oppositeTurno } from "./functions";
 
-export const validateMedium = (medium: IMedium, action: () => void) => {
+export const validateMedium = (mediuns: Array<IMedium>, medium: IMedium, action: () => void) => {
     const dtIngresso = new Date(medium.dtIngresso);
     const dtEmplac = new Date(medium.dtEmplac);
     const dtIniciacao = new Date(medium.dtIniciacao);
     const dtElevacao = new Date(medium.dtElevacao);
     const dtCenturia = new Date(medium.dtCenturia);
     const dtSetimo = new Date(medium.dtSetimo);
+
+    const foundMedium = mediuns.find(item => item.cpf === medium.cpf)
+
+    if(medium.cpf && foundMedium && foundMedium.medium_id !== medium.medium_id) {
+        Alert(`Já existe um médium cadastrado com esse CPF: ${foundMedium.nome} (ID: ${foundMedium.medium_id.toString().padStart(5, '0')})`, 'info');
+        return;
+    }
 
     if (!medium.nome) {
         Alert('Insira o nome do médium', 'error');

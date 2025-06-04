@@ -604,9 +604,9 @@ function AddMedium() {
                                 <option key={index} value={item.abrev}>{item.state}</option>
                             ))}
                         </select>
-                        <label>Telefone 1: </label>
+                        <label>Telefone: </label>
                         <input type="tel" maxLength={15} value={newMedium.telefone1} onChange={(e) => updateProps('telefone1', formatPhoneNumber(e.target.value))}/>
-                        <label>Telefone 2: </label>
+                        <label>Tel. Emergência: </label>
                         <input type="tel" maxLength={15} value={newMedium.telefone2} onChange={(e) => updateProps('telefone2', formatPhoneNumber(e.target.value))}/>
                         <label>E-mail: </label>
                         <input type="email" value={newMedium.email} onChange={(e) => updateProps('email', e.target.value.toLowerCase())}/>
@@ -1234,7 +1234,7 @@ function AddMedium() {
                 </PersonalCard>
                 <div style={{width: '90%', maxWidth: '1200px', display: 'flex', justifyContent: 'space-around', marginTop: '30px'}}>
                     <NavigateButton width="150px" height="45px" color="red" onClick={() => resetNewMedium()}>Cancelar</NavigateButton>
-                    <NavigateButton width="150px" height="45px" onClick={() => validateMedium(newMedium, async () => await handleAddMedium(newMedium, token))}>Cadastrar</NavigateButton>
+                    <NavigateButton width="150px" height="45px" onClick={() => validateMedium(mediuns,newMedium, async () => await handleAddMedium(newMedium, token))}>Cadastrar</NavigateButton>
                 </div>
             </MainContainer>
             <SideMenu list={listSubMenu} />

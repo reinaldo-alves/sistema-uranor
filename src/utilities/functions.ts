@@ -278,10 +278,8 @@ export function showTemplo(medium: IMedium | IMenor, templos: Array<ITemplo>) {
 export function consagracaoDetails(item: IConsagracao, mediuns: Array<IMedium>, templos: Array<ITemplo>) {
     const cidade = templos.find((temp: ITemplo) => temp.templo_id === item.templo)?.cidade;
     const uf = templos.find((temp: ITemplo) => temp.templo_id === item.templo)?.estado.abrev;
-    const telefone1 = mediuns.find((m: IMedium) => m.medium_id === item.medium)?.telefone1;
-    const telefone2 = mediuns.find((m: IMedium) => m.medium_id === item.medium)?.telefone2;
-    const divider = telefone1 && telefone2 ? ' / ' : '';   
-    return `Templo: ${cidade} - ${uf} - Telefone: ${telefone1}${divider}${telefone2}`
+    const telefone = mediuns.find((m: IMedium) => m.medium_id === item.medium)?.telefone1;
+    return `Templo: ${cidade} - ${uf} / Telefone: ${telefone}`
 }
 
 //Formata um objeto Date em uma string com mês por extenso e ano com 4 dígitos

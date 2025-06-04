@@ -234,8 +234,8 @@ function ShowMedium() {
                                 <MediumInfo>Cônjuge: <span>{medium.conjuge}</span></MediumInfo>
                                 <MediumInfo>CEP: <span>{medium.cep}</span></MediumInfo>
                                 <MediumInfo>Endereço: <span>{fullAddress}</span></MediumInfo>
-                                <MediumInfo>Telefone 1: <span>{medium.telefone1}</span></MediumInfo>
-                                <MediumInfo>Telefone 2: <span>{medium.telefone2}</span></MediumInfo>
+                                <MediumInfo>Telefone: <span>{medium.telefone1}</span></MediumInfo>
+                                <MediumInfo>Tel. Emergência: <span>{medium.telefone2}</span></MediumInfo>
                                 <MediumInfo>E-mail: <span>{medium.email}</span></MediumInfo>
                                 <MediumInfo>Profissão: <span>{medium.profissao}</span></MediumInfo>
                             </InfoContainer>

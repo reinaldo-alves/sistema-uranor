@@ -273,9 +273,9 @@ function EditYoungMedium() {
                                 <option key={index} value={item.abrev}>{item.state}</option>
                             ))}
                         </select>
-                        <label>Telefone 1: </label>
+                        <label>Telefone: </label>
                         <input type="tel" maxLength={15} value={menor.telefone1} onChange={(e) => updateProps('telefone1', formatPhoneNumber(e.target.value))}/>
-                        <label>Telefone 2: </label>
+                        <label>Tel. Emergência: </label>
                         <input type="tel" maxLength={15} value={menor.telefone2} onChange={(e) => updateProps('telefone2', formatPhoneNumber(e.target.value))}/>
                         <label>E-mail: </label>
                         <input type="email" value={menor.email} onChange={(e) => updateProps('email', e.target.value.toLowerCase())}/>

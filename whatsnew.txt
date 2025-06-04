@@ -96,6 +96,8 @@ VERSÃO 1.4.0
 
 VERSÃO 1.4.1
 - Criação de rotina para upload e carregamento de fotos do Google Drive na versão online.
+- Adição do campo 'Tel. Emergência' no lugar de 'Telefone 2'.
+- Validação de CPF, que não permite que se adicionem dois cadastros com o mesmo CPF.
 
 O QUE FAZER
 - Incluir médiuns menores nos relatórios.
