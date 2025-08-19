@@ -23,6 +23,7 @@ import MainContainer from "src/components/MainContainer/MainContainer";
 import { NavigateButton } from "src/components/buttons/buttons";
 import { InputContainer, PersonalCard } from "src/components/cardsContainers/cardsContainers";
 import { SectionTitle } from "src/components/texts/texts";
+import TimeLine from "../TimeLine/TimeLine";
 
 function ShowMedium() {
     const [loading, setLoading] = useState(true);
@@ -215,7 +216,6 @@ function ShowMedium() {
                             }}>Frequência</NavigateButton>
                             <NavigateButton width="150px" color="green" disabled={searchMediumInCons(medium.medium_id) === defaultConsagracao} onClick={() => generateAutorizacao([searchMediumInCons(medium.medium_id)], templos, adjuntos, ministros, searchMediumInCons(medium.medium_id).consagracao)}>Autorização</NavigateButton>
                             <NavigateButton width="150px" color="green" disabled={!medium.dtCenturia || medium.sex !== 'Masculino'} onClick={() => generateReclass(medium, adjuntos, ministros, cavaleiros, user)}>Reclassificação</NavigateButton>
-                            <NavigateButton width="150px" onClick={() => navigate(`/mediuns/historico/${medium.medium_id}`)} color="green">Linha do Tempo</NavigateButton>
                             <NavigateButton width="150px" onClick={confirmChangeMed} color="red">Mudar Med.</NavigateButton>
                             <NavigateButton width="150px" style={{display: `${user.level === 'Administrador' ? 'block' : 'none'}`}} onClick={deleteMedium} color="red">Excluir</NavigateButton>
                         </MainInfoContainer>
@@ -373,6 +373,7 @@ function ShowMedium() {
                         </PersonalCard>
                     </div>
                 </GridContainer>
+                <TimeLine medium={medium} />
             </MainContainer>
             <SideMenu list={listSubMenu} />
             <Modal vis={showModal}>

@@ -1,8 +1,25 @@
 import styled from "styled-components";
 
-export const YearCard = styled.div<{show: boolean}>`
+export const TimelineContainer = styled.div`
     width: 90%;
     max-width: 1400px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 60px;
+    margin-bottom: 20px;
+
+    h2 {
+        font-size: 28px;
+        font-weight: bold;
+        color: ${(props) => {return props.theme.color.lighterColor}};
+        margin-bottom: 20px;
+    }
+    
+`;
+
+export const YearCard = styled.div<{show: boolean}>`
+    width: 100%;
     border-radius: 10px;
     padding: 15px;
     background-color: ${(props) => {return props.theme.color.mediumColorTr}};

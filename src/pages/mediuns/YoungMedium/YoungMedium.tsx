@@ -81,7 +81,7 @@ function YoungMedium() {
                             .filter((item: IMenor) => removeDiacritics(item.nome).includes(removeDiacritics(searchName)))
                             .filter((item: IMenor) => removeDiacritics(item.responsavel).includes(removeDiacritics(searchResp)))
                             .map((item: IMenor, index: number) => (
-                                <Results key={index} onClick={() => navigate(`${item.menor_id}`)}>
+                                <Results key={index} onClick={() => navigate(`${item.medium_id}`)}>
                                     <ResultsTitle>{item.nome}</ResultsTitle>
                                     <ResultsDetails>Responsável: {item.responsavel} - {item.parentesco}</ResultsDetails>
                                 </Results>

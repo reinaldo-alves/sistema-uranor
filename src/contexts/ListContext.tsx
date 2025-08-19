@@ -258,11 +258,16 @@ export const ListStore = ({ children }: any) => {
         try {
             const { data } = await api.get('/menor/get-menor', {headers:{Authorization: token}})
             const menor = data.menor.map((item: IMenorAPI) => ({
-                ...item,
+                medium_id: item.medium_id,
+                nome: item.nome,
+                sex: item.sex,
+                foto: !item.foto ? '' : `${process.env.REACT_APP_IMAGE_URL}${item.foto}`,
                 condicao: item.condicao === null ? '' : item.condicao,
+                templo: item.templo,
                 dtNasc: item.dtNasc === null ? '' : item.dtNasc.toString().split('T')[0],
                 rg: item.rg === null ? '' : item.rg,
                 cpf: item.cpf === null ? '' : item.cpf,
+                mae: item.mae,
                 pai: item.pai === null ? '' : item.pai,
                 natur: item.natur === null ? '' : item.natur,
                 naturUF: item.naturUF === null ? '' : item.naturUF,
@@ -277,18 +282,18 @@ export const ListStore = ({ children }: any) => {
                 endCidade: item.endCidade === null ? '' : item.endCidade,
                 endUF: item.endUF === null ? '' : item.endUF,
                 telefone1: item.telefone1 === null ? '' : item.telefone1,
-                telefone2: item.telefone2 === null ? '' : item.telefone2,
                 email: item.email === null ? '' : item.email,
                 temploOrigem: item.temploOrigem === null ? '' : item.temploOrigem,
                 falMiss: item.falMiss === null ? '' : item.falMiss,
                 adjDevas: item.adjDevas === null ? '' : item.adjDevas,
                 nomeEmissao: item.nomeEmissao === null ? '' : item.nomeEmissao,
                 observ: item.observ === null ? '' : item.observ,
+                dtFalange: item.dtFalange === null ? '' : item.dtFalange.toString().split('T')[0],
                 responsavel: item.responsavel === null ? '' : item.responsavel,
                 parentesco: item.parentesco === null ? '' : item.parentesco,
                 contatoResp: item.contatoResp === null ? '' : item.contatoResp
-            }))
-            setMenores(menor)
+            }));
+            setMenores(menor);
         } catch (error) {
             console.log('Erro ao carregar a lista de médiuns menores', error);
         }
@@ -296,31 +301,7 @@ export const ListStore = ({ children }: any) => {
 
     const convertMenorToSend = (menor: IMenor) => {
         const menorObj = {
-            ...menor,
-            dtNasc: menor.dtNasc === '' ? null : menor.dtNasc,
-            rg: menor.rg === '' ? null : menor.rg,
-            cpf: menor.cpf === '' ? null : menor.cpf,
-            pai: menor.pai === '' ? null : menor.pai,
-            natur: menor.natur === '' ? null : menor.natur,
-            naturUF: menor.naturUF === '' ? null : menor.naturUF,
-            profissao: menor.profissao === '' ? null : menor.profissao,
-            estCivil: menor.estCivil === '' ? null : menor.estCivil,
-            conjuge: menor.conjuge === '' ? null : menor.conjuge,
-            cep: menor.cep === '' ? null : menor.cep,
-            endereco: menor.endereco === '' ? null : menor.endereco,
-            endNumero: menor.endNumero === '' ? null : menor.endNumero,
-            endCompl: menor.endCompl === '' ? null : menor.endCompl,
-            endBairro: menor.endBairro === '' ? null : menor.endBairro,
-            endCidade: menor.endCidade === '' ? null : menor.endCidade,
-            endUF: menor.endUF === '' ? null : menor.endUF,
-            telefone1: menor.telefone1 === '' ? null : menor.telefone1,
-            telefone2: menor.telefone2 === '' ? null : menor.telefone2,
-            email: menor.email === '' ? null : menor.email,
-            temploOrigem: menor.temploOrigem === 0 ? null : menor.temploOrigem,
-            falMiss: menor.falMiss === 0 ? null : menor.falMiss,
-            adjDevas: menor.adjDevas === '' ? null : menor.adjDevas,
-            nomeEmissao: menor.nomeEmissao === '' ? null : menor.nomeEmissao,
-            observ: menor.observ === '' ? null : menor.observ,
+            dtFalange: menor.dtFalange === '' ? null : menor.dtFalange,
             responsavel: menor.responsavel === '' ? null : menor.responsavel,
             parentesco: menor.parentesco === '' ? null : menor.parentesco,
             contatoResp: menor.contatoResp === '' ? null : menor.contatoResp

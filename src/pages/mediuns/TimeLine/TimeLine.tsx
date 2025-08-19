@@ -1,49 +1,32 @@
-import Header from "src/components/header/header";
-import { ButtonContainer, EditObs, EventDetails, EventTable, EventTitle, YearCard, YearTitle } from "./styles";
-import SubMenu from "src/components/SubMenu/SubMenu";
-import SideMenu from "src/components/SideMenu/SideMenu";
-import { useNavigate, useParams } from "react-router-dom";
+import { ButtonContainer, EditObs, EventDetails, EventTable, EventTitle, TimelineContainer, YearCard, YearTitle } from "./styles";
 import { useCallback, useContext, useEffect, useState } from "react";
-import { defaultEvento, defaultMedium, eventTypes } from "src/utilities/default";
-import { MediumContext } from "src/contexts/MediumContext";
+import { defaultEvento, eventTypes } from "src/utilities/default";
 import { IEvento, IMedium } from "src/types/types";
 import { UserContext } from "src/contexts/UserContext";
 import { ListContext } from "src/contexts/ListContext";
-import Loading from "src/utilities/Loading";
-import PageNotFound from "src/pages/PageNotFound/PageNotFound";
 import { convertDate, generateListEventos, handleEnterPress } from "src/utilities/functions";
 import { Modal, ModalButton, ModalContent, ModalTitle } from "src/components/Modal/modal";
 import api from "src/api";
 import { Alert, Confirm } from "src/utilities/popups";
-import MainContainer from "src/components/MainContainer/MainContainer";
 import { NavigateButton } from "src/components/buttons/buttons";
 import { InputContainer } from "src/components/cardsContainers/cardsContainers";
 
-function TimeLine() {
-    const [medium, setMedium] = useState(defaultMedium);
+function TimeLine(props: {medium: IMedium}) {
     const [eventos, setEventos] = useState([] as Array<IEvento>);
-    const [loading, setLoading] = useState(true);
     const [showModal, setShowModal] = useState(false);
     const [edit, setEdit] = useState(false);
     const [selected, setSelected] = useState(defaultEvento);
     const [edited, setEdited] = useState(defaultEvento);
     const [dropClassif, setDropClassif] = useState('');
 
-    const { user, token, getUser } = useContext(UserContext);
-    const { mediuns, loadMedium } = useContext(MediumContext);
-    const { ministros, cavaleiros, guias, classificacao, getData } = useContext(ListContext);
-    const navigate = useNavigate();
-    const params = useParams();
+    const { user, token } = useContext(UserContext);
+    const { ministros, cavaleiros, guias, classificacao } = useContext(ListContext);
 
     interface ITipo {
         event: string,
         prior: number,
         auto: boolean
     }
-
-    useEffect(() => {
-        console.log(edited);
-    }, [edited])
 
     const loadEventosMedium = useCallback(async (medium: IMedium, token: string) => {
         try {
@@ -66,7 +49,7 @@ function TimeLine() {
         } else {
             try {
                 const newEvento = {
-                    medium: medium.medium_id,
+                    medium: props.medium.medium_id,
                     data: evento.data,
                     mensagem: evento.mensagem,
                     tipo: evento.tipo,
@@ -74,7 +57,7 @@ function TimeLine() {
                 };
                 await api.post('/evento/create', newEvento, {headers:{Authorization: token}});
                 Alert(edit? 'Evento editado com sucesso' : 'Evento adicionado com sucesso à linha do tempo', 'success');
-                await loadEventosMedium(medium, token);
+                await loadEventosMedium(props.medium, token);
                 closeModal();
             } catch (error) {
                 console.error(edit? 'Não foi possível editar o evento' : 'Não foi possível adicionar o evento à linha do tempo', error);
@@ -94,7 +77,7 @@ function TimeLine() {
             try {
                 await api.put('/evento/update', {evento_id: oldEvent.evento_id, ...changedFields}, {headers:{Authorization: token}})
                 Alert('Evento editado com sucesso', 'success');
-                await loadEventosMedium(medium, token);
+                await loadEventosMedium(props.medium, token);
                 closeModal();
             } catch (error) {
                 console.error('Não foi possível editar o evento', error);
@@ -110,7 +93,7 @@ function TimeLine() {
             try {
                 await api.delete(`/evento/delete?evento_id=${selected.evento_id}`, {headers:{Authorization: token}})
                 Alert(`${!eventTypes.find((item: ITipo) => item.event === selected.tipo)?.auto ? 'Evento excluído' : 'Observações excluídas'} com sucesso`, 'success');
-                await loadEventosMedium(medium, token);
+                await loadEventosMedium(props.medium, token);
                 closeModal();
             } catch (error) {
                 console.error('Erro ao excluir evento da linha do tempo', error);
@@ -118,41 +101,11 @@ function TimeLine() {
             }
         });
     }
-
-    const getInfo = useCallback(async () => {
-        await getUser(token);
-        await loadMedium(token);
-        await getData(token);
-    }, [getUser, loadMedium, getData, token]);
-
-    useEffect(() => {
-        getInfo();
-    }, [getInfo])
     
     useEffect(() => {
-        window.scrollTo({top: 0});
-    }, [])
+        loadEventosMedium(props.medium, token) 
+    }, [props.medium, loadEventosMedium, token])
     
-    useEffect(() => {
-        if (mediuns.length > 0 && params.id) {
-            const foundMedium = mediuns.find((item: IMedium) => item.medium_id === Number(params.id));
-            setMedium(foundMedium);
-            if (foundMedium) {
-                loadEventosMedium(foundMedium, token).then(() => {
-                    setLoading(false);
-                })
-            }
-        }
-    }, [mediuns, params.id, loadEventosMedium, token])
-    
-    if(loading) {
-        return <Loading />
-    }
-    
-    if(!medium) {
-        return <PageNotFound />
-    }
-
     const updateProps = (property: string, newValue: any) => {
         setEdited((prevData: any) => ({
         ...prevData,
@@ -182,17 +135,10 @@ function TimeLine() {
         setSelected(defaultEvento);
         setDropClassif('');
     }
-    
-    const listSubMenu = [
-        {title: 'Página Inicial', click: '/'},
-        {title: 'Consultar Médium', click: '/mediuns/consulta'},
-        {title: 'Cadastrar Médium', click: '/mediuns/cadastro'},
-        {title: 'Médium Menor', click: '/mediuns/menor'}
-    ]
 
     const arrayCards = [];
 
-    for(let i = new Date().getFullYear(); i >= new Date(medium.dtIngresso).getFullYear(); i--) {
+    for(let i = new Date().getFullYear(); i >= new Date(props.medium.dtIngresso).getFullYear(); i--) {
         arrayCards.push(
             <YearCard key={i} show={eventos.filter((item: IEvento) => new Date(item.data).getFullYear() === i).length > 0}>
                 <YearTitle>{i}</YearTitle>
@@ -213,17 +159,14 @@ function TimeLine() {
 
     return (
         <>
-            <Header />
-            <SubMenu list={listSubMenu}/>
-            <MainContainer title='Linha do Tempo' subtitle={`${medium.nome} - ID ${medium.medium_id.toString().padStart(5, '0')}`}>
+            <TimelineContainer>
+                <h2>Linha do Tempo</h2>
+                <EditObs>Clique sobre um evento para editar ou adicionar observações</EditObs>
                 <ButtonContainer>
-                    <NavigateButton width="200px" height="45px" onClick={() => navigate(`/mediuns/consulta/${params.id}`)}>{'< Voltar'}</NavigateButton>
                     <NavigateButton width="200px" height="45px" onClick={() => modalAddEvento()}>Adicionar Evento</NavigateButton>
                 </ButtonContainer>
-                <EditObs>Clique sobre um evento para editar ou adicionar observações</EditObs>
                 {arrayCards}
-            </MainContainer>
-            <SideMenu list={listSubMenu} />
+            </TimelineContainer>
             <Modal vis={showModal}>
                 <ModalContent>
                     <ModalTitle>{edit? 'Editar Evento' : 'Adicionar Evento'}</ModalTitle>

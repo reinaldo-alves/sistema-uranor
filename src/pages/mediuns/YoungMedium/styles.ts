@@ -1,5 +1,74 @@
 import styled from "styled-components";
 
+export const MainFieldsContainer = styled.div`
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+`;
+
+export const MainContent = styled.div`
+    display: flex;
+    gap: 30px;
+    width: 100%;
+
+    @media (max-width: 800px) {
+        flex-direction: column;
+        align-items: center;
+    }
+`;
+
+export const PhotoContainer = styled.div<{photo: string | null}>`
+    height: 150px;
+    aspect-ratio: 3 / 4;
+    border-radius: 10px;
+    border: 2px solid ${(props) => {return props.theme.color.lighterColor}};
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: ${(props) => {return props.theme.color.darkerColor}};
+    text-align: center;
+    font-weight: bold;
+    padding: 15px;
+    position: relative;
+    background-image: ${({ photo }) => photo? `url(${photo})` : 'none'};
+    background-size: cover;
+    background-position: 50% 50%;
+    
+    input {
+        position: absolute;
+        top: 0;
+        height: 100%;
+        width: 100%;
+        opacity: 0;
+        cursor: pointer;
+        
+    }
+
+    @media (max-width: 800px) {
+        width: 136px
+    }
+
+`;
+
+export const PhotoPosition = styled.div<{hide?: boolean}>`
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+    align-self: flex-end;
+
+    span {
+        font-size: 16px;
+        cursor: pointer;
+        visibility: ${({ hide }) => hide? 'hidden' : 'visible'};;
+    }
+
+    @media (max-width: 800px) {
+        align-self: center;
+    }
+`;
+
 export const ResultsCard = styled.div`
     width: 90%;
     max-width: 1400px;
@@ -57,10 +126,10 @@ export const GridContainer = styled.div`
 
 export const FieldContainer = styled.div`
     display: grid;
-    grid-template-columns: auto 1fr auto 150px;
+    grid-template-columns: auto 1fr auto 140px;
     align-items: center;
     width: 100%;
-    min-width: 150px;
+    min-width: 140px;
     gap: 20px 10px;
 
     label:not(:first-of-type) {
@@ -74,11 +143,26 @@ export const FieldContainer = styled.div`
 
 //=========================================================================================================
 
+export const GridShowContainer = styled.div`
+    width: 90%;
+    max-width: 1472px;
+    display: grid;
+    gap: 20px;
+    grid-template-columns: auto 1fr;
+    align-items: flex-start;
+
+    @media (max-width: 800px) {
+        grid-template-columns: 1fr;
+        gap: 0;
+    }
+`;
+
 export const MediumMainInfo = styled.span`
-    font-size: 14px;
+    font-size: 14px !important;
+    text-decoration: none !important;
     font-weight: bold;
     text-align: center;
-    color: ${(props) => {return props.theme.color.lighterColor}};
+    color: ${(props) => {return props.theme.color.darkerColor}};
     display: -webkit-box;
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 2;
@@ -86,7 +170,8 @@ export const MediumMainInfo = styled.span`
     text-overflow: ellipsis;
 
     span {
-        text-decoration: underline;
+        font-size: 14px !important;
+        text-decoration: underline !important;
     }
 `;
 
@@ -101,18 +186,12 @@ export const NameAndId = styled.div`
 `;
 
 export const MainInfoContainer = styled.div`
-    width: 90%;
-    max-width: 1000px;
-    color: ${(props) => {return props.theme.color.lighterColor}};
+    width: 220px;
     display: flex;
-    justify-content: space-around;
+    flex-direction: column;
+    justify-content: center;
     align-items: center;
-    margin-top: 20px;
-
-    @media (max-width: 700px) {
-        flex-direction: column;
-        gap: 5px;
-    }
+    gap: 15px;
 `;
 
 export const ButtonContainer = styled.div`

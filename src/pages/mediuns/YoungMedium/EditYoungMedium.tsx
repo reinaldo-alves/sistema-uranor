@@ -1,6 +1,6 @@
 import { useContext, useState, useEffect, useCallback } from "react";
 import { ListContext } from "src/contexts/ListContext";
-import { FieldContainer, GridContainer } from "./styles";
+import { FieldContainer, GridContainer, MainContent, MainFieldsContainer, PhotoContainer, PhotoPosition } from "./styles";
 import { IEstado, IFalange, IMenor, ITemplo } from "src/types/types";
 import SideMenu from "src/components/SideMenu/SideMenu";
 import SubMenu from "src/components/SubMenu/SubMenu";
@@ -25,7 +25,7 @@ import { Observations, SectionTitle } from "src/components/texts/texts";
 function EditYoungMedium() {
     const { menores, loadMenor, convertMenorToSend, templos, estados, falMiss, getData } = useContext(ListContext);
     const { user, token, getUser } = useContext(UserContext);
-    const { mediuns } = useContext(MediumContext);
+    const { mediuns, uploadImage, convertMediumToSend } = useContext(MediumContext);
     const params = useParams();
     const navigate = useNavigate();
 
@@ -36,11 +36,14 @@ function EditYoungMedium() {
     const [showModal, setShowModal] = useState(false);
     const [dataTransf, setDataTransf] = useState('');
     const [dataCondicao, setDataCondicao] = useState('');
+    const [photo, setPhoto] = useState<File | null>(null);
+    const [preview, setPreview] = useState<string | null>(null);
+    const [updatePhoto, setUpdatePhoto] = useState(false);
 
     const now = new Date().toISOString().split('T')[0];
 
     const defineMenor = useCallback(() => {
-        const foundMenor: IMenor = menores.find((item: IMenor) => item.menor_id === Number(params.id));
+        const foundMenor: IMenor = menores.find((item: IMenor) => item.medium_id === Number(params.id));
         setMenor(foundMenor);
         setSelected(foundMenor);
     }, [params.id, menores]);
@@ -72,7 +75,7 @@ function EditYoungMedium() {
     
     useEffect(() => {
         console.log(menor)
-        if(menor.menor_id) {
+        if(menor.medium_id) {
             setLoading(false);
         }
     }, [menor])
@@ -119,6 +122,38 @@ function EditYoungMedium() {
         }));
     };
 
+    const imageUpdate = (event: React.ChangeEvent<HTMLInputElement>) => {
+        if (event.target.files && event.target.files[0]) {
+            setPhoto(event.target.files[0]);
+            setUpdatePhoto(true);
+        }
+    };
+
+    const removeImage = () => {
+        if (photo || menor.foto) {
+            Confirm('Tem certeza que quer remover esta foto?', 'question', 'Cancelar', 'Confirmar', () => {
+                updateProps('foto', '');
+                setPhoto(null);
+                setPreview(null);
+                setUpdatePhoto(true);
+            })
+        }
+    }
+
+    useEffect(() => {
+        if (photo) {
+            const reader = new FileReader();
+            reader.readAsDataURL(photo);
+            reader.onloadend = () => {
+                setPreview(reader.result as string);
+            };
+        } else if (menor.foto) {
+            setPreview(menor.foto);
+        } else {
+            setPreview(null);
+        }
+    }, [photo, menor.foto]);
+
     const generateObserv = (newMenor: IMenor, oldMenor: IMenor) => {
         const contentArray = [newMenor.observ];
         if (dataCondicao) {
@@ -135,38 +170,69 @@ function EditYoungMedium() {
         return contentArray.length > 1 ? contentArray.filter(Boolean).join('. ') : newMenor.observ;
     }
 
-    const editMedium = async (newMenor: IMenor, oldMenor: IMenor, token: string) => {
+    const editMenor = async (newMenor: IMenor, oldMenor: IMenor, token: string) => {
         newMenor.observ = generateObserv(newMenor, oldMenor);
-        const newMenorObj = convertMenorToSend(newMenor);
-        const oldMenorObj = convertMenorToSend(oldMenor);
-        const changedFields = {} as any
-        for (const key in newMenorObj){
-            if (newMenorObj[key as keyof IMenor] !== oldMenorObj[key as keyof IMenor]){
-                changedFields[key as keyof IMenor] = newMenorObj[key as keyof IMenor]
+        try {
+            const extractMenorData = (menor: IMenor) => convertMenorToSend({dtFalange: menor.dtFalange, responsavel: menor.responsavel, parentesco: menor.parentesco, contatoResp: menor.contatoResp});
+            const extractMediumData = (menor: IMenor) => {
+                const { dtFalange, responsavel, parentesco, contatoResp, ...mediumData } = menor;
+                return convertMediumToSend({...mediumData, med: 'Menor'});
+            };
+            const oldMediumObj = extractMediumData(oldMenor);
+            const oldMenorObj = extractMenorData(oldMenor);
+            const newMediumObj = extractMediumData(newMenor);
+            const newMenorObj = extractMenorData(newMenor);
+            const getChangedFields = (oldObj: any, newObj: any) => {
+                return Object.keys(newObj).reduce((changes: any, key: string) => {
+                    if (newObj[key] !== oldObj[key]) {
+                        changes[key] = newObj[key];
+                    }
+                    return changes;
+                }, {} as Record<string, any>);
             }
-        }
-        if (Object.keys(changedFields).length > 0) {
-            try {
+            const mediumChanges = getChangedFields(oldMediumObj, newMediumObj);
+            const menorChanges = getChangedFields(oldMenorObj, newMenorObj);
+            if (Object.keys(mediumChanges).length > 0 || Object.keys(menorChanges).length > 0) {
                 await Confirm('Tem certeza que quer editar este médium menor?', 'question', 'Cancelar', 'Confirmar', async () => {
-                    await api.put('/menor/update', {menor_id: oldMenorObj.menor_id, ...changedFields}, {headers:{Authorization: token}})
+                    if (Object.keys(mediumChanges).length > 0) {
+                        await api.put('/medium/update', {medium_id: oldMediumObj.medium_id, ...mediumChanges}, {headers:{Authorization: token}});
+                    }
+                    if (Object.keys(menorChanges).length > 0) {
+                        await api.put('/menor/update', {medium: oldMediumObj.medium_id, ...menorChanges}, {headers:{Authorization: token}});
+                    }
+                    if (newMediumObj.foto && newMediumObj.foto !== oldMediumObj.foto) {
+                        await uploadImage(oldMediumObj.medium_id, 'Menor', token, photo);
+                        console.log('foto editada')
+                    } else if (updatePhoto && photo) {
+                        await uploadImage(oldMediumObj.medium_id, 'Menor', token, photo)
+                    }
                     Alert('Médium menor editado com sucesso', 'success');
                     await loadMenor(token);
                     navigate(`/mediuns/menor/${params.id}`);
                 })
-            } catch (error) {
-                console.log('Não foi possível editar o médium menor', error);
-                Alert('Não foi possível editar o médium menor', 'error');
+            } else if (updatePhoto && photo) {
+                await Confirm('Tem certeza que quer editar este médium?', 'question', 'Cancelar', 'Confirmar', async () => {
+                    await uploadImage(oldMediumObj.medium_id, 'Menor', token, photo);
+                    console.log('foto editada');
+                    Alert('Médium editado com sucesso', 'success');
+                    await loadMenor(token);
+                    navigate(`/mediuns/menor/${params.id}`);
+                });
+            } else {
+                Alert('Não foi feita nenhuma alteração no médium menor', 'info')
             }
-        } else {
-            Alert('Não foi feita nenhuma alteração no médium menor', 'info')
+            
+        } catch (error) {
+            console.log('Não foi possível editar o médium menor', error);
+            Alert('Não foi possível editar o médium menor', 'error');
         }
     }
 
-    const handleEditMenor = async (newMedium: IMenor, oldMedium: IMenor, token: string) => {
-        if ((newMedium.condicao !== oldMedium.condicao && newMedium.condicao !== 'Afastado') || (newMedium.templo !== oldMedium.templo)) {
+    const handleEditMenor = async (newMenor: IMenor, oldMenor: IMenor, token: string) => {
+        if ((newMenor.condicao !== oldMenor.condicao && newMenor.condicao !== 'Afastado') || (newMenor.templo !== oldMenor.templo)) {
             setShowModal(true);
         } else {
-            await editMedium(newMedium, oldMedium, token);
+            await editMenor(newMenor, oldMenor, token);
         }
     }
 
@@ -190,29 +256,41 @@ function EditYoungMedium() {
             <SubMenu list={listSubMenu}/>
             <MainContainer>
                 <PersonalCard>
-                    <SectionTitle>Editar Médium Menor</SectionTitle>
-                    <FieldContainer>
-                        <label>Nome Médium: </label>
-                        <input type="text" value={menor.nome} onChange={(e) => updateProps('nome', formatInputText(e.target.value))}/>
-                        <label>Sexo: </label>
-                        <input type="text" value={menor.sex} disabled />
-                    </FieldContainer>
-                    <GridContainer>
-                        <label>Templo: </label>
-                        <select value={menor.templo} onChange={(e) => updateProps('templo', Number(e.target.value))}>
-                            <option value={0}></option>
-                            {templos.map((item: ITemplo, index: number) => (
-                                <option key={index} value={item.templo_id}>{item.cidade} - {item.estado.abrev}</option>
-                            ))}
-                        </select>
-                        <label>Condição Atual: </label>
-                        <select value={menor.condicao} onChange={(e) => updateProps('condicao', e.target.value)}>
-                            <option value={'Ativo'}>Ativo</option>
-                            <option value={'Afastado'}>Afastado</option>
-                            <option value={'Entregou as Armas'}>Entregou as Armas</option>
-                            <option value={'Desencarnado'}>Desencarnado</option>
-                        </select>
-                    </GridContainer>
+                    <MainContent>
+                        <MainFieldsContainer>
+                            <SectionTitle>Editar Médium Menor</SectionTitle>
+                            <SectionTitle>{selected.nome} - ID: {selected.medium_id.toString().padStart(5, '0')}</SectionTitle>
+                            <FieldContainer>
+                                <label>Nome Médium: </label>
+                                <input type="text" value={menor.nome} onChange={(e) => updateProps('nome', formatInputText(e.target.value))}/>
+                                <label>Sexo: </label>
+                                <input type="text" value={menor.sex} disabled />
+                            </FieldContainer>
+                            <GridContainer>
+                                <label>Templo: </label>
+                                <select value={menor.templo} onChange={(e) => updateProps('templo', Number(e.target.value))}>
+                                    <option value={0}></option>
+                                    {templos.map((item: ITemplo, index: number) => (
+                                        <option key={index} value={item.templo_id}>{item.cidade} - {item.estado.abrev}</option>
+                                    ))}
+                                </select>
+                                <label>Condição Atual: </label>
+                                <select value={menor.condicao} onChange={(e) => updateProps('condicao', e.target.value)}>
+                                    <option value={'Ativo'}>Ativo</option>
+                                    <option value={'Afastado'}>Afastado</option>
+                                    <option value={'Entregou as Armas'}>Entregou as Armas</option>
+                                    <option value={'Desencarnado'}>Desencarnado</option>
+                                </select>
+                            </GridContainer>
+                        </MainFieldsContainer>
+                        <PhotoPosition hide={!photo && !menor.foto}>
+                            <PhotoContainer photo={preview}>
+                                {photo || menor.foto? '' : 'Clique aqui para adicionar uma foto'}
+                                <input type="file" accept="image/*" onChange={imageUpdate} />
+                            </PhotoContainer>
+                            <span onClick={removeImage}>Remover foto</span>
+                        </PhotoPosition>
+                    </MainContent>
                 </PersonalCard>
                 <div style={{width: '90%', maxWidth: '1200px', display: 'flex', justifyContent: 'space-around', marginTop: '30px'}}>
                     <NavigateButton width="150px" height="45px" color="red" onClick={() => navigate(`/mediuns/menor/${params.id}`)}>Cancelar</NavigateButton>
@@ -275,8 +353,6 @@ function EditYoungMedium() {
                         </select>
                         <label>Telefone: </label>
                         <input type="tel" maxLength={15} value={menor.telefone1} onChange={(e) => updateProps('telefone1', formatPhoneNumber(e.target.value))}/>
-                        <label>Tel. Emergência: </label>
-                        <input type="tel" maxLength={15} value={menor.telefone2} onChange={(e) => updateProps('telefone2', formatPhoneNumber(e.target.value))}/>
                         <label>E-mail: </label>
                         <input type="email" value={menor.email} onChange={(e) => updateProps('email', e.target.value.toLowerCase())}/>
                     </GridContainer>
@@ -295,6 +371,8 @@ function EditYoungMedium() {
                 <PersonalCard>
                     <SectionTitle>Dados Mediúnicos</SectionTitle>
                     <GridContainer>
+                        <label>Ingresso Falange: </label>
+                        <input type="date" value={menor.dtFalange} onChange={(e) => updateProps('dtFalange', e.target.value)} min={menor.dtNasc} max={now} />
                         <label>Templo Origem: </label>
                         <select value={menor.temploOrigem} disabled={user.level !== 'Administrador' && Boolean(menor.temploOrigem)} onChange={(e) => updateProps('temploOrigem', Number(e.target.value))}>
                             <option value={0}></option>
@@ -302,8 +380,6 @@ function EditYoungMedium() {
                                 <option key={index} value={item.templo_id}>{item.cidade} - {item.estado.abrev}</option>
                             ))}
                         </select>
-                        <label>Nome na emissão: </label>
-                        <input type="text" value={menor.nomeEmissao} onChange={(e) => updateProps('nomeEmissao', formatInputText(e.target.value))}/>
                         <label>Falange Missionária: </label>
                         <select value={menor.falMiss} onChange={(e) => updateProps('falMiss', Number(e.target.value))}>
                             <option value={0}></option>
@@ -317,6 +393,8 @@ function EditYoungMedium() {
                             <option value={'Adejã'}>Adejã</option>
                             <option value={'Alufã'}>Alufã</option>
                         </select>
+                        <label>Nome na emissão: </label>
+                        <input type="text" value={menor.nomeEmissao} onChange={(e) => updateProps('nomeEmissao', formatInputText(e.target.value))}/>
                     </GridContainer>
                 </PersonalCard>
                 <PersonalCard>
@@ -335,18 +413,18 @@ function EditYoungMedium() {
                     {menor.condicao !== selected.condicao && menor.condicao !== 'Afastado' ?
                         <ModalInputContainer>
                             <label>Data de {menor.condicao === 'Ativo' ? 'retorno à doutrina' : menor.condicao === 'Entregou as Armas' ? 'entrega das armas' : menor.condicao === 'Desencarnado' ? 'desencarne' : ''}</label>
-                            <input type="date" value={dataCondicao} onKeyUp={(e) => handleEnterPress(e, async () => await editMedium(menor, selected, token))} onChange={(e) => setDataCondicao(e.target.value)} />
+                            <input type="date" value={dataCondicao} onKeyUp={(e) => handleEnterPress(e, async () => await editMenor(menor, selected, token))} onChange={(e) => setDataCondicao(e.target.value)} />
                         </ModalInputContainer>
                     : ''}
                     {menor.templo !== selected.templo ?
                         <ModalInputContainer>
                             <label>Data de transferência de templo</label>
-                            <input type="date" value={dataTransf} onKeyUp={(e) => handleEnterPress(e, async () => await editMedium(menor, selected, token))} onChange={(e) => setDataTransf(e.target.value)} />
+                            <input type="date" value={dataTransf} onKeyUp={(e) => handleEnterPress(e, async () => await editMenor(menor, selected, token))} onChange={(e) => setDataTransf(e.target.value)} />
                         </ModalInputContainer>
                     : ''}
                     <div style={{display: 'flex', gap: '20px'}}>
                         <ModalButton color="red" onClick={closeModal}>Cancelar</ModalButton>
-                        <ModalButton color='green' onClick={async () => await editMedium(menor, selected, token)}>Salvar</ModalButton>
+                        <ModalButton color='green' onClick={async () => await editMenor(menor, selected, token)}>Salvar</ModalButton>
                     </div>
                 </ModalContent>
             </Modal>

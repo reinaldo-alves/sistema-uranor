@@ -31,6 +31,26 @@ export function formatPhoneNumber(value: string) {
     return value
 }
 
+export function formatEmergencyPhoneNumber(value: string) {
+    if (!value) return "";
+    const digits = value.replace(/\D/g, "").slice(0, 11);
+    let phone = "";
+    const dd = digits.slice(0, 2); 
+    if (digits.length <= 2) {
+        phone = dd;
+    } else if (digits.length <= 6) {
+        phone = `(${dd}) ${digits.slice(2)}`;
+    } else if (digits.length <= 10) {
+        phone = `(${dd}) ${digits.slice(2, 6)}-${digits.slice(6)}`;
+    } else {
+        phone = `(${dd}) ${digits.slice(2, 7)}-${digits.slice(7)}`;
+    }
+    let name = value.replace(/\d/g, "").replace(/[^ A-Za-zÀ-ÿ]/g, "");
+    name = name.replace(/[A-Za-zÀ-ÿ]+/g, (word) => word[0].toUpperCase() + word.slice(1).toLowerCase());
+    if (name.trim()) return `${phone} ${name.trimStart()}`;
+    return phone;
+}
+
 export function formatCpf(value: string) {
     if (!value) return ""
     value = value.replace(/\D/g,'');
@@ -222,13 +242,18 @@ export async function generateListEventos(medium: IMedium, token: string, minist
 
 //Formata os textos inseridos nos inputs para que cada palavra fique com a inicial maiúscula
 export function formatInputText(inputText: string) {
-    const exceptWords = ['e', 'de', 'da', 'do', 'dos', 'das']
+    const alwaysUpper = ['i', 'ii', 'iii', 'iv', 'v'];
+    const alwaysLower = ['e', 'de', 'da', 'do', 'dos', 'das'];
     const text = inputText.toLowerCase();
     const words = text.split(" ");
     let result = words.map(word => {
-        if (!exceptWords.includes(word)) {
+        if(alwaysUpper.includes(word)) {
+            return word.toUpperCase();
+        }
+        else if (!alwaysLower.includes(word)) {
             return word.charAt(0).toUpperCase() + word.slice(1);
-        } else {
+        } 
+        else {
             return word;
         }
     }).join(" ");

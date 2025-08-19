@@ -8,7 +8,7 @@ import Header from "src/components/header/header";
 import { UserContext } from "src/contexts/UserContext";
 import api from "src/api";
 import { MediumContext } from "src/contexts/MediumContext";
-import { formatCep, formatCpf, formatInputText, formatPhoneNumber, handleEnterPress } from "src/utilities/functions";
+import { formatCep, formatCpf, formatEmergencyPhoneNumber, formatInputText, formatPhoneNumber, handleEnterPress } from "src/utilities/functions";
 import { Alert, Confirm } from "src/utilities/popups";
 import axios from "axios";
 import { validateMedium } from "src/utilities/validations";
@@ -724,7 +724,7 @@ function EditMedium() {
                         <label>Telefone: </label>
                         <input type="tel" maxLength={15} value={medium.telefone1} onChange={(e) => updateProps('telefone1', formatPhoneNumber(e.target.value))}/>
                         <label>Tel. Emergência: </label>
-                        <input type="tel" maxLength={15} value={medium.telefone2} onChange={(e) => updateProps('telefone2', formatPhoneNumber(e.target.value))}/>
+                        <input type="tel" value={medium.telefone2} onChange={(e) => updateProps('telefone2', formatEmergencyPhoneNumber(e.target.value))}/>
                         <label>E-mail: </label>
                         <input type="email" value={medium.email} onChange={(e) => updateProps('email', e.target.value.toLowerCase())}/>
                     </GridContainer>

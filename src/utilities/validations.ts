@@ -149,8 +149,8 @@ export const validateMenor = (menor: IMenor, action: () => void) => {
         Alert('Insira o nome do responsável pelo médium menor', 'error');
         return;
     }
-    if (!menor.responsavel) {
-        Alert('Insira o nome do responsável pelo médium menor', 'error');
+    if (!menor.contatoResp) {
+        Alert('Insira o contato do responsável pelo médium menor', 'error');
         return;
     }
     if (!menor.parentesco) {

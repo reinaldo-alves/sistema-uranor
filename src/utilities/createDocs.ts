@@ -3,7 +3,7 @@ import pdfTimes from 'pdfmake/build/vfs_fonts'
 import { timesRegular, timesBold, timesItalic, timesBI } from 'src/assets/encodedFiles/TimesFont';
 import { arialBI, arialBold, arialItalic, arialRegular } from 'src/assets/encodedFiles/ArialFont';
 import { Content, TDocumentDefinitions } from 'pdfmake/interfaces';
-import { IAdjunto, ICalendario, ICanto, ICavaleiro, IConsagracao, IEvento, IFalange, IMedium, IMenor, IMentor, ITemplo, IUser } from "src/types/types";
+import { IAdjunto, ICalendario, ICanto, ICavaleiro, IConsagracao, IEvento, IFalange, IMedium, IMentor, ITemplo, IUser } from "src/types/types";
 import { assTiaNeiva } from '../assets/encodedFiles/signature';
 import { alphabeticOrder, convertDate, generateListEventos, getCurrentDate, imageToBase64, positionsAndFunctions, reduceClassFalMest } from './functions';
 import { jaguarImage } from 'src/assets/encodedFiles/jaguar';
@@ -70,7 +70,7 @@ const docFooter = (current: number, total: number): Content => {
     ]
 };
 
-export const generateEmissao = (medium: IMedium | IMenor, user: IUser, text: string) => {    
+export const generateEmissao = (medium: IMedium, user: IUser, text: string) => {    
     const emissaoTitle: Content = {
         text: `EMISSÃO DO MÉDIUM ${medium.nome.toUpperCase()}`,
         fontSize: 14,
@@ -94,7 +94,7 @@ export const generateEmissao = (medium: IMedium | IMenor, user: IUser, text: str
         }
     ]
 
-    const emissaoInfo = (medium: IMedium | IMenor) => {
+    const emissaoInfo = (medium: IMedium) => {
         const emissaoInfoContent: Content = [
             {
                 text: '_____________________________________________________________________________________',
@@ -167,12 +167,8 @@ export const generateEmissao = (medium: IMedium | IMenor, user: IUser, text: str
 
     const emissaoFooter = (currentPage: number, pageCount: number): Content => docFooter(currentPage, pageCount)
 
-    const emissaoDocTitle = (medium: IMedium | IMenor) => {
-        if ('medium_id' in medium) {
-            return `Emissao_${medium.medium_id.toString().padStart(5, '0')}_${medium.nome.replace(/ /g, '_')}`;
-        } else {
-            return `Emissao_${medium.nome.replace(/ /g, '_')}`;
-        }
+    const emissaoDocTitle = (medium: IMedium) => {
+        return `Emissao_${medium.medium_id.toString().padStart(5, '0')}_${medium.nome.replace(/ /g, '_')}`;
     }
 
     const emissaoDefinitions: TDocumentDefinitions = {

@@ -117,9 +117,10 @@ export interface IDesenvolvimento {
 }
 
 export interface IMenor {
-    menor_id: number,
+    medium_id: number,
     nome: string,
     sex: string,
+    foto: string,
     condicao: string,
     templo: number,
     dtNasc: string,
@@ -140,12 +141,12 @@ export interface IMenor {
     endCidade: string,
     endUF: string,
     telefone1: string,
-    telefone2: string,
     email: string,
     temploOrigem: number,
     falMiss: number,
     adjDevas: string,
     nomeEmissao: string,
+    dtFalange: string,
     observ: string,
     responsavel: string,
     parentesco: string,

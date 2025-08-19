@@ -1,6 +1,6 @@
 import React, { useContext, useState, useEffect } from "react";
 import { ListContext } from "src/contexts/ListContext";
-import { FieldContainer, GridContainer } from "./styles";
+import { FieldContainer, GridContainer, MainContent, MainFieldsContainer, PhotoContainer } from "./styles";
 import { IEstado, IFalange, IMenor, ITemplo } from "src/types/types";
 import SideMenu from "src/components/SideMenu/SideMenu";
 import SubMenu from "src/components/SubMenu/SubMenu";
@@ -17,13 +17,17 @@ import { validateMenor } from "src/utilities/validations";
 import { NavigateButton } from "src/components/buttons/buttons";
 import { PersonalCard } from "src/components/cardsContainers/cardsContainers";
 import { Observations, SectionTitle } from "src/components/texts/texts";
+import { MediumContext } from "src/contexts/MediumContext";
 
 function AddYoungMedium() {
     const { templos, estados, falMiss, loadMenor, convertMenorToSend } = useContext(ListContext);
     const { token } = useContext(UserContext);
+    const { uploadImage, convertMediumToSend } = useContext(MediumContext);
 
     const [newMenor, setNewMenor] = useState(defaultMenor);
     const [listFalMiss, setListFalMiss] = useState([]);
+    const [photo, setPhoto] = useState<File | null>(null);
+    const [preview, setPreview] = useState<string | null>(null);
 
     const now = new Date().toISOString().split('T')[0];
 
@@ -78,12 +82,34 @@ function AddYoungMedium() {
         [property]: newValue
         }));
     };
+
+    const imageUpdate = (event: React.ChangeEvent<HTMLInputElement>) => {
+        if (event.target.files && event.target.files[0]) {
+            setPhoto(event.target.files[0]);
+        }
+    };
+
+    useEffect(() => {
+        if (photo) {
+            const reader = new FileReader();
+            reader.readAsDataURL(photo);
+            reader.onloadend = () => {
+                setPreview(reader.result as string);
+            };
+        } else {
+            setPreview(null);
+        }
+    }, [photo]);
     
     const addMedium = async (menor: IMenor, token: string) => {
-        const menorObj = convertMenorToSend(menor)
-        const {menor_id, ...newMenorObj} = menorObj;
+        const {medium_id, dtFalange, responsavel, parentesco, contatoResp, ...mediumObj} = menor;
+        const newMediumObj = convertMediumToSend({...mediumObj, med: 'Menor'});
+        const newMenorObj = convertMenorToSend({dtFalange, responsavel, parentesco, contatoResp})
         try {
-            await api.post('/menor/create', newMenorObj, {headers:{Authorization: token}})
+            const response = await api.post('/medium/create', newMediumObj, {headers:{Authorization: token}});
+            const { medium_id } = response.data;
+            await uploadImage(medium_id, 'Menor', token, photo);
+            await api.post('/menor/create', {medium: medium_id, ...newMenorObj}, {headers:{Authorization: token}});
             Alert('Médium menor adicionado com sucesso', 'success');
             setNewMenor(defaultMenor);
             await loadMenor(token);
@@ -100,39 +126,47 @@ function AddYoungMedium() {
             <SubMenu list={listSubMenu}/>
             <MainContainer>
                 <PersonalCard>
-                    <SectionTitle>Cadastrar Novo Médium Menor</SectionTitle>
-                    <FieldContainer>
-                        <label>Nome Médium: </label>
-                        <input type="text" value={newMenor.nome} onChange={(e) => updateProps('nome', formatInputText(e.target.value))}/>
-                        <label>Sexo: </label>
-                        <select
-                            value={newMenor.sex}
-                            onChange={(e) => {
-                                updateProps('sex', e.target.value);
-                                updateProps('falMiss', 0);
-                            }}
-                        >
-                            <option value={''}></option>
-                            <option value={'Feminino'}>Feminino</option>
-                            <option value={'Masculino'}>Masculino</option>
-                        </select>
-                    </FieldContainer>
-                    <GridContainer>
-                        <label>Templo: </label>
-                        <select value={newMenor.templo} onChange={(e) => updateProps('templo', Number(e.target.value))}>
-                            <option value={0}></option>
-                            {templos.map((item: ITemplo, index: number) => (
-                                <option key={index} value={item.templo_id}>{item.cidade} - {item.estado.abrev}</option>
-                            ))}
-                        </select>
-                        <label>Condição Atual: </label>
-                        <select value={newMenor.condicao} onChange={(e) => updateProps('condicao', e.target.value)}>
-                            <option value={'Ativo'}>Ativo</option>
-                            <option value={'Afastado'}>Afastado</option>
-                            <option value={'Entregou as Armas'}>Entregou as Armas</option>
-                            <option value={'Desencarnado'}>Desencarnado</option>
-                        </select>
-                    </GridContainer>
+                    <MainContent>
+                        <MainFieldsContainer>
+                            <SectionTitle>Cadastrar Novo Médium Menor</SectionTitle>
+                            <FieldContainer>
+                                <label>Nome Médium: </label>
+                                <input type="text" value={newMenor.nome} onChange={(e) => updateProps('nome', formatInputText(e.target.value))}/>
+                                <label>Sexo: </label>
+                                <select
+                                    value={newMenor.sex}
+                                    onChange={(e) => {
+                                        updateProps('sex', e.target.value);
+                                        updateProps('falMiss', 0);
+                                    }}
+                                >
+                                    <option value={''}></option>
+                                    <option value={'Feminino'}>Feminino</option>
+                                    <option value={'Masculino'}>Masculino</option>
+                                </select>
+                            </FieldContainer>
+                            <GridContainer>
+                                <label>Templo: </label>
+                                <select value={newMenor.templo} onChange={(e) => updateProps('templo', Number(e.target.value))}>
+                                    <option value={0}></option>
+                                    {templos.map((item: ITemplo, index: number) => (
+                                        <option key={index} value={item.templo_id}>{item.cidade} - {item.estado.abrev}</option>
+                                    ))}
+                                </select>
+                                <label>Condição Atual: </label>
+                                <select value={newMenor.condicao} onChange={(e) => updateProps('condicao', e.target.value)}>
+                                    <option value={'Ativo'}>Ativo</option>
+                                    <option value={'Afastado'}>Afastado</option>
+                                    <option value={'Entregou as Armas'}>Entregou as Armas</option>
+                                    <option value={'Desencarnado'}>Desencarnado</option>
+                                </select>
+                            </GridContainer>
+                        </MainFieldsContainer>
+                        <PhotoContainer photo={preview}>
+                            {photo? '' : 'Clique aqui para adicionar uma foto'}
+                            <input type="file" accept="image/*" onChange={imageUpdate} />
+                        </PhotoContainer>
+                    </MainContent>
                 </PersonalCard>
                 <div style={{width: '90%', maxWidth: '1200px', display: 'flex', justifyContent: 'space-around', marginTop: '30px'}}>
                     <NavigateButton width="150px" height="45px" onClick={() => navigate('/mediuns/menor')}>{'< Voltar'}</NavigateButton>
@@ -195,8 +229,6 @@ function AddYoungMedium() {
                         </select>
                         <label>Telefone: </label>
                         <input type="tel" maxLength={15} value={newMenor.telefone1} onChange={(e) => updateProps('telefone1', formatPhoneNumber(e.target.value))}/>
-                        <label>Tel. Emergência: </label>
-                        <input type="tel" maxLength={15} value={newMenor.telefone2} onChange={(e) => updateProps('telefone2', formatPhoneNumber(e.target.value))}/>
                         <label>E-mail: </label>
                         <input type="email" value={newMenor.email} onChange={(e) => updateProps('email', e.target.value.toLowerCase())}/>
                     </GridContainer>
@@ -215,6 +247,8 @@ function AddYoungMedium() {
                 <PersonalCard>
                     <SectionTitle>Dados Mediúnicos</SectionTitle>
                     <GridContainer>
+                        <label>Ingresso Falange: </label>
+                        <input type="date" value={newMenor.dtFalange} onChange={(e) => updateProps('dtFalange', e.target.value)} min={newMenor.dtNasc} max={now} />
                         <label>Templo Origem: </label>
                         <select value={newMenor.temploOrigem} onChange={(e) => updateProps('temploOrigem', Number(e.target.value))}>
                             <option value={0}></option>
@@ -222,8 +256,6 @@ function AddYoungMedium() {
                                 <option key={index} value={item.templo_id}>{item.cidade} - {item.estado.abrev}</option>
                             ))}
                         </select>
-                        <label>Nome na emissão: </label>
-                        <input type="text" value={newMenor.nomeEmissao} onChange={(e) => updateProps('nomeEmissao', formatInputText(e.target.value))}/>
                         <label>Falange Missionária: </label>
                         <select value={newMenor.falMiss} disabled={!newMenor.sex} onChange={(e) => updateProps('falMiss', Number(e.target.value))}>
                             <option value={0}></option>
@@ -237,6 +269,8 @@ function AddYoungMedium() {
                             <option value={'Adejã'}>Adejã</option>
                             <option value={'Alufã'}>Alufã</option>
                         </select>
+                        <label>Nome na emissão: </label>
+                        <input type="text" value={newMenor.nomeEmissao} onChange={(e) => updateProps('nomeEmissao', formatInputText(e.target.value))}/>
                     </GridContainer>
                 </PersonalCard>
                 <PersonalCard>

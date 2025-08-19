@@ -82,10 +82,11 @@ export const defaultCalendario = {
 }
 
 export const defaultMenor : IMenor = {
-    menor_id: 0,
+    medium_id: 0,
     nome: '',
     sex: '',
-    condicao: '',
+    foto: '',
+    condicao: 'Ativo',
     templo: 0,
     dtNasc: '',
     rg: '',
@@ -105,13 +106,13 @@ export const defaultMenor : IMenor = {
     endCidade: '',
     endUF: '',
     telefone1: '',
-    telefone2: '',
     email: '',
     temploOrigem: 0,
     falMiss: 0,
     adjDevas: '',
     nomeEmissao: '',
     observ: '',
+    dtFalange: '',
     responsavel: '',
     parentesco: '',
     contatoResp: ''
