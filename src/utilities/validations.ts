@@ -134,15 +134,15 @@ export const validateMenor = (menor: IMenor, action: () => void) => {
         return;
     }
     if (!menor.templo) {
-        Alert('Selecione o templo do médium', 'error');
+        Alert('Selecione o templo do médium menor', 'error');
         return;
     }
     if (!menor.dtNasc) {
-        Alert('Insira a data de nascimento do médium', 'error');
+        Alert('Insira a data de nascimento do médium menor', 'error');
         return;
     }
     if (!menor.mae) {
-        Alert('Insira o nome da mãe do médium', 'error');
+        Alert('Insira o nome da mãe do médium menor', 'error');
         return;
     }
     if (!menor.responsavel) {
@@ -209,15 +209,9 @@ export const validateEmissao = (medium: IMedium, mediuns: Array<IMedium>, turnoL
 
     //Retorna objeto médium correspondente ao mestre da ninfa sol ou lua
     const mestre = mediuns.find((item: IMedium) => item.medium_id === medium.mestre);
-
-    //Retorna true se o afilhado for arcanos ou presidente
-    const afilhadoArcPre = afilhado?.classif === 'Adjunto Koatay 108 Herdeiro Triada Harpásios 7º Raio Adjuração Arcanos Rama 2000' || afilhado?.presidente === 'Presidente';
     
     //Retorna true se o mestre for arcanos ou presidente
     const mestreArcPre = mestre?.classif === 'Adjunto Koatay 108 Herdeiro Triada Harpásios 7º Raio Adjuração Arcanos Rama 2000' || mestre?.presidente === 'Presidente';
-    
-    //Retorna true se o afilhado e o padrinho/madrinha tiver a mesma origem ou se a origem do padrinho/madrinha for Umaryã (raiz)
-    const afilhadoMesmaOrigem = medium.adjOrigem === afilhado?.adjOrigem || medium.adjOrigem === 6;
     
     //Retorna true se o mestre e a ninfa tiverem a mesma origem ou se a origem da ninfa for Umaryã (raiz)
     const mestreMesmaOrigem = medium.adjOrigem === mestre?.adjOrigem || medium.adjOrigem === 6;
@@ -227,18 +221,10 @@ export const validateEmissao = (medium: IMedium, mediuns: Array<IMedium>, turnoL
             Alert('Informe a classificação do afilhado', 'error');
             return;
         }
-        if (afilhadoArcPre && !afilhadoMesmaOrigem) {
-            Alert('Padrinho de Arcanos/Presidente deve emitir na mesma origem do afilhado', 'error');
-            return;
-        }
     }
     if (medium.sex.concat(medium.med) === 'FemininoDoutrinador') {
         if (afilhado && !afilhado.classif) {
             Alert('Informe a classificação do afilhado', 'error');
-            return;
-        }
-        if (afilhadoArcPre && !afilhadoMesmaOrigem) {
-            Alert('Madrinha de Arcanos/Presidente deve emitir na mesma origem do afilhado', 'error');
             return;
         }
         if (mestre && medium.turnoLeg !== oppositeTurno(turnoL, mestre?.turnoLeg as string)) {

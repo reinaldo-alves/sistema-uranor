@@ -105,6 +105,7 @@ VERSÃO 1.4.2
 - Liberação do campo 'Tel. Emergência' para incluir nome do contato.
 - Alteração da estrutura do cadastro de médiuns menores, com inclusão de foto, do campo 'Ingresso na Falange' e remoção de 'Tel. Emergência'.
 - Alteração do layout da página de consulta do médium menor.
+- Alteração das emissões de padrinhos e madrinhas de Arcanos e Presidentes para permitir origens diferentes de seus afilhados.
 
 O QUE FAZER
 - Incluir médiuns menores nos relatórios.
