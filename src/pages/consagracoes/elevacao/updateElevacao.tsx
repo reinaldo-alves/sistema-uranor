@@ -12,6 +12,7 @@ import api from "src/api";
 import Loading from "src/utilities/Loading";
 import MainContainer from "src/components/MainContainer/MainContainer";
 import { NavigateButton } from "src/components/buttons/buttons";
+import { findFalMissByClassMest } from "src/utilities/functions";
 
 interface IElevacao {
     medium: IConsagracao,
@@ -165,7 +166,7 @@ function UpdateElevacao() {
             try {
                 await Promise.all(listUpdateElevacao.map(async (item: IElevacao) => {
                     if (!item.naoElevou) {
-                        await api.put('/medium/update', {medium_id: item.medium.medium, dtElevacao: dateElevacao, classMest: item.classMest, falMest: item.falMest}, {headers:{Authorization: token}});
+                        await api.put('/medium/update', {medium_id: item.medium.medium, dtElevacao: dateElevacao, classMest: item.classMest, falMest: item.falMest, falMiss: findFalMissByClassMest(item.classMest)}, {headers:{Authorization: token}});
                         if (item.moverCenturia) {
                             await api.put('/consagracao/next-cons', {consagracao_id: item.medium.consagracao_id, consagracao: 3}, {headers:{Authorization: token}})
                         } else {

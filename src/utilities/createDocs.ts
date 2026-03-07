@@ -3,13 +3,13 @@ import pdfTimes from 'pdfmake/build/vfs_fonts'
 import { timesRegular, timesBold, timesItalic, timesBI } from 'src/assets/encodedFiles/TimesFont';
 import { arialBI, arialBold, arialItalic, arialRegular } from 'src/assets/encodedFiles/ArialFont';
 import { Content, TDocumentDefinitions } from 'pdfmake/interfaces';
-import { IAdjunto, ICalendario, ICanto, ICavaleiro, IConsagracao, IEvento, IFalange, IMedium, IMentor, ITemplo, IUser } from "src/types/types";
+import { IAdjunto, ICalendario, ICanto, ICavaleiro, IConsagracao, IEvento, IFalange, IMedium, IMentor, IMeses, ITemplo, IUser } from "src/types/types";
 import { assTiaNeiva } from '../assets/encodedFiles/signature';
 import { alphabeticOrder, convertDate, generateListEventos, getCurrentDate, imageToBase64, positionsAndFunctions, reduceClassFalMest } from './functions';
 import { jaguarImage } from 'src/assets/encodedFiles/jaguar';
 import { aparaImage } from 'src/assets/encodedFiles/apara';
 import { doutrinadorImage } from 'src/assets/encodedFiles/doutrinador';
-import { defaultTemp } from './default';
+import { defaultTemp, meses } from './default';
 
 pdfMake.vfs = pdfTimes.pdfMake.vfs;
 window.pdfMake.vfs['times.ttf'] = timesRegular;
@@ -157,7 +157,7 @@ export const generateEmissao = (medium: IMedium, user: IUser, text: string) => {
                 columnGap: 150
             }
         ];
-        if ('medium_id' in medium) {
+        if (medium.med !== 'Pajé' && medium.dtCenturia) {
             return emissaoInfoContent;
         } else {
             return [emissaoInfoContent[0], emissaoInfoContent[3], emissaoInfoContent[4], emissaoInfoContent[5], emissaoInfoContent[6]];
@@ -1568,6 +1568,7 @@ export const generateCalendario = (calendar: ICalendario) => {
     }
 
     const getSerieAlaba = (day: number, month: number) => {
+        if (!day) return [];
         const primeiroAlaba = new Date(calendar.ano, month, day - 3);
         const ts = primeiroAlaba.getTime();
         const serie = Array.from({length: 7}, (_, i) => {
@@ -1577,9 +1578,17 @@ export const generateCalendario = (calendar: ICalendario) => {
         return serie;
     }
 
-    const arrayAlaba = [getSerieAlaba(calendar.janeiro, 0), getSerieAlaba(calendar.fevereiro, 1), getSerieAlaba(calendar.marco, 2), getSerieAlaba(calendar.abril, 3), getSerieAlaba(calendar.maio, 4), getSerieAlaba(calendar.junho, 5), getSerieAlaba(calendar.julho, 6), getSerieAlaba(calendar.agosto, 7), getSerieAlaba(calendar.setembro, 8), getSerieAlaba(calendar.outubro, 9), getSerieAlaba(calendar.novembro, 10), getSerieAlaba(calendar.dezembro, 11),]
+    const arrayAlaba = meses.map((item: {nome:string, key: keyof IMeses}, index: number) => [getSerieAlaba(calendar.meses[item.key][0], index), getSerieAlaba(calendar.meses[item.key][1], index)]);
 
-    const alabaGetDay = (index: number, position: number) => arrayAlaba[index][position].getDate().toString().padStart(2, '0');
+    console.log(arrayAlaba)
+
+    const alabaGetDay = (index: number, position: number, array: number) => {
+        if (arrayAlaba[index][array][position]) {
+            return arrayAlaba[index][array][position].getDate().toString().padStart(2, '0');
+        } else {
+            return '';
+        }
+    };
 
     const calendarioTitle: Content = {
         text: `ATIVIDADES DOUTRINÁRIAS PARA O ANO DE ${calendar.ano}`,
@@ -1588,6 +1597,29 @@ export const generateCalendario = (calendar: ICalendario) => {
         bold: true, 
         margin: [0, 0, 0, 30]
     }
+
+    const alabaDays: Array<Content> = arrayAlaba.map((item: any, index: number) => {
+        if (alabaGetDay(index, 4, 1)) {
+            return [
+                {text: [
+                    `${alabaGetDay(index, 0, 0)} - ${alabaGetDay(index, 1, 0)} - ${alabaGetDay(index, 2, 0)} - `,
+                    {text: alabaGetDay(index, 3, 0), bold: true},
+                    ` - ${alabaGetDay(index, 4, 0)} - ${alabaGetDay(index, 5, 0)} - ${alabaGetDay(index, 6, 0)}`
+                ], fontSize: 11},
+                {text: [
+                    `${alabaGetDay(index, 0, 1)} - ${alabaGetDay(index, 1, 1)} - ${alabaGetDay(index, 2, 1)} - `,
+                    {text: alabaGetDay(index, 3, 1), bold: true},
+                    ` - ${alabaGetDay(index, 4, 1)} - ${alabaGetDay(index, 5, 1)} - ${alabaGetDay(index, 6, 1)}`
+                ], fontSize: 11},
+            ] as Content
+        } else {
+            return {text: [
+                `${alabaGetDay(index, 0, 0)} - ${alabaGetDay(index, 1, 0)} - ${alabaGetDay(index, 2, 0)} - `,
+                {text: alabaGetDay(index, 3, 0), bold: true},
+                ` - ${alabaGetDay(index, 4, 0)} - ${alabaGetDay(index, 5, 0)} - ${alabaGetDay(index, 6, 0)}`
+            ]} as Content
+        }
+    })
 
     const calendarioTable: Content = {
         style: {
@@ -1612,11 +1644,7 @@ export const generateCalendario = (calendar: ICalendario) => {
                         {text: formatMonth.format(item).toUpperCase(), bold: true},
                         {text: getTrabalho('Angical' ,item)},
                         {text: getTrabalho('Sessão Branca' ,item)},
-                        {text: [
-                            `${alabaGetDay(index, 0)} - ${alabaGetDay(index, 1)} - ${alabaGetDay(index, 2)} - `,
-                            {text: alabaGetDay(index, 3), bold: true},
-                            ` - ${alabaGetDay(index, 4)} - ${alabaGetDay(index, 5)} - ${alabaGetDay(index, 6)}`
-                        ]},
+                        alabaDays[index],
                         {text: getPrimeiroDomingo(item).toString().padStart(2, '0')},
                         {text: getUltimoDomingo(item)}
                     ]

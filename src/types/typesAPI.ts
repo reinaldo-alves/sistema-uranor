@@ -56,13 +56,38 @@ export interface IEventoAPI {
     observ: string | null,
 }
 
-export interface IMenorAPI extends IMediumAPI {
-    menor_id: number,
+export interface IPajeAPI extends IMediumAPI {
+    paje_id: number,
     medium: number,
     dtFalange: Date | null,
     responsavel: string | null,
     parentesco: string | null,
     contatoResp: string | null
+}
+
+export interface IInstrutorAPI {
+    instrutor_id: number,
+    nome: string,
+    ministro: number | null,
+    cursos: number | null
+}
+
+export interface ICursoAPI {
+    curso_id: number,
+    tipo: number,
+    instrutor: number,
+    templo: number,
+    datas: string,
+    concluido: number,
+    observ: string | null
+}
+
+export interface IAlunoAPI {
+    aluno_id: number,
+    medium: number,
+    med: string,
+    curso: number,
+    freq: string | null
 }
 
 export interface IMediumAPI {

@@ -6,14 +6,15 @@ import SubMenu from "src/components/SubMenu/SubMenu";
 import { UserContext } from "src/contexts/UserContext";
 import api from "src/api";
 import { Alert } from "src/utilities/popups";
-import { defaultCalendario } from "src/utilities/default";
 import MainContainer from "src/components/MainContainer/MainContainer";
 import { ListContext } from "src/contexts/ListContext";
 import { SearchButton } from "src/components/buttons/buttons";
 import { InfoContent } from "src/components/texts/texts";
+import { ICalendario } from "src/types/types";
+import { meses } from "src/utilities/default";
 
 function Calendar() {
-    const [edited, setEdited] = useState(defaultCalendario);
+    const [edited, setEdited] = useState({ano: 0, meses: {}} as ICalendario);
     
     const { token } = useContext(UserContext);
     const { calendario, loadCalendario } = useContext(ListContext);
@@ -37,11 +38,18 @@ function Calendar() {
         {title: 'Voltar para Manutenção', click: '/manutencao'}
     ]
 
-    const updateProps = (property: string, newValue: any) => {
-        setEdited((prevData: any) => ({
-        ...prevData,
-        [property]: Number(newValue)
-        }));
+    const updateProps = (property: string, index: number, newValue: string) => {
+        setEdited((prevData: any) => {
+            const nextData = [...prevData.meses[property]];
+            nextData[index] = Number(newValue);
+            return {
+                ...prevData,
+                meses: {
+                    ...prevData.meses,
+                    [property]: nextData
+                }
+            };
+        });
     };
 
     const sendCalendar = async (token: string) => {
@@ -55,6 +63,7 @@ function Calendar() {
                 console.log('Não foi possível editar o usuário', error);
                 Alert('Não foi possível atualizar as informações do calendário', 'error');
             }
+            console.log(calendarText);
         } else {
             Alert('Não foi feita nenhuma alteração no calendário', 'info');
         }
@@ -68,58 +77,23 @@ function Calendar() {
                 <ResultsCard>
                     <CalInputContainer>
                         <label>Ano:</label>
-                        <input type="number" value={edited.ano} onChange={(e) => updateProps('ano', e.target.value)}/>
+                        <input type="number" value={edited.ano} onChange={(e) => updateProps('ano', 0, e.target.value)}/>
                     </CalInputContainer>
                     <InfoContent style={{marginTop: '10px', fontSize: '20px'}}>Dias de Lua Cheia</InfoContent>
+                    <InfoContent style={{margin: '0', padding: '0'}}>Preencher o primeiro quadro. Caso tenha duas luas cheias no mês, preencher o segundo.</InfoContent>
                     <FiveColTable style={{justifyItems: 'center'}}>
-                        <CalInputContainer>
-                            <label>Janeiro:</label>
-                            <input type="number" value={edited.janeiro} onChange={(e) => updateProps('janeiro', e.target.value)}/>
-                        </CalInputContainer>
-                        <CalInputContainer>
-                            <label>Fevereiro:</label>
-                            <input type="number" value={edited.fevereiro} onChange={(e) => updateProps('fevereiro', e.target.value)}/>
-                        </CalInputContainer>
-                        <CalInputContainer>
-                            <label>Março:</label>
-                            <input type="number" value={edited.marco} onChange={(e) => updateProps('marco', e.target.value)}/>
-                        </CalInputContainer>
-                        <CalInputContainer>
-                            <label>Abril:</label>
-                            <input type="number" value={edited.abril} onChange={(e) => updateProps('abril', e.target.value)}/>
-                        </CalInputContainer>
-                        <CalInputContainer>
-                            <label>Maio:</label>
-                            <input type="number" value={edited.maio} onChange={(e) => updateProps('maio', e.target.value)}/>
-                        </CalInputContainer>
-                        <CalInputContainer>
-                            <label>Junho:</label>
-                            <input type="number" value={edited.junho} onChange={(e) => updateProps('junho', e.target.value)}/>
-                        </CalInputContainer>
-                        <CalInputContainer>
-                            <label>Julho:</label>
-                            <input type="number" value={edited.julho} onChange={(e) => updateProps('julho', e.target.value)}/>
-                        </CalInputContainer>
-                        <CalInputContainer>
-                            <label>Agosto:</label>
-                            <input type="number" value={edited.agosto} onChange={(e) => updateProps('agosto', e.target.value)}/>
-                        </CalInputContainer>
-                        <CalInputContainer>
-                            <label>Setembro:</label>
-                            <input type="number" value={edited.setembro} onChange={(e) => updateProps('setembro', e.target.value)}/>
-                        </CalInputContainer>
-                        <CalInputContainer>
-                            <label>Outubro:</label>
-                            <input type="number" value={edited.outubro} onChange={(e) => updateProps('outubro', e.target.value)}/>
-                        </CalInputContainer>
-                        <CalInputContainer>
-                            <label>Novembro:</label>
-                            <input type="number" value={edited.novembro} onChange={(e) => updateProps('novembro', e.target.value)}/>
-                        </CalInputContainer>
-                        <CalInputContainer>
-                            <label>Dezembro:</label>
-                            <input type="number" value={edited.dezembro} onChange={(e) => updateProps('dezembro', e.target.value)}/>
-                        </CalInputContainer>
+                        {meses.map((item, index) => {
+                            const values = edited.meses[item.key] ?? [0, 0];
+                            return (
+                                <CalInputContainer key={index}>
+                                    <label>{item.nome}:</label>
+                                    <div>
+                                        <input type="number" value={values[0]} onChange={(e) => updateProps(item.key, 0, e.target.value)}/>
+                                        <input disabled={!values[0]} style={{background: !values[1] ? '#bbb' : 'white'}} type="number" value={values[1]} onChange={(e) => updateProps(item.key, 1, e.target.value)}/>
+                                    </div>
+                                </CalInputContainer>
+                            )
+                        })}
                     </FiveColTable>
                 </ResultsCard>
                 <SearchButton width="200px" style={{alignSelf: 'center'}} onClick={() => sendCalendar(token)}>Salvar</SearchButton>

@@ -302,7 +302,7 @@ function AddMedium() {
         {title: 'Página Inicial', click: '/'},
         {title: 'Consultar Médium', click: '/mediuns/consulta'},
         {title: 'Cadastrar Médium', click: '/mediuns/cadastro'},
-        {title: 'Médium Menor', click: '/mediuns/menor'}
+        {title: 'Pajé', click: '/mediuns/paje'}
     ]
 
     const fillAddressByCep = async () => {

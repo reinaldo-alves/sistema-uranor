@@ -1,5 +1,5 @@
 import api from "src/api";
-import { ICavaleiro, IConsagracao, IEvento, IFrequencia, IMedium, IMenor, IMentor, ITemplo, ITurno } from "src/types/types";
+import { ICavaleiro, IConsagracao, IEvento, IFrequencia, IMedium, IPaje, IMentor, ITemplo, ITurno } from "src/types/types";
 import { IEventoAPI } from "src/types/typesAPI";
 import { eventTypes } from "./default";
 
@@ -293,7 +293,7 @@ export function handleCapsLock(state: React.Dispatch<React.SetStateAction<boolea
 }
 
 //Exibe o nome do templo do médium, no formato Cidade - UF
-export function showTemplo(medium: IMedium | IMenor, templos: Array<ITemplo>) {
+export function showTemplo(medium: IMedium | IPaje, templos: Array<ITemplo>) {
     const cidade = templos.find((item: ITemplo) => item.templo_id === medium.templo)?.cidade;
     const uf = templos.find((item: ITemplo) => item.templo_id === medium.templo)?.estado.abrev;
     return `${cidade} - ${uf}`
@@ -315,4 +315,14 @@ export const showMedDesenv = (frequencia: IFrequencia, mediuns: Array<IMedium>) 
     const currentMed = mediuns.find((m: IMedium) => m.medium_id === frequencia.medium)?.med;
     const result = frequencia?.med === 'A' ? 'Apará' : frequencia?.med === 'D' ? 'Doutrinador' : currentMed;
     return result;
+}
+
+//Determina a falange missionária a partir da classificação de mestrado
+export function findFalMissByClassMest(classMest: string) {
+    if(classMest.includes('Mago')) return 6;
+    if(classMest.includes('Príncipe')) return 7;
+    if(classMest.includes('Nityama')) return 1;
+    if(classMest.includes('Grega')) return 4;
+    if(classMest.includes('Maya')) return 5;
+    return null;
 }

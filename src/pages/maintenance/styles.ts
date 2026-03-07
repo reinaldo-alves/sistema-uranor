@@ -84,6 +84,15 @@ export const CalInputContainer = styled.div`
         border: solid 1px ${(props) => {return props.theme.color.darkerColor}};
         display: block;
     }
+
+    div {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+        border: 1px solid ${(props) => {return props.theme.color.darkerColor}};
+        border-radius: 8px;
+        padding: 5px;
+    }
 `;
 
 export const ResultsCard = styled.div`

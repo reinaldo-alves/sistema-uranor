@@ -380,7 +380,7 @@ function EditMedium() {
         {title: 'Página Inicial', click: '/'},
         {title: 'Consultar Médium', click: '/mediuns/consulta'},
         {title: 'Cadastrar Médium', click: '/mediuns/cadastro'},
-        {title: 'Médium Menor', click: '/mediuns/menor'}
+        {title: 'Pajé', click: '/mediuns/paje'}
     ]
 
     const fillAddressByCep = async () => {
@@ -759,6 +759,7 @@ function EditMedium() {
                             setValue={setDropPres}
                             inputValue={searchPres}
                             setInputValue={setSearchPres}
+                            disabled={user.level !== 'Administrador' && (medium.sex === 'Masculino' || medium.med === 'Doutrinador')}
                         />
                         <label>Templo Origem: </label>
                         <select value={medium.temploOrigem} disabled={user.level !== 'Administrador' && Boolean(medium.temploOrigem)} onChange={(e) => updateProps('temploOrigem', Number(e.target.value))}>

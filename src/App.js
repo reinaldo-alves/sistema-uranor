@@ -49,6 +49,11 @@ import DesenvDocs from './pages/desenvolvimento/DesenvDocs';
 import AddYoungMedium from './pages/mediuns/YoungMedium/AddYoungMedium';
 import EditYoungMedium from './pages/mediuns/YoungMedium/EditYoungMedium';
 import ShowYoungMedium from './pages/mediuns/YoungMedium/ShowYoungMedium';
+import IniciacaoCurso from './pages/cursos/iniciacaoCurso';
+import ElevacaoCurso from './pages/cursos/elevacaoCurso';
+import CenturiaCurso from './pages/cursos/centuriaCurso';
+import SetimoCurso from './pages/cursos/setimoCurso';
+import Instrutores from './pages/maintenance/instrutores';
 
 function App() {
   const [mainContainer, setMainContainer] = useState('199')
@@ -114,20 +119,25 @@ function App() {
                   <Route path='/consagracoes/centuria/atualizar' element={<UpdateCenturia />} />
                 </>  
               : ''}
+              <Route path='/manutencao/instrutores' element={<Instrutores />} />
               <Route path='/manutencao/usuarios/alterarsenha' element={<ChangePassword />} />
               <Route path='/mediuns/consulta' element={<SearchMedium />} />
               <Route path='/mediuns/consulta/:id' element={<ShowMedium />} />
               <Route path='/mediuns/editar/:id' element={<EditMedium />} />
               <Route path='/mediuns/cadastro' element={<AddMedium />} />
-              <Route path='/mediuns/menor' element={<YoungMedium />} />
-              <Route path='/mediuns/menor/:id' element={<ShowYoungMedium />} />
-              <Route path='/mediuns/menor/editar/:id' element={<EditYoungMedium />} />
-              <Route path='/mediuns/menor/cadastro' element={<AddYoungMedium />} />
+              <Route path='/mediuns/paje' element={<YoungMedium />} />
+              <Route path='/mediuns/paje/:id' element={<ShowYoungMedium />} />
+              <Route path='/mediuns/paje/editar/:id' element={<EditYoungMedium />} />
+              <Route path='/mediuns/paje/cadastro' element={<AddYoungMedium />} />
               <Route path='/cantosechaves' element={<CantosChaves />} />
               <Route path='/desenvolvimento/frequencia' element={<Desenvolvimento />} />
               <Route path='/desenvolvimento/cadastro' element={<AddAspirante />} />
               <Route path='/desenvolvimento/documentos' element={<DesenvDocs />} />
               <Route path='/cursos' element={<Cursos />} />
+              <Route path='/cursos/iniciacao' element={<IniciacaoCurso />} />
+              <Route path='/cursos/elevacao' element={<ElevacaoCurso />} />
+              <Route path='/cursos/centuria' element={<CenturiaCurso />} />
+              <Route path='/cursos/setimo' element={<SetimoCurso />} />
               <Route path='/consagracoes' element={<Consagracoes />} />
               <Route path='/consagracoes/iniciacao' element={<Iniciacao />} />
               <Route path='/consagracoes/elevacao' element={<Elevacao />} />
@@ -147,7 +157,7 @@ function App() {
             <Route path='/login' element={!login? <Login /> : <Navigate to='/' />} />
           </Routes>
         </BrowserRouter>
-        <Footer>Sistema Uranor - v.1.4.2 - ©2025 Uranor do Amanhecer. Todos os direitos reservados.</Footer>
+        <Footer>Sistema Uranor - v.1.5.0 - ©2025 Uranor do Amanhecer. Todos os direitos reservados.</Footer>
       </Background>
     </ThemeProvider>
   );

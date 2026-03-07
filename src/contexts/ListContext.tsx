@@ -1,7 +1,7 @@
 import { createContext, useCallback, useMemo, useState } from "react";
 import api from "src/api";
-import { IAdjunto, ICalendario, ICavaleiro, IConsagracao, IDesenvolvimento, IEstado, IEvento, IFalange, IMenor, IMentor, ITemplo, ITurno } from "src/types/types";
-import { IAdjuntoAPI, ICavaleiroAPI, IConsagracaoAPI, IEventoAPI, IFalangeAPI, IGuiaAPI, IMediumAPI, IMenorAPI, IMinistroAPI, ITemploAPI } from "src/types/typesAPI";
+import { IAdjunto, ICalendario, ICavaleiro, IConsagracao, IDesenvolvimento, IEstado, IEvento, IFalange, IPaje, IMentor, ITemplo, ITurno, IInstrutor, ICurso, IAluno } from "src/types/types";
+import { IAdjuntoAPI, ICavaleiroAPI, IConsagracaoAPI, IEventoAPI, IFalangeAPI, IGuiaAPI, IMediumAPI, IPajeAPI, IMinistroAPI, ITemploAPI, IInstrutorAPI, ICursoAPI, IAlunoAPI } from "src/types/typesAPI";
 import { defaultConsagracao } from "src/utilities/default";
 
 export const ListContext = createContext({} as any);
@@ -14,7 +14,10 @@ export const ListStore = ({ children }: any) => {
     const [adjuntos, setAdjuntos] = useState([] as Array<IAdjunto>);
     const [templos, setTemplos] = useState([] as Array<ITemplo>);
     const [eventos, setEventos] = useState([] as Array<IEvento>);
-    const [menores, setMenores] = useState([] as Array<IMenor>);
+    const [pajes, setPajes] = useState([] as Array<IPaje>);
+    const [instrutores, setInstrutores] = useState([] as Array<IInstrutor>);
+    const [cursos, setCursos] = useState([] as Array<ICurso>);
+    const [alunos, setAlunos] = useState([] as Array<IAluno>);
     const [listIniciacao, setListIniciacao] = useState([] as Array<IConsagracao>);
     const [listElevacao, setListElevacao] = useState([] as Array<IConsagracao>);
     const [listCenturia, setListCenturia] = useState([] as Array<IConsagracao>);
@@ -232,9 +235,6 @@ export const ListStore = ({ children }: any) => {
         try {
             const { data } = await api.get('/calendar/get', {headers:{Authorization: token}})
             const calendar = JSON.parse(data.calendar[0].text);
-            Object.keys(calendar).forEach(key => {
-                calendar[key] = Number(calendar[key]);
-            });
             setCalendario(calendar);
         } catch (error) {
             console.log('Erro ao carregar as informações do calendário', error);
@@ -254,10 +254,10 @@ export const ListStore = ({ children }: any) => {
         }
     }, []);
 
-    const loadMenor = useCallback(async (token: string) => {
+    const loadPaje = useCallback(async (token: string) => {
         try {
-            const { data } = await api.get('/menor/get-menor', {headers:{Authorization: token}})
-            const menor = data.menor.map((item: IMenorAPI) => ({
+            const { data } = await api.get('/paje/get-paje', {headers:{Authorization: token}})
+            const paje = data.paje.map((item: IPajeAPI) => ({
                 medium_id: item.medium_id,
                 nome: item.nome,
                 sex: item.sex,
@@ -293,21 +293,88 @@ export const ListStore = ({ children }: any) => {
                 parentesco: item.parentesco === null ? '' : item.parentesco,
                 contatoResp: item.contatoResp === null ? '' : item.contatoResp
             }));
-            setMenores(menor);
+            setPajes(paje);
         } catch (error) {
-            console.log('Erro ao carregar a lista de médiuns menores', error);
+            console.log('Erro ao carregar a lista de pajés', error);
         }
     }, [])
 
-    const convertMenorToSend = (menor: IMenor) => {
-        const menorObj = {
-            dtFalange: menor.dtFalange === '' ? null : menor.dtFalange,
-            responsavel: menor.responsavel === '' ? null : menor.responsavel,
-            parentesco: menor.parentesco === '' ? null : menor.parentesco,
-            contatoResp: menor.contatoResp === '' ? null : menor.contatoResp
+    const convertPajeToSend = (paje: IPaje) => {
+        const pajeObj = {
+            dtFalange: paje.dtFalange === '' ? null : paje.dtFalange,
+            responsavel: paje.responsavel === '' ? null : paje.responsavel,
+            parentesco: paje.parentesco === '' ? null : paje.parentesco,
+            contatoResp: paje.contatoResp === '' ? null : paje.contatoResp
         };
-        return menorObj
+        return pajeObj
     }
+
+    const loadInstrutor = useCallback(async (token: string) => {
+        try {
+            const { data } = await api.get('/instrutor/get-instrutores', {headers:{Authorization: token}})
+            const instrutor = data.instrutor.map((item: IInstrutorAPI) => {
+                const booleanArray = item.cursos ? item.cursos.toString(2).padStart(4, '0').split('').map(b => b === '1') : [false, false, false, false];
+                return ({
+                    instrutor_id: item.instrutor_id,
+                    nome: item.nome,
+                    ministro: item.ministro ?? 0,
+                    iniciacao: booleanArray[0],
+                    elevacao: booleanArray[1],
+                    centuria: booleanArray[2],
+                    setimo: booleanArray[3]
+                })
+            })
+            setInstrutores(instrutor)
+        } catch (error) {
+            console.log('Erro ao carregar a lista de instrutores', error);
+        }
+    }, [])
+
+    const loadCurso = useCallback (async (token: string) => {
+        try {
+            const { data } = await api.get('/curso/get-cursos', {headers:{Authorization: token}})
+            const curso = data.curso.map((item: ICursoAPI) => {
+                const datas = JSON.parse(item.datas);
+                return ({
+                    ...item,
+                    datas: datas,
+                    concluido: item.concluido === 1 ? true : false,
+                    observ: item.observ === null ? '' : item.observ
+                })
+            })
+            curso.sort((a: ICurso, b: ICurso) => {
+                const dateA = new Date(a.datas[0]);
+                const dateB = new Date(b.datas[0]);
+                return dateB.getTime() - dateA.getTime();
+            })
+            setCursos(curso)
+        } catch (error) {
+            console.log('Erro ao carregar a lista de cursos', error);
+        }
+    }, [])
+
+    const convertCursoToSend = (curso: ICurso) => {
+        const cursoObj: ICursoAPI = {
+            ...curso,
+            datas: JSON.stringify(curso.datas),
+            concluido: curso.concluido ? 1 : 0,
+            observ: curso.observ === '' ? null : curso.observ
+        } 
+        return cursoObj
+    }
+
+    const loadAluno = useCallback(async (token: string) => {
+        try {
+            const { data } = await api.get('/aluno/get-alunos', {headers:{Authorization: token}})
+            const list = data.list.map((item: IAlunoAPI) => {
+                const freq = item.freq ? JSON.parse(item.freq) : {aula1: '-', aula2: '-', aula3: '-', aula4: '-', aula5: '-', aula6: '-', aula7: '-', aula8: '-', aula9: '-', aula10: '-'};
+                return {...item, freq: freq};
+            });
+            setAlunos(list);
+        } catch (error) {
+            console.log('Erro ao carregar a lista de alunos', error);
+        }
+    }, []);
 
     const getData = useCallback(async (token: string) => {
         await loadMinistro(token);
@@ -320,11 +387,14 @@ export const ListStore = ({ children }: any) => {
         await loadConsagracao(token);
         await loadCalendario(token);
         await loadDesenvolvimento(token);
-        await loadMenor(token);
-    }, [loadTemplo, loadCalendario, loadDesenvolvimento, loadConsagracao, loadMenor]);
+        await loadPaje(token);
+        await loadInstrutor(token);
+        await loadCurso(token);
+        await loadAluno(token);
+    }, [loadTemplo, loadCalendario, loadDesenvolvimento, loadConsagracao, loadPaje, loadInstrutor, loadCurso, loadAluno]);
 
     return (
-        <ListContext.Provider value={{templos, estados, adjuntos, coletes, classMest, falMest, falMiss, povos, turnoL, turnoT, ministros, cavaleiros, guias, estrelas, princesas, classificacao, listIniciacao, listElevacao, listCenturia, listMudanca, calendario, allFrequencia, eventos, menores, searchMediumInCons, getData, loadMinistro, loadCavaleiro, loadGuia, loadFalMiss, loadAdjunto, loadTemplo, loadEvento, loadConsagracao, loadCalendario, loadDesenvolvimento, loadMenor, convertMenorToSend}} >
+        <ListContext.Provider value={{templos, estados, adjuntos, coletes, classMest, falMest, falMiss, povos, turnoL, turnoT, ministros, cavaleiros, guias, estrelas, princesas, classificacao, listIniciacao, listElevacao, listCenturia, listMudanca, calendario, allFrequencia, eventos, pajes, instrutores, cursos, alunos, searchMediumInCons, getData, loadMinistro, loadCavaleiro, loadGuia, loadFalMiss, loadAdjunto, loadTemplo, loadEvento, loadConsagracao, loadCalendario, loadDesenvolvimento, loadPaje, convertPajeToSend, loadInstrutor, loadCurso, convertCursoToSend, loadAluno}} >
             { children }
         </ListContext.Provider>
     )

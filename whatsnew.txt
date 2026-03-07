@@ -107,6 +107,14 @@ VERSÃO 1.4.2
 - Alteração do layout da página de consulta do médium menor.
 - Alteração das emissões de padrinhos e madrinhas de Arcanos e Presidentes para permitir origens diferentes de seus afilhados.
 
+VERSÃO 1.5.0
+- Criação de anotação na linha do tempo com data de ingresso na falange ao mover menor para cadastro geral.
+- Bloqueio de alteração do campo Adjunto de Origem para usuários não administradores.
+- Atualização do calendário para acrescentar duas luas cheias por mês, quando necessário.
+- Seção Médium Menor renomeada como Pajé, assim como todas as suas referências.
+- Criação da seção Curso de 7° Raio
+
 O QUE FAZER
+- Incluir relatório e chamadas dos cursos.
 - Incluir médiuns menores nos relatórios.
 - Criar um mecanismo para que backups locais não substitua os id das fotos remotas no banco de dados e vice-versa.

@@ -4,7 +4,14 @@ import SideMenu from "src/components/SideMenu/SideMenu";
 import MainContainer from "src/components/MainContainer/MainContainer";
 
 function Cursos() {
-    const menuList = [{title: 'Página Inicial', click: '/'}]
+    const menuList = [
+        {title: 'Página Inicial', click: '/'},
+        {title: 'Painel', click: '/cursos'},
+        {title: 'Iniciação', click: '/cursos/iniciacao'},
+        {title: 'Elevação', click: '/cursos/elevacao'},
+        {title: 'Centúria', click: '/cursos/centuria'},
+        {title: 'Sétimo Raio', click: '/cursos/setimo'}
+    ]
     
     return (
         <>

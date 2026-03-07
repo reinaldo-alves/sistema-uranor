@@ -1,3 +1,5 @@
+import Iniciacao from "src/pages/consagracoes/iniciacao/iniciacao"
+
 export interface ITurno {
     ninfa: Array<string>,
     jaguar: Array<string>
@@ -85,20 +87,24 @@ export interface IEvento {
     observ: string,
 }
 
+export interface IMeses {
+    jan: Array<number>,
+    fev: Array<number>,
+    mar: Array<number>,
+    abr: Array<number>,
+    mai: Array<number>,
+    jun: Array<number>,
+    jul: Array<number>,
+    ago: Array<number>,
+    set: Array<number>,
+    out: Array<number>,
+    nov: Array<number>,
+    dez: Array<number>
+}
+
 export interface ICalendario {
     ano: number,
-    janeiro: number,
-    fevereiro: number,
-    marco: number,
-    abril: number,
-    maio: number,
-    junho: number,
-    julho: number,
-    agosto: number,
-    setembro: number,
-    outubro: number,
-    novembro: number,
-    dezembro: number,
+    meses: IMeses
 }
 
 export interface IFrequencia {
@@ -116,7 +122,7 @@ export interface IDesenvolvimento {
     frequencia: Array<IFrequencia>
 }
 
-export interface IMenor {
+export interface IPaje {
     medium_id: number,
     nome: string,
     sex: string,
@@ -151,6 +157,47 @@ export interface IMenor {
     responsavel: string,
     parentesco: string,
     contatoResp: string
+}
+
+export interface IInstrutor {
+    instrutor_id: number,
+    nome: string,
+    ministro: number,
+    iniciacao: boolean,
+    elevacao: boolean,
+    centuria: boolean,
+    setimo: boolean
+}
+
+export interface ICurso {
+    curso_id: number,
+    tipo: number,
+    instrutor: number,
+    templo: number,
+    datas: Array<string>,
+    concluido: boolean,
+    observ: string
+}
+
+export interface IAluno {
+    aluno_id: number,
+    medium: number,
+    med: string,
+    curso: number,
+    freq: IAula
+}
+
+export interface IAula {
+    aula1: 'P' | 'F' | '-',
+    aula2: 'P' | 'F' | '-',
+    aula3: 'P' | 'F' | '-',
+    aula4?: 'P' | 'F' | '-',
+    aula5?: 'P' | 'F' | '-',
+    aula6?: 'P' | 'F' | '-',
+    aula7?: 'P' | 'F' | '-',
+    aula8?: 'P' | 'F' | '-',
+    aula9?: 'P' | 'F' | '-',
+    aula10?: 'P' | 'F' | '-'
 }
 
 export interface IMedium {

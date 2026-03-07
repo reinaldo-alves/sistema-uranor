@@ -1,4 +1,4 @@
-import { IMedium, IMenor, ITurno } from "src/types/types";
+import { IMedium, IPaje, ITurno } from "src/types/types";
 import { Alert } from "./popups";
 import { oppositeTurno } from "./functions";
 
@@ -124,37 +124,37 @@ export const validateAspirante = (medium: IMedium, date: string, action: () => v
 
 }
 
-export const validateMenor = (menor: IMenor, action: () => void) => {
-    if (!menor.nome) {
-        Alert('Insira o nome do médium menor', 'error');
+export const validatePaje = (paje: IPaje, action: () => void) => {
+    if (!paje.nome) {
+        Alert('Insira o nome do pajé', 'error');
         return;
     }
-    if (!menor.sex) {
+    if (!paje.sex) {
         Alert('Selecione o sexo', 'error');
         return;
     }
-    if (!menor.templo) {
-        Alert('Selecione o templo do médium menor', 'error');
+    if (!paje.templo) {
+        Alert('Selecione o templo do pajé', 'error');
         return;
     }
-    if (!menor.dtNasc) {
-        Alert('Insira a data de nascimento do médium menor', 'error');
+    if (!paje.dtNasc) {
+        Alert('Insira a data de nascimento do pajé', 'error');
         return;
     }
-    if (!menor.mae) {
-        Alert('Insira o nome da mãe do médium menor', 'error');
+    if (!paje.mae) {
+        Alert('Insira o nome da mãe do pajé', 'error');
         return;
     }
-    if (!menor.responsavel) {
-        Alert('Insira o nome do responsável pelo médium menor', 'error');
+    if (!paje.responsavel) {
+        Alert('Insira o nome do responsável pelo pajé', 'error');
         return;
     }
-    if (!menor.contatoResp) {
-        Alert('Insira o contato do responsável pelo médium menor', 'error');
+    if (!paje.contatoResp) {
+        Alert('Insira o contato do responsável pelo pajé', 'error');
         return;
     }
-    if (!menor.parentesco) {
-        Alert('Insira o parentesco do responsável pelo médium menor', 'error');
+    if (!paje.parentesco) {
+        Alert('Insira o parentesco do responsável pelo pajé', 'error');
         return;
     }
    
@@ -258,12 +258,12 @@ export const validateEmissao = (medium: IMedium, mediuns: Array<IMedium>, turnoL
     action();
 }
 
-export const validateEmissaoMenor = (menor: IMenor, action: () => void) => {
-    if (!menor.nomeEmissao) {
+export const validateEmissaoPaje = (paje: IPaje, action: () => void) => {
+    if (!paje.nomeEmissao) {
         Alert('Informe o nome que o médium usa na emissão', 'error');
         return;
     }
-    if (menor.falMiss && !menor.adjDevas) {
+    if (paje.falMiss && !paje.adjDevas) {
         Alert('Selecione um Adjunto Devas', 'error');
         return
     }

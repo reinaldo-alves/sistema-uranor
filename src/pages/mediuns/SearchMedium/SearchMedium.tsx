@@ -69,7 +69,7 @@ function SearchMedium() {
         {title: 'Página Inicial', click: '/'},
         {title: 'Consultar Médium', click: '/mediuns/consulta'},
         {title: 'Cadastrar Médium', click: '/mediuns/cadastro'},
-        {title: 'Médium Menor', click: '/mediuns/menor'}
+        {title: 'Pajé', click: '/mediuns/paje'}
     ]
 
     if(loading) {
@@ -100,7 +100,6 @@ function SearchMedium() {
                     <TableContainer>
                         <ResultsTable>
                             {mediuns
-                                .filter((item: IMedium) => item.med !== 'Menor')
                                 .filter((item: IMedium) => removeDiacritics(item.nome).includes(removeDiacritics(searchName)))
                                 .filter(searchTemp === '' ? (item: IMedium) => item.nome !== '' : (item: IMedium) => item.templo === Number(searchTemp))
                                 .map((item: IMedium, index: number) => (
@@ -139,7 +138,6 @@ function SearchMedium() {
                         </InfoCard>
                         <MediumInfo>
                             Resultados encontrados: {mediuns
-                            .filter((item: IMedium) => item.med !== 'Menor')
                             .filter((item: IMedium) => removeDiacritics(item.nome).includes(removeDiacritics(searchName)))
                             .filter(searchTemp === '' ? (item: IMedium) => item.nome !== '' : (item: IMedium) => item.templo === Number(searchTemp))
                             .length}

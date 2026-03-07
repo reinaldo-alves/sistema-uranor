@@ -138,7 +138,12 @@ function TimeLine(props: {medium: IMedium}) {
 
     const arrayCards = [];
 
-    for(let i = new Date().getFullYear(); i >= new Date(props.medium.dtIngresso).getFullYear(); i--) {
+    const getOldestYear = () => {
+        const years = eventos.map((item: IEvento) => Number(item.data.split('-')[0]));
+        return Math.min(...years);
+    }
+
+    for(let i = new Date().getFullYear(); i >= getOldestYear(); i--) {
         arrayCards.push(
             <YearCard key={i} show={eventos.filter((item: IEvento) => new Date(item.data).getFullYear() === i).length > 0}>
                 <YearTitle>{i}</YearTitle>

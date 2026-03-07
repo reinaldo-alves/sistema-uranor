@@ -1,4 +1,4 @@
-import { IAdjunto, ICavaleiro, IConsagracao, IEvento, IMedium, IMenor, IMentor, ITemplo, IUser } from "src/types/types"
+import { IAdjunto, ICavaleiro, IConsagracao, IEvento, IMedium, IPaje, IMentor, IMeses, ITemplo, IUser, IInstrutor, ICurso } from "src/types/types"
 
 export const defaultAdj: IAdjunto = {
     adjunto_id: 0,
@@ -65,23 +65,7 @@ export const defaultEvento: IEvento = {
     observ: '',
 }
 
-export const defaultCalendario = {
-    ano: 2024,
-    janeiro: 1,
-    fevereiro: 1,
-    marco: 1,
-    abril: 1,
-    maio: 1,
-    junho: 1,
-    julho: 1,
-    agosto: 1,
-    setembro: 1,
-    outubro: 1,
-    novembro: 1,
-    dezembro: 1,
-}
-
-export const defaultMenor : IMenor = {
+export const defaultPaje : IPaje = {
     medium_id: 0,
     nome: '',
     sex: '',
@@ -116,6 +100,26 @@ export const defaultMenor : IMenor = {
     responsavel: '',
     parentesco: '',
     contatoResp: ''
+}
+
+export const defaultInst: IInstrutor = {
+    instrutor_id: 0,
+    nome: '',
+    ministro: 0,
+    iniciacao: false,
+    elevacao: false,
+    centuria: false,
+    setimo: false
+}
+
+export const defaultCurso: ICurso = {
+    curso_id: 0,
+    tipo: 0,
+    instrutor: 0,
+    templo: 0,
+    datas: Array(20).fill(''),
+    concluido: false,
+    observ: ''
 }
 
 export const defaultMedium: IMedium = {
@@ -212,6 +216,7 @@ export const eventTypes = [
     {event: 'Mudança de Templo', prior: 1, auto: false},
     {event: 'Mudança de Adjunto de Origem', prior: 6, auto: false},
     {event: 'Mudança de Turno', prior: 6, auto: false},
+    {event: 'Mudança de Falange', prior: 6, auto: false},
     {event: 'Outras Consagrações', prior: 5, auto: false},
     {event: 'Desistente do Desenvolvimento', prior: 5, auto: false},
     {event: 'Entregou as Armas', prior: 7, auto: false},
@@ -234,3 +239,18 @@ export const eventTypes = [
     {event: 'Trino Solitário', prior: 5, auto: true},
     {event: 'Trino Sardyos', prior: 5, auto: true},
 ] 
+
+export const meses: Array<{nome: string, key: keyof IMeses}> = [
+    {nome: 'Janeiro', key: 'jan'},
+    {nome: 'Fevereiro', key: 'fev'},
+    {nome: 'Março', key: 'mar'},
+    {nome: 'Abril', key: 'abr'},
+    {nome: 'Maio', key: 'mai'},
+    {nome: 'Junho', key: 'jun'},
+    {nome: 'Julho', key: 'jul'},
+    {nome: 'Agosto', key: 'ago'},
+    {nome: 'Setembro', key: 'set'},
+    {nome: 'Outubro', key: 'out'},
+    {nome: 'Novembro', key: 'nov'},
+    {nome: 'Dezembro', key: 'dez'}
+]

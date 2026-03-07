@@ -4,7 +4,7 @@ import { GridShowContainer, InfoContainer, MainInfoContainer, MediumInfo, Medium
 import SubMenu from "src/components/SubMenu/SubMenu";
 import SideMenu from "src/components/SideMenu/SideMenu";
 import { useNavigate, useParams } from "react-router-dom";
-import { IFalange, IMedium, IMenor, ITemplo } from "src/types/types";
+import { IFalange, IMedium, IPaje, ITemplo } from "src/types/types";
 import { UserContext } from "src/contexts/UserContext";
 import { convertDate, handleEnterPress, showTemplo } from "src/utilities/functions";
 import { ListContext } from "src/contexts/ListContext";
@@ -12,8 +12,8 @@ import PageNotFound from "src/pages/PageNotFound/PageNotFound";
 import Loading from "src/utilities/Loading";
 import { Alert, Confirm } from "src/utilities/popups";
 import { generateEmissao } from "src/utilities/createDocs";
-import { validateEmissaoMenor } from "src/utilities/validations";
-import { emissaoMenorText } from "src/reports/emissao";
+import { validateEmissaoPaje } from "src/utilities/validations";
+import { emissaoPajeText } from "src/reports/emissao";
 import api from "src/api";
 import MainContainer from "src/components/MainContainer/MainContainer";
 import { Modal, ModalButton, ModalContent, ModalInputContainer, ModalSubTitle, ModalTitle } from "src/components/Modal/modal";
@@ -24,60 +24,60 @@ import { SectionTitle } from "src/components/texts/texts";
 
 function ShowYoungMedium() {
     const [loading, setLoading] = useState(true);
-    const [menor, setMenor] = useState({} as IMenor);
+    const [paje, setPaje] = useState({} as IPaje);
     const [showModal, setShowModal] = useState(false);
     const [med, setMed] = useState('');
     const [dtIngresso, setDtIngresso] = useState('');
     
     const { token, user } = useContext(UserContext);
     const { mediuns, loadMedium } = useContext(MediumContext);
-    const { menores, loadMenor, ministros, adjuntos, templos, falMiss } = useContext(ListContext);
+    const { pajes, loadPaje, ministros, adjuntos, templos, falMiss } = useContext(ListContext);
     const params = useParams();
     const navigate = useNavigate();
 
     const now = new Date().toISOString().split('T')[0];
     
     const getInfo = useCallback(async () => {
-        await loadMenor(token);
+        await loadPaje(token);
         await loadMedium(token);
         setLoading(false);
-    }, [loadMenor, loadMedium, token]);
+    }, [loadPaje, loadMedium, token]);
 
     useEffect(() => {
         getInfo();
     }, [getInfo])
      
     useEffect(() => {
-        if(menor?.medium_id && ministros.length && adjuntos.length && templos.length && falMiss.length) {
+        if(paje?.medium_id && ministros.length && adjuntos.length && templos.length && falMiss.length) {
             setLoading(false);
         }
-    }, [menor?.medium_id, ministros, adjuntos, templos, falMiss])
+    }, [paje?.medium_id, ministros, adjuntos, templos, falMiss])
 
     useEffect(() => {
         window.scrollTo({top: 0});
     }, [])
     
     useEffect(() => {
-        const foundMenor = menores.find((item: IMenor) => item.medium_id === Number(params.id));
-        setMenor(foundMenor);
-    }, [menores, params.id])
+        const foundPaje = pajes.find((item: IPaje) => item.medium_id === Number(params.id));
+        setPaje(foundPaje);
+    }, [pajes, params.id])
 
     useEffect(() => {
-        console.log(menor);
-    }, [menor]);
+        console.log(paje);
+    }, [paje]);
     
     if(loading) {
         return <Loading />
     }
 
-    if(!menor) {
+    if(!paje) {
         return <PageNotFound />
     }
 
-    const endNum = menor.endNumero? 'nº ' + menor.endNumero : ''
-    const cityUF = [menor.endCidade, menor.endUF].filter(el => el !== '').join(" - ")
-    const naturCityUF = [menor.natur, menor.naturUF].filter(el => el !== '').join(" - ")
-    const fullAddress = [menor.endereco, endNum, menor.endCompl, menor.endBairro, cityUF].filter(el => el !== '').join(", ")
+    const endNum = paje.endNumero? 'nº ' + paje.endNumero : ''
+    const cityUF = [paje.endCidade, paje.endUF].filter(el => el !== '').join(" - ")
+    const naturCityUF = [paje.natur, paje.naturUF].filter(el => el !== '').join(" - ")
+    const fullAddress = [paje.endereco, endNum, paje.endCompl, paje.endBairro, cityUF].filter(el => el !== '').join(", ")
 
     const closeModal = () => {
         setShowModal(false);
@@ -85,43 +85,51 @@ function ShowYoungMedium() {
         setDtIngresso('');
     }
 
-    const createMediumObj = (menor: IMenor) => {
-        const medium = mediuns.find((item: IMedium) => item.medium_id === menor.medium_id);
+    const createMediumObj = (paje: IPaje) => {
+        const medium = mediuns.find((item: IMedium) => item.medium_id === paje.medium_id);
         return medium;
     }
 
-    const addMedium = async (menor: IMenor, token: string) => {
-        const templo = templos.find((item: ITemplo) => item.templo_id === menor.templo);
+    const addMedium = async (paje: IPaje, token: string) => {
+        const templo = templos.find((item: ITemplo) => item.templo_id === paje.templo);
+        const falange = falMiss.find((item: IFalange) => item.falange_id === paje.falMiss)?.nome;
         const mediumObj = {
             med: med,
-            telefone2: `${menor.contatoResp} ${menor.responsavel}`,
+            telefone2: `${paje.contatoResp} ${paje.responsavel}`,
             dtIngresso: dtIngresso,
             dtTest: dtIngresso,
-            adjOrigem: templo.presidente,
-            observ: `${menor.observ}. Ingressou na falange missionária em ${convertDate(menor.dtFalange)}.`
+            adjOrigem: templo.presidente
         };
-        console.log({medium_id: menor.medium_id, ...mediumObj});
+        const eventObj = {
+            medium: paje.medium_id,
+            data: paje.dtFalange,
+            mensagem: `Ingressou na falange missionária ${falange}`,
+            tipo: 'Mudança de Falange',
+            observ: ''
+        }
+        console.log({medium_id: paje.medium_id, ...mediumObj});
         try {
-            await api.put('/medium/update', {medium_id: menor.medium_id, ...mediumObj}, {headers:{Authorization: token}});
-            await api.delete(`/menor/delete-comp?medium=${menor.medium_id}`, {headers:{Authorization: token}});
-            Alert('Médium menor transferido para o cadastro geral', 'success');
+            await api.put('/medium/update', {medium_id: paje.medium_id, ...mediumObj}, {headers:{Authorization: token}});
+            await api.post('/evento/create', eventObj, {headers:{Authorization: token}});
+            await api.delete(`/paje/delete-comp?medium=${paje.medium_id}`, {headers:{Authorization: token}});
+            Alert('Pajé transferido para o cadastro geral', 'success');
             await loadMedium(token);
-            navigate(`/mediuns/consulta/${menor.medium_id}`);
+            navigate(`/mediuns/consulta/${paje.medium_id}`);
         } catch (error) {
-            console.log('Não foi possível transferir o médium menor para o cadastro geral', error);
-            Alert('Não foi possível transferir o médium menor para o cadastro geral', 'error');
+            console.log('Não foi possível transferir o pajé para o cadastro geral', error);
+            Alert('Não foi possível transferir o pajé para o cadastro geral', 'error');
         }
     }
 
-    const deleteMenor = async () => {
-        await Confirm('ATENÇÃO! Todos os dados do médium menor serão perdidos e não poderão ser recuperados. Continuar?', 'warning', 'Cancelar', 'Excluir', async () => {
+    const deletePaje = async () => {
+        await Confirm('ATENÇÃO! Todos os dados do pajé serão perdidos e não poderão ser recuperados. Continuar?', 'warning', 'Cancelar', 'Excluir', async () => {
             try {
-                await api.delete(`/menor/delete?medium=${menor.medium_id}`, {headers:{Authorization: token}});
-                navigate('/mediuns/menor');
-                Alert('Médium menor excluído com sucesso', 'success');
+                await api.delete(`/paje/delete?medium=${paje.medium_id}`, {headers:{Authorization: token}});
+                navigate('/mediuns/paje');
+                Alert('Pajé excluído com sucesso', 'success');
             } catch (error) {
-                console.log('Erro ao excluir médium menor', error);
-                Alert('Erro ao excluir médium menor', 'error');
+                console.log('Erro ao excluir pajé', error);
+                Alert('Erro ao excluir pajé', 'error');
             }
         });
     }
@@ -130,7 +138,7 @@ function ShowYoungMedium() {
         {title: 'Página Inicial', click: '/'},
         {title: 'Consultar Médium', click: '/mediuns/consulta'},
         {title: 'Cadastrar Médium', click: '/mediuns/cadastro'},
-        {title: 'Médium Menor', click: '/mediuns/menor'}
+        {title: 'Pajé', click: '/mediuns/paje'}
     ]
 
     return (
@@ -139,65 +147,65 @@ function ShowYoungMedium() {
             <SubMenu list={listSubMenu}/>
             <MainContainer>
                 <NameAndId>
-                    <h1>Médium Menor</h1>
-                    <h2>{menor.nome}</h2>
+                    <h1>{paje.nome}</h1>
+                    <h2>Pajé - ID: {paje.medium_id.toString().padStart(5, '0')}</h2>
                 </NameAndId>
                 <GridShowContainer>
                     <PersonalCard showMedium style={{maxWidth: '252px', justifySelf: 'center'}}>
                         <MainInfoContainer>
-                            <PhotoContainer style={{height: '192px'}} photo={menor.foto}>
-                                {menor.foto? '' : 'SEM FOTO'}
+                            <PhotoContainer style={{height: '192px'}} photo={paje.foto}>
+                                {paje.foto? '' : 'SEM FOTO'}
                             </PhotoContainer>
-                            <MediumMainInfo>Sexo: <span>{menor.sex}</span></MediumMainInfo>
-                            <MediumMainInfo>Templo: <span>{showTemplo(menor, templos)}</span></MediumMainInfo>
-                            <MediumMainInfo>Condição Atual: <span>{menor.condicao}</span></MediumMainInfo>
-                            <NavigateButton width="150px" height="45px" onClick={() => navigate('/mediuns/menor')} color="green">{'< Voltar'}</NavigateButton>
-                            <NavigateButton width="150px" height="45px" disabled={!menor.falMiss} onClick={() => validateEmissaoMenor(menor, () => generateEmissao(createMediumObj(menor), user, emissaoMenorText(menor, ministros, adjuntos, templos, falMiss) as string))} color="green">Gerar Emissão</NavigateButton>
-                            <NavigateButton width="150px" height="45px" onClick={() => navigate(`/mediuns/menor/editar/${menor.medium_id}`)} color="green">Editar</NavigateButton>
+                            <MediumMainInfo>Sexo: <span>{paje.sex}</span></MediumMainInfo>
+                            <MediumMainInfo>Templo: <span>{showTemplo(paje, templos)}</span></MediumMainInfo>
+                            <MediumMainInfo>Condição Atual: <span>{paje.condicao}</span></MediumMainInfo>
+                            <NavigateButton width="150px" height="45px" onClick={() => navigate('/mediuns/paje')} color="green">{'< Voltar'}</NavigateButton>
+                            <NavigateButton width="150px" height="45px" disabled={!paje.falMiss} onClick={() => validateEmissaoPaje(paje, () => generateEmissao(createMediumObj(paje), user, emissaoPajeText(paje, ministros, adjuntos, templos, falMiss) as string))} color="green">Gerar Emissão</NavigateButton>
+                            <NavigateButton width="150px" height="45px" onClick={() => navigate(`/mediuns/paje/editar/${paje.medium_id}`)} color="green">Editar</NavigateButton>
                             <NavigateButton width="150px" height="45px" onClick={() => setShowModal(true)}>Mover Cad. Geral</NavigateButton>
-                            <NavigateButton width="150px" height="45px" style={{display: `${user.level === 'Administrador' ? 'block' : 'none'}`}} onClick={deleteMenor} color="red">Excluir</NavigateButton>
+                            <NavigateButton width="150px" height="45px" style={{display: `${user.level === 'Administrador' ? 'block' : 'none'}`}} onClick={deletePaje} color="red">Excluir</NavigateButton>
                         </MainInfoContainer>
                     </PersonalCard>
                     <div>
                         <PersonalCard showMedium>
                             <SectionTitle>Dados Pessoais</SectionTitle>
                             <InfoContainer>
-                                <MediumInfo>Data de Nascimento: <span>{convertDate(menor.dtNasc)}</span></MediumInfo>
+                                <MediumInfo>Data de Nascimento: <span>{convertDate(paje.dtNasc)}</span></MediumInfo>
                                 <MediumInfo>Natural de: <span>{naturCityUF}</span></MediumInfo>
-                                <MediumInfo>RG: <span>{menor.rg}</span></MediumInfo>
-                                <MediumInfo>CPF: <span>{menor.cpf}</span></MediumInfo>
-                                <MediumInfo>Nome do Pai: <span>{menor.pai}</span></MediumInfo>
-                                <MediumInfo>Nome da Mãe: <span>{menor.mae}</span></MediumInfo>
-                                <MediumInfo>Estado Civil: <span>{menor.estCivil}</span></MediumInfo>
-                                <MediumInfo>Cônjuge: <span>{menor.conjuge}</span></MediumInfo>
-                                <MediumInfo>CEP: <span>{menor.cep}</span></MediumInfo>
+                                <MediumInfo>RG: <span>{paje.rg}</span></MediumInfo>
+                                <MediumInfo>CPF: <span>{paje.cpf}</span></MediumInfo>
+                                <MediumInfo>Nome do Pai: <span>{paje.pai}</span></MediumInfo>
+                                <MediumInfo>Nome da Mãe: <span>{paje.mae}</span></MediumInfo>
+                                <MediumInfo>Estado Civil: <span>{paje.estCivil}</span></MediumInfo>
+                                <MediumInfo>Cônjuge: <span>{paje.conjuge}</span></MediumInfo>
+                                <MediumInfo>CEP: <span>{paje.cep}</span></MediumInfo>
                                 <MediumInfo>Endereço: <span>{fullAddress}</span></MediumInfo>
-                                <MediumInfo>Telefone: <span>{menor.telefone1}</span></MediumInfo>
-                                <MediumInfo>E-mail: <span>{menor.email}</span></MediumInfo>
-                                <MediumInfo>Profissão: <span>{menor.profissao}</span></MediumInfo>
+                                <MediumInfo>Telefone: <span>{paje.telefone1}</span></MediumInfo>
+                                <MediumInfo>E-mail: <span>{paje.email}</span></MediumInfo>
+                                <MediumInfo>Profissão: <span>{paje.profissao}</span></MediumInfo>
                             </InfoContainer>
                         </PersonalCard>
                         <PersonalCard showMedium>
                             <SectionTitle>Dados do Responsável</SectionTitle>
                             <InfoContainer>
-                                <MediumInfo>Responsável: <span>{menor.responsavel}</span></MediumInfo>
-                                <MediumInfo>Parentesco: <span>{menor.parentesco}</span></MediumInfo>
-                                <MediumInfo>Contato Responsável: <span>{menor.contatoResp}</span></MediumInfo>
+                                <MediumInfo>Responsável: <span>{paje.responsavel}</span></MediumInfo>
+                                <MediumInfo>Parentesco: <span>{paje.parentesco}</span></MediumInfo>
+                                <MediumInfo>Contato Responsável: <span>{paje.contatoResp}</span></MediumInfo>
                             </InfoContainer>
                         </PersonalCard>
                         <PersonalCard showMedium>
                             <SectionTitle>Dados Mediúnicos</SectionTitle>
                             <InfoContainer>
-                                <MediumInfo>Ingresso Falange: <span>{convertDate(menor.dtFalange)}</span></MediumInfo>
-                                <MediumInfo>Templo de Origem: <span>{menor.temploOrigem ? `${templos.find((item: ITemplo) => item.templo_id === menor.temploOrigem)?.cidade} - ${templos.find((item: ITemplo) => item.templo_id === menor.temploOrigem)?.estado.abrev}` : ''}</span></MediumInfo>
-                                <MediumInfo>Falange Missionária: <span>{falMiss.filter((item: IFalange) => item.falange_id === menor.falMiss)[0]? falMiss.filter((item: IFalange) => item.falange_id === menor.falMiss)[0].nome : ''}</span></MediumInfo>
-                                <MediumInfo>Adjunto Devas: <span>{menor.adjDevas}</span></MediumInfo>
-                                <MediumInfo>Nome na Emissão: <span>{menor.nomeEmissao}</span></MediumInfo>
+                                <MediumInfo>Ingresso Falange: <span>{convertDate(paje.dtFalange)}</span></MediumInfo>
+                                <MediumInfo>Templo de Origem: <span>{paje.temploOrigem ? `${templos.find((item: ITemplo) => item.templo_id === paje.temploOrigem)?.cidade} - ${templos.find((item: ITemplo) => item.templo_id === paje.temploOrigem)?.estado.abrev}` : ''}</span></MediumInfo>
+                                <MediumInfo>Falange Missionária: <span>{falMiss.filter((item: IFalange) => item.falange_id === paje.falMiss)[0]? falMiss.filter((item: IFalange) => item.falange_id === paje.falMiss)[0].nome : ''}</span></MediumInfo>
+                                <MediumInfo>Adjunto Devas: <span>{paje.adjDevas}</span></MediumInfo>
+                                <MediumInfo>Nome na Emissão: <span>{paje.nomeEmissao}</span></MediumInfo>
                             </InfoContainer>
                         </PersonalCard>
-                        <PersonalCard showMedium hide={!menor.observ}>
+                        <PersonalCard showMedium hide={!paje.observ}>
                             <SectionTitle>Observações</SectionTitle>
-                            <MediumText>{menor.observ}</MediumText>
+                            <MediumText>{paje.observ}</MediumText>
                         </PersonalCard>
                     </div>
                 </GridShowContainer>
@@ -206,10 +214,10 @@ function ShowYoungMedium() {
             <Modal vis={showModal}>
                 <ModalContent>
                     <ModalTitle>Mover para Cadastro Geral</ModalTitle>
-                    <ModalSubTitle>{menor.nome}</ModalSubTitle>
+                    <ModalSubTitle>{paje.nome}</ModalSubTitle>
                     <ModalInputContainer>
                         <label>Mediunidade:</label>
-                        <select value={med} onKeyUp={(e) => handleEnterPress(e, async () => await addMedium(menor, token))} onChange={(e) => setMed(e.target.value)}>
+                        <select value={med} onKeyUp={(e) => handleEnterPress(e, async () => await addMedium(paje, token))} onChange={(e) => setMed(e.target.value)}>
                             <option value={''}></option>
                             <option value={'Apará'}>Apará</option>
                             <option value={'Doutrinador'}>Doutrinador</option>
@@ -217,11 +225,11 @@ function ShowYoungMedium() {
                     </ModalInputContainer>
                     <ModalInputContainer>
                         <label>Data de ingresso:</label>
-                        <input type="date" value={dtIngresso} onKeyUp={(e) => handleEnterPress(e, async () => await addMedium(menor, token))} onChange={(e) => setDtIngresso(e.target.value)} min={menor.dtNasc} max={now} />
+                        <input type="date" value={dtIngresso} onKeyUp={(e) => handleEnterPress(e, async () => await addMedium(paje, token))} onChange={(e) => setDtIngresso(e.target.value)} min={paje.dtNasc} max={now} />
                     </ModalInputContainer>
                     <div style={{display: 'flex', gap: '20px'}}>
                         <ModalButton color="red" onClick={closeModal}>Cancelar</ModalButton>
-                        <ModalButton disabled={!med || !dtIngresso} color='green' onClick={async () => await addMedium(menor, token)}>Salvar</ModalButton>
+                        <ModalButton disabled={!med || !dtIngresso} color='green' onClick={async () => await addMedium(paje, token)}>Salvar</ModalButton>
                     </div>
                 </ModalContent>
             </Modal>

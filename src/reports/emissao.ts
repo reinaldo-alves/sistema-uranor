@@ -1,4 +1,4 @@
-import { IAdjunto, ICavaleiro, IFalange, IMedium, IMenor, IMentor, ITemplo } from "src/types/types";
+import { IAdjunto, ICavaleiro, IFalange, IMedium, IPaje, IMentor, ITemplo } from "src/types/types";
 
 export const emissaoText = (medium: IMedium, mediuns: Array<IMedium>, ministros: Array<IMentor>, cavaleiros: Array<ICavaleiro>, guias: Array<IMentor>, adjuntos: Array<IAdjunto>, templos: Array<ITemplo>, falMiss: Array<IFalange>) => {
     
@@ -169,13 +169,13 @@ export const emissaoText = (medium: IMedium, mediuns: Array<IMedium>, ministros:
     //EMISSÕES
 
     //Emissão da ninfa não centuriã de falange missionária
-    const ninfaMenor = `EU, NINFA ${medium.med === 'Doutrinador' ? 'SOL' : medium.med === 'Apará' ? 'LUA' : ''} DA FALANGE DE SUBLIMAÇÃO, ${termoFalangeNinfa}, NO ADJUNTO ${adjOrigemMin} KOATAY 108 MESTRE ${adjOrigemNome}. ${termoPrimeira}EU, ${medium.nomeEmissao}, PARTO COM – 0 – // EM CRISTO JESUS.`
+    const ninfaNaoCenturia = `EU, NINFA ${medium.med === 'Doutrinador' ? 'SOL' : medium.med === 'Apará' ? 'LUA' : ''} DA FALANGE DE SUBLIMAÇÃO, ${termoFalangeNinfa}, NO ADJUNTO ${adjOrigemMin} KOATAY 108 MESTRE ${adjOrigemNome}. ${termoPrimeira}EU, ${medium.nomeEmissao}, PARTO COM – 0 – // EM CRISTO JESUS.`
 
     //Emissão do mago não centurião
-    const magoMenor = `EU, ${medium.dtElevacao ? `JAGUAR ${classMest}, DA FALANGE DE SUBLIMAÇÃO. ` : ''}MAGO MISSIONÁRIO DO ADJUNTO ${medium.adjDevas} KOATAY 108 MESTRE ${adjDevasNome}, NO ADJUNTO ${adjOrigemMin} KOATAY 108 MESTRE ${adjOrigemNome}. EU, ${medium.med === 'Doutrinador' && medium.dtElevacao ? '7º RAIO AUTORIZADO ' : medium.med === 'Apará' && medium.dtElevacao ? '5º YURÊ RAIO AUTORIZADO ' : ''}MESTRE ${medium.nomeEmissao}, PARTO COM – 0 – // EM CRISTO JESUS.`;
+    const magoNaoCenturiao = `EU, ${medium.dtElevacao ? `JAGUAR ${classMest}, DA FALANGE DE SUBLIMAÇÃO. ` : ''}MAGO MISSIONÁRIO DO ADJUNTO ${medium.adjDevas} KOATAY 108 MESTRE ${adjDevasNome}, NO ADJUNTO ${adjOrigemMin} KOATAY 108 MESTRE ${adjOrigemNome}. EU, ${medium.med === 'Doutrinador' && medium.dtElevacao ? '7º RAIO AUTORIZADO ' : medium.med === 'Apará' && medium.dtElevacao ? '5º YURÊ RAIO AUTORIZADO ' : ''}MESTRE ${medium.nomeEmissao}, PARTO COM – 0 – // EM CRISTO JESUS.`;
 
     //Emissão do príncipe maya não centurião
-    const principeMenor = `EU, ${medium.dtElevacao ? `JAGUAR ${classMest}, DA FALANGE DE SUBLIMAÇÃO. ` : ''}PRÍNCIPE MAYA DESTE AMANHECER, DO ADJUNTO ${medium.adjDevas} KOATAY 108 MESTRE ${adjDevasNome}, NA REGÊNCIA DO MINISTRO YURICY, NO ADJUNTO ${adjOrigemMin} KOATAY 108 MESTRE ${adjOrigemNome}. AFILHADO DE KOATAY 108 MINHA MÃE CLARIVIDENTE EM CRISTO JESUS. EU, ${medium.med === 'Doutrinador' && medium.dtElevacao ? '7º RAIO AUTORIZADO MESTRE ' : medium.med === 'Apará' && medium.dtElevacao ? '5º YURÊ RAIO AUTORIZADO MESTRE ' : ''}${medium.nomeEmissao}, PARTO COM – 0 – // EM CRISTO JESUS.`;
+    const principeNaoCenturiao = `EU, ${medium.dtElevacao ? `JAGUAR ${classMest}, DA FALANGE DE SUBLIMAÇÃO. ` : ''}PRÍNCIPE MAYA DESTE AMANHECER, DO ADJUNTO ${medium.adjDevas} KOATAY 108 MESTRE ${adjDevasNome}, NA REGÊNCIA DO MINISTRO YURICY, NO ADJUNTO ${adjOrigemMin} KOATAY 108 MESTRE ${adjOrigemNome}. AFILHADO DE KOATAY 108 MINHA MÃE CLARIVIDENTE EM CRISTO JESUS. EU, ${medium.med === 'Doutrinador' && medium.dtElevacao ? '7º RAIO AUTORIZADO MESTRE ' : medium.med === 'Apará' && medium.dtElevacao ? '5º YURÊ RAIO AUTORIZADO MESTRE ' : ''}${medium.nomeEmissao}, PARTO COM – 0 – // EM CRISTO JESUS.`;
 
     //Emissão da ninfa lua centuriã
     const ninfaLua = `EU, NINFA LUA ${medium.recepcao? 'RECEPÇÃO' : ''}${medium.devas? 'FILHA DE DEVAS' : ''}, DA FALANGE DE ${falMest}, POVO DE ${medium.povo}, ${termoFalangeNinfa}${termoYuricy}${termoOrigemLua}${termoEmMissaoLua}${mestre?.classif === 'Adjunto Koatay 108 Herdeiro Triada Harpásios 7º Raio Adjuração Arcanos Rama 2000'? termoEscravaArcanos : termoEscrava}${termoPrimeira}OH JESUS! ACABO DE RECEBER DE DEUS PAI TODO PODEROSO, A SINTONIA DO GRANDE E DIVINO MESTRE OLORUM, NA LINHA DESTE AMANHECER. DESEJANDO ALCANÇAR OS PODERES DO REINO CENTRAL, COLOCO JESUS! A TERNURA DE TODOS OS TEMPOS. EMITE JESUS! DEIXE QUE AS FORÇAS SE DESLOQUEM ATÉ O MEU PLEXO. EU, ${medium.nomeEmissao}, SOU UMA GUIA MISSIONÁRIA VINDA DO MUNDO VERDE EM MISSÃO ESPECIAL, VENHO NA FORÇA DECRESCENTE ${termoGuia}, TURNO ${medium.turnoLeg}, NA ESPERANÇA DE MINHA ESTRELA ${medium.estrela} DO MEU 2º VERBO, NA ORDEM DO 1º 7º, LEVANDO OS PODERES ${medium.mestre ? 'DO MESTRE' : 'DE MINHA MÃE KOATAY 108'} QUE ME FEZ ${medium.turnoTrab}, PARA FORTALECER O MEU SOL INTERIOR, NOS TRÊS REINOS DE MINHA NATUREZA, PARTIREI SEMPRE COM ${medium.mestre? '– 0 – 0 –' : '– 0 –'} // EM CRISTO JESUS.`
@@ -231,28 +231,28 @@ export const emissaoText = (medium: IMedium, mediuns: Array<IMedium>, ministros:
             return ''
         }
     } else if (medium.falMiss === 1 || medium.falMiss === 2 || medium.falMiss === 4 || medium.falMiss === 5) {
-        return ninfaMenor
+        return ninfaNaoCenturia
     } else if (medium.falMiss === 6) {
-        return magoMenor    
+        return magoNaoCenturiao
     } else if (medium.falMiss === 7) {
-        return principeMenor
+        return principeNaoCenturiao
     } else {
         return ''
     }
 }
 
-export const emissaoMenorText = (menor: IMenor, ministros: Array<IMentor>, adjuntos: Array<IAdjunto>, templos: Array<ITemplo>, falMiss: Array<IFalange>) => {
+export const emissaoPajeText = (paje: IPaje, ministros: Array<IMentor>, adjuntos: Array<IAdjunto>, templos: Array<ITemplo>, falMiss: Array<IFalange>) => {
     
     //INFORMAÇÕES PARA TODOS OS MÉDIUNS
 
     //Armazena o nome da falange missionária
-    const falMissNome = falMiss.find((item: IFalange) => item.falange_id === menor.falMiss)?.nome;
+    const falMissNome = falMiss.find((item: IFalange) => item.falange_id === paje.falMiss)?.nome;
     
     //Armazena o nome do Adjunto Devas, Barros ou Fróes
-    const adjDevasNome = menor.adjDevas === 'Alufã' ? 'BARROS' : menor.adjDevas === 'Adejã' ? 'FRÓES' : '';
+    const adjDevasNome = paje.adjDevas === 'Alufã' ? 'BARROS' : paje.adjDevas === 'Adejã' ? 'FRÓES' : '';
 
     //Armazena o objeto adjunto correspondente ao presidente do templo atual que o médium faz parte
-    const presidente = adjuntos.find((item: IAdjunto) => item.adjunto_id === templos.find((item: ITemplo) => item.templo_id === menor.templo)?.presidente)
+    const presidente = adjuntos.find((item: IAdjunto) => item.adjunto_id === templos.find((item: ITemplo) => item.templo_id === paje.templo)?.presidente)
 
     //Armazena o nome do ministro do adjunto de origem
     const adjOrigemMin = ministros.find((min: IMentor) => min.id === presidente?.ministro)?.nome;
@@ -263,41 +263,41 @@ export const emissaoMenorText = (menor: IMenor, ministros: Array<IMentor>, adjun
     // INFORMAÇÕES PARA TODAS AS NINFAS 
 
     //Retorna o termo da emissão correspondente à falange, após o povo
-    const termoFalangeNinfa = menor.falMiss ? `${falMissNome} MISSIONÁRIA DO ADJUNTO ${menor.adjDevas} KOATAY 108 MESTRE ${adjDevasNome}. ` : '';
+    const termoFalangeNinfa = paje.falMiss ? `${falMissNome} MISSIONÁRIA DO ADJUNTO ${paje.adjDevas} KOATAY 108 MESTRE ${adjDevasNome}. ` : '';
     
     //Se a ninfa for Nityama Madruxa, retorna 'Nityama', caso contrário, retorna o nome da falange 
-    const falMissNomeP = menor.falMiss === 2? 'Nityama' : menor.falMiss === 12? 'Ariana' : falMiss.find((item: IFalange) => item.falange_id === menor.falMiss)?.nome;
+    const falMissNomeP = paje.falMiss === 2? 'Nityama' : paje.falMiss === 12? 'Ariana' : falMiss.find((item: IFalange) => item.falange_id === paje.falMiss)?.nome;
 
     //Armazena nome da primeira da falange
-    const falMissPrimeira = falMiss.find((item: IFalange) => item.falange_id === menor.falMiss)?.primeira;
+    const falMissPrimeira = falMiss.find((item: IFalange) => item.falange_id === paje.falMiss)?.primeira;
     
     //Armazena a classificação do adjunto de apoio da falange
-    const falMissAdjMin = falMiss.find((item: IFalange) => item.falange_id === menor.falMiss)?.adjMin;
+    const falMissAdjMin = falMiss.find((item: IFalange) => item.falange_id === paje.falMiss)?.adjMin;
     
     //Armazena o nome do adjunto de apoio da falange
-    const falMissAdjNome = falMiss.find((item: IFalange) => item.falange_id === menor.falMiss)?.adjNome;
+    const falMissAdjNome = falMiss.find((item: IFalange) => item.falange_id === paje.falMiss)?.adjNome;
     
     //Retorna o termo da primeira da falange
-    const termoPrimeira = menor.falMiss? `NA ORDEM DA 1ª ${falMissNomeP} ${falMissPrimeira}${falMissAdjMin ? `, NA REGÊNCIA DO ${falMissAdjMin} KOATAY 108 MESTRE ${falMissAdjNome}. ` : '. '}` : '';
+    const termoPrimeira = paje.falMiss? `NA ORDEM DA 1ª ${falMissNomeP} ${falMissPrimeira}${falMissAdjMin ? `, NA REGÊNCIA DO ${falMissAdjMin} KOATAY 108 MESTRE ${falMissAdjNome}. ` : '. '}` : '';
 
     //EMISSÕES
 
     //Emissão da ninfa não centuriã de falange missionária
-    const ninfaMenor = `EU, NINFA SOL DA FALANGE DE SUBLIMAÇÃO, ${termoFalangeNinfa} NO ADJUNTO ${adjOrigemMin} KOATAY 108 MESTRE ${adjOrigemNome}. ${termoPrimeira}EU, ${menor.nomeEmissao}, PARTO COM – 0 – // EM CRISTO JESUS.`
+    const ninfaPaje = `EU, NINFA SOL DA FALANGE DE SUBLIMAÇÃO, ${termoFalangeNinfa} NO ADJUNTO ${adjOrigemMin} KOATAY 108 MESTRE ${adjOrigemNome}. ${termoPrimeira}EU, ${paje.nomeEmissao}, PARTO COM – 0 – // EM CRISTO JESUS.`
 
     //Emissão do mago não elevado
-    const magoMenor = `EU, MAGO MISSIONÁRIO DO ADJUNTO ${menor.adjDevas} KOATAY 108 MESTRE ${adjDevasNome}, NO ADJUNTO ${adjOrigemMin} KOATAY 108 MESTRE ${adjOrigemNome}. EU, MESTRE ${menor.nomeEmissao}, PARTO COM – 0 – // EM CRISTO JESUS.`;
+    const magoPaje = `EU, MAGO MISSIONÁRIO DO ADJUNTO ${paje.adjDevas} KOATAY 108 MESTRE ${adjDevasNome}, NO ADJUNTO ${adjOrigemMin} KOATAY 108 MESTRE ${adjOrigemNome}. EU, MESTRE ${paje.nomeEmissao}, PARTO COM – 0 – // EM CRISTO JESUS.`;
 
     //Emissão do príncipe maya não elevado
-    const principeMenor = `EU, PRÍNCIPE MAYA DESTE AMANHECER, DO ADJUNTO ${menor.adjDevas} KOATAY 108 MESTRE ${adjDevasNome}, NA REGÊNCIA DO MINISTRO YURICY, NO ADJUNTO ${adjOrigemMin} KOATAY 108 MESTRE ${adjOrigemNome}. AFILHADO DE KOATAY 108 MINHA MÃE CLARIVIDENTE EM CRISTO JESUS. EU, ${menor.nomeEmissao}, PARTO COM – 0 – // EM CRISTO JESUS.`;
+    const principePaje = `EU, PRÍNCIPE MAYA DESTE AMANHECER, DO ADJUNTO ${paje.adjDevas} KOATAY 108 MESTRE ${adjDevasNome}, NA REGÊNCIA DO MINISTRO YURICY, NO ADJUNTO ${adjOrigemMin} KOATAY 108 MESTRE ${adjOrigemNome}. AFILHADO DE KOATAY 108 MINHA MÃE CLARIVIDENTE EM CRISTO JESUS. EU, ${paje.nomeEmissao}, PARTO COM – 0 – // EM CRISTO JESUS.`;
 
     //Validações para escolher o tipo de emissão a ser usada
-    if (menor.falMiss === 1 || menor.falMiss === 2 || menor.falMiss === 4 || menor.falMiss === 5) {
-        return ninfaMenor
-    } else if (menor.falMiss === 6) {
-        return magoMenor    
-    } else if (menor.falMiss === 7) {
-        return principeMenor
+    if (paje.falMiss === 1 || paje.falMiss === 2 || paje.falMiss === 4 || paje.falMiss === 5) {
+        return ninfaPaje
+    } else if (paje.falMiss === 6) {
+        return magoPaje    
+    } else if (paje.falMiss === 7) {
+        return principePaje
     } else {
         return ''
     }
